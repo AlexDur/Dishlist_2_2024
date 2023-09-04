@@ -1,4 +1,4 @@
-
+<div>
 <p-table
   #dt1
   [value]="rezepte"
@@ -8,7 +8,7 @@
   [rowsPerPageOptions]="[10, 25, 50]"
   [loading]="loading"
   [paginator]="true"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  currentPageReportTemplate="Zeige {first} aus {last} von {totalRecords} Einträgen"
   [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
 >
 
@@ -59,7 +59,7 @@
 
       <th style="min-width:15rem">
         <div class="flex align-items-center">
-          XXX
+          Koch
           <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
             <ng-template pTemplate="header">
               <div class="px-3 pt-3 pb-0">
@@ -86,13 +86,14 @@
           Status
           <p-columnFilter field="status" matchMode="equals" display="menu">
             <p>Gekocht</p>
-            <<!--ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
               <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
                 <ng-template let-option pTemplate="item">
                   <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
+
                 </ng-template>
               </p-dropdown>
-            </ng-template>-->
+            </ng-template>
           </p-columnFilter>
         </div>
       </th>
@@ -130,31 +131,33 @@
         <span class="ml-1 vertical-align-middle">{{ rezept.country.name }}</span>
       </td>
       <td>
-        <img [alt]="rezept.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ rezept.representative.image }}" width="32" style="vertical-align: middle" />
-        <span class="ml-1 vertical-align-middle">{{ rezept.representative.name }}</span>
-      </td>
-      <td>
         {{ rezept.date | date: 'MM/dd/yyyy' }}
       </td>
       <td>
-        {{ rezept.balance | currency: 'USD':'symbol' }}
+        <img [alt]="rezept.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ rezept.representative.image }}" width="32" style="vertical-align: middle" />
+        <span class="ml-1 vertical-align-middle">{{ rezept.representative.name }}</span>
       </td>
+
       <!--<td>
+        {{ rezept.balance | currency: 'USD':'symbol' }}
+      </td>-->
+      <td>
         <p-tag [value]="rezept.status" [severity]="getSeverity(rezept.status)"></p-tag>
       </td>
-      <td>
+      <!--<td>
         <p-progressBar [value]="rezept.activity" [showValue]="false"></p-progressBar>
       </td>-->
-      <td class="text-center">
+      <!--td class="text-center">
         <i class="pi" [ngClass]="{ 'text-green-500 pi-check-circle': rezept.verified, 'text-red-500 pi-times-circle': !rezept.verified }"></i>
-      </td>
+      </td>-->
+      <td><span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="7">No rezepts found.</td>
+      <td colspan="7">Keine Rezepte gefunden.</td>
     </tr>
   </ng-template>
 </p-table>
-
+</div>
 
