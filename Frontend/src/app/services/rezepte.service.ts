@@ -9,18 +9,17 @@ export class RezepteService {
       return [
         {
           id: 1000,
-          name: 'Scholl auf Bulgarlinsen mit Spinat und Tomaten',
+          name: 'Scholle auf Bulgarlinsen mit Spinat und Tomaten',
           country: {
             name: 'www.schmatz.com',
             code: 'dz'
           },
-          company: 'Benton, John B Jr',
           date: '2015-09-13',
           status: 'schon gekocht',
           verified: true,
           activity: 17,
           representative: {
-            name: 'Ioni Bowcher',
+            name: 'Alex',
             image: 'ionibowcher.png'
           },
           balance: 70663
@@ -32,17 +31,33 @@ export class RezepteService {
             name: 'www.lecker.de',
             code: 'dz'
           },
-          company: 'Benton, John B Jr',
           date: '2015-09-13',
           status: 'noch nicht gekocht',
           verified: true,
           activity: 17,
           representative: {
-            name: 'Ioni Bowcher',
+            name: 'Jakob',
             image: 'ionibowcher.png'
           },
           balance: 70663
         },
+        {
+          id: 1000,
+          name: 'Zwiebelkuchen',
+          country: {
+            name: 'www.pinterest.de',
+            code: 'dz'
+          },
+          date: '2015-09-13',
+          status: 'noch nicht gekocht',
+          verified: true,
+          activity: 17,
+          representative: {
+            name: 'Gerd',
+            image: 'ionibowcher.png'
+          },
+          balance: 70663
+        }
         ]
   }
   constructor( private http: HttpClient){}

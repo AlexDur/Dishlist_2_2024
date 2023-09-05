@@ -12,37 +12,26 @@
   [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
 >
 
-<!--  <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th>Name </th>
-      <th>Price</th>
-      <th>Category</th>
-      <th>Quantity</th>
-      <th>Status</th>
-      <th>Reviews</th>
-    </tr>
-  </ng-template>-->
-
-
   <ng-template pTemplate="caption">
-    <div class="flex justify-content-between align-items-center">
+    <div class="flex">
       <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
-      <span class="p-input-icon-left" style="margin-left: 1260px;">
-            <i class="pi pi-search"></i>
-            <input #inputField pInputText type="text" (input)="dt1.filterGlobal(inputField.value, 'contains')" placeholder="Suche" />
-        </span>
+      <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input #inputField pInputText type="text" (input)="dt1.filterGlobal(inputField.value, 'contains')" placeholder="Suche" />
+    </span>
     </div>
   </ng-template>
+
   <ng-template pTemplate="header">
     <tr>
       <th style="min-width:15rem">
-        <div class="flex align-items-center">
+        <div class="flex align-items-center ">
           Rezept
           <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
         </div>
       </th>
       <th style="min-width:15rem">
-        <div class="flex align-items-center">
+        <div class="flex align-items-left justify-content-start">
           Onlineadresse
           <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
         </div>
@@ -55,7 +44,7 @@
         </div>
       </th>
 
-      <th style="min-width:15rem">
+      <th style="min-width:10rem">
         <div class="flex align-items-center">
           Koch
           <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
@@ -125,20 +114,15 @@
         {{ rezept.name }}
       </td>
       <td>
-        <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + rezept.country.code" style="width: 20px" />
         <span class="ml-1 vertical-align-middle">{{ rezept.country.name }}</span>
       </td>
       <td>
         {{ rezept.date | date: 'MM/dd/yyyy' }}
       </td>
       <td>
-        <img [alt]="rezept.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ rezept.representative.image }}" width="32" style="vertical-align: middle" />
         <span class="ml-1 vertical-align-middle">{{ rezept.representative.name }}</span>
       </td>
 
-      <!--<td>
-        {{ rezept.balance | currency: 'USD':'symbol' }}
-      </td>-->
       <td>
         <p-tag [value]="rezept.status" [severity]="getSeverity(rezept.status)"></p-tag>
       </td>
