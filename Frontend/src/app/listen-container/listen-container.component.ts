@@ -49,7 +49,6 @@ constructor( private rezepteService: RezepteService) {}
     }
   }
 
-
   protected readonly HTMLInputElement = HTMLInputElement;
 
 }
