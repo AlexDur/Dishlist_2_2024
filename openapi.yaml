@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: Rezepte-App
+  description: Eine API für die Verwaltung von Rezepten.
+  version: 1.0.0
+servers:
+  - url: 'https'
+
+paths:
+  /rezepte:
+    get:
+      summary:  Alle Rezepte abrufen
+      operationId: getRezepte
+      responses:
+        '200':
+          description: Erfolgreiche Anfrage
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object # Hier Rezept-Daten spezifizieren
+
+    post:
+      summary: Neue Rezepte erstellen
+      operationId: createRezept
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object # Hier Rezept-Daten spezifizieren
+      responses:
+        '201':
+          description: Rezept erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                type: object # Hier Rezept-Daten spezifizieren
+
+  /rezepte/{id}:
+    get:
+      summary: Ein einzelnes Rezept abrufen
+      operationId: getRezepBytId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Rezepts
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Erfolgreiche Anfrage
+          content:
+            application/json:
+              schema:
+                type: object # s.o.
+        '404':
+          description: Rezept nicht gefunden
+
+    put:
+      summary: Rezept aktualisieren
+      operationId: updateRezept
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Rezepts
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Rezept erfolgreich aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Rezept nicht gefunden
+
+    delete:
+      summary: Rezept löschen
+      operationId: deleteRezept
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Rezepts
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Rezept erfolgreich gelöscht
+        '404':
+          description: Rezept nicht gefunden
+
