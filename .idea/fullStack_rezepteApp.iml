@@ -5,8 +5,13 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/Frontend/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/Frontend/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="dbf95b17-e0b4-42ea-af85-16c3c0f6dd53" />
   </component>
 </module>
