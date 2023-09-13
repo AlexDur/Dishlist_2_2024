@@ -15,6 +15,18 @@
 
   <dependencies>
     <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.26</version>
+      <scope>system</scope>
+      <systemPath>C:\Users\alexd\Programmieren\Webentwicklung\React-JS\Projekte\4_DishList\Angular_Java_rezepteApp\fullStack_rezepteApp\Backend\src\main\resources\libs\mysql-connector-j-8.1.0\libs\mysql-connector-j-8.1.0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.9.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>17.0.6</version>
@@ -24,7 +36,7 @@
       <artifactId>javafx-fxml</artifactId>
       <version>17.0.6</version>
     </dependency>
-                                    
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -70,5 +82,12 @@
         </executions>
       </plugin>
           </plugins>
+
+      <resources>
+        <resource>
+          <directory>src/main/resources</directory>
+        </resource>
+      </resources>
+
   </build>
 </project>
