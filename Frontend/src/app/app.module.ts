@@ -10,6 +10,7 @@ import {FormsModule} from "@angular/forms";
 import {DropdownModule} from "primeng/dropdown";
 import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
+import {ButtonModule} from "primeng/button";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {RatingModule} from "primeng/rating";
     FormsModule,
     DropdownModule,
     TagModule,
-    RatingModule
+    RatingModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

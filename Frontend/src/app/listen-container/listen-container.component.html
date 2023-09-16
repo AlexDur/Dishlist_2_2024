@@ -1,4 +1,4 @@
-// TODO: Herausfinden, wieso Button zum Erstellen eines Rezepts nicht sichtbar ist
+<!--TODO: Herausfinden, wieso Button zum Erstellen eines Rezepts nicht sichtbar ist-->
 
 <div>
 <p-table
@@ -16,7 +16,7 @@
 
   <ng-template pTemplate="caption">
     <div class="flex">
-      <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
+      <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
       <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
       <input #inputField pInputText type="text" (input)="dt1.filterGlobal(inputField.value, 'contains')" placeholder="Suche" />
@@ -138,9 +138,10 @@
     </tr>
   </ng-template>
 
+  <ng-template pTemplate="caption">
+
   <div>
-    <h2>Neues Rezept erstellen</h2>
-    <form (ngSubmit)="onSubmit()" #recipeForm="ngForm">
+   <!-- <form (ngSubmit)="onSubmit()" #recipeForm="ngForm">
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" [(ngModel)]="newRecipe.name" required>
@@ -150,18 +151,23 @@
         <label for="beschreibung">Beschreibung</label>
         <textarea id="beschreibung" name="beschreibung" [(ngModel)]="newRecipe.beschreibung" required></textarea>
       </div>
-
-      <!-- Weitere Formularfelder hier hinzufügen, z.B. Onlineadresse, Datum usw. -->
-
       <button type="submit">Rezept erstellen</button>
-    </form>
+    </form>-->
+    <button pButton type="submit">Rezept erstellen</button>
   </div>
+  </ng-template>
+
+  <button pButton type="submit">Rezept erstellen</button>
 
   <ng-template pTemplate="emptymessage">
     <tr>
       <td colspan="7">Keine Rezepte gefunden.</td>
     </tr>
   </ng-template>
+  <div>
+    Test
+  </div>
 </p-table>
+
 </div>
 
