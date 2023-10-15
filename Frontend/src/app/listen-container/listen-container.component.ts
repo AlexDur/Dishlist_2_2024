@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Table} from "primeng/table";
 import {Rezept} from "../domain/rezepte";
 import {RezepteService} from "../services/rezepte.service";
@@ -10,6 +10,10 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./listen-container.component.scss']
 })
 export class ListenContainerComponent implements OnInit{
+  @ViewChild('newRecipeNameInput') newRecipeNameInput!: ElementRef<HTMLInputElement>;
+
+
+  addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
 loading: boolean = true
 statuses!: any[];
@@ -69,7 +73,57 @@ constructor( private rezepteService: RezepteService, private http: HttpClient) {
     );
   }
 
+  addRow() {
+    // Fügen Sie die neue Zeile am Anfang der Liste rezepte hinzu
+    this.rezepte.unshift({
+      id: this.generateUniqueId(),
+      name: '',
+      online_links: '',
+      date: new Date(),
+      person: '',
+      status: '',
+      rating: 0
+    });
 
+    // Setzen Sie den Index der hinzugefügten Zeile
+    this.addRowIndex = 0;
+
+    // Leeren Sie das Formular
+    this.newRecipe = {
+      rezept: '',
+      onlineadresse: '',
+      datum: '',
+      koch: '',
+      status: '',
+      bewertung: ''
+    };
+
+    // Setzen Sie den Fokus auf das Input-Element in der neuen Zeile
+    setTimeout(() => {
+      this.newRecipeNameInput.nativeElement.focus();
+    });
+  }
+
+  onAddRowFocus() {
+    // Stellen Sie sicher, dass Sie den Fokus auf das richtige Input-Element in der neuen Zeile setzen
+    if (this.addRowIndex === 0) {
+      setTimeout(() => {
+        this.newRecipeNameInput.nativeElement.focus();
+      });
+    }
+  }
+
+  cancelAddRow() {
+    // Entfernen Sie die hinzugefügte Zeile, wenn der Vorgang abgebrochen wird
+    if (this.addRowIndex === 0) {
+      this.rezepte.shift();
+    }
+    this.addRowIndex = null;
+  }
+
+  private generateUniqueId() {
+    return 0;
+  }
 }
 
 
