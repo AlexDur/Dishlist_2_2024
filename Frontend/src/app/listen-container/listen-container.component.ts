@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Table} from "primeng/table";
 import {Rezept} from "../domain/rezepte";
 import {RezepteService} from "../services/rezepte.service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-listen-container',
@@ -13,7 +14,8 @@ rezepte: Rezept[] = [];
 loading: boolean = true
 statuses!: any[];
 
-constructor( private rezepteService: RezepteService) {}
+newRecipe: any = {}
+constructor( private rezepteService: RezepteService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.rezepteService.getRezepteMini().then((rezepte) => {
@@ -49,7 +51,24 @@ constructor( private rezepteService: RezepteService) {}
     }
   }
 
-  protected readonly HTMLInputElement = HTMLInputElement;
+  onSubmit(){
+
+    const apiUrl = 'jdbc:mysql://localhost:3306/rezepte';
+
+    // Senden Sie das neue Rezept an Ihre Backend-API
+    this.http.post(apiUrl, this.newRecipe).subscribe(
+      (response) => {
+        console.log('Rezept erfolgreich hinzugefügt', response);
+
+        // Hier können Sie die Anzeige aktualisieren, das Formular zurücksetzen oder andere Aktionen ausführen
+        this.newRecipe = {};
+      },
+      (error) => {
+        console.error('Fehler beim Hinzufügen des Rezepts', error);
+      }
+    );
+  }
+
 
 }
 
