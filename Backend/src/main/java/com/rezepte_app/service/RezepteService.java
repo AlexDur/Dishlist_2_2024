@@ -1,6 +1,8 @@
 // RezepteService.java
-package com.rezepte_app;
+package com.rezepte_app.service;
 
+import com.rezepte_app.Rezept;
+import com.rezepte_app.RezepteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

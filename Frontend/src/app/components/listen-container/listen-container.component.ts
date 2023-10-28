@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Table} from "primeng/table";
-import {Rezept} from "../domain/rezepte";
-import {RezepteService} from "../services/rezepte.service";
+import {Rezept} from "../.././models/rezepte";
+import {RezeptService} from "../../services/rezepte.service";
 import {HttpClient} from "@angular/common/http";
 
 @Component({
@@ -10,21 +10,19 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./listen-container.component.scss']
 })
 export class ListenContainerComponent implements OnInit{
-  @ViewChild('newRecipeNameInput') newRecipeNameInput!: ElementRef<HTMLInputElement>;
-
-
-  addRowIndex: number | null = null;
+@ViewChild('newRecipeNameInput') newRecipeNameInput!: ElementRef<HTMLInputElement>;
+addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
-loading: boolean = true
+/*loading: boolean = true*/
 statuses!: any[];
 
 newRecipe: any = {}
-constructor( private rezepteService: RezepteService, private http: HttpClient) {}
+constructor( private rezepteService: RezeptService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.rezepteService.getRezepteMini().subscribe((rezepte) => {
       this.rezepte = rezepte;
-      this.loading = false;
+
 
       this.rezepte.forEach((rezept) => (rezept.date = new Date(<Date>rezept.date)));
     });
@@ -58,7 +56,7 @@ constructor( private rezepteService: RezepteService, private http: HttpClient) {
 
   onSubmit(){
 
-    const apiUrl = 'jdbc:mysql://localhost:3306/rezepte';
+    const apiUrl = 'http://localhost:8080/api/rezepte';
 
     // Senden Sie das neue Rezept an Ihre Backend-API
     this.http.post(apiUrl, this.newRecipe).subscribe(
