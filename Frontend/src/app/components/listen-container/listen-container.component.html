@@ -1,0 +1,132 @@
+
+<div>
+<p-table
+  #dt1
+  [value]="rezepte"
+  dataKey="id"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [loading]="loading"
+  [paginator]="true"
+  currentPageReportTemplate="Zeige {first} aus {last} von {totalRecords} Einträgen"
+  [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+>
+
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
+      <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input #inputField pInputText type="text" (input)="dt1.filterGlobal(inputField.value, 'contains')" placeholder="Suche" />
+    </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="min-width:15rem">
+        <div class="flex align-items-center ">
+          Rezept
+          <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+        </div>
+      </th>
+      <th style="min-width:15rem">
+        <div class="flex align-items-left justify-content-start">
+          Onlineadresse
+          <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
+        </div>
+      </th>
+
+      <th style="min-width:10rem">
+        <div class="flex align-items-center">
+          Datum
+          <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+        </div>
+      </th>
+
+      <th style="min-width:10rem">
+        <div class="flex align-items-center">
+          Koch
+          <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+            <ng-template pTemplate="header">
+              <div class="px-3 pt-3 pb-0">
+                <span class="font-bold">Agent Picker</span>
+              </div>
+            </ng-template>
+
+          </p-columnFilter>
+        </div>
+      </th>
+
+
+      <th style="min-width:10rem">
+        <div class="flex align-items-center">
+          Status
+          <p-columnFilter field="status" matchMode="equals" display="menu">
+            <p>Gekocht</p>
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+                <ng-template let-option pTemplate="item">
+                  <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
+
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th style="width: 3rem">
+        <div class="flex align-items-center">
+          Bewertung
+          <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rezept>
+    <tr>
+      <td *ngIf="editMode && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.name" (blur)="saveChanges()" />
+      </td>
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
+        {{ rezept.name }}
+      </td>
+
+
+      <td>
+        <span class="ml-1 vertical-align-middle">{{ rezept.name }}</span>
+      </td>
+      <td>
+        {{ rezept.date | date: 'MM/dd/yyyy' }}
+      </td>
+   <!--   <td>
+        <span class="ml-1 vertical-align-middle">{{ rezept. }}</span>
+      </td>-->
+
+      <td>
+        <p-tag [value]="rezept.status" [severity]="getSeverity(rezept.status)"></p-tag>
+      </td>
+
+      <td><span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="caption">
+  <div>
+    <button pButton type="submit" (click)="addRow()">Rezept erstellen</button>
+  </div>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7">Keine Rezepte gefunden.</td>
+    </tr>
+  </ng-template>
+  <div>
+    Test
+  </div>
+</p-table>
+
+</div>
+
