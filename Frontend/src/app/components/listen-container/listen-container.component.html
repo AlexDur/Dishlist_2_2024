@@ -99,8 +99,16 @@
         {{ rezept.online_links }}
       </td>
 
+
       <td>
         {{ rezept.date | date: 'MM/dd/yyyy' }}
+      </td>
+
+      <td *ngIf="editMode && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.koch" (blur)="saveChanges()" />
+      </td>
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
+        {{ rezept.koch }}
       </td>
 
       <td>
