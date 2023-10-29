@@ -1,3 +1,5 @@
+/*TODO: Achtung, das Mergen scheint nicht richtig zu funktionieren. Pruefe, ob das BE up to date ist, also ob DAO weg ist und ersetzt durch Repository z.B.*/
+
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Table} from "primeng/table";
 import {Rezept} from "../.././models/rezepte";
@@ -13,7 +15,6 @@ export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput!: ElementRef<HTMLInputElement>;
 addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
-/*loading: boolean = true*/
 statuses!: any[];
 
 newRecipe: any = {}
