@@ -90,7 +90,7 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
     // Leeren Sie das Formular
     this.newRecipe = {
       rezept: '',
-      onlineadresse: '',
+      online_links: '',
       datum: '',
       koch: '',
       status: '',
