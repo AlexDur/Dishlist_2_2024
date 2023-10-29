@@ -73,7 +73,6 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
   }
 
   addRow() {
-    // Fügen Sie die neue Zeile am Anfang der Liste rezepte hinzu
     this.rezepte.unshift({
       id: this.generateUniqueId(),
       name: '',
