@@ -1,5 +1,5 @@
 // RezepteController.java
-package com.rezepte_app.controller;
+package com.rezepte_app;
 
 import com.rezepte_app.Rezept;
 import com.rezepte_app.RezepteRepository;
@@ -22,9 +22,10 @@ public class RezepteController {
             rezepteRepository.save(rezept);
             return ResponseEntity.status(HttpStatus.CREATED).body("Rezept erfolgreich erstellt.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Rezepts.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Rezepts: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {
