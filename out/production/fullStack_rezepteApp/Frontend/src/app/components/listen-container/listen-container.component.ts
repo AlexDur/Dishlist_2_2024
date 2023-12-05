@@ -1,7 +1,9 @@
+/*TODO: Achtung, das Mergen scheint nicht richtig zu funktionieren. Pruefe, ob das BE up to date ist, also ob DAO weg ist und ersetzt durch Repository z.B.*/
+
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Table} from "primeng/table";
-import {Rezept} from "../../domain/rezepte";
-import {RezepteService} from "../../services/rezepte.service";
+import {Rezept} from "../.././models/rezepte";
+import {RezeptService} from "../../services/rezepte.service";
 import {HttpClient} from "@angular/common/http";
 
 @Component({
@@ -13,16 +15,15 @@ export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput!: ElementRef<HTMLInputElement>;
 addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
-loading: boolean = true
 statuses!: any[];
 
 newRecipe: any = {}
-constructor( private rezepteService: RezepteService, private http: HttpClient) {}
+constructor( private rezepteService: RezeptService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.rezepteService.getRezepteMini().subscribe((rezepte) => {
       this.rezepte = rezepte;
-      this.loading = false;
+
 
       this.rezepte.forEach((rezept) => (rezept.date = new Date(<Date>rezept.date)));
     });
@@ -73,7 +74,6 @@ constructor( private rezepteService: RezepteService, private http: HttpClient) {
   }
 
   addRow() {
-    // Fügen Sie die neue Zeile am Anfang der Liste rezepte hinzu
     this.rezepte.unshift({
       id: this.generateUniqueId(),
       name: '',
@@ -90,7 +90,7 @@ constructor( private rezepteService: RezepteService, private http: HttpClient) {
     // Leeren Sie das Formular
     this.newRecipe = {
       rezept: '',
-      onlineadresse: '',
+      online_links: '',
       datum: '',
       koch: '',
       status: '',
@@ -142,7 +142,6 @@ constructor( private rezepteService: RezepteService, private http: HttpClient) {
     console.log("After saving changes", this.rezepte, this.selectedRow, this.editMode);
     // Aktualisieren Sie die Anzeige, wenn erforderlich
   }
-
 
 
 }

@@ -12,8 +12,8 @@ export class RezeptService {
 
   constructor(private http: HttpClient) { }
 
-  getRezepteMini(): Observable<Rezept[]> {
-    return this.http.get<Rezept[]>(`${this.backendUrl}/rezepteMini`);
+  getAlleRezepte(): Observable<Rezept[]> {
+    return this.http.get<Rezept[]>(`${this.backendUrl}/alleRezepte`); // Ändern Sie hier die URL
   }
 
   createRezept(rezept: Rezept): Observable<string> {

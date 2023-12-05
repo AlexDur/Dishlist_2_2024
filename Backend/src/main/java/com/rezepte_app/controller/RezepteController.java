@@ -1,5 +1,5 @@
 // RezepteController.java
-package com.rezepte_app;
+package com.rezepte_app.controller;
 
 import com.rezepte_app.Rezept;
 import com.rezepte_app.RezepteRepository;

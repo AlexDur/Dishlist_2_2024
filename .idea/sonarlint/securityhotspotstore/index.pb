@@ -34,11 +34,7 @@ G.idea/sonarlint/issuestore/e/c/ec830ae529ec3451483ae6eb62cf975be661cd8c,6\6\66
 Å
 Q.idea/sonarlint/securityhotspotstore/9/3/9345d4e37836356134a20a446053d32434f56608,d\5\d5eb3ead59fdd27cdd79da478b21ea295ad5379f
 w
-G.idea/sonarlint/issuestore/5/d/5d08a986e03fca45b67f5005042814ce4b2ac949,2\4\2492578149ea16e98103667a7eb042dc5f4f0864
-w
 G.idea/sonarlint/issuestore/e/c/ec0d1ab82843267a3c46f49ef1c90feb3bbe2d3f,8\4\849a9ced646d9432996894b7613a9c6ee9cae244
-Å
-Q.idea/sonarlint/securityhotspotstore/5/d/5d08a986e03fca45b67f5005042814ce4b2ac949,1\c\1ca11ea475d5e55cece774ae52b2ecba0db13832
 w
 G.idea/sonarlint/issuestore/d/5/d5eb3ead59fdd27cdd79da478b21ea295ad5379f,3\9\39806a89fa62660a1ca738e82525a7059bd46cda
 Å
@@ -51,8 +47,6 @@ Q.idea/sonarlint/securityhotspotstore/8/3/83a8bead40a40d6f8c73f4792f9af01293488a
 Q.idea/sonarlint/securityhotspotstore/8/4/849a9ced646d9432996894b7613a9c6ee9cae244,2\a\2a77a739c25ee9e9e32283a16fed79f827f5566e
 w
 G.idea/sonarlint/issuestore/8/3/83a8bead40a40d6f8c73f4792f9af01293488a45,b\3\b30bea921209aafec72fa6bb31719a7eef94fd66
-w
-G.idea/sonarlint/issuestore/1/c/1ca11ea475d5e55cece774ae52b2ecba0db13832,0\b\0bb96dd74586e87833fd619e84586c49756ef7e0
 Å
 Q.idea/sonarlint/securityhotspotstore/8/8/88a9255124c95bdc913197c120a8d560edc59c8e,9\0\909762385fc6eb20f922a91c6865741308b57f2c
 w
@@ -69,8 +63,6 @@ w
 G.idea/sonarlint/issuestore/9/d/9d7b5ca5d029fa051b6f5d30cf05df379b8c4a84,8\8\8872dd45f1c06be10864029fabf53b5dbd80232e
 Å
 Q.idea/sonarlint/securityhotspotstore/8/a/8ae0bd90750cef360b799f00f65ac94e6aed7485,8\d\8d6f3fc7d3039d76d27ec8f70ba32e62869244c1
-w
-G.idea/sonarlint/issuestore/2/4/2492578149ea16e98103667a7eb042dc5f4f0864,c\7\c79dccc5d6266ab5ee117c1fcc4d1903bdebd7da
 Å
 Q.idea/sonarlint/securityhotspotstore/6/1/6114e5d58e7ac41c658986a3f46d4c81d4a4ee7d,3\9\3914986c8d0e9cc27a914ad86aa5f64430cbb67c
 w
@@ -80,13 +72,9 @@ Q.idea/sonarlint/securityhotspotstore/d/5/d5eb3ead59fdd27cdd79da478b21ea295ad537
 w
 G.idea/sonarlint/issuestore/4/6/46c4d9840a252fe30442901660268e686824adac,c\8\c8a7230d5decc634b39c7938883c0b2403e8b8a4
 Å
-Q.idea/sonarlint/securityhotspotstore/1/c/1ca11ea475d5e55cece774ae52b2ecba0db13832,9\c\9c4712a94998cb055b4512be86d64dfd9dcd960f
-Å
 Q.idea/sonarlint/securityhotspotstore/6/6/660c8f77a0611f4dfb8029c13490a3a2969120d8,c\d\cdb2eb54a0f9d0ed2a26364f1d3e2e090adf2ae6
 w
 G.idea/sonarlint/issuestore/8/4/849a9ced646d9432996894b7613a9c6ee9cae244,4\b\4b7b8a704ccedf6b9c118576f8b4f253da9c6c94
-Å
-Q.idea/sonarlint/securityhotspotstore/2/4/2492578149ea16e98103667a7eb042dc5f4f0864,0\9\09cbb33f6bf75112e45bbc48276ad1b8c667bc58
 Å
 Q.idea/sonarlint/securityhotspotstore/e/2/e2024d474bdeeb86a8cf4b0bed30305c5bfffc72,4\4\44d4c3854fc50af80eb7dc415778f7f1c08f4193
 w
@@ -111,8 +99,6 @@ _
 /Backend/src/main/java/com/rezepte_app/Main.java,d\c\dc2e09cc1813f5370ca4658ece43ae4fa9fac4ce
 ?
 Backend/pom.xml,6\f\6f5a34a61856e01a5e5abd8b3142ee6665a5d397
-M
-Backend/Backend/src/Main.java,5\b\5beac10631c8d77cded4db763587f5d463b6a175
 Å
 Q.idea/sonarlint/securityhotspotstore/8/c/8c1d7373c8326df661dfc1c37ce628197596baf4,f\1\f1a318c6c2db228385c50b8f0d2984181c34896c
 Å
@@ -123,17 +109,13 @@ w
 G.idea/sonarlint/issuestore/d/3/d3d123c1eeb9dca3fb98b0e821ebc8d841afc814,f\7\f7e2e3a5d4b89268231df335e953d34480a810b4
 a
 1Backend/src/main/java/com/rezepte_app/Rezept.java,d\1\d14235fdc188870036bac163ae77ac1944ce0e39
-u
-EBackend/Backend/Spring boot/src/main/resources/application.properties,4\5\450853917ea1826173395d082a46cce2d2e2743a
 f
 6Backend/src/main/java/com/rezepte_app/Application.java,e\a\ea9181040d7fc9ddc278c07c379d815a14e58b21
-w
-GBackend/src/main/java/com/rezepte_app/controller/RezepteController.java,7\9\79d3951a18f090601ba8dfd1ab620393a3196dd9
 |
 LFrontend/src/app/components/listen-container/listen-container.component.html,e\3\e3d1d130048ada477027aff01f980fea8d4c2fa1
 z
 JFrontend/src/app/components/listen-container/listen-container.component.ts,3\c\3cd81cd1472207e7551fb457f1125ebcf07c81bf
 l
 <Backend/src/main/java/com/rezepte_app/RezepteRepository.java,4\d\4d8aa77505a6b1d8661547ce346b97940da04e43
-q
-ABackend/src/main/java/com/rezepte_app/service/RezepteService.java,3\9\391e6284282e70a3e780b09a96dcca1036f00312
+P
+ Backend/META-INF/application.xml,9\c\9c2922256ab1a8a24b15fb4661a65c071f47bd3f

@@ -21,7 +21,7 @@ newRecipe: any = {}
 constructor( private rezepteService: RezeptService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.rezepteService.getRezepteMini().subscribe((rezepte) => {
+    this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       this.rezepte = rezepte;
 
 

@@ -7,7 +7,6 @@
   [rows]="10"
   [showCurrentPageReport]="true"
   [rowsPerPageOptions]="[10, 25, 50]"
-  [loading]="loading"
   [paginator]="true"
   currentPageReportTemplate="Zeige {first} aus {last} von {totalRecords} Einträgen"
   [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
@@ -34,7 +33,7 @@
       <th style="min-width:15rem">
         <div class="flex align-items-left justify-content-start">
           Onlineadresse
-          <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
+          <p-columnFilter type="text" field="online_links" display="menu"></p-columnFilter>
         </div>
       </th>
 
@@ -93,17 +92,24 @@
       <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
         {{ rezept.name }}
       </td>
-
-
-      <td>
-        <span class="ml-1 vertical-align-middle">{{ rezept.name }}</span>
+      <td *ngIf="editMode && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.online_links" (blur)="saveChanges()" />
       </td>
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
+        {{ rezept.online_links }}
+      </td>
+
+
       <td>
         {{ rezept.date | date: 'MM/dd/yyyy' }}
       </td>
-   <!--   <td>
-        <span class="ml-1 vertical-align-middle">{{ rezept. }}</span>
-      </td>-->
+
+      <td *ngIf="editMode && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.koch" (blur)="saveChanges()" />
+      </td>
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
+        {{ rezept.koch }}
+      </td>
 
       <td>
         <p-tag [value]="rezept.status" [severity]="getSeverity(rezept.status)"></p-tag>
