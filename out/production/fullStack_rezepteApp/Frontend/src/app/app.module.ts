@@ -11,13 +11,13 @@ import {DropdownModule} from "primeng/dropdown";
 import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
-import { RezeptFormComponent } from './components/rezept-form/rezept-form.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ListenContainerComponent,
-    RezeptFormComponent
+
   ],
   imports: [
     BrowserModule,

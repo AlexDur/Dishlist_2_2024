@@ -1,5 +1,5 @@
 // RezepteService.java
-package com.rezepte_app.service;
+package com.rezepte_app;
 
 import com.rezepte_app.Rezept;
 import com.rezepte_app.RezepteRepository;
@@ -22,3 +22,5 @@ public class RezepteService {
         }
     }
 }
+
+  /*TODO:  Es fehlt noch Erstellung, Aktualisierung und Löschung von Rezepten, wenn dies in Ihrem Anwendungsfall*/

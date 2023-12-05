@@ -1,10 +1,23 @@
 package com.rezepte_app;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "rezepte") // Optional: Wenn die Tabelle einen anderen Namen hat als die Klasse
 public class Rezept {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
+
     private String beschreibung;
 
-    // Konstruktor
+    // Konstruktor (kann beibehalten werden)
     public Rezept() {
         // Konstruktor ohne Argumente
     }
@@ -35,4 +48,6 @@ public class Rezept {
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
     }
+
+    // Weitere Methoden, Equals, HashCode und ToString können hier hinzugefügt werden
 }
