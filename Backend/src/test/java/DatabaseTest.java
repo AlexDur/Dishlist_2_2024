@@ -12,7 +12,7 @@ public class DatabaseTest {
         dataSource = new JdbcDataSource();
         dataSource.setURL("jdbc:h2:mem:testdb");
         dataSource.setUser("sa");
-        dataSource.setPassword("password");
+        dataSource.setPassword("sa");
 
         // Erstellen Sie Tabellen und Testdaten hier
         // Führen Sie SQL-Abfragen aus, um Tabellen zu erstellen und Daten einzufügen
