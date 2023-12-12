@@ -21,6 +21,11 @@ public class RezepteService {
             System.out.println("Beschreibung: " + rezept.getBeschreibung());
         }
     }
-}
 
-  /*TODO:  Es fehlt noch Erstellung, Aktualisierung und Löschung von Rezepten, wenn dies in Ihrem Anwendungsfall*/
+    public Rezept createRezept(String name, String beschreibung) {
+        Rezept neuesRezept = new Rezept();
+        neuesRezept.setName(name);
+        neuesRezept.setBeschreibung(beschreibung);
+        return rezepteRepository.save(neuesRezept);
+    }
+}
