@@ -12,4 +12,6 @@ public interface RezepteRepository extends JpaRepository<Rezept, Integer> {
 
  /*   List<Rezept> findByTitel(String titel);
     void deleteByTitel(String titel);*/
+
+
 }
