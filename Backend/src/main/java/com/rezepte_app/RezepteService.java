@@ -1,12 +1,10 @@
-// RezepteService.java
 package com.rezepte_app;
 
-import com.rezepte_app.Rezept;
-import com.rezepte_app.RezepteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RezepteService {
@@ -14,18 +12,39 @@ public class RezepteService {
     @Autowired
     private RezepteRepository rezepteRepository;
 
-    public void fetchAndPrintRezepte() {
-        List<Rezept> rezepte = rezepteRepository.findAll();
-        for (Rezept rezept : rezepte) {
-            System.out.println("Name: " + rezept.getName());
-            System.out.println("Beschreibung: " + rezept.getBeschreibung());
+    // Im RezepteService
+    public List<Rezept> fetchAlleRezepte() {
+        return rezepteRepository.findAll();
+    }
+
+
+    public Rezept createRezept(Rezept rezept) {
+        return rezepteRepository.save(rezept);
+    }
+
+    public Rezept updateRezept(Rezept rezept) {
+        // Überprüfen, ob das Rezept in der Datenbank existiert
+        Optional<Rezept> existingRezept = Optional.ofNullable(rezepteRepository.findById(rezept.getId()));
+        if (existingRezept.isPresent()) {
+            // Aktualisieren Sie die Eigenschaften des Rezepts
+            Rezept updatedRezept = existingRezept.get();
+            updatedRezept.setName(rezept.getName());
+            updatedRezept.setBeschreibung((rezept.getBeschreibung()));
+            updatedRezept.setOnlineadresse(rezept.getOnlineAdresse());
+            updatedRezept.setDatum(rezept.getDatum());
+            updatedRezept.setKoch(rezept.getKoch());
+            updatedRezept.setStatus(rezept.getStatus());
+            updatedRezept.setBewertung(rezept.getBewertung());
+            // Speichern Sie das aktualisierte Rezept
+            return rezepteRepository.save(updatedRezept);
+        } else {
+            // Das Rezept wurde nicht gefunden
+            return null;
         }
     }
 
-    public Rezept createRezept(String name, String beschreibung) {
-        Rezept neuesRezept = new Rezept();
-        neuesRezept.setName(name);
-        neuesRezept.setBeschreibung(beschreibung);
-        return rezepteRepository.save(neuesRezept);
-    }
+/*    public void deleteRezept(Long id) {
+        // Löschen Sie das Rezept mit der angegebenen ID
+        rezepteRepository.deleteById(id);
+    }*/
 }

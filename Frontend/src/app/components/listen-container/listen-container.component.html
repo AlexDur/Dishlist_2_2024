@@ -17,7 +17,7 @@
       <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
       <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
-      <input #inputField pInputText type="text" (input)="dt1.filterGlobal(inputField.value, 'contains')" placeholder="Suche" />
+      <input #newRecipeNameInput  pInputText type="text" (input)="dt1.filterGlobal(newRecipeNameInput.value, 'contains')" placeholder="Suche" />
     </span>
     </div>
   </ng-template>
@@ -87,25 +87,22 @@
   <ng-template pTemplate="body" let-rezept>
     <tr>
       <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.name" (blur)="saveChanges()" />
+        <input [(ngModel)]="rezept.name" (blur)="saveChanges(rezept)" />
       </td>
       <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
         {{ rezept.name }}
       </td>
       <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.online_links" (blur)="saveChanges()" />
+        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)" />
       </td>
       <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
-        {{ rezept.online_links }}
+        {{ rezept.onlineAdresse }}
       </td>
-
-
       <td>
-        {{ rezept.date | date: 'MM/dd/yyyy' }}
+        <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
       </td>
-
       <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.koch" (blur)="saveChanges()" />
+        <input [(ngModel)]="rezept.koch" (blur)="saveChanges(rezept)" />
       </td>
       <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
         {{ rezept.koch }}
@@ -116,6 +113,13 @@
       </td>
 
       <td><span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
+      <td>
+        <button pButton  (click)="deleteRow(rezept.id)">
+          <i class="pi pi-times" style="font-size: 4em;"></i>
+        </button>
+      </td>
+
+
     </tr>
   </ng-template>
   <ng-template pTemplate="caption">
