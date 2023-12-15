@@ -107,8 +107,6 @@ w
 G.idea/sonarlint/issuestore/d/3/d3d123c1eeb9dca3fb98b0e821ebc8d841afc814,f\7\f7e2e3a5d4b89268231df335e953d34480a810b4
 a
 1Backend/src/main/java/com/rezepte_app/Rezept.java,d\1\d14235fdc188870036bac163ae77ac1944ce0e39
-f
-6Backend/src/main/java/com/rezepte_app/Application.java,e\a\ea9181040d7fc9ddc278c07c379d815a14e58b21
 |
 LFrontend/src/app/components/listen-container/listen-container.component.html,e\3\e3d1d130048ada477027aff01f980fea8d4c2fa1
 z
@@ -209,3 +207,15 @@ L
 Backend/META-INF/context.xml,5\6\5611a3df5f1e2e38085c2208922a51e5465bcf14
 U
 %Backend/src/main/resources/log4j2.xml,0\d\0daf1e1745c22ac6319dc82018be6ada69c232f4
+R
+"Frontend/src/app/models/rezepte.ts,2\0\20b3f91202a4ed23db7b9e51f471b8ca4d247860
+Å
+Q.idea/sonarlint/securityhotspotstore/2/0/20b3f91202a4ed23db7b9e51f471b8ca4d247860,0\1\01a224248124f5e6f58fa6aab379429842d8fbcb
+w
+G.idea/sonarlint/issuestore/2/0/20b3f91202a4ed23db7b9e51f471b8ca4d247860,4\c\4cf0dd803c14e7624d31a96a8788a53003125727
+k
+;Backend/src/main/java/com/rezepte_app/JSONResponseBody.java,9\1\91251f1f2066da6b48c52cf4f39825b1c493f9b2
+v
+FBackend/src/main/java/com/rezepte_app/controller/JSONResponseBody.java,e\7\e7d5d1b65d618f05cd81d1e05a3a2aedb3e53c5d
+z
+JBackend/src/main/java/com/rezepte_app/controller/ResponseBodyProvider.java,3\e\3ea0ae6eb9c19ac5b37be6b067106f998be5a0a9

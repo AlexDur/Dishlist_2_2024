@@ -10,8 +10,6 @@ import java.util.List;
 public interface RezepteRepository extends JpaRepository<Rezept, Integer> {
     // benutzerdefinierten Abfragemethoden
 
- /*   List<Rezept> findByTitel(String titel);
-    void deleteByTitel(String titel);*/
 
-
+    Rezept findById(int id);
 }
