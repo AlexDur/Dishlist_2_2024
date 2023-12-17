@@ -10,16 +10,13 @@ public class DatabaseManager {
 
     public static void main(String[] args) {
         try {
-            // Initialisieren Sie den Context
+
             Context ctx = new InitialContext();
             DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/yourDB");
 
-            // Holen Sie sich eine Verbindung
+            // Verbindung holen
             try (Connection connection = ds.getConnection()) {
-                // Hier können Sie SQL-Anfragen ausführen
-                // Zum Beispiel:
-                // Statement stmt = connection.createStatement();
-                // ResultSet rs = stmt.executeQuery("SELECT * FROM yourTable");
+
             } catch (SQLException e) {
                 // Fehlerbehandlung
                 e.printStackTrace();

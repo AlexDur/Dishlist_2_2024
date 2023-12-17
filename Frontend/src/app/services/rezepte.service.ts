@@ -21,12 +21,9 @@ export class RezeptService {
   createRezept(rezept: Rezept): Observable<string> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-
-    // Überprüfen, ob das Datum im richtigen Format ist
     if (!this.isValidDate(rezept.datum, 'dd-MM-yyyy')) {
       return throwError('Ungültiges Datumsformat. Verwenden Sie "dd-MM-yyyy".');
     }
-
     // Rezept an das Backend senden
     return this.http.post<string>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers });
   }

@@ -1,32 +1,42 @@
 package com.rezepte_app;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
-@Table(name = "rezepte") // Optional: Wenn die Tabelle einen anderen Namen hat als die Klasse
+@Table(name = "rezepte") // Wenn die Tabelle einen anderen Namen hat als die Klasse
 public class Rezept {
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private String beschreibung;
+
+    @NotNull
     private String onlineadresse;
-    private java.sql.Date datum; // Verwenden Sie java.sql.Date für das Datum
+    private java.sql.Date datum;
+
+    @NotNull
     private String koch;
-    private boolean status; // Verwenden Sie boolean für den Status
+
+    @NotNull
+    private boolean status;
+
+    @NotNull
     private int bewertung;
 
     // Konstruktor (kann beibehalten werden)
-    public Rezept() {
-        // Konstruktor ohne Argumente
-    }
-
     // Getter und Setter für id
     public int getId() {
         return id;
@@ -36,7 +46,6 @@ public class Rezept {
         this.id = id;
     }
 
-    // Getter und Setter für name
     public String getName() {
         return name;
     }
@@ -54,7 +63,6 @@ public class Rezept {
         this.beschreibung = beschreibung;
     }
 
-    // Getter und Setter für onlineadresse
     public String getOnlineAdresse() {
         return onlineadresse;
     }
@@ -63,7 +71,6 @@ public class Rezept {
         this.onlineadresse = onlineadresse;
     }
 
-    // Getter und Setter für datum
     public java.sql.Date getDatum() {
         return datum;
     }
@@ -72,7 +79,6 @@ public class Rezept {
         this.datum = datum;
     }
 
-    // Getter und Setter für koch
     public String getKoch() {
         return koch;
     }
@@ -80,13 +86,6 @@ public class Rezept {
     public void setKoch(String koch) {
         this.koch = koch;
     }
-
-/*
-    // Getter und Setter für status
-    public boolean isStatus() {
-        return status;
-    }
-*/
 
     public boolean getStatus() {
         return status;
@@ -104,5 +103,5 @@ public class Rezept {
         this.bewertung = bewertung;
     }
 
-    // Weitere Methoden, Equals, HashCode und ToString können hier hinzugefügt werden
+
 }

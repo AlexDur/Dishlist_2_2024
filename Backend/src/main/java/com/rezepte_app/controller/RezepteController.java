@@ -2,11 +2,12 @@
 package com.rezepte_app.controller;
 
 import com.rezepte_app.Rezept;
-import com.rezepte_app.RezepteService; // Fügen Sie Ihren RezepteService hinzu
+import com.rezepte_app.RezepteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class RezepteController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRezept(@RequestBody Rezept rezept) {
+    public ResponseEntity<String> createRezept( @RequestBody Rezept rezept) {
         try {
             Rezept createdRezept = rezepteService.createRezept(rezept); // Verwenden des RezepteServices
             return ResponseEntity.status(HttpStatus.CREATED).body("Rezept erfolgreich erstellt. ID: " + createdRezept.getId());
@@ -47,5 +48,6 @@ public class RezepteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Aktualisieren des Rezepts: " + e.getMessage());
         }
     }
+
 
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AllgController {
     @GetMapping("/data")
     public ResponseEntity<String> getData() {
-        // Hier implementieren Sie Ihre API-Logik
+
         String responseData = "Hello from the API!";
         ResponseEntity<String> ok = ResponseEntity.ok(responseData);
         return ok;

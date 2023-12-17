@@ -23,10 +23,10 @@ public class RezepteService {
     }
 
     public Rezept updateRezept(Rezept rezept) {
-        // Überprüfen, ob das Rezept in der Datenbank existiert
+
         Optional<Rezept> existingRezept = Optional.ofNullable(rezepteRepository.findById(rezept.getId()));
         if (existingRezept.isPresent()) {
-            // Aktualisieren Sie die Eigenschaften des Rezepts
+
             Rezept updatedRezept = existingRezept.get();
             updatedRezept.setName(rezept.getName());
             updatedRezept.setBeschreibung((rezept.getBeschreibung()));
@@ -35,16 +35,16 @@ public class RezepteService {
             updatedRezept.setKoch(rezept.getKoch());
             updatedRezept.setStatus(rezept.getStatus());
             updatedRezept.setBewertung(rezept.getBewertung());
-            // Speichern Sie das aktualisierte Rezept
+
             return rezepteRepository.save(updatedRezept);
         } else {
-            // Das Rezept wurde nicht gefunden
+            //  Rezept nicht gefunden
             return null;
         }
     }
 
 /*    public void deleteRezept(Long id) {
-        // Löschen Sie das Rezept mit der angegebenen ID
+        // Löschen des Rezepts mit angegebener ID
         rezepteRepository.deleteById(id);
     }*/
 }
