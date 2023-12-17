@@ -1,3 +1,6 @@
 
-Vtypescript:S1135"4Complete the task associated to this "TODO" comment.(˜²Ô8îŸ¿È·1
-typescript:S1874@"ä'subscribe' is deprecated. Instead of passing separate callback arguments, use an observer argument. Signatures taking separate callback arguments will be removed in v8. Details: https://rxjs.dev/deprecations/subscribe-arguments(ìÄª•ÿÿÿÿÿ8îŸ¿È·1
+Stypescript:S1128"+Remove this unused import of 'HttpHeaders'.(°¯À“üÿÿÿÿ8¾ªí¯Æ1
+Rtypescript:S1128"*Remove this unused import of 'Observable'.(ú•×ûÿÿÿÿ8¾ªí¯Æ1
+İtypescript:S1874š"³'(next?: ((value: string) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(ÍŠ½êıÿÿÿÿ8ã¡°Æ1
+Ôtypescript:S1874«"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(í”ä<8Û¶„ğÆ1
+Útypescript:S1874¼"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(®­œõûÿÿÿÿ8ÛĞàõÆ1

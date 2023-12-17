@@ -25,6 +25,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // Weitere Exception-Handler für andere Fehlerfälle
+
 }
 

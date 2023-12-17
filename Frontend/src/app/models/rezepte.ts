@@ -4,6 +4,6 @@ export interface Rezept {
   onlineAdresse?: string,
   datum?: Date | undefined,
   person?: string,
-  status?: string,
+  status?: boolean,
   rating?: number
 }

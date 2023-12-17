@@ -65,7 +65,7 @@
           <p-columnFilter field="status" matchMode="equals" display="menu">
             <p>Gekocht</p>
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+              <p-dropdown [ngModel]="value" (onChange)="filter($event.value)" placeholder="Any">
                 <ng-template let-option pTemplate="item">
                   <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
 
@@ -87,7 +87,12 @@
   <ng-template pTemplate="body" let-rezept>
     <tr>
       <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.name" (blur)="saveChanges(rezept)" />
+        <input [(ngModel)]="rezept.name"
+               (blur)="saveChanges(rezept)"
+               required
+               minlength="1"
+               maxlength="255"
+               pattern="[A-Za-z0-9 ]*" />
       </td>
       <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
         {{ rezept.name }}
@@ -109,8 +114,9 @@
       </td>
 
       <td>
-        <p-tag [value]="rezept.status" [severity]="getSeverity(rezept.status)"></p-tag>
+        <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])" [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
       </td>
+
 
       <td><span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
       <td>

@@ -1,8 +1,8 @@
 export interface Rezept {
   id?: number,
   name?: string,
-  online_links?: string,
-  date?: string | Date,
+  onlineAdresse?: string,
+  datum?: Date | undefined,
   person?: string,
   status?: string,
   rating?: number

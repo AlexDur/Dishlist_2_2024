@@ -14,10 +14,14 @@ export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
 addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
-statuses!: any[];
 newRecipe: any = {}
 private backendUrl = 'http://localhost:8080';
-constructor( private rezepteService: RezeptService, private http: HttpClient) {}
+
+  tagToggleStates: { [key: number]: boolean } = {};
+  constructor( private rezepteService: RezeptService, private http: HttpClient) {}
+
+
+
 
   ngOnInit(): void {
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
@@ -27,11 +31,6 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
       this.rezepte.forEach((rezept) => (rezept.datum = new Date(<Date>rezept.datum)));
     });
 
-    this.statuses = [
-      { label: 'Noch nicht gekocht', value: 'noch nicht gekocht' },
-      { label: 'Schon (x) gekocht', value: 'schon gekocht' },
-    ];
-    console.log('statuses array:', this.statuses);
   }
 
 
@@ -39,8 +38,12 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
     table.clear();
   }
 
-  getSeverity(status: string) {
-    if (typeof status === 'string') { // Überprüfen, ob status ein String ist
+  getSeverity(status: boolean | string): string {
+    if (typeof status === 'boolean') {
+      // Behandlung boolescher Werte
+      return status ? 'geplant' : 'gekocht';
+    } else if (typeof status === 'string') {
+      // Behandlung von String-Werten
       switch (status.toLowerCase()) {
         case 'noch nicht gekocht':
           console.log('Status is noch nicht gekocht');
@@ -53,52 +56,42 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
           return 'null';
       }
     } else {
-      return 'null'; // Wenn status kein String ist, geben Sie 'null' zurück oder eine andere geeignete Standardwert.
+      return 'null';
     }
   }
 
+  getTagValue(status: boolean, isTagToggled: boolean): string {
+    if (isTagToggled) {
+      return 'gekocht'; // Wenn das Tag getoggled ist
+    } else {
+      return status ? 'gekocht' : 'geplant';
+    }
+  }
 
-/*  onSubmit() {
-    this.rezepteService.createRezept(this.newRecipe).subscribe(
-      (response) => {
-        console.log('Rezept erfolgreich hinzugefügt', response);
-        // Hier können Sie die Anzeige aktualisieren oder andere Aktionen ausführen
-        // Z.B.: Um die Liste der Rezepte neu zu laden:
-        this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
-          this.rezepte = rezepte;
-        });
-        // Das Formular zurücksetzen
-        this.newRecipe = {
-          name: '',
-          onlineAdresse: '',
-          date: new Date(),
-          person: '',
-          status: '',
-          rating: 0
-        };
-      },
-      (error) => {
-        console.error('Fehler beim Hinzufügen des Rezepts', error);
-      }
-    );
-  }*/
+  toggleTag(rezept: Rezept) {
+    this.tagToggleStates[rezept.id!] = !this.tagToggleStates[rezept.id!];
+  }
+
+
 
   /*id kann ich weglassen, das die DB die ID autoamisch generiert (AUTO INCREMET)*/
   addRow() {
-
     const currentDate = new Date();
     console.log('Aktueller Wert von rezept.date:', this.newRecipe.datum);
 
-    this.rezepte.unshift({
+    const newRezept: Rezept = {
       name: '',
       onlineAdresse: '',
       datum: currentDate,
       person: '',
-      status: '',
+      status: false, // Hier wird der Status standardmäßig auf "geplant" (false) gesetzt
       rating: 0
-    });
+    };
 
-    // Setzen des Index der hinzugefügten Zeile
+    this.tagToggleStates[newRezept.id!] = false;
+
+    this.rezepte.unshift(newRezept);
+
     this.addRowIndex = 0;
 
     // Leeren des Formulars
@@ -116,6 +109,7 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
       this.newRecipeNameInput?.nativeElement.focus();
     });
   }
+
 
   onAddRowFocus() {
     // Setzen des Fokus auf das richtige Input-Element in der neuen Zeile
@@ -137,7 +131,6 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
   editMode = false; // Variable, um den Bearbeitungsmodus zu verfolgen
   selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
 
-// Methode zum Aktivieren des Bearbeitungsmodus für eine Zeile
   activateEditMode(rowData: Rezept) {
     this.editMode = true;
     this.selectedRow = rowData;
@@ -145,7 +138,6 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
 
 
 
-// Methode zum Speichern der Bearbeitungen
   saveChanges(rezept: Rezept) {
     console.log("Before saving changes", rezept, this.selectedRow, this.editMode);
 
@@ -180,7 +172,6 @@ constructor( private rezepteService: RezeptService, private http: HttpClient) {}
 
     this.editMode = false; // Beenden des Bearbeitungsmodus
     console.log("After saving changes", rezept, this.selectedRow, this.editMode);
-
 
   }
 

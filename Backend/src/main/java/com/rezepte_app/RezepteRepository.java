@@ -8,8 +8,6 @@ import java.util.List;
 
 @Repository
 public interface RezepteRepository extends JpaRepository<Rezept, Integer> {
-    // benutzerdefinierten Abfragemethoden
-
 
     Rezept findById(int id);
 }
