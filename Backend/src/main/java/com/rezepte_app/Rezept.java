@@ -20,8 +20,6 @@ public class Rezept {
     @NotNull
     private String name;
 
-    @NotNull
-    private String beschreibung;
 
     @NotNull
     private String onlineadresse;
@@ -55,6 +53,7 @@ public class Rezept {
     }
 
     // Getter und Setter für beschreibung
+/*
     public String getBeschreibung() {
         return beschreibung;
     }
@@ -62,6 +61,7 @@ public class Rezept {
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
     }
+*/
 
     public String getOnlineAdresse() {
         return onlineadresse;
