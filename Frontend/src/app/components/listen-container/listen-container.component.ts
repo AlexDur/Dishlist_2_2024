@@ -177,10 +177,11 @@ private backendUrl = 'http://localhost:8080';
 
   deleteRow(rezeptId: number) {
     if (confirm('Möchten Sie dieses Rezept wirklich löschen?')) {
+
       this.rezepteService.deleteRezept(rezeptId).subscribe(
         () => {
           console.log('Rezept erfolgreich gelöscht');
-          // Anzeige aktualisieren oder andere Aktionen ausführen
+          // Anzeige aktualisieren durch Aufruf aller jetzt noch vorhandener Rezepte
           this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
             this.rezepte = rezepte;
           });
@@ -191,6 +192,7 @@ private backendUrl = 'http://localhost:8080';
       );
     }
   }
+
 
 }
 

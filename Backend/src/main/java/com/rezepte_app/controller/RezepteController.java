@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-
+import java.util.Optional;
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/rezepte") // Basispfad für Ihre API-Endpunkte
 public class RezepteController {
@@ -35,11 +36,12 @@ public class RezepteController {
     }
 
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateRezept(@RequestBody Rezept rezept) {
         try {
-            Rezept updatedRezept = rezepteService.updateRezept(rezept); // Verwenden des RezepteServices
-            if (updatedRezept != null) {
+            Optional<Rezept> updatedRezeptOptional = rezepteService.updateRezept(rezept); // Verwenden des RezepteServices
+            if (updatedRezeptOptional.isPresent()) {
+                Rezept updatedRezept = updatedRezeptOptional.get();
                 return ResponseEntity.status(HttpStatus.OK).body("Rezept erfolgreich aktualisiert. ID: " + updatedRezept.getId());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rezept wurde nicht gefunden.");
@@ -49,5 +51,20 @@ public class RezepteController {
         }
     }
 
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteRezept(@PathVariable int id) {
+        try {
+            boolean deleted = rezepteService.deleteRezept(id); // Verwenden des RezepteServices
+
+            if (deleted) {
+                return ResponseEntity.status(HttpStatus.OK).body("Rezept erfolgreich gelöscht. ID: " + id);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rezept wurde nicht gefunden.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Löschen des Rezepts: " + e.getMessage());
+        }
+    }
 
 }

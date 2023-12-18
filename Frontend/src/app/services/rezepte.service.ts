@@ -24,6 +24,19 @@ export class RezeptService {
     if (!this.isValidDate(rezept.datum, 'dd-MM-yyyy')) {
       return throwError('Ungültiges Datumsformat. Verwenden Sie "dd-MM-yyyy".');
     }
+
+    if (rezept.name && rezept.name.length > 100) {
+      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
+    }
+
+    if (rezept.onlineAdresse && rezept.onlineAdresse.length > 100) {
+      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
+    }
+
+    if (rezept.person && rezept.person.length > 100) {
+      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
+    }
+
     // Rezept an das Backend senden
     return this.http.post<string>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers });
   }
