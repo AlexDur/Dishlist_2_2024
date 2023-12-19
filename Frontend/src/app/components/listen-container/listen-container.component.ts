@@ -27,7 +27,6 @@ private backendUrl = 'http://localhost:8080';
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       this.rezepte = rezepte;
 
-
       this.rezepte.forEach((rezept) => (rezept.datum = new Date(<Date>rezept.datum)));
     });
 
@@ -111,36 +110,11 @@ private backendUrl = 'http://localhost:8080';
   }
 
 
-  onAddRowFocus() {
-    // Setzen des Fokus auf das richtige Input-Element in der neuen Zeile
-    if (this.addRowIndex === 0) {
-      setTimeout(() => {
-        this.newRecipeNameInput?.nativeElement.focus();
-      });
-    }
-  }
-
-  cancelAddRow() {
-    // Entfernen der hinzugefügten Zeile, wenn Vorgang abgebrochen wird
-    if (this.addRowIndex === 0) {
-      this.rezepte.shift();
-    }
-    this.addRowIndex = null;
-  }
-
   editMode = false; // Variable, um den Bearbeitungsmodus zu verfolgen
   selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
 
-  activateEditMode(rowData: Rezept) {
-    this.editMode = true;
-    this.selectedRow = rowData;
-  }
-
-
-
   saveChanges(rezept: Rezept) {
     console.log("Before saving changes", rezept, this.selectedRow, this.editMode);
-
 
     if (rezept.id === null || rezept.id === undefined) {
       this.rezepteService.createRezept(rezept).subscribe(
@@ -160,7 +134,7 @@ private backendUrl = 'http://localhost:8080';
       );
     } else {
 
-      this.rezepteService.updateRezept(rezept).subscribe(
+      this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
         (response) => {
           console.log('Rezept erfolgreich aktualisiert', response);
         },
@@ -192,7 +166,6 @@ private backendUrl = 'http://localhost:8080';
       );
     }
   }
-
 
 }
 

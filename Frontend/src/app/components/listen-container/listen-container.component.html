@@ -94,35 +94,34 @@
                maxlength="255"
                pattern="[A-Za-z0-9 ]*" />
       </td>
-      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
-        {{ rezept.name }}
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (blur)="saveChanges(rezept)">
+       <input [(ngModel)]="rezept.name"/>
       </td>
-      <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)" />
+
+      <td *ngIf="editMode && selectedRow.id === rezept.id" (blur)="saveChanges(rezept)">
+        <input [(ngModel)]="rezept.onlineAdresse"/>
       </td>
-      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
-        {{ rezept.onlineAdresse }}
-      </td>
+
       <td>
         <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
       </td>
-      <td *ngIf="editMode && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.koch" (blur)="saveChanges(rezept)" />
-      </td>
-      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (click)="activateEditMode(rezept)">
-        {{ rezept.koch }}
+
+      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (blur)="saveChanges(rezept)">
+        <input [(ngModel)]="rezept.koch"/>
       </td>
 
       <td>
         <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])" [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
       </td>
 
-
-      <td><span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
       <td>
+        <span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
+      <td>
+
         <button pButton  (click)="deleteRow(rezept.id)">
           <i class="pi pi-times" style="font-size: 4em;"></i>
         </button>
+
       </td>
 
 
