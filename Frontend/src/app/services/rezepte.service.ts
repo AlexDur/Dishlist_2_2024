@@ -41,7 +41,7 @@ export class RezeptService {
     return this.http.post<string>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers });
   }
 
-// Hilfsfunktion zur Überprüfung des Datumsformats
+  // Hilfsfunktion zur Überprüfung des Datumsformats
   private isValidDate(date: Date | undefined, format: string): boolean {
     if (date instanceof Date) {
       // Wenn das Datum bereits ein Date-Objekt ist, gibt es kein Problem mit dem Format
@@ -53,20 +53,17 @@ export class RezeptService {
     return formattedDate !== null;
   }
 
-  updateRezept(rezept: Rezept): Observable<any> {
-    const apiUrl = `${this.backendUrl}/api/rezepte`;
-
+  updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
+    const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     return this.http.put(apiUrl, rezept, { headers });
   }
 
   deleteRezept(rezeptId: number): Observable<any> {
-    const apiUrl = `${this.backendUrl}/api/rezepte/${rezeptId}`;
-
+    const apiUrl = `${this.backendUrl}/api/rezepte/delete/${rezeptId}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     return this.http.delete(apiUrl, { headers });
   }
+
 
 }
