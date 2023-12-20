@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -16,3 +17,4 @@ public class AllgController {
         return ok;
     }
 }
+*/

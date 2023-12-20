@@ -14,10 +14,10 @@
 
   <ng-template pTemplate="caption">
     <div class="flex">
-      <button pButton class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)">Löschen</button>
+      <button pButton type="button" (click)="addRow()">Rezept erstellen</button>
       <span class="p-input-icon-left">
-      <i class="pi pi-search"></i>
-      <input #newRecipeNameInput  pInputText type="text" (input)="dt1.filterGlobal(newRecipeNameInput.value, 'contains')" placeholder="Suche" />
+     <!-- <i class="pi pi-search"></i>
+      <input #newRecipeNameInput  pInputText type="text" (input)="dt1.filterGlobal(newRecipeNameInput.value, 'contains')" placeholder="Suche" />-->
     </span>
     </div>
   </ng-template>
@@ -82,32 +82,28 @@
           <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
         </div>
       </th>
+      <th style="width: 3rem">
+      </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rezept>
     <tr>
-      <td *ngIf="editMode && selectedRow.id === rezept.id">
+      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
         <input [(ngModel)]="rezept.name"
-               (blur)="saveChanges(rezept)"
-               required
-               minlength="1"
-               maxlength="255"
-               pattern="[A-Za-z0-9 ]*" />
-      </td>
-      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (blur)="saveChanges(rezept)">
-       <input [(ngModel)]="rezept.name"/>
+
+               (blur)="saveChanges(rezept)"/>
       </td>
 
-      <td *ngIf="editMode && selectedRow.id === rezept.id" (blur)="saveChanges(rezept)">
-        <input [(ngModel)]="rezept.onlineAdresse"/>
+      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)" required/>
       </td>
 
       <td>
         <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
       </td>
 
-      <td *ngIf="!editMode || selectedRow.id !== rezept.id" (blur)="saveChanges(rezept)">
-        <input [(ngModel)]="rezept.koch"/>
+      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
+        <input [(ngModel)]="rezept.koch" (blur)="saveChanges(rezept)"/>
       </td>
 
       <td>
@@ -121,18 +117,9 @@
         <button pButton  (click)="deleteRow(rezept.id)">
           <i class="pi pi-times" style="font-size: 4em;"></i>
         </button>
-
       </td>
-
-
     </tr>
   </ng-template>
-  <ng-template pTemplate="caption">
-  <div>
-    <button pButton type="submit" (click)="addRow()">Rezept erstellen</button>
-  </div>
-  </ng-template>
-
   <ng-template pTemplate="emptymessage">
     <tr>
       <td colspan="7">Keine Rezepte gefunden.</td>

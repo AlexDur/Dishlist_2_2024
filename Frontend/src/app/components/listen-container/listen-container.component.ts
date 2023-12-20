@@ -15,27 +15,27 @@ export class ListenContainerComponent implements OnInit{
 addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
 newRecipe: any = {}
+  editMode = true; // Variable, um den Bearbeitungsmodus zu verfolgen
+  selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
 private backendUrl = 'http://localhost:8080';
 
   tagToggleStates: { [key: number]: boolean } = {};
-  constructor( private rezepteService: RezeptService, private http: HttpClient) {}
-
-
+  constructor( private rezepteService: RezeptService, private http: HttpClient) {
+    this.selectedRow = {};
+  }
 
 
   ngOnInit(): void {
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       this.rezepte = rezepte;
-
       this.rezepte.forEach((rezept) => (rezept.datum = new Date(<Date>rezept.datum)));
+
     });
-
   }
 
-
-  clear(table: Table) {
+/*  clear(table: Table) {
     table.clear();
-  }
+  }*/
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -72,11 +72,10 @@ private backendUrl = 'http://localhost:8080';
   }
 
 
-
   /*id kann ich weglassen, das die DB die ID autoamisch generiert (AUTO INCREMET)*/
   addRow() {
     const currentDate = new Date();
-    console.log('Aktueller Wert von rezept.date:', this.newRecipe.datum);
+    console.log('addRow geht:', this.newRecipe.datum);
 
     const newRezept: Rezept = {
       name: '',
@@ -110,8 +109,7 @@ private backendUrl = 'http://localhost:8080';
   }
 
 
-  editMode = false; // Variable, um den Bearbeitungsmodus zu verfolgen
-  selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
+
 
   saveChanges(rezept: Rezept) {
     console.log("Before saving changes", rezept, this.selectedRow, this.editMode);

@@ -17,9 +17,8 @@ public class Rezept {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
-    private String name;
 
+    private String name;
 
     @NotNull
     private String onlineadresse;
