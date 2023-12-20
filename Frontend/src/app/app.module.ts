@@ -11,6 +11,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {ButtonModule} from "primeng/button";
     DropdownModule,
     TagModule,
     RatingModule,
-    ButtonModule
+    ButtonModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
