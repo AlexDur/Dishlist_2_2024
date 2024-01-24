@@ -30,10 +30,11 @@
           <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
         </div>
       </th>
+
       <th style="min-width:15rem">
         <div class="flex align-items-left justify-content-start">
-          Onlineadresse
-          <p-columnFilter type="text" field="online_links" display="menu"></p-columnFilter>
+          Online-Adresse
+          <p-columnFilter type="text" field="online_adresse" display="menu"></p-columnFilter>
         </div>
       </th>
 
@@ -46,7 +47,7 @@
 
       <th style="min-width:10rem">
         <div class="flex align-items-center">
-          Koch
+          Person
           <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
             <ng-template pTemplate="header">
               <div class="px-3 pt-3 pb-0">
@@ -82,6 +83,7 @@
           <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
         </div>
       </th>
+
       <th style="width: 3rem">
       </th>
     </tr>
@@ -89,13 +91,12 @@
   <ng-template pTemplate="body" let-rezept>
     <tr>
       <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.name"
-
-               (blur)="saveChanges(rezept)"/>
+        <input [(ngModel)]="rezept.name" (blur)="saveChanges(rezept)"/>
       </td>
 
+
       <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)" required/>
+        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)"/>
       </td>
 
       <td>
@@ -103,7 +104,7 @@
       </td>
 
       <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.koch" (blur)="saveChanges(rezept)"/>
+        <input [(ngModel)]="rezept.person" (blur)="saveChanges(rezept)"/>
       </td>
 
       <td>

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
@@ -18,7 +18,7 @@ export class RezeptService {
   }
 
 
-  createRezept(rezept: Rezept): Observable<string> {
+  createRezept(rezept: Rezept): Observable<HttpResponse<HttpResponse<string>>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     if (!this.isValidDate(rezept.datum, 'dd-MM-yyyy')) {
@@ -38,7 +38,7 @@ export class RezeptService {
     }
 
     // Rezept an das Backend senden
-    return this.http.post<string>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers });
+    return this.http.post<HttpResponse<string>>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   // Hilfsfunktion zur Überprüfung des Datumsformats
