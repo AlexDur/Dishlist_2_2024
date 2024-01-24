@@ -41,5 +41,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# sonarlint
-sonarlint-config.xml
+
+# SonarLint-spezifische Dateien
+sonarlint/
+.sonarlint/
+sonar-report.json
