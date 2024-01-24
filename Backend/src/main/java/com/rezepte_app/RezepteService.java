@@ -23,10 +23,9 @@ public class RezepteService {
     public Rezept createRezept(Rezept rezept) {
         // ...
 
-        if (rezept.getName().isEmpty()) {
-            throw new IllegalArgumentException("Der Name des Rezepts darf nicht leer sein.");
+        if (rezept.getName() == null) {
+            throw new IllegalArgumentException("Der Name des Rezepts darf nicht null sein.");
         }
-
 
         return rezepteRepository.save(rezept);
     }
@@ -38,9 +37,9 @@ public class RezepteService {
             Rezept existingRezept = existingRezeptOptional.get();
             existingRezept.setName(rezept.getName());
          /*   existingRezept.setBeschreibung(rezept.getBeschreibung());*/
-            existingRezept.setOnlineadresse(rezept.getOnlineAdresse());
+            existingRezept.setonlineAdresse(rezept.getonlineAdresse());
             existingRezept.setDatum(rezept.getDatum());
-            existingRezept.setKoch(rezept.getKoch());
+            existingRezept.setperson(rezept.getperson());
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
 

@@ -21,11 +21,11 @@ public class Rezept {
     private String name;
 
     @NotNull
-    private String onlineadresse;
+    private String onlineAdresse;
     private java.sql.Date datum;
 
     @NotNull
-    private String koch;
+    private String person;
 
     @NotNull
     private boolean status;
@@ -62,13 +62,9 @@ public class Rezept {
     }
 */
 
-    public String getOnlineAdresse() {
-        return onlineadresse;
-    }
+    public String getonlineAdresse() {return onlineAdresse;    }
 
-    public void setOnlineadresse(String onlineadresse) {
-        this.onlineadresse = onlineadresse;
-    }
+    public void setonlineAdresse(String onlineAdresse) { this.onlineAdresse = onlineAdresse;}
 
     public java.sql.Date getDatum() {
         return datum;
@@ -78,12 +74,12 @@ public class Rezept {
         this.datum = datum;
     }
 
-    public String getKoch() {
-        return koch;
+    public String getperson() {
+        return person;
     }
 
-    public void setKoch(String koch) {
-        this.koch = koch;
+    public void setperson(String person) {
+        this.person = person;
     }
 
     public boolean getStatus() {

@@ -7,28 +7,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/rezepte") // Basispfad für Ihre API-Endpunkte
 public class RezepteController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RezepteController.class);
+
 
     @Autowired
     private RezepteService rezepteService; // Injizieren des RezepteService
 
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRezept( @RequestBody Rezept rezept) {
+    public ResponseEntity<String> createRezept(@RequestBody Rezept rezept) {
+        logger.info("POST-Anfrage erhalten für Rezepterstellung: {}", rezept);
         try {
             Rezept createdRezept = rezepteService.createRezept(rezept); // Verwenden des RezepteServices
             return ResponseEntity.status(HttpStatus.CREATED).body("Rezept erfolgreich erstellt. ID: " + createdRezept.getId());
         } catch (Exception e) {
+            logger.error("Fehler beim Erstellen des Rezepts", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Rezepts: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {

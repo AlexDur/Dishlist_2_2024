@@ -1,7 +1,7 @@
 
-Htypescript:S1128"%Remove this unused import of 'Table'.(ΤΖ¦λ8¶¤Θ1
+Htypescript:S1128"%Remove this unused import of 'Table'.(ΤΖ¦λ8ςϊβ¦Θ1
 Stypescript:S1128"+Remove this unused import of 'HttpHeaders'.(°―ΐ“όÿÿÿÿ8χΊ¦Η1
 Rtypescript:S1128"*Remove this unused import of 'Observable'.(ϊ•Χϋÿÿÿÿ8χΊ¦Η1
-άtypescript:S1874v"³'(next?: ((value: string) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(Ν½κύÿÿÿÿ8ϊσ―¤Θ1
-Ϊtypescript:S1874‡"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(―§Υώÿÿÿÿ8ϊσ―¤Θ1
-Ϊtypescript:S1874™"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(®­υϋÿÿÿÿ8ϋσ―¤Θ1
+ψtypescript:S1874h"Ο'(next?: ((value: HttpResponse<HttpResponse<string>>) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(Ν½κύÿÿÿÿ8ϊσ―¤Θ1
+Ωtypescript:S1874t"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(―§Υώÿÿÿÿ8ϊσ―¤Θ1
+Ϊtypescript:S1874"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(®­υϋÿÿÿÿ8ϋσ―¤Θ1
