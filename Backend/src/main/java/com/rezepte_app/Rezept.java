@@ -1,10 +1,6 @@
 package com.rezepte_app;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
 @Entity
@@ -20,11 +16,10 @@ public class Rezept {
 
     private String name;
 
-    @NotNull
+    @Column(name = "onlineAdresse")
     private String onlineAdresse;
     private java.sql.Date datum;
 
-    @NotNull
     private String person;
 
     @NotNull
@@ -51,20 +46,13 @@ public class Rezept {
         this.name = name;
     }
 
-    // Getter und Setter für beschreibung
-/*
-    public String getBeschreibung() {
-        return beschreibung;
+    public String getOnlineAdresse() {
+        return onlineAdresse;
     }
 
-    public void setBeschreibung(String beschreibung) {
-        this.beschreibung = beschreibung;
+    public void setOnlineAdresse(String onlineAdresse) {
+        this.onlineAdresse = onlineAdresse;
     }
-*/
-
-    public String getonlineAdresse() {return onlineAdresse;    }
-
-    public void setonlineAdresse(String onlineAdresse) { this.onlineAdresse = onlineAdresse;}
 
     public java.sql.Date getDatum() {
         return datum;
