@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {Observable, throwError} from 'rxjs';
+import {map, Observable, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {DatePipe} from "@angular/common";
 
@@ -12,6 +12,9 @@ export class RezeptService {
   private backendUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
+
+
+
 
   getAlleRezepte(): Observable<Rezept[]> {
     return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`);
@@ -37,9 +40,30 @@ export class RezeptService {
       return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
     }
 
-    // Rezept an das Backend senden
-    return this.http.post<HttpResponse<string>>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', responseType: 'text' as 'json' });
+    // Rezept an das Backend senden und die Antwort als HttpResponse<string> erhalten
+
+    return this.http.post<HttpResponse<string>>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', responseType: 'text' as 'json' }).pipe(
+      map(response => {
+        if (response.body !== null) {
+          // Den Body in eine Zeichenkette umwandeln und dann als JSON interpretieren
+          const responseBodyString = response.body.toString();
+          console.log('rBodystring', responseBodyString)
+          const jsonResponse = JSON.parse(responseBodyString);
+
+          // Hier kannst du auf die Daten im JSON zugreifen
+          const message = jsonResponse.message;
+          const id = jsonResponse.id;
+
+          // Die bearbeitete Antwort zurückgeben
+          return response;
+        } else {
+          // Handle den Fall, wenn die Antwort keinen Body hat
+          return response;
+        }
+      })
+    );
   }
+
 
   // Hilfsfunktion zur Überprüfung des Datumsformats
   private isValidDate(date: Date | undefined, format: string): boolean {
@@ -59,8 +83,8 @@ export class RezeptService {
     return this.http.put(apiUrl, rezept, { headers });
   }
 
-  deleteRezept(rezeptId: number): Observable<any> {
-    const apiUrl = `${this.backendUrl}/api/rezepte/delete/${rezeptId}`;
+  deleteRezept(id: number): Observable<any> {
+    const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.delete(apiUrl, { headers });
   }

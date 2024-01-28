@@ -32,7 +32,7 @@ paths:
               type: object # Hier Rezept-Daten spezifizieren
       responses:
         '201':
-          description: Rezept erfolgreich erstellt
+          description: Rezept ganz erfolgreich erstellt
           content:
             application/json:
               schema:

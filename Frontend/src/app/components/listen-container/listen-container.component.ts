@@ -12,9 +12,12 @@ import {Observable} from "rxjs";
 })
 export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
-addRowIndex: number | null = null;
 rezepte: Rezept[] = [];
 newRecipe: any = {}
+  istGeaendert: boolean = false;
+  istGespeichert: boolean = false;
+  showSaveButton: boolean = true;
+  showDeleteButton: boolean = false;
   editMode = true; // Variable, um den Bearbeitungsmodus zu verfolgen
   selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
 private backendUrl = 'http://localhost:8080';
@@ -25,6 +28,7 @@ private backendUrl = 'http://localhost:8080';
   }
 
   ngOnInit(): void {
+    console.log('selectedRow in ngOnInit:', this.selectedRow);
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       console.log('Geladene Rezepte:', rezepte);
       this.rezepte = rezepte;
@@ -73,6 +77,7 @@ private backendUrl = 'http://localhost:8080';
 
   /*id kann ich weglassen, das die DB die ID automatisch generiert (AUTO INCREMET)*/
   addRow() {
+    console.log('selectedRow in addRow:', this.selectedRow);
     const currentDate = new Date();
 
     this.newRecipe = {
@@ -85,6 +90,7 @@ private backendUrl = 'http://localhost:8080';
     };
 
     this.rezepte.unshift(this.newRecipe);
+    this.editMode = true; // Setzen Sie editMode auf true, um Eingabefelder anzuzeigen
 
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
     this.selectedRow = this.newRecipe;
@@ -95,17 +101,21 @@ private backendUrl = 'http://localhost:8080';
     });
   }
 
-
   saveChanges(rezept: Rezept) {
+    console.log('selectedRow in saveChanges:', this.selectedRow);
     console.log("Aktueller Wert von onlineAdresse", rezept.onlineAdresse);
     console.log("Before saving changes", rezept);
 
     if (rezept.id === null || rezept.id === undefined) {
       this.rezepteService.createRezept(rezept).subscribe(
         (response) => {
-          console.log('Rezept erfolgreich erstellt', response);
+          console.log('Rezept ganz erfolgreich erstellt', response);
 
           this.rezepte.unshift();
+          this.istGeaendert = false;
+          this.istGespeichert = true;
+          this.showSaveButton = false;
+          this.showDeleteButton = true;
         },
         (error) => {
           console.error('Fehler beim Erstellen des Rezepts', error);
@@ -116,6 +126,8 @@ private backendUrl = 'http://localhost:8080';
       this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
         (response) => {
           console.log('Rezept erfolgreich aktualisiert', response);
+          this.showSaveButton = false;
+          this.showDeleteButton = true;
           // Finden Sie das zu aktualisierende Rezept in der Liste und aktualisieren Sie es
           const index = this.rezepte.findIndex(r => r.id === rezept.id);
           if (index !== -1) {
@@ -130,16 +142,22 @@ private backendUrl = 'http://localhost:8080';
   }
 
 
-  deleteRow(rezeptId: number) {
-    if (confirm('Möchten Sie dieses Rezept wirklich löschen?')) {
+/*  editRow(rezept: Rezept) {
+    this.selectedRow = rezept;
+    this.editMode = true;
+  }*/
 
-      this.rezepteService.deleteRezept(rezeptId).subscribe(
+/*  cancelEdit() {
+    this.selectedRow = null;
+    this.editMode = false;
+  }*/
+
+  deleteRow(id: number) {
+    if (id !== undefined) {
+      this.rezepteService.deleteRezept(id).subscribe(
         () => {
           console.log('Rezept erfolgreich gelöscht');
-          // Anzeige aktualisieren durch Aufruf aller jetzt noch vorhandener Rezepte
-          this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
-            this.rezepte = rezepte;
-          });
+          // Weitere Aktionen nach dem Löschen des Rezepts
         },
         (error) => {
           console.error('Fehler beim Löschen des Rezepts', error);
@@ -147,6 +165,7 @@ private backendUrl = 'http://localhost:8080';
       );
     }
   }
+
 
 }
 

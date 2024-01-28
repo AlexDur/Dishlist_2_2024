@@ -21,8 +21,6 @@ l
 <Backend/src/main/java/com/rezepte_app/RezepteRepository.java,4\d\4d8aa77505a6b1d8661547ce346b97940da04e43
 t
 DBackend/src/main/java/com/rezepte_app/controller/AllgController.java,5\a\5a5262f2467efcf486aa1819d73e3fd80d96eea1
-g
-7Backend/src/main/java/com/rezepte_app/github_pilot.java,3\1\31c628e5a0c6ab94554a3f05060b3357555854a0
 l
 <Backend/src/main/java/com/rezepte_app/config/CorsConfig.java,a\6\a6e2acde86df5472e6989f44a696570eb34549cc
 R
@@ -231,8 +229,6 @@ w
 G.idea/sonarlint/issuestore/8/7/87b9f524db34a5462ba58a21d88084123e17426c,a\7\a72620d53d83b35944d3ecbf81f036e7c257e0d9
 w
 G.idea/sonarlint/issuestore/8/7/87916bb918d9a508f8ae1ec7b9a80c1514abdf43,6\1\61109747afe405d0a2d8ce2fe2104ad00019b084
-
-Q.idea/sonarlint/securityhotspotstore/3/1/31c628e5a0c6ab94554a3f05060b3357555854a0,6\0\6004424d50b7fe726786d9b34252b50b018a39b3
 w
 G.idea/sonarlint/issuestore/c/e/ce6be99a9a3fca606d02992453ea3d00a07744f0,d\3\d3dd71a5d0ab7a03bead18c21e2dfc18d282515d
 w
@@ -520,8 +516,6 @@ G.idea/sonarlint/issuestore/9/4/94e661769b50ee887c35fd8310497df3061901b9,9\a\9a
 
 Q.idea/sonarlint/securityhotspotstore/0/8/08ccbc5740fa30710b310e7e1d632d4709e43a53,0\7\079fa56c225effd71e61afa427a0e6488c7b6d2e
 
-Q.idea/sonarlint/securityhotspotstore/6/0/6004424d50b7fe726786d9b34252b50b018a39b3,0\1\013eea16b496f64d117aedb3027d876908be4d34
-
 Q.idea/sonarlint/securityhotspotstore/6/0/60be3a624913e42baaaeeb450aa28386f8163705,d\9\d99edab7968bd0da3a0f682c548807c5aa078148
 
 Q.idea/sonarlint/securityhotspotstore/6/0/606e689ea3570c1404a5d5e83b1352d4de2c6c4b,6\5\659db11567fd8dae42586a6b3cbb3151e153e5b0
@@ -583,8 +577,6 @@ Q.idea/sonarlint/securityhotspotstore/c/2/c2c8494e5f8655d1c82229c90e8edaa5125325
 Q.idea/sonarlint/securityhotspotstore/d/5/d5da9562b9b1ec61650745973db20ad724920396,d\0\d01486723e76b735cf2e1be6862d035a3fca3e8a
 w
 G.idea/sonarlint/issuestore/6/0/606e689ea3570c1404a5d5e83b1352d4de2c6c4b,a\5\a554c6679455ff7c5edeca66fc8e0f58b604f717
-w
-G.idea/sonarlint/issuestore/6/0/6004424d50b7fe726786d9b34252b50b018a39b3,f\5\f5a1ab3b661047d52de8738dfa63608cccf0c232
 w
 G.idea/sonarlint/issuestore/6/8/68bbc8031dc7c41b6572c703c91e029474df5c3f,7\0\70c16d3f9f11a16b3c0ff280a1ed0c43829ea1b0
 w
@@ -935,3 +927,5 @@ V
 &Frontend/src/app/app-routing.module.ts,f\2\f24d10e6cac907ccf7376053c8164943576ec53f
 C
 Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
+<
+openapi.yaml,8\c\8c1d7373c8326df661dfc1c37ce628197596baf4

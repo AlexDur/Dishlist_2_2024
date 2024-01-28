@@ -90,21 +90,31 @@
   </ng-template>
   <ng-template pTemplate="body" let-rezept>
     <tr>
-      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.name" (blur)="saveChanges(rezept)"/>
-      </td>
+      <ng-container >
+        <td>
+          <input [(ngModel)]="rezept.name" (ngModelChange)="rezept.istGeaendert = true" *ngIf="editMode && selectedRow === rezept"/>
+          <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
+        </td>
 
 
-      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.onlineAdresse" (blur)="saveChanges(rezept)"/>
+
+
+        <!--<td *ngIf="!editMode || (editMode && selectedRow !== rezept)">
+          {{ rezept.name }}
+        </td>-->
+      </ng-container>
+
+
+      <!--<td *ngIf="rezept.id">
+        <input [(ngModel)]="rezept.onlineAdresse" (ngModelChange)="rezept.istGeaendert = true"/>
       </td>
 
       <td>
         <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
       </td>
 
-      <td *ngIf="selectedRow && selectedRow.id === rezept.id">
-        <input [(ngModel)]="rezept.person" (blur)="saveChanges(rezept)"/>
+      <td *ngIf="rezept.id">
+        <input [(ngModel)]="rezept.person" (ngModelChange)="rezept.istGeaendert = true"/>
       </td>
 
       <td>
@@ -115,10 +125,20 @@
         <span class="p-column-title">Reviews</span><p-rating [ngModel]="rezept.rating"  [cancel]="false"></p-rating></td>
       <td>
 
-        <button pButton  (click)="deleteRow(rezept.id)">
+      <td *ngIf="!rezept.istGeaendert">
+        <button pButton (click)="deleteRow(rezept.id)">
           <i class="pi pi-times" style="font-size: 4em;"></i>
         </button>
+      </td>-->
+
+      <td *ngIf="rezept.istGeaendert && showSaveButton">
+        <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
       </td>
+      <td *ngIf="rezept.istGeaendert && showDeleteButton">
+        <button pButton type="button" (click)="deleteRow(rezept.id)">Löschen</button>
+      </td>
+
+
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">

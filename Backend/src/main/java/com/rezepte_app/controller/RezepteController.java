@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -26,21 +28,33 @@ public class RezepteController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRezept(@RequestBody Rezept rezept) {
+    public ResponseEntity<Map<String, Object>> createRezept(@RequestBody Rezept rezept) {
         logger.info("POST-Anfrage erhalten für Rezepterstellung: {}", rezept);
         try {
             Rezept createdRezept = rezepteService.createRezept(rezept); // Verwenden des RezepteServices
-            return ResponseEntity.status(HttpStatus.CREATED).body("Rezept erfolgreich erstellt. ID: " + createdRezept.getId());
+
+            // Erstelle ein JSON-Objekt für die Antwort
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Rezept erfolgreich erstellt.");
+            response.put("id", createdRezept.getId());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             logger.error("Fehler beim Erstellen des Rezepts", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Rezepts: " + e.getMessage());
+
+            // Bei einem Fehler ebenfalls ein JSON-Objekt für die Antwort erstellen
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Fehler beim Erstellen des Rezepts: " + e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
 
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {
-        return rezepteService.fetchAlleRezepte(); // Verwenden des RezepteServices
+        return rezepteService.fetchAlleRezepte();
+
     }
 
 
@@ -62,16 +76,12 @@ public class RezepteController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteRezept(@PathVariable int id) {
-        try {
-            boolean deleted = rezepteService.deleteRezept(id); // Verwenden des RezepteServices
-
-            if (deleted) {
-                return ResponseEntity.status(HttpStatus.OK).body("Rezept erfolgreich gelöscht. ID: " + id);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rezept wurde nicht gefunden.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Löschen des Rezepts: " + e.getMessage());
+        logger.info("ID, die vom Frontend empfangen wurde: {}", id);
+        boolean deleted = rezepteService.deleteRezept(id);
+        if (deleted) {
+            return new ResponseEntity<>("Rezept erfolgreich gelöscht", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Rezept mit der angegebenen ID wurde nicht gefunden", HttpStatus.NOT_FOUND);
         }
     }
 
