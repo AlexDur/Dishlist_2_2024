@@ -57,7 +57,6 @@ public class RezepteController {
 
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateRezept(@RequestBody Rezept rezept) {
         try {

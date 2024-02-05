@@ -5,5 +5,5 @@ export interface Rezept {
   datum?: Date | undefined,
   person?: string,
   status?: boolean,
-  rating?: number
+  bewertung?: number
 }
