@@ -70,8 +70,13 @@ private backendUrl = 'http://localhost:8080';
     }
   }
 
-  toggleTag(rezept: Rezept) {
+  toggleTag(rezept: any) {
     this.tagToggleStates[rezept.id!] = !this.tagToggleStates[rezept.id!];
+
+    // Zusätzlich den `status` im `rezept`-Objekt aktualisieren
+    rezept.status = !rezept.status;
+
+    rezept.istGeaendert = true;
   }
 
 
@@ -85,26 +90,24 @@ private backendUrl = 'http://localhost:8080';
       onlineAdresse: '',
       datum: currentDate,
       person: '',
-      status: false, // Hier wird der Status standardmäßig auf "geplant" (false) gesetzt
-      rating: 0,
+      status: false,
+      bewertung: 0,
     };
 
     this.rezepte.unshift(this.newRecipe);
-    this.editMode = true; // Setzen Sie editMode auf true, um Eingabefelder anzuzeigen
+    this.editMode = true; // Setzen des editMode auf true, um Eingabefelder anzuzeigen
 
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
     this.selectedRow = this.newRecipe;
 
-    // Setzen des Fokus auf das Input-Element in der neuen Zeile
+    // Setzen des Fokuses auf das Input-Element in der neuen Zeile
     setTimeout(() => {
       this.newRecipeNameInput?.nativeElement.focus();
     });
   }
 
   saveChanges(rezept: Rezept) {
-    console.log('selectedRow in saveChanges:', this.selectedRow);
-    console.log("Aktueller Wert von onlineAdresse", rezept.onlineAdresse);
-    console.log("Before saving changes", rezept);
+    console.log('selectedRow in saveChanges:', this.rezepte);
 
     if (rezept.id === null || rezept.id === undefined) {
       this.rezepteService.createRezept(rezept).subscribe(
@@ -140,6 +143,12 @@ private backendUrl = 'http://localhost:8080';
       );
     }
   }
+
+  onRatingChanged(newRating: number, rezept: any) {
+    rezept.bewertung = newRating;
+    rezept.istGeaendert = true;
+  }
+
 
 
 /*  editRow(rezept: Rezept) {
