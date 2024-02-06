@@ -64,15 +64,16 @@ public class RezepteService {
     }
 
     public boolean deleteRezept(int id) {
-        Optional<Rezept> rezeptOptional = Optional.ofNullable(rezepteRepository.findById(id));
-
-        if (rezeptOptional.isPresent()) {
+        try {
             rezepteRepository.deleteById(id);
-            return true;
-        } else {
-            return false; // Rezept mit der angegebenen ID wurde nicht gefunden
+            return true; // Erfolg: Rezept gelöscht
+        } catch (Exception e) {
+            // Protokollierung: Fehler beim Löschen des Rezepts
+            logger.error("Fehler beim Löschen des Rezepts mit ID {}: {}", id, e.getMessage());
+            return false; // Fehler beim Löschen des Rezepts
         }
     }
+
 
 
 

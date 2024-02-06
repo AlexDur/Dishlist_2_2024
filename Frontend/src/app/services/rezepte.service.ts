@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {map, Observable, throwError} from 'rxjs';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {DatePipe} from "@angular/common";
 
@@ -86,8 +86,14 @@ export class RezeptService {
   deleteRezept(id: number): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.delete(apiUrl, { headers });
+    return this.http.delete(apiUrl, { headers }).pipe(
+      catchError((error) => {
+        console.error('Fehler beim Löschen des Rezepts', error);
+        return throwError(() => new Error('Fehler beim Löschen des Rezepts'));
+      })
+    );
   }
+
 
 
 }
