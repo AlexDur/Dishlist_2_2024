@@ -929,3 +929,5 @@ C
 Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
 <
 openapi.yaml,8\c\8c1d7373c8326df661dfc1c37ce628197596baf4
+H
+Frontend/src/styles.scss,e\c\ec830ae529ec3451483ae6eb62cf975be661cd8c

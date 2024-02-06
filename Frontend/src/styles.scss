@@ -1,1 +1,22 @@
+@media screen and (max-width: 768px) {
 
+  .p-table .p-tablewrapper table {
+    display: flex;
+    flex-direction:column;
+
+  }
+
+  .p-table .p-tablewrapper table tbody {
+    display: block;
+  }
+
+  .p-table .p-tablewrapper table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    display: block;
+    width: 100%;
+  }
+}
