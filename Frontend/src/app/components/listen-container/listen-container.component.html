@@ -85,6 +85,7 @@
       </th>
 
       <th style="width: 3rem">
+        <div>Aktion</div>
       </th>
     </tr>
   </ng-template>
@@ -122,21 +123,19 @@
         <p-rating [ngModel]="rezept.bewertung" [cancel]="false" (ngModelChange)="onRatingChanged($event, rezept)"></p-rating></td>
       <td>
 
-      <td *ngIf="!rezept.istGeaendert">
+    <!--  <td *ngIf="!rezept.istGeaendert">
         <button pButton (click)="deleteRow(rezept.id)">
           <i class="pi pi-times" style="font-size: 4em;"></i>
         </button>
-      </td>
+      </td>-->
 
-      <td *ngIf="rezept.istGeaendert && showSaveButton">
-        <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
+    <tr *ngIf="rezept.istGeaendert && (showSaveButton || showDeleteButton)">
+      <td colspan="7" class="text-center">
+        <button pButton *ngIf="rezept.istGeaendert && showSaveButton" type="button" (click)="saveChanges(rezept)">Speichern</button>
+        <button pButton *ngIf="rezept.istGeaendert && showDeleteButton" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
       </td>
-      <td *ngIf="rezept.istGeaendert && showDeleteButton">
-        <button pButton type="button" (click)="deleteRow(rezept.id)">Löschen</button>
-      </td>
-
-
     </tr>
+
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
