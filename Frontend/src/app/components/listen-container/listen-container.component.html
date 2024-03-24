@@ -43,7 +43,7 @@
           <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
         </div>
       </th>
-
+<!--
       <th style="min-width:10rem">
         <div class="flex align-items-center">
           Person
@@ -56,7 +56,7 @@
 
           </p-columnFilter>
         </div>
-      </th>
+      </th>-->
 
 
       <th style="min-width:10rem">
@@ -97,17 +97,18 @@
 
       <td>
         <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse" (ngModelChange)="rezept.istGeaendert = true"/>
-        <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.onlineAdresse }}</span>
+        <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
       </td>
+
 
       <td>
         <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
       </td>
 
-      <td>
+      <!--<td>
         <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.person" (ngModelChange)="rezept.istGeaendert = true"/>
         <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.person }}</span>
-      </td>
+      </td>-->
 
       <td>
         <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])"  [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>

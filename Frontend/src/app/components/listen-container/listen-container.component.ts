@@ -171,6 +171,15 @@ newRecipe: any = {}
     }
   }
 
+  openUrl(url: string): void {
+    // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      window.open(url, '_blank');
+    } else {
+      console.warn('Ungültige URL');
+
+    }
+  }
 
 }
 
