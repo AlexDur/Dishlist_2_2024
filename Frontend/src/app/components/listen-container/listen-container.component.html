@@ -3,6 +3,7 @@
 <p-table
   #dt1
   [value]="rezepte"
+
   dataKey="id"
   [rows]="10"
   [showCurrentPageReport]="true"
@@ -16,8 +17,6 @@
     <div class="flex">
       <button pButton type="button" (click)="addRow()">Rezept erstellen</button>
       <span class="p-input-icon-left">
-     <!-- <i class="pi pi-search"></i>
-      <input #newRecipeNameInput  pInputText type="text" (input)="dt1.filterGlobal(newRecipeNameInput.value, 'contains')" placeholder="Suche" />-->
     </span>
     </div>
   </ng-template>
@@ -89,16 +88,12 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rezept>
-    <tr>
-        <td>
+  <ng-template pTemplate="body" let-rezept   >
+    <tr [ngClass]="{'markiertes-rezept': selectedRow === rezept}" (click)="selectRow(rezept)">
+        <td  class="rezept-tabelle">
           <input [(ngModel)]="rezept.name" (ngModelChange)="rezept.istGeaendert = true" *ngIf="editMode && selectedRow === rezept"/>
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
         </td>
-
-        <!--<td *ngIf="!editMode || (editMode && selectedRow !== rezept)">
-          {{ rezept.name }}
-        </td>-->
 
       <td>
         <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse" (ngModelChange)="rezept.istGeaendert = true"/>
@@ -123,16 +118,11 @@
         <p-rating [ngModel]="rezept.bewertung" [cancel]="false" (ngModelChange)="onRatingChanged($event, rezept)"></p-rating></td>
       <td>
 
-    <!--  <td *ngIf="!rezept.istGeaendert">
-        <button pButton (click)="deleteRow(rezept.id)">
-          <i class="pi pi-times" style="font-size: 4em;"></i>
-        </button>
-      </td>-->
 
     <tr *ngIf="rezept.istGeaendert && (showSaveButton || showDeleteButton)">
       <td colspan="7" class="text-center">
         <button pButton *ngIf="rezept.istGeaendert && showSaveButton" type="button" (click)="saveChanges(rezept)">Speichern</button>
-        <button pButton *ngIf="rezept.istGeaendert && showDeleteButton" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
+        <button pButton *ngIf="showDeleteButton" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
       </td>
     </tr>
 
@@ -148,4 +138,3 @@
 </p-table>
 
 </div>
-

@@ -14,12 +14,12 @@ export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
 rezepte: Rezept[] = [];
 newRecipe: any = {}
+  selectedRow: any;
   istGeaendert: boolean = false;
   istGespeichert: boolean = false;
   showSaveButton: boolean = true;
   showDeleteButton: boolean = false;
   editMode = true; // Variable, um den Bearbeitungsmodus zu verfolgen
-  selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
 /*private backendUrl = 'http://localhost:8080';*/
 
   tagToggleStates: { [key: number]: boolean } = {};
@@ -36,13 +36,10 @@ newRecipe: any = {}
         if (rezept.datum) {
           rezept.datum = new Date(rezept.datum);
         }
-        rezept.showDeleteButton = rezept.istGeaendert;
         return rezept;
       });
     });
   }
-
-
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -155,16 +152,9 @@ newRecipe: any = {}
   }
 
 
-
-/*  editRow(rezept: Rezept) {
+  selectRow(rezept: any) {
     this.selectedRow = rezept;
-    this.editMode = true;
-  }*/
-
-/*  cancelEdit() {
-    this.selectedRow = null;
-    this.editMode = false;
-  }*/
+  }
 
   deleteRow(id: number) {
     console.log('Die ID vor löschen:',id)

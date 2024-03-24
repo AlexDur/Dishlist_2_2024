@@ -85,6 +85,10 @@ public class Rezept {
         this.bewertung = bewertung;
     }
 
+    public boolean isIstGeaendert() {
+        return istGeaendert;
+    }
+
     public void setIstGeaendert(boolean istGeaendert) {
         this.istGeaendert = istGeaendert;
     }
