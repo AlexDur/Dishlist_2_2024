@@ -48,13 +48,16 @@ public class RezepteService {
 
         if (existingRezeptOptional.isPresent()) {
             Rezept existingRezept = existingRezeptOptional.get();
-            // Setzen Sie hier die Felder von existingRezept basierend auf den Werten von rezept
+
+            // Setze die Felder von existingRezept basierend auf den Werten von rezept
             existingRezept.setName(rezept.getName());
             existingRezept.setOnlineAdresse(rezept.getOnlineAdresse());
             existingRezept.setDatum(rezept.getDatum());
-         /*   existingRezept.setPerson(rezept.getPerson());*/
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
+
+            // Aktualisiere den Zustand des Rezepts
+            existingRezept.setIstGeaendert(true);
 
             return Optional.of(rezepteRepository.save(existingRezept));
         } else {
@@ -62,6 +65,7 @@ public class RezepteService {
             return Optional.empty();
         }
     }
+
 
     public boolean deleteRezept(int id) {
         try {
