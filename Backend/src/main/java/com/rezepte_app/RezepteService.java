@@ -33,7 +33,6 @@ public class RezepteService {
 
     @Valid
     public Rezept createRezept(Rezept rezept) {
-        // ...
 
         if (rezept.getName() == null) {
             throw new IllegalArgumentException("Der Name des Rezepts darf nicht null sein.");
@@ -55,9 +54,7 @@ public class RezepteService {
             existingRezept.setDatum(rezept.getDatum());
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
-
-            // Aktualisiere den Zustand des Rezepts
-            existingRezept.setIstGeaendert(true);
+            existingRezept.setIstGeaendert(rezept.isIstGeaendert());
 
             return Optional.of(rezepteRepository.save(existingRezept));
         } else {
@@ -77,8 +74,5 @@ public class RezepteService {
             return false; // Fehler beim Löschen des Rezepts
         }
     }
-
-
-
 
 }

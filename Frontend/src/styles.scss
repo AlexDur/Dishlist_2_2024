@@ -20,3 +20,19 @@
     width: 100%;
   }
 }
+
+.rezept-tabelle tr:hover {
+  background-color: lightblue;
+}
+
+
+.markiertes-rezept {
+  background-color: red;
+}
+
+
+
+.p-datatable .p-datatable-tbody > tr > td:hover {
+  background-color: #c9d2e8;
+  cursor: pointer;
+}
