@@ -20,7 +20,7 @@ newRecipe: any = {}
   showDeleteButton: boolean = false;
   editMode = true; // Variable, um den Bearbeitungsmodus zu verfolgen
   selectedRow: any; // Variable, um die ausgewählte Zeile zu speichern
-private backendUrl = 'http://localhost:8080';
+/*private backendUrl = 'http://localhost:8080';*/
 
   tagToggleStates: { [key: number]: boolean } = {};
   constructor( private rezepteService: RezeptService, private http: HttpClient) {
@@ -31,14 +31,18 @@ private backendUrl = 'http://localhost:8080';
     console.log('selectedRow in ngOnInit:', this.selectedRow);
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       console.log('Geladene Rezepte:', rezepte);
-      this.rezepte = rezepte;
-      this.rezepte.forEach((rezept) => (rezept.datum = new Date(<Date>rezept.datum)));
+      this.rezepte = rezepte.map((rezept) => {
+        // Konvertiere das Datum, wenn es definiert ist
+        if (rezept.datum) {
+          rezept.datum = new Date(rezept.datum);
+        }
+        rezept.showDeleteButton = rezept.istGeaendert;
+        return rezept;
+      });
     });
   }
 
-/*  clear(table: Table) {
-    table.clear();
-  }*/
+
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -119,6 +123,7 @@ private backendUrl = 'http://localhost:8080';
           this.istGespeichert = true;
           this.showSaveButton = false;
           this.showDeleteButton = true;
+          this.editMode = false;
         },
         (error) => {
           console.error('Fehler beim Erstellen des Rezepts', error);
@@ -162,7 +167,8 @@ private backendUrl = 'http://localhost:8080';
   }*/
 
   deleteRow(id: number) {
-    if (id !== undefined) {
+    console.log('Die ID vor löschen:',id)
+    if (id) {
       this.rezepteService.deleteRezept(id).subscribe(
         () => {
           console.log('Rezept erfolgreich gelöscht');

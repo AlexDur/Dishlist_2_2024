@@ -28,15 +28,14 @@ public class Rezept {
     @NotNull
     private int bewertung;
 
+    private boolean istGeaendert;
+
     // Konstruktor (kann beibehalten werden)
     // Getter und Setter für id
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -86,5 +85,7 @@ public class Rezept {
         this.bewertung = bewertung;
     }
 
-
+    public void setIstGeaendert(boolean istGeaendert) {
+        this.istGeaendert = istGeaendert;
+    }
 }
