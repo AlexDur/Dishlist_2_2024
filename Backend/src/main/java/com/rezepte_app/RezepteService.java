@@ -20,7 +20,7 @@ public class RezepteService {
 
     // Im RezepteService
     public List<Rezept> fetchAlleRezepte() {
-        List<Rezept> alleRezepte = rezepteRepository.findAll();
+        List<Rezept> alleRezepte = rezepteRepository.findAllByOrderByIdDesc();
         logger.info("Anzahl der abgerufenen Rezepte: {}", alleRezepte.size());
 
         // Optional: Loggen Sie einige Details der abgerufenen Rezepte
@@ -43,7 +43,7 @@ public class RezepteService {
 
 
     public Optional<Rezept> updateRezept(Rezept rezept) {
-        Optional<Rezept> existingRezeptOptional = Optional.ofNullable(rezepteRepository.findById(rezept.getId()));
+        Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(rezept.getId());
 
         if (existingRezeptOptional.isPresent()) {
             Rezept existingRezept = existingRezeptOptional.get();
@@ -55,6 +55,7 @@ public class RezepteService {
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
             existingRezept.setIstGeaendert(rezept.isIstGeaendert());
+            existingRezept.setIstGespeichert(rezept.isIstGeaendert());
 
             return Optional.of(rezepteRepository.save(existingRezept));
         } else {
