@@ -7,8 +7,6 @@ import org.jetbrains.annotations.NotNull;
 @Table(name = "rezepte") // Wenn die Tabelle einen anderen Namen hat als die Klasse
 public class Rezept {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -35,7 +33,6 @@ public class Rezept {
     public int getId() {
         return id;
     }
-
 
     public String getName() {
         return name;
