@@ -38,6 +38,8 @@ public class RezepteController {
             response.put("message", "Rezept erfolgreich erstellt.");
             response.put("id", createdRezept.getId());
 
+            logger.info("Antwort beim Erstellen des Rezepts: {}", response);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             logger.error("Fehler beim Erstellen des Rezepts", e);
@@ -45,6 +47,8 @@ public class RezepteController {
             // Bei einem Fehler ebenfalls ein JSON-Objekt für die Antwort erstellen
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", "Fehler beim Erstellen des Rezepts: " + e.getMessage());
+
+            logger.error("Fehlerantwort beim Erstellen des Rezepts: {}", errorResponse);
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
@@ -74,7 +78,7 @@ public class RezepteController {
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRezept(@PathVariable int id) {
+    public ResponseEntity<String> deleteRezept(@PathVariable("id") int id) {
         logger.info("ID, die vom Frontend empfangen wurde: {}", id);
         boolean deleted = rezepteService.deleteRezept(id);
         if (deleted) {

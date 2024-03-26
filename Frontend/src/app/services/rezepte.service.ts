@@ -4,6 +4,12 @@ import {catchError, map, Observable, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {DatePipe} from "@angular/common";
 
+interface RezeptAntwort {
+  id: number; // Angenommen, dies ist der Typ der ID in Ihrer Datenbank
+  message: string; // Eine Nachricht vom Server, z.B. "Rezept erfolgreich erstellt."
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,48 +27,23 @@ export class RezeptService {
   }
 
 
-  createRezept(rezept: Rezept): Observable<HttpResponse<HttpResponse<string>>> {
+  createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    if (!this.isValidDate(rezept.datum, 'dd-MM-yyyy')) {
-      return throwError('Ungültiges Datumsformat. Verwenden Sie "dd-MM-yyyy".');
-    }
-
-    if (rezept.name && rezept.name.length > 100) {
-      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
-    }
-
-    if (rezept.onlineAdresse && rezept.onlineAdresse.length > 100) {
-      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
-    }
-
-    if (rezept.person && rezept.person.length > 100) {
-      return throwError('Die Beschreibung ist zu lang. Maximal 100 Zeichen erlaubt.');
-    }
-
-    // Rezept an das Backend senden und die Antwort als HttpResponse<string> erhalten
-
-    return this.http.post<HttpResponse<string>>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', responseType: 'text' as 'json' }).pipe(
+    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', responseType: 'json' }).pipe(
       map(response => {
-        if (response.body !== null) {
-          // Den Body in eine Zeichenkette umwandeln und dann als JSON interpretieren
-          const responseBodyString = response.body.toString();
-          console.log('rBodystring', responseBodyString)
-          const jsonResponse = JSON.parse(responseBodyString);
-
-          // Hier kannst du auf die Daten im JSON zugreifen
-          const message = jsonResponse.message;
-          const id = jsonResponse.id;
-
-          // Die bearbeitete Antwort zurückgeben
-          return response;
-        } else {
-          // Handle den Fall, wenn die Antwort keinen Body hat
-          return response;
-        }
+        console.log('Message:', response.body?.message);
+        console.log('ID:', response.body?.id);
+        return response;
+      }),
+      catchError(error => {
+        console.error('Ein Fehler ist aufgetreten:', error);
+        return throwError(error);
       })
     );
   }
+
+
 
 
   // Hilfsfunktion zur Überprüfung des Datumsformats
@@ -85,15 +66,16 @@ export class RezeptService {
 
   deleteRezept(id: number): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.delete(apiUrl, { headers }).pipe(
+    // Keine Notwendigkeit, Content-Type Header für eine DELETE-Anfrage zu setzen,
+    // besonders wenn kein Body gesendet wird.
+    return this.http.delete(apiUrl, { responseType: 'text' }).pipe(
       catchError((error) => {
         console.error('Fehler beim Löschen des Rezepts', error);
-        return throwError(() => new Error('Fehler beim Löschen des Rezepts'));
+        // Direkte Verwendung von throwError ohne Funktion, um die Konsistenz mit RxJS 6+ zu wahren
+        return throwError(new Error('Fehler beim Löschen des Rezepts'));
       })
     );
   }
-
 
 
 }

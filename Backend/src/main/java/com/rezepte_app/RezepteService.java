@@ -33,11 +33,9 @@ public class RezepteService {
 
     @Valid
     public Rezept createRezept(Rezept rezept) {
-
         if (rezept.getName() == null) {
             throw new IllegalArgumentException("Der Name des Rezepts darf nicht null sein.");
         }
-
         return rezepteRepository.save(rezept);
     }
 
@@ -55,7 +53,7 @@ public class RezepteService {
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
             existingRezept.setIstGeaendert(rezept.isIstGeaendert());
-            existingRezept.setIstGespeichert(rezept.isIstGeaendert());
+
 
             return Optional.of(rezepteRepository.save(existingRezept));
         } else {
@@ -72,7 +70,7 @@ public class RezepteService {
         } catch (Exception e) {
             // Protokollierung: Fehler beim Löschen des Rezepts
             logger.error("Fehler beim Löschen des Rezepts mit ID {}: {}", id, e.getMessage());
-            return false; // Fehler beim Löschen des Rezepts
+            return false;
         }
     }
 
