@@ -3,7 +3,6 @@
 <p-table
   #dt1
   [value]="rezepte"
-
   dataKey="id"
   [rows]="10"
   [showCurrentPageReport]="true"
@@ -43,21 +42,6 @@
           <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
         </div>
       </th>
-<!--
-      <th style="min-width:10rem">
-        <div class="flex align-items-center">
-          Person
-          <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-            <ng-template pTemplate="header">
-              <div class="px-3 pt-3 pb-0">
-                <span class="font-bold">Agent Picker</span>
-              </div>
-            </ng-template>
-
-          </p-columnFilter>
-        </div>
-      </th>-->
-
 
       <th style="min-width:10rem">
         <div class="flex align-items-center">
@@ -88,27 +72,22 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rezept   >
+  <ng-template pTemplate="body" let-rezept  >
     <tr [ngClass]="{'markiertes-rezept': selectedRow === rezept}" (click)="selectRow(rezept)">
-        <td  class="rezept-tabelle">
-          <input [(ngModel)]="rezept.name" (ngModelChange)="rezept.istGeaendert = true" *ngIf="editMode && selectedRow === rezept"/>
+        <td>
+          <input [(ngModel)]="rezept.name"  (ngModelChange)="setGeaendert(rezept)"  *ngIf="editMode && selectedRow === rezept"/>
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
         </td>
 
       <td>
-        <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse" (ngModelChange)="rezept.istGeaendert = true"/>
+        <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse"  (ngModelChange)="setGeaendert(rezept)" />
         <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
       </td>
 
 
       <td>
-        <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd/MM/yyyy' }}</span>
+        <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd.MM.yyyy' }}</span>
       </td>
-
-      <!--<td>
-        <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.person" (ngModelChange)="rezept.istGeaendert = true"/>
-        <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.person }}</span>
-      </td>-->
 
       <td>
         <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])"  [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
@@ -120,10 +99,14 @@
       <td>
 
 
-    <tr *ngIf="rezept.istGeaendert && (showSaveButton || showDeleteButton)">
+    <tr *ngIf="editMode && rezept === selectedRow">
       <td colspan="7" class="text-center">
-        <button pButton *ngIf="rezept.istGeaendert && showSaveButton" type="button" (click)="saveChanges(rezept)">Speichern</button>
-        <button pButton *ngIf="showDeleteButton" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
+        <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
+      </td>
+    </tr>
+    <tr *ngIf="!editMode && rezept === selectedRow">
+      <td colspan="7" class="text-center">
+        <button pButton *ngIf="showDeleteButton && rezept.id" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
       </td>
     </tr>
 

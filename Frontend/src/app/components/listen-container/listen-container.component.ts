@@ -22,16 +22,15 @@ newRecipe: any = {}
   selectedRow: any;
   istGeaendert: boolean = false;
   istGespeichert: boolean = false;
-  showSaveButton: boolean = true;
+  showSaveButton: boolean = false;
   showDeleteButton: boolean = false;
-  editMode = true;
+  editMode = false;
   rezeptGeladen: boolean = false;
 
   tagToggleStates: { [key: number]: boolean } = {};
   constructor( private rezepteService: RezeptService, private http: HttpClient) {
     this.selectedRow = {};
   }
-
 
 
   ngOnInit(): void {
@@ -44,6 +43,7 @@ newRecipe: any = {}
           rezept.datum = new Date(rezept.datum);
         }
       /*  rezept.showDeleteButton = true;*/
+
         return rezept;
       });
     });
@@ -84,15 +84,21 @@ newRecipe: any = {}
 
     // Zusätzlich den `status` im `rezept`-Objekt aktualisieren
     rezept.status = !rezept.status;
-
     rezept.istGeaendert = true;
   }
 
+  setGeaendert(rezept: Rezept) {
+    rezept.istGeaendert = true;
 
-  /*id kann ich weglassen, das die DB die ID automatisch generiert (AUTO INCREMET)*/
+  }
+
+
+
+  /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
   addRow() {
     console.log('selectedRow in addRow:', this.selectedRow);
     const currentDate = new Date();
+
 
     this.newRecipe = {
       name: '',
@@ -116,17 +122,14 @@ newRecipe: any = {}
   }
 
   saveChanges(rezept: Rezept) {
-    console.log('selectedRow in saveChanges:', this.rezepte);
-
     if (rezept.id === null || rezept.id === undefined) {
+      // Rezept erstellen
       this.rezepteService.createRezept(rezept).subscribe(
-        (response) => { // Der Typ HttpResponse<RezeptAntwort> wird implizit angenommen
+        (response) => {
           if (response.body) {
-            console.log('Geparste Antwort:', response.body);
-            console.log('Rezept ganz erfolgreich erstellt?', response.body.id);
+            // ID des neu erstellten Rezepts setzen
             rezept.id = response.body.id;
-
-            this.rezepte.unshift(rezept);
+            // Kein erneutes Hinzufügen des Rezepts zur Liste
             this.istGeaendert = false;
             this.showSaveButton = false;
             this.showDeleteButton = true;
@@ -134,21 +137,19 @@ newRecipe: any = {}
             this.istGespeichert = true;
           } else {
             console.error('Fehler: Antwortkörper ist null');
-            // Hier könnten Sie weitere Fehlerbehandlungen durchführen.
           }
         },
-        (error) => { // Fehler-Callback korrekt platzieren
+        (error) => {
           console.error('Fehler beim Erstellen des Rezepts', error);
         }
       );
     } else {
-      // Behandlung der Aktualisierung vorhandener Rezepte
+      // Rezept aktualisieren
       this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
-        (response) => { // Der Rückgabetyp wird hier nicht explizit benötigt
-          console.log('Rezept erfolgreich aktualisiert', response);
+        (response) => {
+          // UI-Zustände aktualisieren
           this.showSaveButton = false;
           this.showDeleteButton = true;
-          // Finden Sie das zu aktualisierende Rezept in der Liste und aktualisieren Sie es
           const index = this.rezepte.findIndex(r => r.id === rezept.id);
           if (index !== -1) {
             this.rezepte[index] = {...rezept};
@@ -163,6 +164,8 @@ newRecipe: any = {}
   }
 
 
+
+
   onRatingChanged(newRating: number, rezept: any) {
     rezept.bewertung = newRating;
     rezept.istGeaendert = true;
@@ -173,11 +176,6 @@ newRecipe: any = {}
     this.selectedRow = rezept;
   }
 
-/*  loadRezept() {
-    // Hier wird das Rezept asynchron geladen
-    // Stellen Sie sicher, dass rezeptGeladen auf true gesetzt wird, wenn das Rezept vollständig geladen ist
-    this.rezeptGeladen = true;
-  }*/
 
   deleteRow(id: number) {
     this.loadRezept().then(() => {
