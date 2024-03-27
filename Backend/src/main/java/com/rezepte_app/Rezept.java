@@ -3,6 +3,9 @@ package com.rezepte_app;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "rezepte") // Wenn die Tabelle einen anderen Namen hat als die Klasse
 public class Rezept {
@@ -18,13 +21,19 @@ public class Rezept {
     private String onlineAdresse;
     private java.sql.Date datum;
 
-    private String person;
-
     @NotNull
     private boolean status;
 
     @NotNull
     private int bewertung;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "rezept_kategorie",
+            joinColumns = @JoinColumn(name = "rezept_id"),
+            inverseJoinColumns = @JoinColumn(name = "kategorie_id")
+    )
+    private Set<Kategorie> kategorien = new HashSet<>();
 
     private boolean istGeaendert;
 
@@ -56,14 +65,6 @@ public class Rezept {
 
     public void setDatum(java.sql.Date datum) {
         this.datum = datum;
-    }
-
-    public String getperson() {
-        return person;
-    }
-
-    public void setperson(String person) {
-        this.person = person;
     }
 
     public boolean getStatus() {

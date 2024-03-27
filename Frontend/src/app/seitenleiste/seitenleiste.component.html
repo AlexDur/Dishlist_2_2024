@@ -1,0 +1,7 @@
+<div>
+  <h3>Gerichte</h3>
+  <div class="p-field-checkbox" *ngFor="let type of interKuechen; let i = index">
+    <p-checkbox [value]="type" [(ngModel)]="selectedTypes[i]" inputId="type_{{i}}"></p-checkbox>
+    <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+  </div>
+</div>
