@@ -14,8 +14,10 @@ import {ButtonModule} from "primeng/button";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SeitenleisteComponent} from "./seitenleiste/seitenleiste.component";
 import {CheckboxModule} from "primeng/checkbox";
-import { TagsAuswahlComponent } from './tags-auswahl/tags-auswahl.component';
 import {ContextMenuModule} from "primeng/contextmenu";
+import { TagsComponent } from './tags/tags.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
+import {TieredMenuModule} from "primeng/tieredmenu";
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import {ContextMenuModule} from "primeng/contextmenu";
     AppComponent,
     ListenContainerComponent,
     SeitenleisteComponent,
-    TagsAuswahlComponent
+    TagsComponent,
+    DropdownComponent,
 
   ],
   imports: [
@@ -38,7 +41,8 @@ import {ContextMenuModule} from "primeng/contextmenu";
     ButtonModule,
     BrowserAnimationsModule,
     CheckboxModule,
-    ContextMenuModule
+    ContextMenuModule,
+    TieredMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

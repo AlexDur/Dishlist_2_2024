@@ -20,10 +20,28 @@ export class SeitenleisteComponent {
   ];
 
 
-
   selectedFilters: string[] = [];
   selectedCategories: string[] = [];
-  selectedTypes: string[] = [];
+  selectedKuechen: string[] = [];
+
+  gerichtArten = [
+    { label: 'Vorspeise', value: 'vorspeise', count: 4146 },
+    { label: 'Haupt', value: 'haupt', count: 4146 },
+    { label: 'Nachtisch', value: 'nachtisch', count: 4146 },
+    { label: 'Getränk', value: 'getränk', count: 4146 },
+  ];
+
+  selectedGerichtarten: string[] = [];
+
+  gerichtEigenschaften = [
+    { label: 'schnell', value: 'schnell', count: 4146 },
+    { label: 'kalorienreich', value: 'kalorienreich', count: 4146 },
+    { label: 'vegetarisch', value: 'vegetarisch', count: 4146 },
+    { label: 'proteinreich', value: 'preoteinreich', count: 4146 },
+  ];
+
+
+  selectedGerichtEigenschaften: string[] = [];
 
   filteredRezepte: Rezept[] = [];
 
