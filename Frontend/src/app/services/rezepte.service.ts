@@ -26,7 +26,6 @@ export class RezeptService {
     return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`);
   }
 
-
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 

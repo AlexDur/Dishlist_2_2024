@@ -19,6 +19,7 @@ export class ListenContainerComponent implements OnInit{
 @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
 rezepte: Rezept[] = [];
 newRecipe: any = {}
+
   selectedRow: any;
   istGeaendert: boolean = false;
   istGespeichert: boolean = false;

@@ -7,6 +7,7 @@ export interface Rezept {
   person?: string;
   status?: boolean;
   bewertung?: number;
+  kategorien?: string[];
   istGeaendert?: boolean;
   showDeleteButton?: boolean;
 }
