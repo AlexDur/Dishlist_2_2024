@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {TagService} from "../services/tags.service";
+import {Tag} from "../models/tag";
 
 @Component({
   selector: 'app-tags',
@@ -7,5 +9,11 @@ import { Component } from '@angular/core';
 })
 export class TagsComponent {
 
+  tags: Tag[] = [];
 
+  constructor(private tagService: TagService) {
+    this.tagService.tags$.subscribe(tags => {
+      this.tags = tags;
+    });
+  }
 }
