@@ -1,9 +1,3 @@
 <div class="tag-container">
-<p-tag severity="success" value="Vorspeise"></p-tag>
-<p-tag severity="warning" value="Deutsch"></p-tag>
-<p-tag severity="danger" value="Vogelsalat"></p-tag>
-<p-tag severity="danger" value="Vogelsalat"></p-tag>
-<p-tag severity="danger" value="Vogelsalat"></p-tag>
-<p-tag severity="danger" value="Vogelsalat"></p-tag>
-<p-tag severity="danger" value="Vogelsalat"></p-tag>
+  <p-tag *ngFor="let tag of tags" [value]="tag.label" [severity]="tag.severity"></p-tag>
 </div>

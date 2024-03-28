@@ -935,14 +935,8 @@ i
 9Frontend/src/app/seitenleiste/seitenleiste.component.html,9\8\9817ec9b3808ec7d585d7d009fab6a8c5837f652
 g
 7Frontend/src/app/seitenleiste/seitenleiste.component.ts,c\9\c98cf9e6b97c3b4ed8e6997973a18203a0d6f5d4
-i
-9Frontend/src/app/tags-auswahl/tags-auswahl.component.scss,a\7\a73ee19a4a9f55ab3f9eb1298a7460b400759930
-i
-9Frontend/src/app/tags-auswahl/tags-auswahl.component.html,3\7\379dea107e1f00448360ab6caf767f1f991c9cbf
 [
 +Frontend/src/app/services/filter.service.ts,3\f\3f02f0e820d5e00866971b29ee97eb21456efb34
-g
-7Frontend/src/app/tags-auswahl/tags-auswahl.component.ts,3\8\38263b494df47385013563742e326b9ffb1e73b8
 i
 9Frontend/src/app/seitenleiste/seitenleiste.component.scss,3\d\3d36ee429d7619d927b66e479287b3550db4fae0
 d
@@ -959,3 +953,7 @@ a
 1Frontend/src/app/dropdown/dropdown.component.scss,9\a\9a1612cf29127afd710d56b5b70f78f37d4f16a3
 a
 1Frontend/src/app/dropdown/dropdown.component.html,5\7\577da27dbfdae9dbf1d08a50ec1c7f2ad48b652d
+N
+Frontend/src/app/models/tag.ts,e\f\ef69baf8b81136d68783c6082f3f0c91908fe8f1
+Y
+)Frontend/src/app/services/tags.service.ts,1\c\1cb8fa65360a0e0b117a6c542565f0ef4ea0ff02
