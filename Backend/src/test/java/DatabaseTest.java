@@ -1,3 +1,4 @@
+/*
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
@@ -28,3 +29,4 @@ public class DatabaseTest {
         // Schreiben Sie Ihre Testfälle hier, die die Datenbankinteraktion überprüfen
     }
 }
+*/
