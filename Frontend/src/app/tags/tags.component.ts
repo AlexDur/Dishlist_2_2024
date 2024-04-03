@@ -18,7 +18,8 @@ export class TagsComponent {
     });
   }
 
-  getSelectedTags(): string[] {
+  getTagLabels(): string[] {
     return this.tags.map(tag => tag.label);
   }
+
 }
