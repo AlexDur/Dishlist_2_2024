@@ -1,9 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Table} from "primeng/table";
 import {Rezept} from "../.././models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {TagService} from "../../services/tags.service";
 
 interface RezeptAntwort {
   id: number; // Stellen Sie sicher, dass der Typ mit Ihrer API übereinstimmt
@@ -15,10 +13,12 @@ interface RezeptAntwort {
   templateUrl: './listen-container.component.html',
   styleUrls: ['./listen-container.component.scss']
 })
+
 export class ListenContainerComponent implements OnInit{
+
 @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
-rezepte: Rezept[] = [];
-newRecipe: any = {}
+  rezepte: Rezept[] = [];
+  newRecipe: any = {}
 
   selectedRow: any;
   istGeaendert: boolean = false;
@@ -27,28 +27,35 @@ newRecipe: any = {}
   showDeleteButton: boolean = false;
   editMode = false;
   rezeptGeladen: boolean = false;
-
   tagToggleStates: { [key: number]: boolean } = {};
-  constructor( private rezepteService: RezeptService, private http: HttpClient) {
+  currentRecipe: Rezept | undefined;
+
+  constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
   }
 
-
   ngOnInit(): void {
-    this.loadRezept();
-    console.log('selectedRow in ngOnInit:', this.selectedRow);
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
       console.log('Geladene Rezepte:', rezepte);
       this.rezepte = rezepte.map((rezept) => {
         if (rezept.datum) {
           rezept.datum = new Date(rezept.datum);
         }
-      /*  rezept.showDeleteButton = true;*/
-
         return rezept;
       });
+
+      // Annahme: Sie möchten das erste Rezept aus der Liste als currentRecipe setzen
+      if (this.rezepte.length > 0) {
+        const firstRezeptId = this.rezepte[0]?.id;
+        if (firstRezeptId !== undefined) {
+          // Nur wenn Rezepte vorhanden sind, loadRezept() aufrufen
+          this.loadRezept();
+        }
+      }
     });
   }
+
+
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -123,6 +130,9 @@ newRecipe: any = {}
   }
 
   saveChanges(rezept: Rezept) {
+    const selectedTags: string[] = this.tagService.getSelectedTags().map(tag => tag.label);
+    rezept.tags = selectedTags;
+
     if (rezept.id === null || rezept.id === undefined) {
       // Rezept erstellen
       this.rezepteService.createRezept(rezept).subscribe(
@@ -130,39 +140,36 @@ newRecipe: any = {}
           if (response.body) {
             // ID des neu erstellten Rezepts setzen
             rezept.id = response.body.id;
-            // Kein erneutes Hinzufügen des Rezepts zur Liste
-            this.istGeaendert = false;
-            this.showSaveButton = false;
-            this.showDeleteButton = true;
-            this.editMode = false;
-            this.istGespeichert = true;
+            // Rest des Codes...
           } else {
             console.error('Fehler: Antwortkörper ist null');
           }
         },
         (error) => {
           console.error('Fehler beim Erstellen des Rezepts', error);
+          // Fehlerbehandlung für die Tags
+          this.restoreOriginalTags();
         }
       );
     } else {
       // Rezept aktualisieren
       this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
         (response) => {
-          // UI-Zustände aktualisieren
-          this.showSaveButton = false;
-          this.showDeleteButton = true;
-          const index = this.rezepte.findIndex(r => r.id === rezept.id);
-          if (index !== -1) {
-            this.rezepte[index] = {...rezept};
-          }
-          this.istGespeichert = true;
+          // Rest des Codes...
         },
         (error) => {
           console.error('Fehler beim Aktualisieren des Rezepts', error);
+          // Fehlerbehandlung für die Tags
+          this.restoreOriginalTags();
         }
       );
     }
   }
+
+  restoreOriginalTags() {
+    // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
+  }
+
 
 
 
@@ -209,11 +216,10 @@ newRecipe: any = {}
 
   loadRezept(): Promise<void> {
     // Hier wird das Rezept asynchron geladen
-    // Stellen Sie sicher, dass rezeptGeladen auf true gesetzt wird, wenn das Rezept vollständig geladen ist
+    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
     return new Promise<void>((resolve, reject) => {
-      // Stellen Sie sicher, dass rezeptGeladen auf true gesetzt wird, wenn das Rezept vollständig geladen ist
       // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
-      this.rezeptGeladen = true; // Annahme: Setzen Sie hier this.rezeptGeladen auf true, wenn das Rezept geladen wurde
+      this.rezeptGeladen = true;
       resolve();
     });
   }

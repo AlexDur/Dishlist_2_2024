@@ -1,4 +1,4 @@
 <div class="card flex justify-content-center">
-  <button #btn type="button" pButton label="Auswahl" (click)="menu.toggle($event)"></button>
+  <button #btn type="button" pButton label="Auswahl" (click)="toggleEditMode()"></button>
   <p-tieredMenu #menu [model]="items" [popup]="true"></p-tieredMenu>
 </div>

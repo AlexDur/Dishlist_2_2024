@@ -1,5 +1,6 @@
 package com.rezepte_app;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -7,14 +8,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+/*Entität ist eine Klasse, die die Attribute und das Verhalten eines Objekts definiert.*/
+
 @Table(name = "rezepte") // Wenn die Tabelle einen anderen Namen hat als die Klasse
 public class Rezept {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
+    @JsonProperty("name")
     private String name;
 
     @Column(name = "onlineAdresse")
@@ -27,13 +32,21 @@ public class Rezept {
     @NotNull
     private int bewertung;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
-            name = "rezept_kategorie",
+            name = "rezept_tags",
             joinColumns = @JoinColumn(name = "rezept_id"),
-            inverseJoinColumns = @JoinColumn(name = "kategorie_id")
-    )
-    private Set<Kategorie> kategorien = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
+
+    // Getter und Setter
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
     private boolean istGeaendert;
 
@@ -42,6 +55,7 @@ public class Rezept {
     public int getId() {
         return id;
     }
+
 
     public String getName() {
         return name;
@@ -90,4 +104,6 @@ public class Rezept {
     public void setIstGeaendert(boolean istGeaendert) {
         this.istGeaendert = istGeaendert;
     }
+
+
 }

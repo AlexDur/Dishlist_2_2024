@@ -1,6 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {TagService} from "../services/tags.service";
+import {Menu} from "primeng/menu";
+import {BehaviorSubject} from "rxjs";
+import {Rezept} from "../models/rezepte";
+import {Tag} from "../models/tag";
+
 
 @Component({
   selector: 'app-dropdown',
@@ -8,8 +13,12 @@ import {TagService} from "../services/tags.service";
   styleUrls: ['./dropdown.component.scss']
 })
 export class DropdownComponent implements OnInit{
+  @ViewChild('menu') menu!: Menu;
+  @Input() currentRecipe: Rezept | undefined;
+  @Input() editMode: boolean =false;
   items: MenuItem[] | undefined;
-  selectedTags: string[] = [];
+
+
 
   constructor(private tagService: TagService) {
   }
@@ -32,28 +41,28 @@ export class DropdownComponent implements OnInit{
             label: 'Vorspeise',
             icon: 'pi pi-plus',
             command: () => {
-              this.addTag('Vorspeise', 'success');
+              this.addTag({ label: 'Vorspeise', severity: 'success' });
             }
           },
           {
             label: 'Haupt',
             icon: 'pi pi-folder-open',
             command: () => {
-              this.addTag('Haupt', 'success');
+              this.addTag({ label: 'Haupt', severity: 'success' });
             }
           },
           {
             label: 'Nachtisch',
             icon: 'pi pi-print',
             command: () => {
-              this.addTag('Nachtisch', 'success');
+              this.addTag({ label: 'Nachtisch', severity: 'success' });
             }
           },
           {
             label: 'Getränk',
             icon: 'pi pi-print',
             command: () => {
-              this.addTag('Getränk', 'success');
+              this.addTag({ label: 'Getränk', severity: 'success' });
             }
           },
         ]
@@ -66,36 +75,35 @@ export class DropdownComponent implements OnInit{
             label: 'Chinesisch',
             icon: 'pi pi-copy',
             command: () => {
-              this.addTag('Chinesisch', 'warning');
+              this.addTag({ label: 'Chinesisch', severity: 'warning' });
             }
           },
           {
             label: 'Deutsch',
             icon: 'pi pi-times',
             command: () => {
-              this.addTag('Deutsch', 'warning');
+              this.addTag({ label: 'Deutsch', severity: 'warning' });
             }
           },
           {
             label: 'Indisch',
             icon: 'pi pi-copy',
             command: () => {
-              this.addTag('Indisch', 'warning');
+              this.addTag({ label: 'Indisch', severity: 'warning' });
             }
           },
           {
             label: 'Italienisch',
             icon: 'pi pi-times',
             command: () => {
-              this.addTag('Italienisch', 'warning');
+              this.addTag({ label: 'Italienisch', severity: 'warning' });
             }
-          }
-          ,
+          },
           {
             label: 'Japanisch',
             icon: 'pi pi-times',
             command: () => {
-              this.addTag('Japanisch', 'warning');
+              this.addTag({ label: 'Japanisch', severity: 'warning' });
             }
           }
         ]
@@ -108,28 +116,28 @@ export class DropdownComponent implements OnInit{
             label: 'kalorienreich',
             icon: 'pi pi-copy',
             command: () => {
-              this.addTag('kalorienreich', 'danger');
+              this.addTag({ label: 'kalorienreich', severity: 'danger' });
             }
           },
           {
             label: 'proteinreich',
             icon: 'pi pi-times',
             command: () => {
-              this.addTag('proteinreich', 'danger');
+              this.addTag({ label: 'proteinreich', severity: 'danger' });
             }
           },
           {
             label: 'schnell',
             icon: 'pi pi-copy',
             command: () => {
-              this.addTag('schnell', 'danger');
+              this.addTag({ label: 'schnell', severity: 'danger' });
             }
           },
           {
             label: 'vegetarisch',
             icon: 'pi pi-times',
             command: () => {
-              this.addTag('vegetarisch', 'danger');
+              this.addTag({ label: 'vegetarisch', severity: 'danger' });
             }
           }
         ]
@@ -137,9 +145,26 @@ export class DropdownComponent implements OnInit{
     ]
   }
 
-  addTag(label: string, severity: 'success' | 'info' | 'warning' | 'danger') {
-    this.tagService.addTag({ label, severity });
+  addTag(tag: Tag): void {
+    const currentTags = this.tagService.getSelectedTags();
+
+    // Überprüfe, ob der Tag bereits vorhanden ist
+    const tagExists = currentTags.some(existingTag => existingTag.label === tag.label);
+    if (!tagExists) {
+      // Füge den Tag hinzu und aktualisiere den TagService
+      const updatedTags = [...currentTags, tag];
+      this.tagService.updateTags(updatedTags);
+    } else {
+      console.log('Tag already exists:', tag.label);
+    }
   }
 
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode
+    if (event) {
+      this.menu.toggle(event);
+    }
+  }
 
 }

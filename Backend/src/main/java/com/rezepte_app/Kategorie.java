@@ -1,4 +1,4 @@
-package com.rezepte_app;
+/*package com.rezepte_app;
 
 import jakarta.persistence.*;
 
@@ -19,4 +19,4 @@ public class Kategorie {
     private Set<Rezept> rezepte = new HashSet<>();
 
 
-}
+}*/
