@@ -1,14 +1,14 @@
-import {Component, Input} from '@angular/core';
-import {TagService} from "../services/tags.service";
-import {Tag} from "../models/tag";
-import {Rezept} from "../models/rezepte";
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Tag } from "../models/tag";
+import { Rezept } from "../models/rezepte";
+import { TagService } from "../services/tags.service";
 
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.scss']
 })
-export class TagsComponent {
+export class TagsComponent implements OnChanges {
   @Input() currentRecipe: Rezept | undefined;
   tags: Tag[] = [];
 
@@ -18,8 +18,13 @@ export class TagsComponent {
     });
   }
 
-  getTagLabels(): string[] {
-    return this.tags.map(tag => tag.label);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentRecipe'] && this.currentRecipe) {
+      this.tags = this.convertToTags(this.currentRecipe.tags || []);
+    }
   }
 
+  private convertToTags(tagLabels: string[]): Tag[] {
+    return tagLabels.map(label => ({ label } as Tag));
+  }
 }
