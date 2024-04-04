@@ -3,11 +3,6 @@ import {Rezept} from "../.././models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
 
-interface RezeptAntwort {
-  id: number; // Stellen Sie sicher, dass der Typ mit Ihrer API übereinstimmt
-  message?: string; // Optional, falls Ihre Antwort eine Nachricht enthält
-}
-
 @Component({
   selector: 'app-listen-container',
   templateUrl: './listen-container.component.html',
@@ -44,7 +39,7 @@ export class ListenContainerComponent implements OnInit{
         return rezept;
       });
 
-      // Annahme: Sie möchten das erste Rezept aus der Liste als currentRecipe setzen
+      // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
       if (this.rezepte.length > 0) {
         const firstRezeptId = this.rezepte[0]?.id;
         if (firstRezeptId !== undefined) {
@@ -54,8 +49,6 @@ export class ListenContainerComponent implements OnInit{
       }
     });
   }
-
-
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
