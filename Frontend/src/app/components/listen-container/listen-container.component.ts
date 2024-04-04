@@ -133,7 +133,11 @@ export class ListenContainerComponent implements OnInit{
           if (response.body) {
             // ID des neu erstellten Rezepts setzen
             rezept.id = response.body.id;
-            // Rest des Codes...
+            this.istGeaendert = false;
+            this.showSaveButton = false;
+            this.showDeleteButton = true;
+            this.editMode = false;
+            this.istGespeichert = true;
           } else {
             console.error('Fehler: Antwortkörper ist null');
           }
