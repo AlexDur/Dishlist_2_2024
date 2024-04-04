@@ -15,9 +15,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SeitenleisteComponent} from "./seitenleiste/seitenleiste.component";
 import {CheckboxModule} from "primeng/checkbox";
 import {ContextMenuModule} from "primeng/contextmenu";
-import { TagsComponent } from './tags/tags.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import {TieredMenuModule} from "primeng/tieredmenu";
+import {TagsComponent} from "./tags/tags.component";
+
+
 
 
 @NgModule({
@@ -25,9 +27,8 @@ import {TieredMenuModule} from "primeng/tieredmenu";
     AppComponent,
     ListenContainerComponent,
     SeitenleisteComponent,
-    TagsComponent,
     DropdownComponent,
-
+    TagsComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +43,8 @@ import {TieredMenuModule} from "primeng/tieredmenu";
     BrowserAnimationsModule,
     CheckboxModule,
     ContextMenuModule,
-    TieredMenuModule
+    TieredMenuModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]
