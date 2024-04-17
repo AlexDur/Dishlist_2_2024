@@ -35,8 +35,7 @@ export class RezeptService {
 
     const rezeptMitFormatiertenTags = {
       ...rezept,
-    /*Sicherstellen, dass, wenn rezept.tags = undefined, stattdessen ein leeres Array verwendet wird*/
-      tags: rezept.tags?.map(tagName => ({ name: tagName })) ?? []
+      tags: rezept.tags ?? []
     };
 
     return this.http.post<RezeptAntwort>(
