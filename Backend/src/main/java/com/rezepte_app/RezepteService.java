@@ -2,6 +2,7 @@ package com.rezepte_app;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class RezepteService {
         List<Rezept> alleRezepte = rezepteRepository.findAllByOrderByIdDesc();
         logger.info("Anzahl der abgerufenen Rezepte: {}", alleRezepte.size());
 
+        // Lade alle Tags für alle Rezepte in einer einzigen Abfrage
+        for (Rezept rezept : alleRezepte) {
+            Hibernate.initialize(rezept.getTags());
+        }
+
         // Optional: Loggen Sie einige Details der abgerufenen Rezepte
         if (logger.isDebugEnabled()) {
             alleRezepte.forEach(rezept -> logger.debug("Rezept: {}", rezept));
@@ -55,7 +61,36 @@ public class RezepteService {
         }
     }
 
+    @Transactional
+    @Valid
+    public Rezept createRezept(Rezept rezept, List<Tag> tags) {
 
+        // Überprüfen der Gültigkeit und Existenz der Tags
+        Set<Tag> savedTags = new HashSet<>();
+        for (Tag tag : tags) {
+            if (tag != null && tag.getLabel() != null && tag.getSeverity() != null) {
+                Optional<Tag> existingTagOptional = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
+                if (existingTagOptional.isPresent()) {
+                    savedTags.add(existingTagOptional.get());
+                } else {
+                    // Überprüfen, ob das Tag bereits in der Liste der zu speichernden Tags vorhanden ist
+                    if (!savedTags.contains(tag)) {
+                        Tag savedTag = tagRepository.save(tag);
+                        savedTags.add(savedTag);
+                    } else {
+                        throw new IllegalArgumentException("Das Tag ist bereits dem Rezept zugeordnet.");
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Ungültiges Tag: " + tag);
+            }
+        }
+
+        // Setzen der gültigen Tags im Rezept
+        rezept.setTags(savedTags);
+
+        return rezepteRepository.save(rezept);
+    }
 
     private Set<Tag> verarbeiteUndSpeichereTags(Set<Tag> tags) {
         Set<Tag> verarbeiteteTags = new HashSet<>();
@@ -65,20 +100,6 @@ public class RezepteService {
         }
         return verarbeiteteTags;
     }
-
-    @Valid
-    public Rezept createRezept(Rezept rezept) {
-        if (rezept.getName() == null) {
-            throw new IllegalArgumentException("Der Name des Rezepts darf nicht null sein.");
-        }
-
-        // Verwende TagService zum Hinzufügen/Verarbeiten von Tags
-        Set<Tag> verarbeiteteTags = verarbeiteUndSpeichereTags(rezept.getTags());
-        rezept.setTags(verarbeiteteTags);
-
-        return rezepteRepository.save(rezept);
-    }
-
 
     public Optional<Rezept> updateRezept(Rezept rezept) {
         Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(rezept.getId());
@@ -103,6 +124,20 @@ public class RezepteService {
             return Optional.empty();
         }
     }
+
+    public void updateTag(int tagId, String newLabel, String newSeverity) {
+        Optional<Tag> tagOptional = tagRepository.findById(tagId);
+        if (tagOptional.isPresent()) {
+            Tag tag = tagOptional.get();
+            tag.setLabel(newLabel);
+            tag.setSeverity(newSeverity);
+            tagRepository.save(tag);
+        } else {
+            throw new IllegalArgumentException("Tag mit der angegebenen ID wurde nicht gefunden.");
+        }
+    }
+
+
 
 
     public boolean deleteRezept(int id) {

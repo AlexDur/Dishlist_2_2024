@@ -2,11 +2,7 @@ package com.rezepte_app;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
@@ -14,45 +10,63 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name ="tags")
 public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Der Name darf nicht leer sein")
-    private String name;
+    @NotBlank(message="Label muss vorhanden sein")
+    private String label;
 
-    @ManyToMany(mappedBy = "tags")
-    private Set<Rezept> rezepte = new HashSet<>();
+    @NotBlank(message = "Severity muss vorhanden sein")
+    private String severity;
+
+    @ManyToOne // Many tags can belong to one recipe
+    @JoinColumn(name = "rezept_id") // Foreign key to the recipe table
+    private Rezept rezept; // Reference to the recipe this tag belongs to
 
     public Tag() {
         // Standardkonstruktor ohne Parameter ist für JPA erforderlich
     }
 
-    @JsonCreator
-    public Tag(@JsonProperty("name") String name) {
-        this.name = name;
+    public String getLabel() {
+        return label;
     }
 
-    public String getName() {
-        return name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getSeverity() {
+        return severity;
     }
 
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public Rezept getRezept() {
+        return rezept;
+    }
+
+    public void setRezept(Rezept rezept) {
+        this.rezept = rezept;
+    }
+
+    /*Zur Vermeidung von doppelten Objekten*/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Tag)) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
+        return id == tag.id;
     }
 
+    /*Zur Orga von Objekten in Hashtabellen (=>schnelle Suche und Zugriff auf Objekte möglich)*/
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id);
     }
 }
