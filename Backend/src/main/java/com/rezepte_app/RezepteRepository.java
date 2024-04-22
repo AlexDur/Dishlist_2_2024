@@ -1,7 +1,7 @@
 /*Allgemein: RezepteRepository um effizient Datenzugriffsoperationen für die Rezept-Entitäten zu abstrahieren
  und zu vereinfachen, indem es die komplexen Datenbankoperationen hinter einfachen Methodenaufrufen verbirgt.*/
 
-/*Zur Nutzung des Repositorys kann in Service-Klasse mitells DI eingebunden wurden*/
+/*Zur Nutzung des Repositorys kann in Service-Klasse mittels DI eingebunden wurden*/
 
 package com.rezepte_app;
 import org.springframework.data.jpa.repository.JpaRepository;
