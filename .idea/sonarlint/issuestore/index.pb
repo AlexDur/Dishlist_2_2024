@@ -933,8 +933,6 @@ i
 9Frontend/src/app/seitenleiste/seitenleiste.component.html,9\8\9817ec9b3808ec7d585d7d009fab6a8c5837f652
 g
 7Frontend/src/app/seitenleiste/seitenleiste.component.ts,c\9\c98cf9e6b97c3b4ed8e6997973a18203a0d6f5d4
-[
-+Frontend/src/app/services/filter.service.ts,3\f\3f02f0e820d5e00866971b29ee97eb21456efb34
 i
 9Frontend/src/app/seitenleiste/seitenleiste.component.scss,3\d\3d36ee429d7619d927b66e479287b3550db4fae0
 d
