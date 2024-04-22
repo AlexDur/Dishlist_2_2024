@@ -37,7 +37,7 @@ public class RezepteService {
             Hibernate.initialize(rezept.getTags());
         }
 
-        // Optional: Loggen Sie einige Details der abgerufenen Rezepte
+        // Optional: Loggen einiger Details der abgerufenen Rezepte
         if (logger.isDebugEnabled()) {
             alleRezepte.forEach(rezept -> logger.debug("Rezept: {}", rezept));
         }
