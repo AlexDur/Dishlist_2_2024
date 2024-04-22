@@ -47,10 +47,10 @@ public class TagService {
             // Überprüfen, ob das Tag bereits in der Datenbank vorhanden ist
             Optional<Tag> existingTagOptional = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
             if (existingTagOptional.isPresent()) {
-                // Wenn das Tag bereits existiert, fügen Sie es zur Liste der gespeicherten Tags hinzu
+                // Wenn das Tag bereits existiert, fügen es zur Liste der gespeicherten Tags hinzu
                 savedTags.add(existingTagOptional.get());
             } else {
-                // Wenn das Tag neu ist, speichern Sie es in der Datenbank und fügen Sie es zur Liste der gespeicherten Tags hinzu
+                // Wenn das Tag neu ist, speichere in der Datenbank und fügen es zur Liste der gespeicherten Tags hinzu
                 savedTags.add(tagRepository.save(tag));
             }
         }
