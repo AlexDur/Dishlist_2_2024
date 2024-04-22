@@ -1,5 +1,5 @@
 <div>
-  <h3 class="hellgruen">Gerichtart</h3>
+  <h3 class="hellgruen">Gangart</h3>
   <div class="p-field-checkbox" *ngFor="let type of gerichtArten; let i = index">
     <p-checkbox [value]="type" [(ngModel)]="selectedGerichtarten[i]" inputId="type_{{i}}"></p-checkbox>
     <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
@@ -15,7 +15,7 @@
 </div>
 
 <div>
-  <h3 class="rot">Gerichteigenschaften</h3>
+  <h3 class="rot">Attribute</h3>
   <div class="p-field-checkbox" *ngFor="let type of gerichtEigenschaften; let i = index">
     <p-checkbox [value]="type" [(ngModel)]="selectedGerichtEigenschaften[i]" inputId="type_{{i}}"></p-checkbox>
     <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>

@@ -72,7 +72,7 @@ public class RezepteController {
     public ResponseEntity<Map<String, Object>> createRezept(@RequestBody Rezept rezept) {
         logger.info("POST-Anfrage erhalten für Rezepterstellung: {}", rezept);
 
-        // Stelle sicher, dass die Tags als Set<Tag> gespeichert werden
+        // Stellt sicher, dass die Tags als Set<Tag> gespeichert werden
         Set<Tag> tags = new HashSet<>(rezept.getTags()); // Konvertiere die Liste von Tags in ein Set
         rezept.setTags(tags);
 
@@ -86,7 +86,7 @@ public class RezepteController {
             // Erstellt das Rezept mit den vorbereiteten Tags
             Rezept createdRezept = rezepteService.createRezept(rezept, new ArrayList<>(preparedTags));
 
-            // Erstelle ein JSON-Objekt für die Antwort
+            // Erstellt ein JSON-Objekt für die Antwort
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Rezept erfolgreich erstellt.");
             response.put("id", createdRezept.getId());

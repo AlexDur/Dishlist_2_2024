@@ -123,7 +123,7 @@ export class ListenContainerComponent implements OnInit{
   }
 
   saveChanges(rezept: Rezept) {
-    // Hier erhalten Sie die ausgewählten Tags vom TagService
+    // Erhalt der ausgewählten Tags vom TagService
     const selectedTags:  Tag[] = this.tagService.getSelectedTags();
 
     // Setzen der ausgewählten Tags für das aktuelle Rezept
