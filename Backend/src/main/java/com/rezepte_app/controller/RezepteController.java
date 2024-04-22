@@ -1,10 +1,7 @@
 // RezepteController.java
 package com.rezepte_app.controller;
 
-import com.rezepte_app.Rezept;
-import com.rezepte_app.RezepteRepository;
-import com.rezepte_app.RezepteService;
-import com.rezepte_app.Tag;
+import com.rezepte_app.*;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +34,9 @@ public class RezepteController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+    @Autowired
+    private TagService tagService;
+
     /*Durch @Autowired wird eine Instanz von RezepteService injiziert. Das bedeutet,Spring kümmert sich automatisch
     um die Erstellung und Bereitstellung einer Instanz dieser Klasse, die die Geschäftslogik enthält*/
     @Autowired
@@ -53,6 +53,18 @@ public class RezepteController {
         }
     }
 
+    @PostMapping("/tags")
+    public ResponseEntity<String> saveTags(@RequestBody List<Tag> tags) {
+        try {
+            // Aufrufen des entsprechenden Service, um die Tags zu speichern
+            List<Tag> savedTags = tagService.saveTags(tags);
+
+            return ResponseEntity.ok("Tags erfolgreich gespeichert.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Speichern der Tags: " + e.getMessage());
+        }
+    }
+
     /*Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Sie nimmt ein Rezept-Objekt aus dem Request Body entgegen
     und verwendet rezepteService, um das Rezept in der Datenbank zu speichern. Bei Erfolg wird eine Antwort mit dem Status
     HttpStatus.CREATED und Details zum erstellten Rezept zurückgegeben*/
@@ -65,7 +77,14 @@ public class RezepteController {
         rezept.setTags(tags);
 
         try {
-            Rezept createdRezept = rezepteService.createRezept(rezept);
+            // Stellt sicher, dass die Tags als Set<Tag> gespeichert werden und bereitet sie vor
+            Set<Tag> preparedTags = prepareAndValidateTags(rezept.getTags());
+
+            // Setzt die vorbereiteten Tags im Rezept
+            rezept.setTags(preparedTags);
+
+            // Erstellt das Rezept mit den vorbereiteten Tags
+            Rezept createdRezept = rezepteService.createRezept(rezept, new ArrayList<>(preparedTags));
 
             // Erstelle ein JSON-Objekt für die Antwort
             Map<String, Object> response = new HashMap<>();
@@ -78,9 +97,9 @@ public class RezepteController {
         } catch (Exception e) {
             logger.error("Fehler beim Erstellen des Rezepts", e);
 
-            // Bei einem Fehler ebenfalls ein JSON-Objekt für die Antwort erstellen
+            // Bei einem anderen Fehler ebenfalls ein JSON-Objekt für die Antwort erstellen
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Fehler beim Erstellen des Rezepts: " + e.getMessage());
+            errorResponse.put("error", "Interner Serverfehler beim Erstellen des Rezepts");
 
             logger.error("Fehlerantwort beim Erstellen des Rezepts: {}", errorResponse);
 
@@ -93,8 +112,40 @@ public class RezepteController {
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {
         return rezepteService.fetchAlleRezepte();
-
     }
+
+    // Methode zum Vorbereiten und Validieren der Tags
+    private Set<Tag> prepareAndValidateTags(Set<Tag> tags) {
+        // Überprüfe, ob die Tags nicht null sind
+        if (tags == null) {
+            throw new IllegalArgumentException("Die Liste der Tags darf nicht null sein.");
+        }
+
+        // Entferne leere oder ungültige Tags
+        tags.removeIf(tag -> tag == null || tag.getLabel() == null || tag.getSeverity() == null);
+
+        // Überprüfe, ob nach dem Entfernen von ungültigen Tags noch Tags übrig sind
+        if (tags.isEmpty()) {
+            throw new IllegalArgumentException("Die Liste der Tags enthält keine gültigen Tags.");
+        }
+
+        return tags;
+    }
+
+
+    @PutMapping("/tags/{tagId}")
+    public ResponseEntity<String> updateTag(@PathVariable("tagId") int tagId, @RequestBody Tag updatedTag) {
+        try {
+            rezepteService.updateTag(tagId, updatedTag.getLabel(), updatedTag.getSeverity());
+            return ResponseEntity.ok("Tag erfolgreich aktualisiert.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag mit der angegebenen ID wurde nicht gefunden.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Aktualisieren des Tags: " + e.getMessage());
+        }
+    }
+
+
 
     /*PUT-Anfrage Methode auf /api/rezepte/update/{id} aktualisiert ein bestehendes Rezept. Sie versucht, ein Rezept mit der spezifizierten ID zu aktualisieren.*/
     @PutMapping("/update/{id}")

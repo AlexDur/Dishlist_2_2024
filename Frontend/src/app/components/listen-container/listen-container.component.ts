@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Rezept} from "../.././models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
+import {Tag} from "../../models/tag";
 
 @Component({
   selector: 'app-listen-container',
@@ -105,7 +106,6 @@ export class ListenContainerComponent implements OnInit{
       name: '',
       onlineAdresse: '',
       datum: currentDate,
-      person: '',
       status: false,
       bewertung: 0,
     };
@@ -123,7 +123,10 @@ export class ListenContainerComponent implements OnInit{
   }
 
   saveChanges(rezept: Rezept) {
-    const selectedTags: string[] = this.tagService.getSelectedTags().map(tag => tag.label);
+    // Hier erhalten Sie die ausgewählten Tags vom TagService
+    const selectedTags:  Tag[] = this.tagService.getSelectedTags();
+
+    // Setzen der ausgewählten Tags für das aktuelle Rezept
     rezept.tags = selectedTags;
 
     if (rezept.id === null || rezept.id === undefined) {
