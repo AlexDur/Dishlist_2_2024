@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,7 +26,7 @@ public class TagService {
     public Tag addTag(Tag tag) {
         try {
             // Überprüfe, ob ein Tag mit dem gleichen Namen bereits existiert
-            Optional<Tag> existingTag = tagRepository.findByName(tag.getName());
+            Optional<Tag> existingTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
 
             if (existingTag.isPresent()) {
                 // Ein Tag mit dem gleichen Namen existiert bereits, gib es zurück
@@ -38,7 +41,21 @@ public class TagService {
         }
     }
 
-
+    public List<Tag> saveTags(List<Tag> tags) {
+        List<Tag> savedTags = new ArrayList<>();
+        for (Tag tag : tags) {
+            // Überprüfen, ob das Tag bereits in der Datenbank vorhanden ist
+            Optional<Tag> existingTagOptional = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
+            if (existingTagOptional.isPresent()) {
+                // Wenn das Tag bereits existiert, fügen Sie es zur Liste der gespeicherten Tags hinzu
+                savedTags.add(existingTagOptional.get());
+            } else {
+                // Wenn das Tag neu ist, speichern Sie es in der Datenbank und fügen Sie es zur Liste der gespeicherten Tags hinzu
+                savedTags.add(tagRepository.save(tag));
+            }
+        }
+        return savedTags;
+    }
 
     // Methode zum Entfernen eines Tags
     @Transactional
@@ -57,12 +74,12 @@ public class TagService {
 
 
     // Methode zum Suchen eines Tags nach Namen
-    public Optional<Tag> findTagByName(String name) {
+    public Optional<Tag> findTagByLabelAndSeverity(String label, String severity) {
         try {
-            return tagRepository.findByName(name);
+            return tagRepository.findByLabelAndSeverity(label, severity);
         } catch (RuntimeException e) {
             // Log the exception, handle it, or rethrow it
-            throw new ServiceException("Error finding tag by name", e);
+            throw new ServiceException("Error finding tag by label and severity", e);
         }
     }
 

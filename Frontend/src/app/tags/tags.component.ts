@@ -20,11 +20,9 @@ export class TagsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['currentRecipe'] && this.currentRecipe) {
-      this.tags = this.convertToTags(this.currentRecipe.tags || []);
+      this.tags = this.currentRecipe.tags || [];
     }
   }
 
-  private convertToTags(tagLabels: string[]): Tag[] {
-    return tagLabels.map(label => ({ label } as Tag));
-  }
+
 }

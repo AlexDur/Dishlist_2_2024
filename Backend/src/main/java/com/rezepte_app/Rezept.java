@@ -10,16 +10,15 @@ import java.util.Set;
 @Entity
 /*Entität ist eine Klasse, die die Attribute und das Verhalten eines Objekts definiert.*/
 
-@Table(name = "rezepte") // Wenn die Tabelle einen anderen Namen hat als die Klasse
+@Table(name = "rezepte")
 public class Rezept {
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @JsonProperty("name")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "onlineAdresse")
@@ -27,17 +26,27 @@ public class Rezept {
     private java.sql.Date datum;
 
     @NotNull
+    @Column(name = "status")
     private boolean status;
 
     @NotNull
+    @Column(name = "bewertung")
     private int bewertung;
 
-    @ManyToMany
-    @JoinTable(
-            name = "rezept_tags",
-            joinColumns = @JoinColumn(name = "rezept_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @OneToMany(mappedBy = "rezept", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Tag> tags = new HashSet<>();
+
+    @Column(name = "istGeaendert")
+    private boolean istGeaendert;
+
+    public Rezept() {
+        // Standardkonstruktor
+    }
+
+    // Getter und Setter für id
+    public int getId() {
+        return id;
+    }
 
     // Getter und Setter
     public Set<Tag> getTags() {
@@ -47,15 +56,6 @@ public class Rezept {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
-
-    private boolean istGeaendert;
-
-    // Konstruktor (kann beibehalten werden)
-    // Getter und Setter für id
-    public int getId() {
-        return id;
-    }
-
 
     public String getName() {
         return name;
