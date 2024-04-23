@@ -94,7 +94,6 @@ export class ListeninhaltComponent {
   }
 
 
-
   /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
   addRow() {
     console.log('selectedRow in addRow:', this.selectedRow);
