@@ -1,3 +1,5 @@
-<div class="tag-container" *ngFor="let tag of tags">
-  <p-tag [value]="tag.label" [severity]="tag.severity"></p-tag>
-</div>
+<ng-container>
+  <p-tag [severity]="currentSeverities['Vorspeise']" (click)="handleClick('Vorspeise')">Vorspeise</p-tag>
+  <p-tag [severity]="currentSeverities['Hauptgang']" (click)="handleClick('Hauptgang')">Hauptgang</p-tag>
+  <p-tag [severity]="currentSeverities['Nachtisch']" (click)="handleClick('Nachtisch')">Nachtisch</p-tag>
+</ng-container>

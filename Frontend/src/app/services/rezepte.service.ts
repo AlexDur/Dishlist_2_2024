@@ -35,8 +35,12 @@ export class RezeptService {
 
     const rezeptMitFormatiertenTags = {
       ...rezept,
+      /*Wenn das tags-Attribut des ursprünglichen rezept-Objekts nicht vorhanden ist
+      oder null oder undefined ist, wird stattdessen ein leeres Array [] zugewiesen.*/
       tags: rezept.tags ?? []
     };
+
+    console.log('Rezepte.service: rezeptMitFormatiertenTags:', rezeptMitFormatiertenTags)
 
     return this.http.post<RezeptAntwort>(
       `${this.backendUrl}/api/rezepte/create`,
