@@ -23,9 +23,8 @@ public class Tag {
     @NotBlank(message = "Severity muss vorhanden sein")
     private String severity;
 
-    @ManyToOne // Many tags can belong to one recipe
-    @JoinColumn(name = "rezept_id") // Foreign key to the recipe table
-    private Rezept rezept; // Reference to the recipe this tag belongs to
+    @ManyToMany(mappedBy = "tags") // Referenziert die 'tags' Sammlung in der Rezept-Entität
+    private Set<Rezept> rezepte = new HashSet<>();
 
     public Tag() {
         // Standardkonstruktor ohne Parameter ist für JPA erforderlich
@@ -47,12 +46,12 @@ public class Tag {
         this.severity = severity;
     }
 
-    public Rezept getRezept() {
-        return rezept;
+    public Set<Rezept> getRezepte() {
+        return rezepte;
     }
 
-    public void setRezept(Rezept rezept) {
-        this.rezept = rezept;
+    public void setRezepte(Set<Rezept> rezepte) {
+        this.rezepte = rezepte;
     }
 
     /*Zur Vermeidung von doppelten Objekten*/

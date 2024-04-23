@@ -33,7 +33,12 @@ public class Rezept {
     @Column(name = "bewertung")
     private int bewertung;
 
-    @OneToMany(mappedBy = "rezept", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "rezept_tag", // Name der Verknüpfungstabelle
+            joinColumns = @JoinColumn(name = "rezept_id"), // Spalte, die auf die Rezept-ID verweist
+            inverseJoinColumns = @JoinColumn(name = "tag_id") // Spalte, die auf die Tag-ID verweist
+    )
     private Set<Tag> tags = new HashSet<>();
 
     @Column(name = "istGeaendert")
@@ -84,6 +89,7 @@ public class Rezept {
     public boolean getStatus() {
         return status;
     }
+
     public void setStatus(boolean status) {
         this.status = status;
     }
@@ -105,5 +111,16 @@ public class Rezept {
         this.istGeaendert = istGeaendert;
     }
 
-
+    @PrePersist
+    @PreUpdate
+    private void validateTags() {
+        for (Tag tag : tags) {
+            if (tag.getLabel() == null || tag.getLabel().isEmpty()) {
+                throw new IllegalArgumentException("AUS REZEPT.java: Ungültiges Tag-Label: " + tag.getLabel());
+            }
+            if (tag.getSeverity() == null || tag.getSeverity().isEmpty()) {
+                throw new IllegalArgumentException("AUS REZEPT.java: Ungültiger Tag-Schweregrad: " + tag.getSeverity());
+            }
+        }
+    }
 }

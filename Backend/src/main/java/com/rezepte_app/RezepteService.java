@@ -62,44 +62,31 @@ public class RezepteService {
     }
 
     @Transactional
-    @Valid
-    public Rezept createRezept(Rezept rezept, List<Tag> tags) {
-
-        // Überprüfen der Gültigkeit und Existenz der Tags
+    public Rezept createRezept(@Valid Rezept rezept) {
         Set<Tag> savedTags = new HashSet<>();
-        for (Tag tag : tags) {
-            if (tag != null && tag.getLabel() != null && tag.getSeverity() != null) {
-                Optional<Tag> existingTagOptional = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
-                if (existingTagOptional.isPresent()) {
-                    savedTags.add(existingTagOptional.get());
-                } else {
-                    // Überprüfen, ob das Tag bereits in der Liste der zu speichernden Tags vorhanden ist
-                    if (!savedTags.contains(tag)) {
-                        Tag savedTag = tagRepository.save(tag);
-                        savedTags.add(savedTag);
-                    } else {
-                        throw new IllegalArgumentException("Das Tag ist bereits dem Rezept zugeordnet.");
-                    }
-                }
-            } else {
-                throw new IllegalArgumentException("Ungültiges Tag: " + tag);
+        if (rezept.getTags() != null) {
+            for (Tag tag : rezept.getTags()) {
+                // Findet das Tag, falls es bereits existiert, oder speichert es neu
+                Tag savedTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity())
+                        .orElseGet(() -> tagRepository.save(tag));
+                savedTags.add(savedTag);
             }
         }
-
-        // Setzen der gültigen Tags im Rezept
         rezept.setTags(savedTags);
-
         return rezepteRepository.save(rezept);
     }
 
     private Set<Tag> verarbeiteUndSpeichereTags(Set<Tag> tags) {
         Set<Tag> verarbeiteteTags = new HashSet<>();
         for (Tag tag : tags) {
-            Tag verarbeiteterTag = tagService.addTag(tag);
+            // Prüft, ob der Tag bereits existiert und verwende diesen, ansonsten wird ein neuer gespeichert.
+            Tag verarbeiteterTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity())
+                    .orElseGet(() -> tagRepository.save(tag));
             verarbeiteteTags.add(verarbeiteterTag);
         }
         return verarbeiteteTags;
     }
+
 
     public Optional<Rezept> updateRezept(Rezept rezept) {
         Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(rezept.getId());

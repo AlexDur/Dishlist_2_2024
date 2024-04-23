@@ -1,4 +1,5 @@
 package com.rezepte_app;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +17,14 @@ public class GlobalExceptionHandler {
         Map<String, Object> errors = new HashMap<>();
         errors.put("timestamp", LocalDateTime.now());
         errors.put("message", "Validation failed");
-        Collectors Collectors = null;
+
+        // Hier verwenden wir direkt `Collectors.toList()` um eine Liste von Fehlermeldungen zu erstellen
         errors.put("errors", ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> error.getDefaultMessage())
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList()));
+
         return ResponseEntity.badRequest().body(errors);
     }
-
-
 }
-

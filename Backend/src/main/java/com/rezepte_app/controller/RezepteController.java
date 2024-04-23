@@ -2,6 +2,7 @@
 package com.rezepte_app.controller;
 
 import com.rezepte_app.*;
+import jakarta.validation.Valid;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,22 +70,12 @@ public class RezepteController {
     und verwendet rezepteService, um das Rezept in der Datenbank zu speichern. Bei Erfolg wird eine Antwort mit dem Status
     HttpStatus.CREATED und Details zum erstellten Rezept zurückgegeben*/
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createRezept(@RequestBody Rezept rezept) {
+    public ResponseEntity<Map<String, Object>> createRezept(@RequestBody @Valid Rezept rezept) {
         logger.info("POST-Anfrage erhalten für Rezepterstellung: {}", rezept);
 
-        // Stellt sicher, dass die Tags als Set<Tag> gespeichert werden
-        Set<Tag> tags = new HashSet<>(rezept.getTags()); // Konvertiere die Liste von Tags in ein Set
-        rezept.setTags(tags);
-
         try {
-            // Stellt sicher, dass die Tags als Set<Tag> gespeichert werden und bereitet sie vor
-            Set<Tag> preparedTags = prepareAndValidateTags(rezept.getTags());
-
-            // Setzt die vorbereiteten Tags im Rezept
-            rezept.setTags(preparedTags);
-
-            // Erstellt das Rezept mit den vorbereiteten Tags
-            Rezept createdRezept = rezepteService.createRezept(rezept, new ArrayList<>(preparedTags));
+            // Erstellt das Rezept direkt ohne manuelle Validierung der Tags
+            Rezept createdRezept = rezepteService.createRezept(rezept);
 
             // Erstellt ein JSON-Objekt für die Antwort
             Map<String, Object> response = new HashMap<>();
@@ -107,31 +98,11 @@ public class RezepteController {
         }
     }
 
-
     /*Methode verarbeitet GET-Anfragen auf /api/rezepte/alleRezepte und holt über rezepteService alle Rezepte aus der Datenbank.*/
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {
         return rezepteService.fetchAlleRezepte();
     }
-
-    // Methode zum Vorbereiten und Validieren der Tags
-    private Set<Tag> prepareAndValidateTags(Set<Tag> tags) {
-        // Überprüfe, ob die Tags nicht null sind
-        if (tags == null) {
-            throw new IllegalArgumentException("Die Liste der Tags darf nicht null sein.");
-        }
-
-        // Entferne leere oder ungültige Tags
-        tags.removeIf(tag -> tag == null || tag.getLabel() == null || tag.getSeverity() == null);
-
-        // Überprüfe, ob nach dem Entfernen von ungültigen Tags noch Tags übrig sind
-        if (tags.isEmpty()) {
-            throw new IllegalArgumentException("Die Liste der Tags enthält keine gültigen Tags.");
-        }
-
-        return tags;
-    }
-
 
     @PutMapping("/tags/{tagId}")
     public ResponseEntity<String> updateTag(@PathVariable("tagId") int tagId, @RequestBody Tag updatedTag) {
