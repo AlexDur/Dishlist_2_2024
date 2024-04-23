@@ -1,0 +1,133 @@
+<div class="table-container">
+  <p-table
+    #dt1
+    [value]="rezepte"
+    dataKey="id"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
+    currentPageReportTemplate="Zeige {first} aus {last} von {totalRecords} Einträgen"
+    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+  >
+
+    <ng-template pTemplate="caption">
+      <div class="rechts-ausgerichtet">
+        <button pButton type="button" (click)="addRow()">Rezept erstellen</button>
+        <span class="p-input-icon-left">
+      </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width:10rem">
+          <div class="flex align-items-center ">
+            Rezept
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th style="min-width:15rem">
+          <div class="flex align-items-left justify-content-start">
+            Online-Adresse
+            <p-columnFilter type="text" field="online_adresse" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th style="min-width:18rem">
+          <div class="flex align-items-left justify-content-start">
+            Tags
+            <p-columnFilter type="text" field="Tags" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th style="min-width:5rem">
+          <div class="flex align-items-center">
+            Datum
+            <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th style="min-width:5rem">
+          <div class="flex align-items-center">
+            Status
+            <p-columnFilter field="status" matchMode="equals" display="menu">
+              <p>Gekocht</p>
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-dropdown [ngModel]="value" (onChange)="filter($event.value)" placeholder="Any">
+                  <ng-template let-option pTemplate="item">
+                    <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
+
+                  </ng-template>
+                </p-dropdown>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+
+        <th style="width: 3rem">
+          <div class="flex align-items-center">
+            Bewertung
+            <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th style="width: 3rem">
+          <div>Aktion</div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rezept  >
+      <tr [ngClass]="{'markiertes-rezept': selectedRow === rezept}" (click)="selectRow(rezept)">
+        <td>
+          <input [(ngModel)]="rezept.name"  (ngModelChange)="setGeaendert(rezept)"  *ngIf="editMode && selectedRow === rezept"/>
+          <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
+        </td>
+
+        <td>
+          <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse"  (ngModelChange)="setGeaendert(rezept)" />
+          <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
+        </td>
+
+        <td>
+          <!--<app-dropdown [currentRecipe]="currentRecipe"></app-dropdown>-->
+          <app-tags [currentRecipe]="currentRecipe"></app-tags>
+        </td>
+
+        <td>
+          <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd.MM.yyyy' }}</span>
+        </td>
+
+        <td>
+          <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])"  [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
+        </td>
+
+        <td>
+          <span class="p-column-title">Reviews</span>
+          <p-rating [ngModel]="rezept.bewertung" [cancel]="false" (ngModelChange)="onRatingChanged($event, rezept)"></p-rating></td>
+        <td>
+
+
+      <tr *ngIf="editMode && rezept === selectedRow">
+        <td colspan="7" class="text-center">
+          <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
+        </td>
+      </tr>
+      <tr *ngIf="!editMode && rezept === selectedRow">
+        <td colspan="7" class="text-center">
+          <button pButton *ngIf="showDeleteButton && rezept.id" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
+        </td>
+      </tr>
+
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">Keine Rezepte gefunden.</td>
+      </tr>
+    </ng-template>
+    <div>
+      Test
+    </div>
+  </p-table>
+</div>
