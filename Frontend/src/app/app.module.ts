@@ -15,7 +15,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SeitenleisteComponent} from "./seitenleiste/seitenleiste.component";
 import {CheckboxModule} from "primeng/checkbox";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {DropdownComponent} from './dropdown/dropdown.component';
+/*import {DropdownComponent} from './dropdown/dropdown.component';*/
 import {TieredMenuModule} from "primeng/tieredmenu";
 import {TagsComponent} from "./tags/tags.component";
 import {ListeninhaltComponent} from './listeninhalt/listeninhalt.component';
@@ -26,7 +26,7 @@ import {ListeninhaltComponent} from './listeninhalt/listeninhalt.component';
     AppComponent,
     ListenContainerComponent,
     SeitenleisteComponent,
-    DropdownComponent,
+/*    DropdownComponent,*/
     TagsComponent,
     ListeninhaltComponent
   ],

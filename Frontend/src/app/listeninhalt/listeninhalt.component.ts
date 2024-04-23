@@ -3,6 +3,7 @@ import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import {TagService} from "../services/tags.service";
 import {Tag} from "../models/tag";
+import {Dish} from "../tags/tags.component"
 
 @Component({
   selector: 'app-listeninhalt',
@@ -24,6 +25,7 @@ export class ListeninhaltComponent {
   rezeptGeladen: boolean = false;
   tagToggleStates: { [key: number]: boolean } = {};
   currentRecipe: Rezept | undefined;
+  activeTags: Set<Dish> = new Set();
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
@@ -49,6 +51,14 @@ export class ListeninhaltComponent {
       }
     });
   }
+
+  onActiveTagsChanged(activeTags: Set<Dish>): void {
+
+    this.activeTags = activeTags // Update the activeTags list
+    console.log('Listeninhalt: activeTag', activeTags)
+  }
+
+
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -123,6 +133,7 @@ export class ListeninhaltComponent {
   saveChanges(rezept: Rezept) {
     // Erhalt der ausgewählten Tags vom TagService
     const selectedTags:  Tag[] = this.tagService.getSelectedTags();
+    console.log('listeninhalt: selectedTag', selectedTags)
 
     // Setzen der ausgewählten Tags für das aktuelle Rezept
     rezept.tags = selectedTags;

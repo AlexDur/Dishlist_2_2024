@@ -92,7 +92,7 @@
 
         <td>
           <!--<app-dropdown [currentRecipe]="currentRecipe"></app-dropdown>-->
-          <app-tags [currentRecipe]="currentRecipe"></app-tags>
+          <app-tags [currentRecipe]="currentRecipe"  (activeTagsChanged)="onActiveTagsChanged($event)"></app-tags>
         </td>
 
         <td>

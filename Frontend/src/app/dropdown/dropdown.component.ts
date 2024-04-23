@@ -1,3 +1,4 @@
+/*
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {TagService} from "../services/tags.service";
@@ -168,3 +169,4 @@ export class DropdownComponent implements OnInit{
   }
 
 }
+*/

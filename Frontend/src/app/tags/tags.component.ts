@@ -1,9 +1,8 @@
-import {ChangeDetectorRef, Component, Input} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Rezept} from "../models/rezepte";
+import {TagService} from "../services/tags.service";
 
-
-type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
-
+export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 
 @Component({
   selector: 'app-tags',
@@ -13,6 +12,7 @@ type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 
 export class TagsComponent {
   @Input()currentRecipe: Rezept | undefined;
+  @Output() activeTagsChanged = new EventEmitter<Set<Dish>>();
 
   // Anfangs- und aktuelle Severity-Zustände
   initialSeverities: Record<Dish, string> = {
@@ -23,7 +23,7 @@ export class TagsComponent {
   currentSeverities: Record<Dish, string> = {...this.initialSeverities};
   activeTags: Set<Dish> = new Set();
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private tagService: TagService) {}
 
 
   handleClick(dish: Dish): void {
@@ -38,5 +38,13 @@ export class TagsComponent {
       this.currentSeverities[dish] = 'info';
     }
     this.cdr.detectChanges();
+
+    // Aktualisiere die Tags im TagService
+    this.updateTags(this.activeTags);
   }
+
+  updateTags(activeTags: Set<Dish>): void {
+    this.tagService.updateActiveTags(activeTags);
+  }
+
 }
