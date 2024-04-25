@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import {TagService} from "../services/tags.service";
@@ -10,7 +10,7 @@ import {Dish} from "../tags/tags.component"
   templateUrl: './listeninhalt.component.html',
   styleUrls: ['./listeninhalt.component.scss']
 })
-export class ListeninhaltComponent {
+export class ListeninhaltComponent implements OnInit{
 
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   rezepte: Rezept[] = [];
