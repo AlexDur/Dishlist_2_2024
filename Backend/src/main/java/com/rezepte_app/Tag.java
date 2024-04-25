@@ -46,13 +46,6 @@ public class Tag {
         this.severity = severity;
     }
 
-    public Set<Rezept> getRezepte() {
-        return rezepte;
-    }
-
-    public void setRezepte(Set<Rezept> rezepte) {
-        this.rezepte = rezepte;
-    }
 
     /*Zur Vermeidung von doppelten Objekten*/
     @Override
