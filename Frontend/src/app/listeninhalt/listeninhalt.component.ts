@@ -25,7 +25,7 @@ export class ListeninhaltComponent implements OnInit{
   rezeptGeladen: boolean = false;
   tagToggleStates: { [key: number]: boolean } = {};
   currentRecipe: Rezept | undefined;
-  activeTags: Set<Dish> = new Set();
+  selectedTag: Set<Dish> = new Set();
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
@@ -52,10 +52,10 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-  onActiveTagsChanged(activeTags: Set<Dish>): void {
+  onselectedTagChanged(selectedTag: Set<Dish>): void {
 
-    this.activeTags = activeTags // Update the activeTags list
-    console.log('Listeninhalt: activeTag', activeTags)
+    this.selectedTag = selectedTag // Update the selectedTag list
+    console.log('Listeninhalt: activeTag', selectedTag)
   }
 
 
