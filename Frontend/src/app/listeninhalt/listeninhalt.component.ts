@@ -1,17 +1,18 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import {TagService} from "../services/tags.service";
+
+import {Dish, TagsComponent} from "../tags/tags.component"
 import {Tag} from "../models/tag";
-import {Dish} from "../tags/tags.component"
 
 @Component({
   selector: 'app-listeninhalt',
   templateUrl: './listeninhalt.component.html',
   styleUrls: ['./listeninhalt.component.scss']
 })
-export class ListeninhaltComponent implements OnInit{
-
+export class ListeninhaltComponent implements OnInit, AfterViewInit{
+  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   rezepte: Rezept[] = [];
   newRecipe: any = {}
@@ -25,11 +26,13 @@ export class ListeninhaltComponent implements OnInit{
   rezeptGeladen: boolean = false;
   tagToggleStates: { [key: number]: boolean } = {};
   currentRecipe: Rezept | undefined;
-  selectedTag: Set<Dish> = new Set();
+  selectedTag: Set<Tag> = new Set<Tag>();
+
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
   }
+
 
   ngOnInit(): void {
     this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
@@ -39,6 +42,11 @@ export class ListeninhaltComponent implements OnInit{
           rezept.datum = new Date(rezept.datum);
         }
         return rezept;
+      });
+      this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
+        // Logik, um die ausgewählten Tags zu verarbeiten
+        console.log('Ausgewählte Tags wurden geändert:', selectedTags);
+        // Optional: Aktualisieren Sie die Tags im aktuellen Rezept oder führen Sie weitere Aktionen durch
       });
 
       // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
@@ -52,12 +60,21 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-  onselectedTagChanged(selectedTag: Set<Dish>): void {
 
-    this.selectedTag = selectedTag // Update the selectedTag list
-    console.log('Listeninhalt: activeTag', selectedTag)
+  ngAfterViewInit() {
+    if (this.tagsComponent) {
+      this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
+        console.log('Ausgewählte Tags wurden geändert:', selectedTags);
+      });
+    } else {
+      console.error('TagsComponent ist nicht verfügbar.');
+    }
   }
 
+  onselectedTagChanged(selectedTag: Tag[]): void {
+    this.selectedTag = new Set(selectedTag);
+    console.log('Listeninhalt: activeTag', selectedTag)
+  }
 
 
   getSeverity(status: boolean | string): string {
@@ -100,9 +117,7 @@ export class ListeninhaltComponent implements OnInit{
 
   setGeaendert(rezept: Rezept) {
     rezept.istGeaendert = true;
-
   }
-
 
   /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
   addRow() {

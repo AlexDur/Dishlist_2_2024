@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {TagService} from "../services/tags.service";
 import {Tag} from "../models/tag";
-import {BehaviorSubject} from "rxjs";
+import {Subscription} from "rxjs";
 
 export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 
@@ -12,10 +12,13 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   styleUrls: ['./tags.component.scss']
 })
 
-export class TagsComponent {
+export class TagsComponent implements OnInit, OnDestroy{
   @Input()currentRecipe: Rezept | undefined;
-  @Output() selectedTagsChanged = new EventEmitter
-  private tagsSubject = new BehaviorSubject<Tag[]>([]);
+  @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
+  public subscription?: Subscription;
+  public tags: Tag[] = [];
+
+  /*  private tagsSubject = new BehaviorSubject<Tag[]>([]);*/
   currentSeverities: Record<'Vorspeise' | 'Hauptgang' | 'Nachtisch', 'success' | 'info' | 'warning' | 'danger' | 'default'> = {
     Vorspeise: 'success',
     Hauptgang: 'warning',
@@ -34,23 +37,27 @@ export class TagsComponent {
     Nachtisch: 'danger'
   };}
 
+  ngOnInit(): void {
+    this.subscription = this.tagService.tags$.subscribe(tags => {
+      this.tags = tags;
+      console.log('Aktualisierte Tags:', tags);
+    });
+  }
+
   handleClick(tag: Tag): void {
-    const newSeverity = tag.severity === 'info' ? this.initialSeverities[tag.label as Dish] : 'info';
-    this.currentSeverities[tag.label as Dish] = newSeverity;  // Update currentSeverities
-    const updatedTags = this.tagsSubject.getValue();
+    const newSeverity = tag.severity === 'info' ? this.initialSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] : 'info';
+    this.currentSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] = newSeverity;
+    let updatedTags = this.tagService.getSelectedTags();
     const tagIndex = updatedTags.findIndex(t => t.label === tag.label);
     if (tagIndex !== -1) {
       updatedTags[tagIndex] = {...updatedTags[tagIndex], severity: newSeverity};
     } else {
       updatedTags.push({ ...tag, severity: newSeverity });
     }
-    this.tagsSubject.next(updatedTags);
-    this.cdr.detectChanges();  // Notify Angular to update the view
-    this.selectedTagsChanged.emit(new Set(this.tagsSubject.getValue())); // Notify parent component
-    this.updateTags(); // Update tags in the service after handling the click
+    this.tagService.updateSelectedTags(updatedTags);  // Updates the tags in the service
+    this.selectedTagsChanged.emit(updatedTags);  // Notify parent component
+    this.updateTags();  // Ensure tags are updated in the service
   }
-
-
 
   getTagFromLabel(label: 'Vorspeise' | 'Hauptgang' | 'Nachtisch'): Tag {
     const tag = {
@@ -61,11 +68,14 @@ export class TagsComponent {
     return tag;
   }
 
-
-
   updateTags(): void {
-    // Aktualisiere alle Tags basierend auf dem aktuellen Zustand im Subject
-    this.tagService.updateSelectedTags(Array.from(this.tagsSubject.getValue()));
+    this.tagService.updateSelectedTags(Array.from(this.tagService.getSelectedTags()));
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 

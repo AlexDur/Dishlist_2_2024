@@ -11,24 +11,22 @@ export class TagService {
   public tags$ = this.tagsSubject.asObservable();
 
   updateSelectedTags(selectedTags: Tag[]): void {
-    const tags = this.tagsSubject.getValue(); // Aktuelle Tags abrufen
-    const updatedTags: Tag[] = [];
+    const tags = this.tagsSubject.getValue();
+    const updatedTags = tags.map(tag => {
+      const foundTag = selectedTags.find(t => t.label === tag.label);
+      return foundTag ? { ...tag, ...foundTag } : tag;
+    });
 
-    // Überprüfen, ob die Tags bereits im aktuellen Set enthalten sind, und sie aktualisieren oder hinzufügen
-    selectedTags.forEach(selectedTag => {
-      const existingTagIndex = tags.findIndex(tag => tag.label === selectedTag.label); // Korrektur: Vergleich der Labels
-      if (existingTagIndex !== -1) {
-        // Tag existiert bereits, aktualisieren
-        updatedTags.push({ ...tags[existingTagIndex], ...selectedTag }); // Annahme: selectedTag könnte aktualisierte Informationen haben
-      } else {
-        // Tag existiert nicht, hinzufügen
-        updatedTags.push(selectedTag); // Annahme: selectedTag ist bereits vollständig definiert
+    // Fügen Sie fehlende Tags hinzu, die noch nicht in der Liste sind
+    selectedTags.forEach(tag => {
+      if (!updatedTags.some(t => t.label === tag.label)) {
+        updatedTags.push(tag);
       }
     });
 
-    // Aktualisieren des Subjects mit den neuen Tags
     this.tagsSubject.next(updatedTags);
   }
+
 
 
   getSelectedTags(): Tag[] {
