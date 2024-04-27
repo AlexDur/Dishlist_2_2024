@@ -25,7 +25,6 @@ import {ListeninhaltComponent} from './listeninhalt/listeninhalt.component';
   declarations: [
     AppComponent,
     ListenContainerComponent,
-    SeitenleisteComponent,
 /*    DropdownComponent,*/
     TagsComponent,
     ListeninhaltComponent
