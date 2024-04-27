@@ -44,27 +44,27 @@ public class RezepteController {
     private RezepteService rezepteService; // Injizieren des RezepteService
 
     // Methode zum Hinzufügen eines Tags zu einem Rezept
-    @PostMapping("/{rezeptId}/addTag")
-    public ResponseEntity<String> addTagToRezept(@PathVariable("rezeptId") int rezeptId, @RequestBody Tag tag) {
+    @PostMapping("/{rezeptId}/addTags")
+    public ResponseEntity<String> addTagsToRezept(@PathVariable("rezeptId") int rezeptId, @RequestBody List<Tag> tags) {
         try {
-            rezepteService.addTagToRezept(rezeptId, tag);
-            return ResponseEntity.ok("Tag erfolgreich zum Rezept hinzugefügt.");
+            rezepteService.addTagsToRezept(rezeptId, tags);
+            return ResponseEntity.ok("Tags erfolgreich zum Rezept hinzugefügt.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping("/tags")
-    public ResponseEntity<String> saveTags(@RequestBody List<Tag> tags) {
-        try {
-            // Aufrufen des entsprechenden Service, um die Tags zu speichern
-            List<Tag> savedTags = tagService.saveTags(tags);
 
-            return ResponseEntity.ok("Tags erfolgreich gespeichert.");
+    @PostMapping("/tags")
+    public ResponseEntity<List<Tag>> saveTags(@RequestBody List<Tag> tags) {
+        try {
+            List<Tag> savedTags = tagService.saveTags(tags);
+            return ResponseEntity.ok(savedTags); // Rückgabe der gespeicherten Tags
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Speichern der Tags: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
     /*Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Sie nimmt ein Rezept-Objekt aus dem Request Body entgegen
     und verwendet rezepteService, um das Rezept in der Datenbank zu speichern. Bei Erfolg wird eine Antwort mit dem Status

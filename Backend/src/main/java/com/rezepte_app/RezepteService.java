@@ -47,19 +47,19 @@ public class RezepteService {
 
     // Methode zum Hinzufügen eines Tags zu einem Rezept
     @Transactional
-    public void addTagToRezept(int rezeptId, Tag tag) {
-        Optional<Rezept> rezeptOptional = rezepteRepository.findById(rezeptId);
-        if (rezeptOptional.isPresent()) {
-            Rezept rezept = rezeptOptional.get();
-            Tag tagToAdd = tagService.addTag(tag);
+    public void addTagsToRezept(int rezeptId, List<Tag> tags) {
+        Rezept rezept = rezepteRepository.findById(rezeptId)
+                .orElseThrow(() -> new IllegalArgumentException("Rezept mit der angegebenen ID wurde nicht gefunden."));
+
+        for (Tag tag : tags) {
+            Tag tagToAdd = tagService.addTag(tag);  // Stellen Sie sicher, dass Ihre tagService.addTag Methode effizient ist
             if (!rezept.getTags().contains(tagToAdd)) {
                 rezept.getTags().add(tagToAdd);
-                rezepteRepository.save(rezept);
             }
-        } else {
-            throw new IllegalArgumentException("Rezept mit der angegebenen ID wurde nicht gefunden.");
         }
+        rezepteRepository.save(rezept);  // Speichern außerhalb der Schleife für Effizienz
     }
+
 
     @Transactional
     public Rezept createRezept(@Valid Rezept rezept) {

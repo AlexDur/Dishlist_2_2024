@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.service;
 
 import com.rezepte_app.Tag;
@@ -10,7 +11,8 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class ActiveTagService {
+public class ActiveTagService */
+/*{
 
     private final TagRepository tagRepository;
 
@@ -23,9 +25,15 @@ public class ActiveTagService {
         return new HashSet<>(tagRepository.saveAll(tags));
     }
 
+*//*
+*/
 /*    public Tag getActiveTags(int userId) {
         // Implementieren Sie die Logik, um das aktive Tag für den Benutzer abzurufen.
         return tagRepository.findById(userId).orElse(null); // Nur ein Platzhalter
-    }*/
-}
+    }*//*
+*/
+/*
+}*//*
 
+
+*/

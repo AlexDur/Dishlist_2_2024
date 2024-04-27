@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,6 +23,8 @@ public class TagService {
     }
 
     // Methode zum Hinzufügen eines neuen Tags, falls es noch nicht existiert
+    // Transactional: Operationen werden innerhalb einer Transaktion durchgeführt.
+    // Das bedeutet, dass entweder alle Änderungen erfolgreich durchgeführt oder im Fehlerfall komplett zurückgerollt werden.
     @Transactional
     public Tag addTag(Tag tag) {
         try {
@@ -42,20 +45,11 @@ public class TagService {
     }
 
     public List<Tag> saveTags(List<Tag> tags) {
-        List<Tag> savedTags = new ArrayList<>();
-        for (Tag tag : tags) {
-            // Überprüfen, ob das Tag bereits in der Datenbank vorhanden ist
-            Optional<Tag> existingTagOptional = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
-            if (existingTagOptional.isPresent()) {
-                // Wenn das Tag bereits existiert, fügen es zur Liste der gespeicherten Tags hinzu
-                savedTags.add(existingTagOptional.get());
-            } else {
-                // Wenn das Tag neu ist, speichere in der Datenbank und fügen es zur Liste der gespeicherten Tags hinzu
-                savedTags.add(tagRepository.save(tag));
-            }
-        }
-        return savedTags;
+        return tags.stream()
+                .map(tagRepository::save)
+                .collect(Collectors.toList());
     }
+
 
     // Methode zum Entfernen eines Tags
     @Transactional
