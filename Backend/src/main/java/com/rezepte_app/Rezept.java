@@ -35,7 +35,7 @@ public class Rezept {
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
-            name = "rezept_tag", // Name der Verknüpfungstabelle
+            name = "rezept_tags", // Name der Verknüpfungstabelle
             joinColumns = @JoinColumn(name = "rezept_id"), // Spalte, die auf die Rezept-ID verweist
             inverseJoinColumns = @JoinColumn(name = "tag_id") // Spalte, die auf die Tag-ID verweist
     )
