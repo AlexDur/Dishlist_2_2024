@@ -5,10 +5,6 @@ _
 java:S6813+"BRemove this field injection and use constructor injection instead.(êæÄŞ8©µ›Êî1
 P
 java:S6856z".Bind path variable "id" to a method parameter.(¢ŠÉûÿÿÿÿ8şÅÑìÓ1
-_
-java:S1854="=Remove this useless assignment to local variable "savedTags".(‘öÃêüÿÿÿÿ8Ş¶›Êî1
-P
-java:S1481=".Remove this unused "savedTags" local variable.(‘öÃêüÿÿÿÿ8í¶›Êî1
 `
 java:S1128
 "CRemove this unused import 'org.springframework.stereotype.Service'.(¼º¡Ú8Á¡°ê1

@@ -108,7 +108,6 @@
           <p-rating [ngModel]="rezept.bewertung" [cancel]="false" (ngModelChange)="onRatingChanged($event, rezept)"></p-rating></td>
         <td>
 
-
       <tr *ngIf="editMode && rezept === selectedRow">
         <td colspan="7" class="text-center">
           <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
