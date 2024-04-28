@@ -55,12 +55,9 @@
             <p-columnFilter field="status" matchMode="equals" display="menu">
               <p>Gekocht</p>
               <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                <p-dropdown [ngModel]="value" (onChange)="filter($event.value)" placeholder="Any">
                   <ng-template let-option pTemplate="item">
                     <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
-
                   </ng-template>
-                </p-dropdown>
               </ng-template>
             </p-columnFilter>
           </div>
