@@ -1,5 +1,5 @@
 
 <div class="grid-container">
-  <app-seitenleiste></app-seitenleiste>
-  <app-listeninhalt></app-listeninhalt>
+  <app-seitenleiste (filteredRezepte)="onRezepteFiltered($event)"></app-seitenleiste>
+  <app-listeninhalt [rezepte]="filteredRezepte"></app-listeninhalt>
 </div>

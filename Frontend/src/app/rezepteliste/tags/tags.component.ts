@@ -38,10 +38,10 @@ export class TagsComponent implements OnInit, OnDestroy{
   };}
 
   ngOnInit(): void {
-    this.subscription = this.tagService.tags$.subscribe(tags => {
+ /*   this.subscription = this.tagService.tags$.subscribe(tags => {
       this.tags = tags;
       console.log('Aktualisierte Tags:', tags);
-    });
+    });*/
   }
 
   handleClick(tag: Tag): void {

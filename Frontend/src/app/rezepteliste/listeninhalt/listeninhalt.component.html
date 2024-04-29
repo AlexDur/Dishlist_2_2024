@@ -89,7 +89,7 @@
 
         <td>
           <!--<app-dropdown [currentRecipe]="currentRecipe"></app-dropdown>-->
-          <app-tags [currentRecipe]="currentRecipe"  (selectedTagsChanged)="onselectedTagChanged($event)"></app-tags>
+          <app-tags  #tagsComponent [currentRecipe]="currentRecipe"  (selectedTagsChanged)="onselectedTagChanged($event)"></app-tags>
         </td>
 
         <td>
@@ -126,4 +126,3 @@
       Test
     </div>
   </p-table>
-</div>
