@@ -45,11 +45,6 @@ export class ListeninhaltComponent implements OnInit{
         }
         return rezept;
       });
-     /* this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
-        // Logik, um die ausgewählten Tags zu verarbeiten
-        console.log('Ausgewählte Tags wurden geändert:', selectedTags);
-        // Optional: Aktualisieren Sie die Tags im aktuellen Rezept oder führen Sie weitere Aktionen durch
-      });*/
 
       // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
       if (this.rezepte.length > 0) {
@@ -62,29 +57,10 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-/*
-  onRezepteFiltered(filteredRezepte: Rezept[]): void {
-    // Empfange und aktualisiere die Daten
-    this.filteredRezepte = filteredRezepte;
-  }
-*/
-
-  // Zur verzögerten Initialisierung
-/*  ngAfterViewInit() {
-    if (this.tagsComponent) {
-      this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
-        console.log('Ausgewählte Tags wurden geändert:', selectedTags);
-      });
-    } else {
-      console.error('TagsComponent ist nicht verfügbar.');
-    }
-  }*/
-
   onselectedTagChanged(selectedTag: Tag[]): void {
     this.selectedTag = new Set(selectedTag);
     console.log('Listeninhalt: activeTag', selectedTag)
   }
-
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
@@ -203,17 +179,14 @@ export class ListeninhaltComponent implements OnInit{
     // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
   }
 
-
   onRatingChanged(newRating: number, rezept: any) {
     rezept.bewertung = newRating;
     rezept.istGeaendert = true;
   }
 
-
   selectRow(rezept: any) {
     this.selectedRow = rezept;
   }
-
 
   deleteRow(id: number) {
     this.loadRezept().then(() => {
@@ -255,7 +228,6 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-
   openUrl(url: string): void {
     // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -265,6 +237,5 @@ export class ListeninhaltComponent implements OnInit{
 
     }
   }
-
 
 }

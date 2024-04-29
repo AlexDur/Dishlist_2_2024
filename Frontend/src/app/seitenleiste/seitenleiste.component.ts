@@ -13,7 +13,6 @@ export class SeitenleisteComponent implements OnInit {
   @Output() filteredRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
   selectedGerichtarten: string[] = [];
-/*  filteredRezepte: Rezept[] = [];*/
 
   constructor(private filterService: FilterService, private rezepteService: RezeptService) {
   }

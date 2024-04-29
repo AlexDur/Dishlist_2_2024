@@ -12,7 +12,7 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   styleUrls: ['./tags.component.scss']
 })
 
-export class TagsComponent implements OnInit, OnDestroy{
+export class TagsComponent {
   @Input()currentRecipe: Rezept | undefined;
   @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
   public subscription?: Subscription;
@@ -36,13 +36,6 @@ export class TagsComponent implements OnInit, OnDestroy{
     Hauptgang: 'warning',
     Nachtisch: 'danger'
   };}
-
-  ngOnInit(): void {
- /*   this.subscription = this.tagService.tags$.subscribe(tags => {
-      this.tags = tags;
-      console.log('Aktualisierte Tags:', tags);
-    });*/
-  }
 
   handleClick(tag: Tag): void {
     const newSeverity = tag.severity === 'info' ? this.initialSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] : 'info';
@@ -71,13 +64,6 @@ export class TagsComponent implements OnInit, OnDestroy{
   updateTags(): void {
     this.tagService.updateSelectedTags(Array.from(this.tagService.getSelectedTags()));
   }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
 
 
 }
