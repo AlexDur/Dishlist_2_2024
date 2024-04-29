@@ -933,12 +933,6 @@ i
 9Frontend/src/app/seitenleiste/seitenleiste.component.scss,3\d\3d36ee429d7619d927b66e479287b3550db4fae0
 d
 4Backend/src/main/java/com/rezepte_app/Kategorie.java,1\8\18f4be68567b33bae3ccf80b121a177d51804871
-_
-/Frontend/src/app/dropdown/dropdown.component.ts,e\d\ede4ff716a7a903dec8051b72427a354fdb1cc85
-a
-1Frontend/src/app/dropdown/dropdown.component.scss,9\a\9a1612cf29127afd710d56b5b70f78f37d4f16a3
-a
-1Frontend/src/app/dropdown/dropdown.component.html,5\7\577da27dbfdae9dbf1d08a50ec1c7f2ad48b652d
 N
 Frontend/src/app/models/tag.ts,e\f\ef69baf8b81136d68783c6082f3f0c91908fe8f1
 Y
@@ -963,8 +957,6 @@ l
 <Frontend/src/app/seitenleiste/filters/filters.component.scss,e\5\e519f7ec5ead9a5330eb1d5bafbeab87ead50431
 j
 :Frontend/src/app/seitenleiste/filters/filters.component.ts,c\7\c7f1b44513840990ff19513e14ffc026b6649be7
-m
-=Frontend/src/app/seitenleiste/filters/filters.service.spec.ts,0\8\0899db18f853c562a3419614fa0fe831473ec174
 h
 8Frontend/src/app/seitenleiste/filters/filters.service.ts,a\a\aa75b101c121ae4ac04c8598ce0784b711cbacb4
 f
@@ -989,3 +981,5 @@ X
 NFrontend/src/app/rezepteliste/listen-container/listen-container.component.html,e\b\eb9e976b242bf1d15ebd466c1f744fa669f40783
 |
 LFrontend/src/app/rezepteliste/listen-container/listen-container.component.ts,5\a\5a489db4be183ba6282eaf47072fa0e7cf86a527
+B
+Backend/.gitignore,9\a\9a1715d06494ea7aa881e88967fc390b8824fb16

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
@@ -11,10 +11,11 @@ import {Tag} from "../../models/tag";
   templateUrl: './listeninhalt.component.html',
   styleUrls: ['./listeninhalt.component.scss']
 })
-export class ListeninhaltComponent implements OnInit, AfterViewInit{
+export class ListeninhaltComponent implements OnInit{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
-  rezepte: Rezept[] = [];
+  @Input() rezepte: Rezept[] = [];
+  filteredRezepte: Rezept[] = [];
   newRecipe: any = {}
 
   selectedRow: any;
@@ -27,6 +28,7 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
   tagToggleStates: { [key: number]: boolean } = {};
   currentRecipe: Rezept | undefined;
   selectedTag: Set<Tag> = new Set<Tag>();
+
 
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
@@ -43,11 +45,11 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
         }
         return rezept;
       });
-      this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
+     /* this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
         // Logik, um die ausgewählten Tags zu verarbeiten
         console.log('Ausgewählte Tags wurden geändert:', selectedTags);
         // Optional: Aktualisieren Sie die Tags im aktuellen Rezept oder führen Sie weitere Aktionen durch
-      });
+      });*/
 
       // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
       if (this.rezepte.length > 0) {
@@ -60,7 +62,15 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
     });
   }
 
-  ngAfterViewInit() {
+/*
+  onRezepteFiltered(filteredRezepte: Rezept[]): void {
+    // Empfange und aktualisiere die Daten
+    this.filteredRezepte = filteredRezepte;
+  }
+*/
+
+  // Zur verzögerten Initialisierung
+/*  ngAfterViewInit() {
     if (this.tagsComponent) {
       this.tagsComponent.selectedTagsChanged.subscribe(selectedTags => {
         console.log('Ausgewählte Tags wurden geändert:', selectedTags);
@@ -68,7 +78,7 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
     } else {
       console.error('TagsComponent ist nicht verfügbar.');
     }
-  }
+  }*/
 
   onselectedTagChanged(selectedTag: Tag[]): void {
     this.selectedTag = new Set(selectedTag);
@@ -241,6 +251,7 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
       // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
       this.rezeptGeladen = true;
       resolve();
+
     });
   }
 
@@ -254,4 +265,6 @@ export class ListeninhaltComponent implements OnInit, AfterViewInit{
 
     }
   }
+
+
 }
