@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {FilterService} from "primeng/api";
 import {RezeptService} from "../services/rezepte.service";
 import {Tag} from "../models/tag";
+import {Gerichtart} from "../models/gerichtart";
 
 @Component({
   selector: 'app-seitenleiste',
@@ -10,19 +11,53 @@ import {Tag} from "../models/tag";
   styleUrls: ['./seitenleiste.component.scss']
 })
 export class SeitenleisteComponent implements OnInit {
-  @Output() filteredRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
-  rezepte: Rezept[] = [];
+  @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+  @Output() rezepteGefiltert: Rezept[] = [];
   selectedGerichtarten: string[] = [];
+  rezeptGeladen: boolean = false;
+  rezepte: Rezept[] = [];
 
   constructor(private filterService: FilterService, private rezepteService: RezeptService) {
   }
+  ngOnInit(): void {
+    this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
+      console.log('Geladene Rezepte:', rezepte);
+      this.rezepte = rezepte.map((rezept) => {
+        if (rezept.datum) {
+          rezept.datum = new Date(rezept.datum);
+        }
+        return rezept;
+      });
+
+      // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
+      if (this.rezepte.length > 0) {
+        const firstRezeptId = this.rezepte[0]?.id;
+        if (firstRezeptId !== undefined) {
+          // Nur wenn Rezepte vorhanden sind, loadRezept() aufrufen
+          this.loadRezept();
+        }
+      }
+      this.updateGerichtArtCount();
+    });
+  }
+
+  loadRezept(): Promise<void> {
+    // Hier wird das Rezept asynchron geladen
+    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
+    return new Promise<void>((resolve, reject) => {
+      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
+      this.rezeptGeladen = true;
+      resolve();
+
+    });
+  }
 
   /*  interKuechen = [
-      { label: 'Deutsch', value: 'deutsch', count: 3 },
-      { label: 'Chinesisch', value: 'chinesisch', count: 1 },
-      { label: 'Japanisch', value: 'japanisch', count: 0 },
-      { label: 'Italienisch', value: 'italienisch', count: 0 },
-      { label: 'Indisch', value: 'indisch', count: 4 },
+      { label: 'Deutsch', severity: 'deutsch', count: 3 },
+      { label: 'Chinesisch', severity: 'chinesisch', count: 1 },
+      { label: 'Japanisch', severity: 'japanisch', count: 0 },
+      { label: 'Italienisch', severity: 'italienisch', count: 0 },
+      { label: 'Indisch', severity: 'indisch', count: 4 },
     ];*/
 
 
@@ -30,27 +65,22 @@ export class SeitenleisteComponent implements OnInit {
   selectedCategories: string[] = [];
   selectedKuechen: string[] = [];
 
-  gerichtArten = [
-    {label: 'Vorspeise', value: 'vorspeise', count: 1},
-    {label: 'Hauptgang', value: 'hauptgang', count: 2},
-    {label: 'Nachtisch', value: 'nachtisch', count: 3},
-    /*{ label: 'Getränk', value: 'getränk', count: 2 },*/
+  gerichtArten: Gerichtart[] = [
+    {label: 'Vorspeise', severity: 'vorspeise', count: 0 },
+    {label: 'Hauptgang', severity: 'hauptgang', count: 0 },
+    {label: 'Nachtisch', severity: 'nachtisch', count: 0 },
   ];
 
   /*  gerichtEigenschaften = [
-      { label: 'schnell', value: 'schnell', count: 2 },
-      { label: 'kalorienreich', value: 'kalorienreich', count: 3 },
-      { label: 'vegetarisch', value: 'vegetarisch', count: 2 },
-      { label: 'proteinreich', value: 'preoteinreich', count: 0 },
+      { label: 'schnell', severity: 'schnell', count: 2 },
+      { label: 'kalorienreich', severity: 'kalorienreich', count: 3 },
+      { label: 'vegetarisch', severity: 'vegetarisch', count: 2 },
+      { label: 'proteinreich', severity: 'preoteinreich', count: 0 },
     ];*/
 
 
   selectedGerichtEigenschaften: string[] = [];
 
-  ngOnInit(): void {
-    // Beim Initialisieren der Komponente die Zählung der Gerichtarten aktualisieren
-    this.updateGerichtArtCount();
-  }
 
   updateGerichtArtCount(): void {
     // Erhalt aller Rezepte
@@ -78,19 +108,25 @@ export class SeitenleisteComponent implements OnInit {
   }
 
   filterRezepte(): void {
+    if (!this.rezepte) {
+      console.log('Keine Rezepte vorhanden.');
+      return; // Beenden Sie die Funktion, da keine Rezepte vorhanden sind
+    }
+    console.log('Seitenleiste_rezepte', this.rezepte);
     if (this.selectedGerichtarten.length === 0) {
       // Wenn keine Gerichtsarten ausgewählt sind, sende alle Rezepte
       console.log('seitenliste_filterRezepte_nein:', this.selectedGerichtarten)
-      this.filteredRezepte.emit(this.rezepte);
+      this.gefilterteRezepte.emit(this.rezepte);
     } else {
-      console.log('seitenliste_filterRezepte_ja:', this.selectedGerichtarten)
       // Filtere die Rezepte basierend auf den ausgewählten Gerichtsarten
-      const filteredRezepte: Rezept[] = this.rezepte.filter((rezept) => {
-        return rezept.tags?.some((tag) => this.selectedGerichtarten.includes(tag.label));
+      console.log('seitenliste_selectedGerichtarten_ja:', this.selectedGerichtarten)
+      const gefilterteRezepte: Rezept[] = this.rezepte.filter((rezepte) => {
+        return rezepte.tags?.some((tag) => this.selectedGerichtarten.includes(tag.label));
       });
 
       // Sende die gefilterten Rezepte über den EventEmitter
-      this.filteredRezepte.emit(filteredRezepte);
+      this.gefilterteRezepte.emit(gefilterteRezepte);
+      console.log('Seitenleiste_filteredRezepte', gefilterteRezepte)
     }
   }
 

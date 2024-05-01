@@ -1,7 +1,7 @@
 <div class="table-container">
   <p-table
     #dt1
-    [value]="rezepte"
+    [value]="gefilterteRezepte"
     dataKey="id"
     [rows]="10"
     [showCurrentPageReport]="true"
@@ -88,8 +88,7 @@
         </td>
 
         <td>
-          <!--<app-dropdown [currentRecipe]="currentRecipe"></app-dropdown>-->
-          <app-tags  #tagsComponent [currentRecipe]="currentRecipe"  (selectedTagsChanged)="onselectedTagChanged($event)"></app-tags>
+          <app-tags  [currentRecipe]="currentRecipe"  (selectedTagsChanged)="onselectedTagChanged($event)"></app-tags>
         </td>
 
         <td>

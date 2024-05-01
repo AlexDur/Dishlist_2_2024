@@ -1,8 +1,6 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Rezept} from "../.././models/rezepte";
-import {RezeptService} from "../../services/rezepte.service";
-import {TagService} from "../../services/tags.service";
-import {Tag} from "../../models/tag";
+
 
 @Component({
   selector: 'app-listen-container',
@@ -11,8 +9,7 @@ import {Tag} from "../../models/tag";
 })
 
 export class ListenContainerComponent implements OnInit{
-  @Input() filteredRezepte: Rezept[] = [];
-  @Input() rezepte: Rezept[] = [];
+  @Input() rezepteChanged: Rezept[] = [];
 
   constructor() {}
 
@@ -20,10 +17,11 @@ export class ListenContainerComponent implements OnInit{
 
 
   onRezepteFiltered(filteredRezepte: Rezept[]): void {
-    // Hier kannst du die gefilterten Rezepte verarbeiten
+    // Verarbeitung der gefilterten Rezepte
     console.log('Gefilterte Rezepte:', filteredRezepte);
-    this.filteredRezepte = filteredRezepte;
+    this.rezepteChanged = filteredRezepte;
   }
+
 
 }
 
