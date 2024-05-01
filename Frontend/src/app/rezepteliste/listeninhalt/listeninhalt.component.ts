@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
@@ -14,8 +14,8 @@ import {Tag} from "../../models/tag";
 export class ListeninhaltComponent implements OnInit{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
-  @Input() rezepte: Rezept[] = [];
-  filteredRezepte: Rezept[] = [];
+  @Input() gefilterteRezepte: Rezept[] = [];
+  @Output() rezepteChanged: EventEmitter<Rezept[]>;
   newRecipe: any = {}
 
   selectedRow: any;
@@ -33,22 +33,23 @@ export class ListeninhaltComponent implements OnInit{
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
+    this.rezepteChanged = new EventEmitter<Rezept[]>();
   }
 
 
   ngOnInit(): void {
-    this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
-      console.log('Geladene Rezepte:', rezepte);
-      this.rezepte = rezepte.map((rezept) => {
-        if (rezept.datum) {
-          rezept.datum = new Date(rezept.datum);
+    this.rezepteService.getAlleRezepte().subscribe((gefilterteRezepte) => {
+      console.log('Geladene Rezepte:', gefilterteRezepte);
+      this.gefilterteRezepte = gefilterteRezepte.map((rezeptGefiltert) => {
+        if (rezeptGefiltert.datum) {
+          rezeptGefiltert.datum = new Date(rezeptGefiltert.datum);
         }
-        return rezept;
+        return rezeptGefiltert;
       });
 
       // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
-      if (this.rezepte.length > 0) {
-        const firstRezeptId = this.rezepte[0]?.id;
+      if (this.gefilterteRezepte.length > 0) {
+        const firstRezeptId = this.gefilterteRezepte[0]?.id;
         if (firstRezeptId !== undefined) {
           // Nur wenn Rezepte vorhanden sind, loadRezept() aufrufen
           this.loadRezept();
@@ -57,9 +58,20 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
+  loadRezept(): Promise<void> {
+    // Hier wird das Rezept asynchron geladen
+    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
+    return new Promise<void>((resolve, reject) => {
+      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
+      this.rezeptGeladen = true;
+      resolve();
+
+    });
+  }
+
   onselectedTagChanged(selectedTag: Tag[]): void {
     this.selectedTag = new Set(selectedTag);
-    console.log('Listeninhalt: activeTag', selectedTag)
+    console.log('Listeninhalt: selectedTag', selectedTag)
   }
 
   getSeverity(status: boolean | string): string {
@@ -118,7 +130,7 @@ export class ListeninhaltComponent implements OnInit{
       bewertung: 0,
     };
 
-    this.rezepte.unshift(this.newRecipe);
+    this.gefilterteRezepte.unshift(this.newRecipe);
     this.editMode = true;
 
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
@@ -204,7 +216,7 @@ export class ListeninhaltComponent implements OnInit{
             console.log('Rezept erfolgreich gelöscht');
 
             // Logik, um das gelöschte Rezept aus der Liste zu entfernen
-            this.rezepte = this.rezepte.filter(rezept => rezept.id !== id);
+            this.gefilterteRezepte = this.gefilterteRezepte.filter(rezepeGefiltert => rezepeGefiltert.id !== id);
           },
           (error) => {
             console.error('Fehler beim Löschen des Rezepts', error);
@@ -217,16 +229,7 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-  loadRezept(): Promise<void> {
-    // Hier wird das Rezept asynchron geladen
-    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
-    return new Promise<void>((resolve, reject) => {
-      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
-      this.rezeptGeladen = true;
-      resolve();
 
-    });
-  }
 
   openUrl(url: string): void {
     // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.

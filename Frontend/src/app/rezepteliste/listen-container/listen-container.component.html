@@ -1,5 +1,8 @@
 
 <div class="grid-container">
-  <app-seitenleiste (filteredRezepte)="onRezepteFiltered($event)"></app-seitenleiste>
-  <app-listeninhalt [rezepte]="filteredRezepte"></app-listeninhalt>
+  <!--() ist Event-Bindung. Ausdruck auf der rechten Seite der Gleichung wird ausgelöst, wenn das angegebene Ereignis auftritt-->
+  <app-seitenleiste (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste>
+
+  <!--// [] ist Property-Binding. Wert auf rechter Seiter der Gleichung wird an Eigenschaft auf linker Seite übergeben-->
+  <app-listeninhalt [gefilterteRezepte]="rezepteChanged"></app-listeninhalt>
 </div>

@@ -15,8 +15,6 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 export class TagsComponent {
   @Input()currentRecipe: Rezept | undefined;
   @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
-  public subscription?: Subscription;
-  public tags: Tag[] = [];
 
   /*  private tagsSubject = new BehaviorSubject<Tag[]>([]);*/
   currentSeverities: Record<'Vorspeise' | 'Hauptgang' | 'Nachtisch', 'success' | 'info' | 'warning' | 'danger' | 'default'> = {
@@ -38,6 +36,15 @@ export class TagsComponent {
   };}
 
   handleClick(tag: Tag): void {
+
+    const isCheckboxUnselected = this.currentSeverities[tag.label as Dish] === 'info';
+
+    // Wenn die Checkbox abgewählt wird, rufe die resetTags-Funktion auf
+    if (isCheckboxUnselected) {
+      this.resetTags();
+      return; // Beende die Funktion hier
+    }
+
     const newSeverity = tag.severity === 'info' ? this.initialSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] : 'info';
     this.currentSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] = newSeverity;
     let updatedTags = this.tagService.getSelectedTags();
@@ -63,6 +70,20 @@ export class TagsComponent {
 
   updateTags(): void {
     this.tagService.updateSelectedTags(Array.from(this.tagService.getSelectedTags()));
+  }
+
+  resetTags(): void {
+    // Iteriere über die Schlüssel des currentSeverities-Objekts
+    for (const key in this.currentSeverities) {
+      if (Object.prototype.hasOwnProperty.call(this.currentSeverities, key)) {
+        // Setze die Severity des aktuellen Tags auf den Ausgangszustand zurück
+        this.currentSeverities[key as Dish] = this.initialSeverities[key as Dish];
+      }
+    }
+
+    // Leere die ausgewählten Tags
+    this.tagService.updateSelectedTags([]);
+    this.selectedTagsChanged.emit([]); // Benachrichtige das übergeordnete Komponente über die Änderung
   }
 
 
