@@ -83,6 +83,7 @@ export class SeitenleisteComponent implements OnInit {
       this.gerichtArten.forEach((art) => {
         art.count = 0;
       });
+/*      console.log('gerichtarten', this.gerichtArten)*/
 
       // Rezepte durchlaufen und die Anzahl für jede Gerichtart zählen
       rezepte.forEach((rezept) => {
@@ -137,7 +138,8 @@ export class SeitenleisteComponent implements OnInit {
   }
 
   toggleGerichtsart(label: string): void {
-    if (!label) return; // Prüft, ob das Label gültig ist.
+    console.log('Zustand VOR Toggle:', [...this.selectedGerichtarten]);
+    if (!label || !Array.isArray(this.selectedGerichtarten)) return;
 
     // Filtert das Array, um nur Strings zu behalten.
     this.selectedGerichtarten = this.selectedGerichtarten
@@ -153,7 +155,7 @@ export class SeitenleisteComponent implements OnInit {
       this.selectedGerichtarten.push(label);
     }
 
-    console.log('Zustand nach Toggle:', [...this.selectedGerichtarten]);
+    console.log('Zustand NACH Toggle:', [...this.selectedGerichtarten]);
     this.filterRezepte(); // Aktualisiert die Filterung der Rezepte.
   }
 
