@@ -15,9 +15,9 @@ export class ListeninhaltComponent implements OnInit{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() gefilterteRezepte: Rezept[] = [];
-  @Output() rezepteChanged: EventEmitter<Rezept[]>;
+  /*@Input() originalRezepte: Rezept[] = [];*/
+/*  @Output() rezepteChanged: EventEmitter<Rezept[]>;*/
   newRecipe: any = {}
-
   selectedRow: any;
   istGeaendert: boolean = false;
   istGespeichert: boolean = false;
@@ -30,10 +30,9 @@ export class ListeninhaltComponent implements OnInit{
   selectedTag: Set<Tag> = new Set<Tag>();
 
 
-
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
-    this.rezepteChanged = new EventEmitter<Rezept[]>();
+/*    this.rezepteChanged = new EventEmitter<Rezept[]>();*/
   }
 
 
