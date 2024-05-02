@@ -55,9 +55,9 @@ export class SeitenleisteComponent implements OnInit {
     ];*/
 
 
-  selectedFilters: string[] = [];
+/*  selectedFilters: string[] = [];
   selectedCategories: string[] = [];
-  selectedKuechen: string[] = [];
+  selectedKuechen: string[] = [];*/
 
   gerichtArten: Gerichtart[] = [
     {label: 'Vorspeise', severity: 'vorspeise', count: 0 },
@@ -132,25 +132,31 @@ export class SeitenleisteComponent implements OnInit {
     // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
     console.log('SL:', this.originalRezepte)
     this.rezepte = [...this.originalRezepte];
-    this.filterRezepte();
+   /* this.filterRezepte();*/
     // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
   }
 
   toggleGerichtsart(label: string): void {
-    // Mit label wird der Index der angewählten Gerichtart gesucht
+    if (!label) return; // Prüft, ob das Label gültig ist.
+
+    // Filtert das Array, um nur Strings zu behalten.
+    this.selectedGerichtarten = this.selectedGerichtarten
+      .filter(item => typeof item === 'string');
+
     const index = this.selectedGerichtarten.indexOf(label);
-    /*-1 = kein Element in Array ist*/
+
     if (index !== -1) {
-      // Wenn die Gerichtsart bereits ausgewählt ist, entferne sie aus dem Array
+      // Entfernt das Label, wenn es bereits ausgewählt ist.
       this.selectedGerichtarten.splice(index, 1);
-      console.log('Seitenleiste_selectedGerichtarten', this.selectedGerichtarten)
     } else {
-      // Wenn die Gerichtsart nicht ausgewählt ist, füge sie dem Array hinzu
+      // Fügt das Label hinzu, wenn es noch nicht ausgewählt ist.
       this.selectedGerichtarten.push(label);
     }
-    this.filterRezepte(); // Filtere die Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
 
+    console.log('Zustand nach Toggle:', [...this.selectedGerichtarten]);
+    this.filterRezepte(); // Aktualisiert die Filterung der Rezepte.
   }
+
 
 
 }
