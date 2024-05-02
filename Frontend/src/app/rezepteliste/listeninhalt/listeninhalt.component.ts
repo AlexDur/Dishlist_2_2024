@@ -32,7 +32,6 @@ export class ListeninhaltComponent implements OnInit{
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService) {
     this.selectedRow = {};
-/*    this.rezepteChanged = new EventEmitter<Rezept[]>();*/
   }
 
 
