@@ -12,10 +12,11 @@ import {Gerichtart} from "../models/gerichtart";
 })
 export class SeitenleisteComponent implements OnInit {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
-  @Output() rezepteGefiltert: Rezept[] = [];
+/*  @Output() rezepteGefiltert: Rezept[] = [];*/
   selectedGerichtarten: string[] = [];
   rezeptGeladen: boolean = false;
   rezepte: Rezept[] = [];
+  originalRezepte: Rezept[] = [];
 
   constructor(private filterService: FilterService, private rezepteService: RezeptService) {
   }
@@ -37,6 +38,8 @@ export class SeitenleisteComponent implements OnInit {
           this.loadRezept();
         }
       }
+      this.originalRezepte = [...this.rezepte]; // Speichern Sie die ursprünglichen Rezepte
+      console.log('Seitenleiste_originalRezepte', this.originalRezepte)
       this.updateGerichtArtCount();
     });
   }
@@ -110,38 +113,51 @@ export class SeitenleisteComponent implements OnInit {
   filterRezepte(): void {
     if (!this.rezepte) {
       console.log('Keine Rezepte vorhanden.');
-      return; // Beenden Sie die Funktion, da keine Rezepte vorhanden sind
+      return; // Beenden, da keine Rezepte vorhanden sind
     }
+    if (!Array.isArray(this.selectedGerichtarten)) {
+      this.selectedGerichtarten = [];
+    }
+
     console.log('Seitenleiste_rezepte', this.rezepte);
     if (this.selectedGerichtarten.length === 0) {
       // Wenn keine Gerichtsarten ausgewählt sind, sende alle Rezepte
       console.log('seitenliste_filterRezepte_nein:', this.selectedGerichtarten)
       this.gefilterteRezepte.emit(this.rezepte);
+     /* this.resetRezepte();*/
     } else {
       // Filtere die Rezepte basierend auf den ausgewählten Gerichtsarten
       console.log('seitenliste_selectedGerichtarten_ja:', this.selectedGerichtarten)
-      const gefilterteRezepte: Rezept[] = this.rezepte.filter((rezepte) => {
+      const gefilterteRezepte: Rezept[] = this.originalRezepte.filter((rezepte) => {
         return rezepte.tags?.some((tag) => this.selectedGerichtarten.includes(tag.label));
       });
-
       // Sende die gefilterten Rezepte über den EventEmitter
       this.gefilterteRezepte.emit(gefilterteRezepte);
       console.log('Seitenleiste_filteredRezepte', gefilterteRezepte)
     }
   }
 
+/*  resetRezepte():void{
+    // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
+    this.rezepte = [...this.originalRezepte];
+    this.filterRezepte();
+    // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
+  }*/
+
   toggleGerichtsart(label: string): void {
-    // Überprüfe, ob die Gerichtsart bereits ausgewählt ist
+    // Mit label wird der Index der angewählten Gerichtart gesucht
     const index = this.selectedGerichtarten.indexOf(label);
-    /*-1 wird std.mäßig zurückgegeben, wenn kein Element im Array ist*/
+    /*-1 = kein Element in Array ist*/
     if (index !== -1) {
       // Wenn die Gerichtsart bereits ausgewählt ist, entferne sie aus dem Array
       this.selectedGerichtarten.splice(index, 1);
+      console.log('Seitenleiste_selectedGerichtarten', this.selectedGerichtarten)
     } else {
       // Wenn die Gerichtsart nicht ausgewählt ist, füge sie dem Array hinzu
       this.selectedGerichtarten.push(label);
     }
     this.filterRezepte(); // Filtere die Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
+
   }
 
 

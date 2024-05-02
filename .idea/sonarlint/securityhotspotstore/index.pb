@@ -983,3 +983,5 @@ NFrontend/src/app/rezepteliste/listen-container/listen-container.component.html
 LFrontend/src/app/rezepteliste/listen-container/listen-container.component.ts,5\a\5a489db4be183ba6282eaf47072fa0e7cf86a527
 B
 Backend/.gitignore,9\a\9a1715d06494ea7aa881e88967fc390b8824fb16
+U
+%Frontend/src/app/models/gerichtart.ts,6\e\6ec8e39a837e8d899efa6e9b03ff398d8195374a
