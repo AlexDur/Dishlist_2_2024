@@ -18,40 +18,31 @@ export class SeitenleisteComponent implements OnInit {
   rezepte: Rezept[] = [];
   originalRezepte: Rezept[] = [];
 
-  constructor(private filterService: FilterService, private rezepteService: RezeptService) {
-  }
+  constructor(private filterService: FilterService, private rezepteService: RezeptService) {  }
   ngOnInit(): void {
-    this.rezepteService.getAlleRezepte().subscribe((rezepte) => {
-      console.log('Geladene Rezepte:', rezepte);
-      this.rezepte = rezepte.map((rezept) => {
-        if (rezept.datum) {
-          rezept.datum = new Date(rezept.datum);
-        }
-        return rezept;
-      });
+    this.rezepteService.rezepte$.subscribe(rezepte => {
+      this.rezepte = rezepte.map(rezept => ({
+        ...rezept,
+        datum: rezept.datum ? new Date(rezept.datum) : undefined
+      }));
+      this.originalRezepte = [...this.rezepte];
 
-      // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
       if (this.rezepte.length > 0) {
-        const firstRezeptId = this.rezepte[0]?.id;
-        if (firstRezeptId !== undefined) {
-          // Nur wenn Rezepte vorhanden sind, loadRezept() aufrufen
-          this.loadRezept();
-        }
+        this.loadRezept(); // Angenommen, Sie möchten hier eine spezielle Logik ausführen
       }
-      this.originalRezepte = [...this.rezepte]; // Speichern Sie die ursprünglichen Rezepte
-      console.log('Seitenleiste_originalRezepte', this.originalRezepte)
+      console.log('Listeninhalt_originalRezepte', this.originalRezepte);
       this.updateGerichtArtCount();
     });
+
+    // Stellen Sie sicher, dass die Rezeptdaten geladen sind
+    this.rezepteService.getAlleRezepte();
   }
 
   loadRezept(): Promise<void> {
-    // Hier wird das Rezept asynchron geladen
-    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
-    return new Promise<void>((resolve, reject) => {
-      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
+    // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
+    return new Promise<void>(resolve => {
       this.rezeptGeladen = true;
       resolve();
-
     });
   }
 
@@ -87,7 +78,7 @@ export class SeitenleisteComponent implements OnInit {
 
   updateGerichtArtCount(): void {
     // Erhalt aller Rezepte
-    this.rezepteService.getAlleRezepte().subscribe((rezepte: Rezept[]) => {
+    this.rezepteService.rezepte$.subscribe(rezepte => {
       // Zähler für jede Gerichtart auf 0 zurücksetzen
       this.gerichtArten.forEach((art) => {
         art.count = 0;
@@ -124,7 +115,7 @@ export class SeitenleisteComponent implements OnInit {
       // Wenn keine Gerichtsarten ausgewählt sind, sende alle Rezepte
       console.log('seitenliste_filterRezepte_nein:', this.selectedGerichtarten)
       this.gefilterteRezepte.emit(this.rezepte);
-     /* this.resetRezepte();*/
+      this.resetRezepte();
     } else {
       // Filtere die Rezepte basierend auf den ausgewählten Gerichtsarten
       console.log('seitenliste_selectedGerichtarten_ja:', this.selectedGerichtarten)
@@ -137,12 +128,13 @@ export class SeitenleisteComponent implements OnInit {
     }
   }
 
-/*  resetRezepte():void{
+  resetRezepte():void{
     // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
+    console.log('SL:', this.originalRezepte)
     this.rezepte = [...this.originalRezepte];
     this.filterRezepte();
     // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
-  }*/
+  }
 
   toggleGerichtsart(label: string): void {
     // Mit label wird der Index der angewählten Gerichtart gesucht

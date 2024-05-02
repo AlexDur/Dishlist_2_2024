@@ -37,36 +37,30 @@ export class ListeninhaltComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.rezepteService.getAlleRezepte().subscribe((gefilterteRezepte) => {
-      console.log('Geladene Rezepte:', gefilterteRezepte);
-      this.gefilterteRezepte = gefilterteRezepte.map((rezeptGefiltert) => {
-        if (rezeptGefiltert.datum) {
-          rezeptGefiltert.datum = new Date(rezeptGefiltert.datum);
-        }
-        return rezeptGefiltert;
-      });
+    this.rezepteService.rezepte$.subscribe(rezepte => {
+      this.gefilterteRezepte = rezepte.map(rezept => ({
+        ...rezept,
+        datum: rezept.datum ? new Date(rezept.datum) : undefined
+      }));
 
-      // Annahme: Um das erste Rezept aus der Liste als currentRecipe setzen
       if (this.gefilterteRezepte.length > 0) {
-        const firstRezeptId = this.gefilterteRezepte[0]?.id;
-        if (firstRezeptId !== undefined) {
-          // Nur wenn Rezepte vorhanden sind, loadRezept() aufrufen
-          this.loadRezept();
-        }
+        this.loadRezept(); // Angenommen, Sie möchten hier eine spezielle Logik ausführen
       }
     });
+
+    // Stellen Sie sicher, dass die Rezeptdaten geladen sind
+    this.rezepteService.getAlleRezepte();
   }
 
   loadRezept(): Promise<void> {
-    // Hier wird das Rezept asynchron geladen
-    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
-    return new Promise<void>((resolve, reject) => {
-      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
+    // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
+    return new Promise<void>(resolve => {
       this.rezeptGeladen = true;
       resolve();
-
     });
   }
+
+
 
   onselectedTagChanged(selectedTag: Tag[]): void {
     this.selectedTag = new Set(selectedTag);
@@ -227,8 +221,6 @@ export class ListeninhaltComponent implements OnInit{
       }
     });
   }
-
-
 
   openUrl(url: string): void {
     // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.
