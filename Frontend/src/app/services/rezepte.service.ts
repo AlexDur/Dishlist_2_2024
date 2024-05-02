@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {DatePipe} from "@angular/common";
 
@@ -16,14 +16,28 @@ interface RezeptAntwort {
 export class RezeptService {
 
   private backendUrl = 'http://localhost:8080';
+  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+  public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
 
   private getJsonHeaders() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
   constructor(private http: HttpClient) { }
 
-  getAlleRezepte(): Observable<Rezept[]> {
-    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`);
+  getAlleRezepte(): void {
+    // Nur eine Netzwerkanfrage auslösen, wenn das BehaviorSubject leer ist
+    if (this.rezepteSubject.getValue().length === 0) {
+      this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
+        tap(rezepte => {
+          // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
+          const processedRezepte = rezepte.map(rezept => ({
+            ...rezept,
+            datum: rezept.datum ? new Date(rezept.datum) : undefined
+          }));
+          this.rezepteSubject.next(processedRezepte);
+        })
+      ).subscribe();
+    }
   }
 
 /*  getRezeptById(rezeptId: number): Observable<Rezept> {
