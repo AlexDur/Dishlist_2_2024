@@ -105,7 +105,15 @@ public class RezepteService {
             Set<Tag> verarbeiteteTags = verarbeiteUndSpeichereTags(rezept.getTags());
             existingRezept.setTags(verarbeiteteTags);
 
-            return Optional.of(rezepteRepository.save(existingRezept));
+            // Überprüfe, ob die Tags gültig sind
+            if (!verarbeiteteTags.isEmpty()) {
+                // Speichere das aktualisierte Rezept
+                return Optional.of(rezepteRepository.save(existingRezept));
+            } else {
+                logger.error("Ungültige Tags für das Rezept mit ID {}.", rezept.getId());
+                // Hier könnten Sie eine spezifischere Fehlerbehandlung durchführen oder eine entsprechende Ausnahme werfen
+                return Optional.empty();
+            }
         } else {
             logger.info("Rezept mit ID {} nicht gefunden.", rezept.getId());
             return Optional.empty();
@@ -123,8 +131,6 @@ public class RezepteService {
             throw new IllegalArgumentException("Tag mit der angegebenen ID wurde nicht gefunden.");
         }
     }
-
-
 
 
     public boolean deleteRezept(int id) {

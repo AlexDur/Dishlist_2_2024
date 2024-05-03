@@ -107,6 +107,9 @@ public class RezepteController {
     @PutMapping("/tags/{tagId}")
     public ResponseEntity<String> updateTag(@PathVariable("tagId") int tagId, @RequestBody Tag updatedTag) {
         try {
+            // Hier loggen Sie die empfangenen Tags
+            logger.info("Empfangene Tags: {}", updatedTag);
+
             rezepteService.updateTag(tagId, updatedTag.getLabel(), updatedTag.getSeverity());
             return ResponseEntity.ok("Tag erfolgreich aktualisiert.");
         } catch (IllegalArgumentException e) {
@@ -116,23 +119,30 @@ public class RezepteController {
         }
     }
 
-
-
     /*PUT-Anfrage Methode auf /api/rezepte/update/{id} aktualisiert ein bestehendes Rezept. Sie versucht, ein Rezept mit der spezifizierten ID zu aktualisieren.*/
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateRezept(@RequestBody Rezept rezept) {
+    public ResponseEntity<?> updateRezept(@PathVariable("id") int id, @Valid @RequestBody Rezept rezept) {
         try {
-            Optional<Rezept> updatedRezeptOptional = rezepteService.updateRezept(rezept); // Verwenden des RezepteServices
+            // Hier loggen Sie das empfangene Rezept
+            logger.info("Empfangenes Rezept: {}", rezept);
+
+            if (rezept.getId() != id) {
+                return ResponseEntity.badRequest().body("Die ID des Rezepts stimmt nicht mit der angegebenen ID überein.");
+            }
+
+            Optional<Rezept> updatedRezeptOptional = rezepteService.updateRezept(rezept);
             if (updatedRezeptOptional.isPresent()) {
                 Rezept updatedRezept = updatedRezeptOptional.get();
-                return ResponseEntity.status(HttpStatus.OK).body("Rezept erfolgreich aktualisiert. ID: " + updatedRezept.getId());
+                return ResponseEntity.ok(updatedRezept);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rezept wurde nicht gefunden.");
+                return ResponseEntity.notFound().build(); // Hier wird build() anstelle von body() verwendet
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Aktualisieren des Rezepts: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Fehler beim Aktualisieren des Rezepts: " + e.getMessage());
         }
     }
+
+
 
     /*Für DELETE-Anfragen auf /api/rezepte/delete/{id} versucht diese Methode, ein Rezept mit der gegebenen ID zu löschen*/
     @DeleteMapping("/delete/{id}")

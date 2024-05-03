@@ -80,16 +80,19 @@ export class RezeptService {
     // Überprüfen, ob `tags` definiert ist, und Verwendung eines leeren Arrays als Fallback
     const rezeptMitFormatiertenTags = {
       ...rezept,
-      tags: rezept.tags?.map(tagName => ({ name: tagName })) ?? []
+      /*Wenn das tags-Attribut des ursprünglichen rezept-Objekts nicht vorhanden ist
+      oder null oder undefined ist, wird stattdessen ein leeres Array [] zugewiesen.*/
+      tags: rezept.tags ?? []
     };
 
-    return this.http.put(apiUrl, rezeptMitFormatiertenTags, { headers: this.getJsonHeaders() }).pipe(
+    return this.http.put(apiUrl, rezeptMitFormatiertenTags, { headers: this.getJsonHeaders(), observe: 'response', responseType: 'json' }).pipe(
       catchError((error) => {
         console.error('Fehler beim Aktualisieren des Rezepts', error);
         return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts'));
       })
     );
   }
+
 
 
   deleteRezept(id: number): Observable<any> {
