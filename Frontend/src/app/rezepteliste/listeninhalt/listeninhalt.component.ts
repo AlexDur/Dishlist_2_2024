@@ -59,8 +59,6 @@ export class ListeninhaltComponent implements OnInit{
     });
   }
 
-
-
   onselectedTagChanged(selectedTag: Tag[]): void {
     this.selectedTag = new Set(selectedTag);
     console.log('Listeninhalt: selectedTag', selectedTag)
@@ -68,13 +66,10 @@ export class ListeninhaltComponent implements OnInit{
 
   getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
-      // Behandlung boolescher Werte
-      return status ? 'geplant' : 'gekocht';
+      return status ? 'info' : 'warning'; // Wenn gekocht, dann 'info', sonst keine Farbe
     } else if (typeof status === 'string') {
-      // Behandlung von String-Werten
       switch (status.toLowerCase()) {
         case 'noch nicht gekocht':
-          console.log('Status is noch nicht gekocht');
           return 'danger';
 
         case 'schon gekocht':
@@ -90,9 +85,9 @@ export class ListeninhaltComponent implements OnInit{
 
   getTagValue(status: boolean, isTagToggled: boolean): string {
     if (isTagToggled) {
-      return 'gekocht'; // Wenn das Tag getoggled ist
+      return 'schon gekocht'; // Wenn das Tag getoggled ist
     } else {
-      return status ? 'gekocht' : 'geplant';
+      return status ? 'schon gekocht' : 'noch geplant';
     }
   }
 
@@ -136,12 +131,13 @@ export class ListeninhaltComponent implements OnInit{
 
   saveChanges(rezept: Rezept) {
     // Erhalt der ausgewählten Tags vom TagService
-    const selectedTags:  Tag[] = this.tagService.getSelectedTags();
+    const selectedTags: Tag[] = this.tagService.getSelectedTags();
     console.log('listeninhalt: selectedTag', selectedTags)
 
     // Setzen der ausgewählten Tags für das aktuelle Rezept
     rezept.tags = selectedTags;
 
+    // Überprüfen, ob das Rezept bereits eine ID hat (also bereits existiert)
     if (rezept.id === null || rezept.id === undefined) {
       // Rezept erstellen
       this.rezepteService.createRezept(rezept).subscribe(
@@ -149,11 +145,7 @@ export class ListeninhaltComponent implements OnInit{
           if (response.body) {
             // ID des neu erstellten Rezepts setzen
             rezept.id = response.body.id;
-            this.istGeaendert = false;
-            this.showSaveButton = false;
-            this.showDeleteButton = true;
-            this.editMode = false;
-            this.istGespeichert = true;
+            this.updateUIAfterSave();
           } else {
             console.error('Fehler: Antwortkörper ist null');
           }
@@ -168,7 +160,14 @@ export class ListeninhaltComponent implements OnInit{
       // Rezept aktualisieren
       this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
         (response) => {
-          // Rest des Codes...
+          if (response.body) {
+
+            // ID des neu erstellten Rezepts setzen
+            rezept.id = response.body.id;
+            this.updateUIAfterSave();
+          } else {
+            console.error('Fehler: Antwortkörper ist null');
+          }
         },
         (error) => {
           console.error('Fehler beim Aktualisieren des Rezepts', error);
@@ -178,6 +177,15 @@ export class ListeninhaltComponent implements OnInit{
       );
     }
   }
+
+  updateUIAfterSave() {
+    this.istGeaendert = false;
+    this.showSaveButton = false;
+    this.showDeleteButton = true;
+    this.editMode = false;
+    this.istGespeichert = true;
+  }
+
 
   restoreOriginalTags() {
     // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
@@ -190,6 +198,7 @@ export class ListeninhaltComponent implements OnInit{
 
   selectRow(rezept: any) {
     this.selectedRow = rezept;
+    this.editMode = true;
   }
 
   deleteRow(id: number) {

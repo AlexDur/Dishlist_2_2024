@@ -121,7 +121,7 @@ export class SeitenleisteComponent implements OnInit {
       // Filtere die Rezepte basierend auf den ausgewählten Gerichtsarten
       console.log('seitenliste_selectedGerichtarten_ja:', this.selectedGerichtarten)
       const gefilterteRezepte: Rezept[] = this.originalRezepte.filter((rezepte) => {
-        return rezepte.tags?.some((tag) => this.selectedGerichtarten.includes(tag.label));
+        return rezepte.tags?.some((tag) => this.selectedGerichtarten.includes(<string>tag.label));
       });
       // Sende die gefilterten Rezepte über den EventEmitter
       this.gefilterteRezepte.emit(gefilterteRezepte);
