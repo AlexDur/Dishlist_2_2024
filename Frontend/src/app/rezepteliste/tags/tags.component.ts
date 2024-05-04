@@ -12,7 +12,7 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   styleUrls: ['./tags.component.scss']
 })
 
-export class TagsComponent {
+export class TagsComponent implements OnInit{
   @Input()currentRecipe: Rezept | undefined;
   @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
 
@@ -35,10 +35,21 @@ export class TagsComponent {
     Nachtisch: 'danger'
   };}
 
+  ngOnInit(){
+    this.loadInitialTags();
+  }
+
+  loadInitialTags(): void {
+    this.tagService.getSelectedTags().forEach(tag => {
+      if (tag.severity) {
+        this.currentSeverities[tag.label as Dish] = tag.severity;
+      }
+    });
+    this.cdr.detectChanges();
+  }
+
   handleClick(tag: Tag): void {
-
     const isCheckboxUnselected = this.currentSeverities[tag.label as Dish] === 'info';
-
     // Wenn die Checkbox abgewählt wird, rufe die resetTags-Funktion auf
     if (isCheckboxUnselected) {
       this.resetTags();

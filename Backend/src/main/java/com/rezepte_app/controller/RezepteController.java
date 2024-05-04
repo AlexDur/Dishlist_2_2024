@@ -105,19 +105,19 @@ public class RezepteController {
     }
 
     @PutMapping("/tags/{tagId}")
-    public ResponseEntity<String> updateTag(@PathVariable("tagId") int tagId, @RequestBody Tag updatedTag) {
+    public ResponseEntity<Tag> updateTag(@PathVariable("tagId") int tagId, @RequestBody Tag updatedTag) {
         try {
-            // Hier loggen Sie die empfangenen Tags
             logger.info("Empfangene Tags: {}", updatedTag);
 
-            rezepteService.updateTag(tagId, updatedTag.getLabel(), updatedTag.getSeverity());
-            return ResponseEntity.ok("Tag erfolgreich aktualisiert.");
+            Tag updated = rezepteService.updateTag(tagId, updatedTag.getLabel(), updatedTag.getSeverity());
+            return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag mit der angegebenen ID wurde nicht gefunden.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Aktualisieren des Tags: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
     /*PUT-Anfrage Methode auf /api/rezepte/update/{id} aktualisiert ein bestehendes Rezept. Sie versucht, ein Rezept mit der spezifizierten ID zu aktualisieren.*/
     @PutMapping("/update/{id}")

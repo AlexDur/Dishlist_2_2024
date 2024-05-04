@@ -120,16 +120,12 @@ public class RezepteService {
         }
     }
 
-    public void updateTag(int tagId, String newLabel, String newSeverity) {
-        Optional<Tag> tagOptional = tagRepository.findById(tagId);
-        if (tagOptional.isPresent()) {
-            Tag tag = tagOptional.get();
-            tag.setLabel(newLabel);
-            tag.setSeverity(newSeverity);
-            tagRepository.save(tag);
-        } else {
-            throw new IllegalArgumentException("Tag mit der angegebenen ID wurde nicht gefunden.");
-        }
+    public Tag updateTag(int tagId, String label, String severity) {
+        // Suchen des Tags, Update durchführen und zurückgeben des aktualisierten Tags
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Tag nicht gefunden"));
+        tag.setLabel(label);
+        tag.setSeverity(severity);
+        return tagRepository.save(tag);  // Speichert das aktualisierte Tag und gibt es zurück
     }
 
 
