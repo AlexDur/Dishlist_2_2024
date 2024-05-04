@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {FilterService} from "primeng/api";
 import {RezeptService} from "../services/rezepte.service";
@@ -12,10 +12,9 @@ import {Gerichtart} from "../models/gerichtart";
 })
 export class SeitenleisteComponent implements OnInit {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
-/*  @Output() rezepteGefiltert: Rezept[] = [];*/
+  @Input() rezepte: Rezept[] = [];
   selectedGerichtarten: string[] = [];
   rezeptGeladen: boolean = false;
-  rezepte: Rezept[] = [];
   originalRezepte: Rezept[] = [];
 
   constructor(private filterService: FilterService, private rezepteService: RezeptService) {  }
@@ -125,7 +124,7 @@ export class SeitenleisteComponent implements OnInit {
       });
       // Sende die gefilterten Rezepte über den EventEmitter
       this.gefilterteRezepte.emit(gefilterteRezepte);
-      console.log('Seitenleiste_filteredRezepte', gefilterteRezepte)
+      console.log('Seitenleiste_gefilterteRezepte', gefilterteRezepte)
     }
   }
 

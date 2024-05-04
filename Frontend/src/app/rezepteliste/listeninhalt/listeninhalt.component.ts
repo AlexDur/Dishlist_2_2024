@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
@@ -11,12 +21,12 @@ import {Tag} from "../../models/tag";
   templateUrl: './listeninhalt.component.html',
   styleUrls: ['./listeninhalt.component.scss']
 })
-export class ListeninhaltComponent implements OnInit{
+export class ListeninhaltComponent implements OnChanges{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
+  @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
-  /*@Input() originalRezepte: Rezept[] = [];*/
-/*  @Output() rezepteChanged: EventEmitter<Rezept[]>;*/
+
   newRecipe: any = {}
   selectedRow: any;
   istGeaendert: boolean = false;
@@ -34,29 +44,10 @@ export class ListeninhaltComponent implements OnInit{
     this.selectedRow = {};
   }
 
-
-  ngOnInit(): void {
-    this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.gefilterteRezepte = rezepte.map(rezept => ({
-        ...rezept,
-        datum: rezept.datum ? new Date(rezept.datum) : undefined
-      }));
-
-      if (this.gefilterteRezepte.length > 0) {
-        this.loadRezept(); // Angenommen, Sie möchten hier eine spezielle Logik ausführen
-      }
-    });
-
-    // Stellen Sie sicher, dass die Rezeptdaten geladen sind
-    this.rezepteService.getAlleRezepte();
-  }
-
-  loadRezept(): Promise<void> {
-    // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
-    return new Promise<void>(resolve => {
-      this.rezeptGeladen = true;
-      resolve();
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['rezepte']) {
+      console.log('Rezepte aktualisiert:', this.rezepte);
+    }
   }
 
   onselectedTagChanged(selectedTag: Tag[]): void {
@@ -202,33 +193,21 @@ export class ListeninhaltComponent implements OnInit{
   }
 
   deleteRow(id: number) {
-    this.loadRezept().then(() => {
-      console.log("Rezept vor Löschung geladen", this.rezeptGeladen);
-      console.log('Die ID vor dem Löschen:', id);
-
-      // Überprüfen, ob das Rezept geladen wurde
-      if (this.rezeptGeladen) {
-        // Die deleteRow-Methode wird nur aufgerufen, wenn das Rezept geladen wurde
-        console.log('Die deleteRow-Methode wird aufgerufen, da das Rezept geladen ist');
-
-        // Aufruf des RezeptService, um das Rezept zu löschen
-        this.rezepteService.deleteRezept(id).subscribe(
-          () => {
-            console.log('Rezept erfolgreich gelöscht');
-
-            // Logik, um das gelöschte Rezept aus der Liste zu entfernen
-            this.gefilterteRezepte = this.gefilterteRezepte.filter(rezepeGefiltert => rezepeGefiltert.id !== id);
-          },
-          (error) => {
-            console.error('Fehler beim Löschen des Rezepts', error);
-          }
-        );
-      } else {
-        // Das Rezept wurde noch nicht geladen
-        console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
-      }
-    });
+    if (this.rezeptGeladen) {
+      this.rezepteService.deleteRezept(id).subscribe(
+        () => {
+          console.log('Rezept erfolgreich gelöscht');
+          this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept => rezept.id !== id);
+        },
+        (error) => {
+          console.error('Fehler beim Löschen des Rezepts', error);
+        }
+      );
+    } else {
+      console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
+    }
   }
+
 
   openUrl(url: string): void {
     // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.

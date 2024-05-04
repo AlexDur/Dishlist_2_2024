@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rezept} from "../.././models/rezepte";
+import {RezeptService} from "../../services/rezepte.service";
 
 
 @Component({
@@ -9,17 +10,27 @@ import {Rezept} from "../.././models/rezepte";
 })
 
 export class ListenContainerComponent implements OnInit{
-  @Input() rezepteChanged: Rezept[] = [];
+  @Output() rezepteLoaded: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+  rezepte: Rezept[] = [];
 
-  constructor() {}
+  constructor(private rezepteService: RezeptService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rezepteService.getAlleRezepte().subscribe(rezepte => {
+      console.log("Geladene Rezepte:", rezepte);
+      this.rezepte = rezepte.map(rezept => ({
+        ...rezept,
+        datum: rezept.datum ? new Date(rezept.datum) : undefined
+      }));
+      this.rezepteLoaded.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
+    });
+  }
 
 
-  onRezepteFiltered(filteredRezepte: Rezept[]): void {
+  onRezepteFiltered(gefilterteRezepte: Rezept[]): void {
     // Verarbeitung der gefilterten Rezepte
-    console.log('Gefilterte Rezepte:', filteredRezepte);
-    this.rezepteChanged = filteredRezepte;
+    console.log('Gefilterte Rezepte:', gefilterteRezepte);
+    this.rezepte = gefilterteRezepte;
   }
 
 
