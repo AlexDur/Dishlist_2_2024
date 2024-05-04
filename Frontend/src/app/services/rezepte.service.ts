@@ -9,7 +9,6 @@ interface RezeptAntwort {
   message: string;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -24,25 +23,25 @@ export class RezeptService {
   }
   constructor(private http: HttpClient) { }
 
-  getAlleRezepte(): void {
-    // Nur eine Netzwerkanfrage auslösen, wenn das BehaviorSubject leer ist
+  getAlleRezepte(): Observable<Rezept[]> {
+    // Prüfen, ob das BehaviorSubject bereits Daten enthält
     if (this.rezepteSubject.getValue().length === 0) {
-      this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
+      return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
         tap(rezepte => {
           // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
           const processedRezepte = rezepte.map(rezept => ({
             ...rezept,
             datum: rezept.datum ? new Date(rezept.datum) : undefined
           }));
-          this.rezepteSubject.next(processedRezepte);
+          this.rezepteSubject.next(processedRezepte);  // Aktualisieren des Subjects mit den neuen Daten
         })
-      ).subscribe();
+      );
+    } else {
+      // Wenn Daten vorhanden sind, das bestehende BehaviorSubject als Observable zurückgeben
+      return this.rezepteSubject.asObservable();
     }
   }
 
-/*  getRezeptById(rezeptId: number): Observable<Rezept> {
-    return this.http.get<Rezept>(`${this.backendUrl}/api/rezepte/${rezeptId}`);
-  }*/
 
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const headers = this.getJsonHeaders();

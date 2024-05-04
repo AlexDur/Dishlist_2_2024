@@ -1,4 +1,13 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input, OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
 import {TagService} from "../../services/tags.service";
 import {Tag} from "../../models/tag";
@@ -12,9 +21,10 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   styleUrls: ['./tags.component.scss']
 })
 
-export class TagsComponent implements OnInit{
-  @Input()currentRecipe: Rezept | undefined;
+export class TagsComponent implements OnInit, OnDestroy, OnChanges{
+  @Input() currentRecipe: Rezept | undefined;
   @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
+
 
   /*  private tagsSubject = new BehaviorSubject<Tag[]>([]);*/
   currentSeverities: Record<'Vorspeise' | 'Hauptgang' | 'Nachtisch', 'success' | 'info' | 'warning' | 'danger' | 'default'> = {
@@ -32,30 +42,44 @@ export class TagsComponent implements OnInit{
   constructor(private cdr: ChangeDetectorRef, private tagService: TagService) {  this.currentSeverities = {
     Vorspeise: 'success',
     Hauptgang: 'warning',
-    Nachtisch: 'danger'
+    Nachtisch: 'danger',
+
+
   };}
 
   ngOnInit(){
-    this.loadInitialTags();
+    if (this.currentRecipe) {
+      this.loadInitialTags();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentRecipe'] && changes['currentRecipe'].currentValue) {
+      this.loadInitialTags();
+    }
   }
 
   loadInitialTags(): void {
-    this.tagService.getSelectedTags().forEach(tag => {
-      if (tag.severity) {
-        this.currentSeverities[tag.label as Dish] = tag.severity;
-      }
-    });
-    this.cdr.detectChanges();
+    if (this.currentRecipe && this.currentRecipe.tags) {
+      this.currentRecipe.tags.forEach(tag => {
+        // Stellen Sie sicher, dass sowohl `tag.label` als auch `tag.severity` definiert sind
+        if (tag.label && tag.severity) {
+          // Nun können Sie sicher sein, dass tag.label nicht undefined ist
+          this.currentSeverities[tag.label] = tag.severity;
+        }
+      });
+      this.cdr.detectChanges(); // Trigger a manual change detection to update the view
+    }
   }
 
+
   handleClick(tag: Tag): void {
-    const isCheckboxUnselected = this.currentSeverities[tag.label as Dish] === 'info';
+    const isInfoUnselected = this.currentSeverities[tag.label as Dish] === 'info';
     // Wenn die Checkbox abgewählt wird, rufe die resetTags-Funktion auf
-    if (isCheckboxUnselected) {
+    if (isInfoUnselected) {
       this.resetTags();
       return; // Beende die Funktion hier
     }
-
     const newSeverity = tag.severity === 'info' ? this.initialSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] : 'info';
     this.currentSeverities[tag.label as 'Vorspeise' | 'Hauptgang' | 'Nachtisch'] = newSeverity;
     let updatedTags = this.tagService.getSelectedTags();
@@ -65,9 +89,9 @@ export class TagsComponent implements OnInit{
     } else {
       updatedTags.push({ ...tag, severity: newSeverity });
     }
-    this.tagService.updateSelectedTags(updatedTags);  // Updates the tags in the service
-    this.selectedTagsChanged.emit(updatedTags);  // Notify parent component
-    this.updateTags();  // Ensure tags are updated in the service
+    this.tagService.updateSelectedTags(updatedTags);  // Updaten der Tags im Service
+    this.selectedTagsChanged.emit(updatedTags);  // Benachrichtige Elter
+    this.updateTags();  // Sicherstellen, dass Tags im Service geupdated werden
   }
 
   getTagFromLabel(label: 'Vorspeise' | 'Hauptgang' | 'Nachtisch'): Tag {
@@ -98,4 +122,6 @@ export class TagsComponent implements OnInit{
   }
 
 
+  ngOnDestroy() {
+  }
 }
