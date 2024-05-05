@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../.././models/rezepte";
-import {RezeptService} from "../../services/rezepte.service";
+import {Rezept} from "../../../models/rezepte";
+import {RezeptService} from "../../../services/rezepte.service";
 
 
 @Component({
@@ -11,6 +11,7 @@ import {RezeptService} from "../../services/rezepte.service";
 
 export class ListenContainerComponent implements OnInit{
   @Output() rezepteLoaded: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+  @Input() isMobile?: boolean;
   rezepte: Rezept[] = [];
 
   constructor(private rezepteService: RezeptService) {}

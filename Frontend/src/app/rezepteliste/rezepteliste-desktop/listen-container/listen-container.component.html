@@ -8,5 +8,7 @@
   <!--[] ist Property-Binding. Wert auf rechter Seite der Gleichung wird an Eigenschaft auf linker Seite übergeben-->
   <!--[] als einseitige Bindung von Elter zu Kind. Dabei ist gefilterteRezepte e. @Input()-Eigenschaft in der ListeninhaltK-->
   <!--rezepte gespeichert in LContainer werden weitergeben an LInhalt. Wenn rezepte in LContainer aktualisiert wird, dann auch gefilterteRezepte in LInhalt-->
-  <app-listeninhalt [gefilterteRezepte]="rezepte"></app-listeninhalt>
+  <app-listeninhalt *ngIf="!isMobile" [gefilterteRezepte]="rezepte"></app-listeninhalt>
+  <app-listeninhaltmobil *ngIf="isMobile" [gefilterteRezepte]="rezepte"></app-listeninhaltmobil>
+
 </div>

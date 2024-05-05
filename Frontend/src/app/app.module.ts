@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {CheckboxModule} from "primeng/checkbox";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
-import {ListenContainerComponent} from "./rezepteliste/listen-container/listen-container.component";
-import {RezeptelisteModule} from "./rezepteliste/rezepteliste.module";
+import {SeitenleisteModule} from "./seitenleiste/seitenleiste-desktop/seitenleiste.module";
+import {ListenContainerComponent} from "./rezepteliste/rezepteliste-desktop/listen-container/listen-container.component";
+import {RezeptelisteModule} from "./rezepteliste/rezepteliste-desktop/rezepteliste.module";
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ListenContainerComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -22,8 +22,7 @@ import {RezeptelisteModule} from "./rezepteliste/rezepteliste.module";
     BrowserAnimationsModule,
     ContextMenuModule,
     SeitenleisteModule,
-
- RezeptelisteModule
+    RezeptelisteModule
   ],
   providers: [],
   bootstrap: [AppComponent]
