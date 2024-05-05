@@ -1,0 +1,26 @@
+<div class="seitenleiste">
+  <h3 class="hellgruen">Gangart</h3>
+  <div class="p-field-checkbox" *ngFor="let art of gerichtArten; let i = index">
+    <p-checkbox [value]="art" [(ngModel)]="selectedGerichtarten[i]" (ngModelChange)="toggleGerichtsart(art.label)" inputId="type_{{i}}"></p-checkbox>
+    <label for="type_{{i}}" class="label-abstand">{{ art.label }} ({{ art.count }})</label>
+  </div>
+</div>
+
+
+
+
+<!--<div>
+  <h3 class="orange">Internationale Küchen</h3>
+  <div class="p-field-checkbox" *ngFor="let type of interKuechen; let i = index">
+    <p-checkbox [value]="type" [(ngModel)]="selectedKuechen[i]" inputId="type_{{i}}"></p-checkbox>
+    <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+  </div>
+</div>
+
+<div>
+  <h3 class="rot">Attribute</h3>
+  <div class="p-field-checkbox" *ngFor="let type of gerichtEigenschaften; let i = index">
+    <p-checkbox [value]="type" [(ngModel)]="selectedGerichtEigenschaften[i]" inputId="type_{{i}}"></p-checkbox>
+    <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+  </div>
+</div>-->

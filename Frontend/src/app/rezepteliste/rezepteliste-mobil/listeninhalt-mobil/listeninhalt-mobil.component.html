@@ -1,108 +1,19 @@
-<div class="table-container">
-  <p-table
-    #dt1
-    [value]="gefilterteRezepte"
-    dataKey="id"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    currentPageReportTemplate="Zeige {first} aus {last} von {totalRecords} Einträgen"
-    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-  >
-    <ng-template pTemplate="caption">
-      <div class="rechts-ausgerichtet">
-        <button pButton type="button" (click)="addRow()">Rezept erstellen</button>
+<div class="container-listeninhalt">
+  <div *ngFor="let rezept of gefilterteRezepte" class="p-col-12 p-md-6 p-lg-4">
+    <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
+      <div class="p-card-title">{{ rezept.name }}</div>
+   <!--   <div class="p-card-content">
+        <div class="mobile-row">
+          <p-rating [ngModel]="rezept.bewertung" [readonly]="isRatingReadonly()" [cancel]="false"></p-rating>
+        </div>
+      </div>-->
+      <div class="p-card-footer" (click)="$event.stopPropagation()">
+        <!--TODO: Bei Klick auf bearbeiten soll sich das Formular öffnen-->
+        <button pButton type="button" icon="pi pi-pencil" (click)="selectRow(rezept); $event.stopPropagation()" class="p-button-text"></button>
+       <!--TODO: Bei Klick auf löschen, soll ja oder nein- dialog aufploppen-->
+        <button pButton type="button" icon="pi pi-trash" (click)="deleteRow(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
       </div>
-    </ng-template>
-
-    <ng-template pTemplate="header">
-      <!-- Header wird auf mobilen Geräten ausgeblendet -->
-    </ng-template>
-
-    <ng-template pTemplate="body" let-rezept>
-      <tr [ngClass]="{'markiertes-rezept': selectedRow === rezept}" (click)="selectRow(rezept)">
-        <td>
-          <div class="mobile-row">
-            <label>Rezept</label>
-            <input [(ngModel)]="rezept.name" placeholder="Name des Rezepts"
-                   (ngModelChange)="setGeaendert(rezept)" *ngIf="editMode && selectedRow === rezept"/>
-            <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
-          </div>
-        </td>
-
-        <td>
-          <div class="mobile-row">
-            <label>Online-Adresse</label>
-            <input [(ngModel)]="rezept.onlineAdresse" placeholder="URL"
-                   (ngModelChange)="setGeaendert(rezept)" *ngIf="editMode && selectedRow === rezept"/>
-            <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
-          </div>
-        </td>
-
-        <td>
-          <div class="mobile-row">
-            <label>Tags</label>
-            <app-tags [currentRecipe]="rezept" (selectedTagsChanged)="onselectedTagChanged($event)" ></app-tags>
-          </div>
-        </td>
-
-        <td>
-          <div class="mobile-row">
-            <label>Datum</label>
-            <span>{{ rezept.datum | date: 'dd.MM.yyyy' }}</span>
-          </div>
-        </td>
-
-        <td>
-          <div class="mobile-row">
-            <label>Status</label>
-            <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])"
-                   [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
-          </div>
-        </td>
-
-        <td>
-          <div class="mobile-row">
-            <label>Bewertung</label>
-            <p-rating [ngModel]="rezept.bewertung" [cancel]="false" (ngModelChange)="onRatingChanged($event, rezept)"></p-rating>
-          </div>
-        </td>
-      </tr>
-
-      <tr *ngIf="editMode && rezept === selectedRow">
-        <td colspan="7" class="text-center">
-          <button pButton type="button" (click)="saveChanges(rezept)">Speichern</button>
-        </td>
-      </tr>
-      <tr *ngIf="!editMode && rezept === selectedRow">
-        <td colspan="7" class="text-center">
-          <button pButton *ngIf="showDeleteButton && rezept.id" type="button" (click)="deleteRow(rezept.id)">Löschen</button>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="7">Keine Rezepte gefunden.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+    </p-card>
+    <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
+  </div>
 </div>
-
-<!--<style>
-  @media screen and (max-width: 600px) {
-    .p-datatable .p-datatable-thead > tr > th, .p-datatable .p-datatable-tbody > tr > td {
-      display: block;
-      width: 100%;
-    }
-
-    .p-datatable .p-datatable-thead {
-      display: none;
-    }
-
-    .mobile-row {
-      margin-bottom: 10px;
-    }
-  }
-</style>-->

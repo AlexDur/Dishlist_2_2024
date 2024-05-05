@@ -9,18 +9,18 @@ import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
 import {ListeninhaltMobilComponent} from "../rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil.component";
+import {CardModule} from "primeng/card";
 
 @NgModule({
   declarations: [
     TagsComponent,
     ListeninhaltComponent,
-ListeninhaltMobilComponent
+    ListeninhaltMobilComponent,
+
   ],
   exports: [
     ListeninhaltComponent,
     ListeninhaltMobilComponent
-
-
   ],
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ ListeninhaltMobilComponent
     TagModule,
     RatingModule,
     ButtonModule,
-
+    CardModule
   ]
 })
 export class RezeptelisteModule { }

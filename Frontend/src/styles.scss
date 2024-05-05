@@ -1,3 +1,7 @@
+@import '~primeng/resources/primeng.min.css'; // Stellen Sie sicher, dass der Pfad korrekt ist
+@import '~primeicons/primeicons.css'; // Dies sollte der korrekte Pfad sein
+
+
 $primary-color: #424242;
 $secondary-color: #f5f5f5;
 $tertiary-color: white;
@@ -47,11 +51,12 @@ $tertiary-color: white;
 
 .grid-container {
   display: grid;
-  grid-template-columns: 250px 1fr; /* Seitenleiste mit fester Breite und der Rest für die Tabelle */
+  grid-template-columns: 200px 1fr;
   gap: 10px;
   background-color: #575e65;
   color:white;
   padding: 1rem;
+
 }
 
 
@@ -115,22 +120,124 @@ p-tag + p-tag {
   font-size: 0.9rem;
 }
 
+.mobile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /*padding: 0.5rem;*/
+  border-bottom: 1px solid #ccc;
+/*  margin-bottom: 5px;*/
+}
 
-/*.green {
-  color: green;
+.p-card .p-card-body{
+  padding-bottom:0;
+  margin:0;
 }
-.orange {
-  color: orange;
+
+.p-card-body{
+  padding-bottom:0;
 }
-.red {
-  color: red;
+
+.p-card {
+  display: flex;
+  flex: 0 1 calc(33.333% - 20px);
+  flex-direction: column;
+  padding-bottom:0;
+  justify-content: space-between; /* Stellt sicher, dass der Footer am unteren Rand der Karte bleibt */
 }
-.clicked {
-  color: #3b82f6;
-}*/
+
+
+.p-card-content{
+  padding-bottom:0;
+  margin-bottom:0;
+  font-size: 12px;
+}
+
+.p-card-title{
+  display: flex;
+  justify-content:center;
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.p-card-footer{
+  display: flex;
+  justify-content:center;
+}
+
+.p-card .p-card-footer{
+  padding-top:0;
+}
+
+.clickable-card {
+  cursor: pointer;
+}
 
 @media screen and (max-width: 599px) {
   .seitenleiste {
-    order: -1; /* Stellt sicher, dass die Seitenleiste zuerst kommt */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    order: -1;
+    width: 100%;
+    padding: 10px;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container-listeninhalt{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .p-card {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex: 0 1 calc(50% - 20px); /* Zwei Karten pro Zeile in kleineren Ansichten */
+  }
+}
+
+@media (max-width: 480px) {
+  .p-card {
+    flex: 0 1 100%; /* Eine Karte pro Zeile in sehr kleinen Ansichten */
+  }
+}
+
+/*Rezept-Hinzufügen-Button*/
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.floating-button:hover {
+  background-color: darkred;
 }

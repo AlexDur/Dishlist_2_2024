@@ -3,12 +3,12 @@
   <!--() ist Event-Bindung. gefilterteRezepte ist Output-Event von Seitenleiste.-->
   <!--Handler "onRe..($event)" wird aufgerufen, wenn gefiltRez...von app-seit. emittiert wird-->
   <!--$event enthält das Datenobjekt, das vom Event Emitter gesendet wird; hier die gefilterten Rezepte-->
-  <app-seitenleiste (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste>
+  <app-seitenleiste *ngIf="!isMobile" (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste>
+  <app-seitenleiste-mobil *ngIf="isMobile" (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste-mobil>
 
   <!--[] ist Property-Binding. Wert auf rechter Seite der Gleichung wird an Eigenschaft auf linker Seite übergeben-->
   <!--[] als einseitige Bindung von Elter zu Kind. Dabei ist gefilterteRezepte e. @Input()-Eigenschaft in der ListeninhaltK-->
   <!--rezepte gespeichert in LContainer werden weitergeben an LInhalt. Wenn rezepte in LContainer aktualisiert wird, dann auch gefilterteRezepte in LInhalt-->
   <app-listeninhalt *ngIf="!isMobile" [gefilterteRezepte]="rezepte"></app-listeninhalt>
   <app-listeninhaltmobil *ngIf="isMobile" [gefilterteRezepte]="rezepte"></app-listeninhaltmobil>
-
 </div>

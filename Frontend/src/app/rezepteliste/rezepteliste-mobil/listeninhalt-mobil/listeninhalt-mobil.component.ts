@@ -23,6 +23,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
+  @Input() rezepteVerfügbar: boolean = false;
 
   newRecipe: any = {}
   selectedRow: any;
@@ -31,7 +32,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
   showSaveButton: boolean = false;
   showDeleteButton: boolean = false;
   editMode = false;
-  rezeptGeladen: boolean = false;
+  rezepteGeladen: boolean = false;
   tagToggleStates: { [key: number]: boolean } = {};
   currentRecipe: Rezept | undefined;
   selectedTag: Set<Tag> = new Set<Tag>();
@@ -44,7 +45,9 @@ export class ListeninhaltMobilComponent implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rezepte']) {
       console.log('Rezepte aktualisiert:', this.rezepte);
+
     }
+
   }
 
   onselectedTagChanged(selectedTag: Tag[]): void {
@@ -179,6 +182,17 @@ export class ListeninhaltMobilComponent implements OnChanges{
     // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
   }
 
+
+  /*loadRezept(): Promise<void> {
+    // Hier wird das Rezept asynchron geladen
+    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
+    return new Promise<void>((resolve, reject) => {
+      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
+      this.rezeptGeladen = true;
+      resolve();
+
+    });*/
+
   onRatingChanged(newRating: number, rezept: any) {
     rezept.bewertung = newRating;
     rezept.istGeaendert = true;
@@ -190,7 +204,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
   }
 
   deleteRow(id: number) {
-    if (this.rezeptGeladen) {
+    if (this.rezepteVerfügbar) {
       this.rezepteService.deleteRezept(id).subscribe(
         () => {
           console.log('Rezept erfolgreich gelöscht');
@@ -205,15 +219,28 @@ export class ListeninhaltMobilComponent implements OnChanges{
     }
   }
 
+  isRatingReadonly(): boolean {
+    // Ihre Logik hier, z.B.:
+    return true; // oder eine dynamischere Bedingung
+  }
 
-  openUrl(url: string): void {
-    // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.
+
+  openUrl(url: string | undefined): void {
+    if (!url) {
+      console.warn('Versuch, eine undefinierte URL zu öffnen');
+      return;
+    }
+    // Füge "http://" hinzu, wenn die URL mit "www." beginnt und kein "http://" oder "https://" hat
+    if (url.startsWith('www.')) {
+      url = 'http://' + url;
+    }
+    // Grundlegende Validierung, um sicherzustellen, dass die URL jetzt mit "http://" oder "https://" beginnt
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank');
     } else {
       console.warn('Ungültige URL');
-
     }
   }
+
 
 }
