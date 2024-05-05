@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../../../models/rezepte";
-import {RezeptService} from "../../../services/rezepte.service";
+import {Rezept} from "../../models/rezepte";
+import {RezeptService} from "../../services/rezepte.service";
 
 
 @Component({
@@ -10,9 +10,10 @@ import {RezeptService} from "../../../services/rezepte.service";
 })
 
 export class ListenContainerComponent implements OnInit{
-  @Output() rezepteLoaded: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() isMobile?: boolean;
+  rezepteGeladen: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
+  rezepteVerfügbar = false
 
   constructor(private rezepteService: RezeptService) {}
 
@@ -23,8 +24,11 @@ export class ListenContainerComponent implements OnInit{
         ...rezept,
         datum: rezept.datum ? new Date(rezept.datum) : undefined
       }));
-      this.rezepteLoaded.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
+      this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
+      this.rezepteVerfügbar =true
+      console.log('rezepteVerfügbar', this.rezepteVerfügbar)
     });
+
   }
 
 

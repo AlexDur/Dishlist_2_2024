@@ -4,9 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste-desktop/seitenleiste.module";
-import {ListenContainerComponent} from "./rezepteliste/rezepteliste-desktop/listen-container/listen-container.component";
+import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
+import {ListenContainerComponent} from "./rezepteliste/listen-container/listen-container.component";
 import {RezeptelisteModule} from "./rezepteliste/rezepteliste-desktop/rezepteliste.module";
+import { RezeptErstellungComponent } from './rezepteliste/rezepteliste-mobil/listeninhalt-mobil/rezept-erstellung/rezept-erstellung.component';
+import { RezeptHinzufuegenButtonComponent } from './rezepteliste/rezepteliste-mobil/listeninhalt-mobil/rezept-hinzufuegen-button/rezept-hinzufuegen-button.component';
+import {CheckboxModule} from "primeng/checkbox";
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -14,7 +18,8 @@ import {RezeptelisteModule} from "./rezepteliste/rezepteliste-desktop/rezeptelis
   declarations: [
     AppComponent,
     ListenContainerComponent,
-
+    RezeptErstellungComponent,
+    RezeptHinzufuegenButtonComponent,
   ],
   imports: [
     BrowserModule,
@@ -22,9 +27,14 @@ import {RezeptelisteModule} from "./rezepteliste/rezepteliste-desktop/rezeptelis
     BrowserAnimationsModule,
     ContextMenuModule,
     SeitenleisteModule,
-    RezeptelisteModule
+    RezeptelisteModule,
+    CheckboxModule,
+    FormsModule
   ],
   providers: [],
+  exports: [
+    RezeptHinzufuegenButtonComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
