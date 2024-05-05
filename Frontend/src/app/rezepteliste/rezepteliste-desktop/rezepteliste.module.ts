@@ -8,14 +8,18 @@ import {FormsModule} from "@angular/forms";
 import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
+import {ListeninhaltMobilComponent} from "../rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil.component";
 
 @NgModule({
   declarations: [
     TagsComponent,
-    ListeninhaltComponent
+    ListeninhaltComponent,
+ListeninhaltMobilComponent
   ],
   exports: [
-    ListeninhaltComponent
+    ListeninhaltComponent,
+    ListeninhaltMobilComponent
+
 
   ],
   imports: [

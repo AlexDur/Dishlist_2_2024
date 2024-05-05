@@ -1,7 +1,6 @@
 package com.rezepte_app;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rezepte_app.model.Rezept;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 

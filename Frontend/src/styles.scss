@@ -128,3 +128,9 @@ p-tag + p-tag {
 .clicked {
   color: #3b82f6;
 }*/
+
+@media screen and (max-width: 599px) {
+  .seitenleiste {
+    order: -1; /* Stellt sicher, dass die Seitenleiste zuerst kommt */
+  }
+}

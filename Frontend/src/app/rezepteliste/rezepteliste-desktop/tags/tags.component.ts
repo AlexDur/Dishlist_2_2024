@@ -8,10 +8,9 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Rezept} from "../../models/rezepte";
-import {TagService} from "../../services/tags.service";
-import {Tag} from "../../models/tag";
-import {Subscription} from "rxjs";
+import {Rezept} from "../../../models/rezepte";
+import {TagService} from "../../../services/tags.service";
+import {Tag} from "../../../models/tag";
 
 export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 

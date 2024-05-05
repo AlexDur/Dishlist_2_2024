@@ -1,27 +1,24 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
-  OnInit,
-  Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Rezept} from "../../models/rezepte";
-import {RezeptService} from "../../services/rezepte.service";
-import {TagService} from "../../services/tags.service";
+import {Rezept} from "../../../models/rezepte";
+import {RezeptService} from "../../../services/rezepte.service";
+import {TagService} from "../../../services/tags.service";
 
-import {Dish, TagsComponent} from "../tags/tags.component"
-import {Tag} from "../../models/tag";
+import {Dish, TagsComponent} from "../../rezepteliste-desktop/tags/tags.component";
+import {Tag} from "../../../models/tag";
 
 @Component({
-  selector: 'app-listeninhalt',
-  templateUrl: './listeninhalt.component.html',
-  styleUrls: ['./listeninhalt.component.scss']
+  selector: 'app-listeninhaltmobil',
+  templateUrl: './listeninhalt-mobil.component.html',
+  styleUrls: ['./listeninhalt-mobil.component.scss']
 })
-export class ListeninhaltComponent implements OnChanges{
+export class ListeninhaltMobilComponent implements OnChanges{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
