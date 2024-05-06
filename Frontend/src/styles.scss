@@ -136,6 +136,9 @@ p-tag + p-tag {
 
 .p-card-body{
   padding-bottom:0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .p-card {
@@ -144,19 +147,21 @@ p-tag + p-tag {
   flex-direction: column;
   padding-bottom:0;
   justify-content: space-between; /* Stellt sicher, dass der Footer am unteren Rand der Karte bleibt */
+  min-height: 100px;
+  max-height: 150px;
 }
 
 
 .p-card-content{
   padding-bottom:0;
   margin-bottom:0;
-  font-size: 12px;
+  font-size: 8px;
 }
 
 .p-card-title{
   display: flex;
   justify-content:center;
-  font-size: 10px;
+  font-size: 14px !important;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -164,14 +169,26 @@ p-tag + p-tag {
 .p-card-footer{
   display: flex;
   justify-content:center;
+  padding-top:0;
 }
 
 .p-card .p-card-footer{
-  padding-top:0;
+  padding-top: 0 !important;
 }
 
 .clickable-card {
   cursor: pointer;
+}
+
+.mahlzeiten{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-around;
+}
+
+.p-field-checkbox {
+  font-size:6px;
+  margin: 5px; /* Rechter Abstand zwischen den Checkboxen */
 }
 
 @media screen and (max-width: 599px) {
@@ -180,10 +197,9 @@ p-tag + p-tag {
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     order: -1;
     width: 100%;
-    padding: 10px;
   }
 }
 
@@ -196,6 +212,15 @@ p-tag + p-tag {
   }
 }
 
+@media screen and (max-width: 480px) {
+  .container-listeninhalt{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+    gap: 20px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .container-listeninhalt{
     display: grid;
@@ -204,6 +229,7 @@ p-tag + p-tag {
     gap: 20px;
   }
 }
+
 
 @media (max-width: 768px) {
   .p-card {
@@ -214,8 +240,13 @@ p-tag + p-tag {
 
 @media (max-width: 480px) {
   .p-card {
-    flex: 0 1 100%; /* Eine Karte pro Zeile in sehr kleinen Ansichten */
+    flex: 0 1 100%;
   }
+}
+
+.trennungsstrich {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
 }
 
 /*Rezept-Hinzufügen-Button*/
@@ -233,7 +264,7 @@ p-tag + p-tag {
   font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   outline: none;
   transition: background-color 0.3s;
 }

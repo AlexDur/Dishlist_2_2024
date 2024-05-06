@@ -18,9 +18,10 @@ import {FormsModule} from "@angular/forms";
   declarations: [
     AppComponent,
     ListenContainerComponent,
-    RezeptErstellungComponent,
-    RezeptHinzufuegenButtonComponent,
   ],
+
+  // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
+  // RezeptelistenModuls in seinen eigenen Komponenten oder in anderen Modulen, die es importiert, verwenden.
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -33,7 +34,6 @@ import {FormsModule} from "@angular/forms";
   ],
   providers: [],
   exports: [
-    RezeptHinzufuegenButtonComponent
   ],
   bootstrap: [AppComponent]
 })

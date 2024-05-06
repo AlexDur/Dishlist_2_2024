@@ -120,67 +120,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
     });
   }
 
-  saveChanges(rezept: Rezept) {
-    // Erhalt der ausgewählten Tags vom TagService
-    const selectedTags: Tag[] = this.tagService.getSelectedTags();
-    console.log('listeninhalt: selectedTag', selectedTags)
 
-    // Setzen der ausgewählten Tags für das aktuelle Rezept
-    rezept.tags = selectedTags;
-
-    // Überprüfen, ob das Rezept bereits eine ID hat (also bereits existiert)
-    if (rezept.id === null || rezept.id === undefined) {
-      // Rezept erstellen
-      this.rezepteService.createRezept(rezept).subscribe(
-        (response) => {
-          if (response.body) {
-            // ID des neu erstellten Rezepts setzen
-            rezept.id = response.body.id;
-            this.updateUIAfterSave();
-          } else {
-            console.error('Fehler: Antwortkörper ist null');
-          }
-        },
-        (error) => {
-          console.error('Fehler beim Erstellen des Rezepts', error);
-          // Fehlerbehandlung für die Tags
-          this.restoreOriginalTags();
-        }
-      );
-    } else {
-      // Rezept aktualisieren
-      this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
-        (response) => {
-          if (response.body) {
-
-            // ID des neu erstellten Rezepts setzen
-            rezept.id = response.body.id;
-            this.updateUIAfterSave();
-          } else {
-            console.error('Fehler: Antwortkörper ist null');
-          }
-        },
-        (error) => {
-          console.error('Fehler beim Aktualisieren des Rezepts', error);
-          // Fehlerbehandlung für die Tags
-          this.restoreOriginalTags();
-        }
-      );
-    }
-  }
-
-  updateUIAfterSave() {
-    this.istGeaendert = false;
-    this.showSaveButton = false;
-    this.showDeleteButton = true;
-    this.editMode = false;
-    this.istGespeichert = true;
-  }
-
-
-  restoreOriginalTags() {
-    // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
-  }
 
 
   /*loadRezept(): Promise<void> {

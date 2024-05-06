@@ -10,17 +10,26 @@ import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
 import {ListeninhaltMobilComponent} from "../rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil.component";
 import {CardModule} from "primeng/card";
+import {
+  RezeptHinzufuegenButtonComponent
+} from "../rezepteliste-mobil/listeninhalt-mobil/rezept-hinzufuegen-button/rezept-hinzufuegen-button.component";
+import {
+  RezeptErstellungComponent
+} from "../rezepteliste-mobil/listeninhalt-mobil/rezept-erstellung/rezept-erstellung.component";
 
 @NgModule({
   declarations: [
     TagsComponent,
     ListeninhaltComponent,
     ListeninhaltMobilComponent,
+    RezeptHinzufuegenButtonComponent,
+    RezeptErstellungComponent
 
   ],
   exports: [
     ListeninhaltComponent,
-    ListeninhaltMobilComponent
+    ListeninhaltMobilComponent,
+    RezeptHinzufuegenButtonComponent
   ],
   imports: [
     CommonModule,
