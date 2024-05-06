@@ -975,8 +975,6 @@ LFrontend/src/app/seitenleiste/seitenleiste-desktop/seitenleiste.component.ts,d
 NFrontend/src/app/seitenleiste/seitenleiste-desktop/seitenleiste.component.scss,b\f\bfa97e7f44315a09c7ce0ecaf4d6337f5ec97ec5
 
 QFrontend/src/app/seitenleiste/seitenleiste-desktop/filters/filters.component.html,2\f\2fecf4239f93b5eaafa01edcc15de4385f943520
-y
-IFrontend/src/app/seitenleiste/seitenleiste-desktop/seitenleiste.module.ts,7\9\7937131a29142d76435eea58b81a2559d2f20e72
 
 OFrontend/src/app/seitenleiste/seitenleiste-desktop/filters/filters.component.ts,c\3\c3fe94ee8fde2b82aaeb532f83694140ab8c7015
 

@@ -7,6 +7,7 @@
           <p-rating [ngModel]="rezept.bewertung" [readonly]="isRatingReadonly()" [cancel]="false"></p-rating>
         </div>
       </div>-->
+      <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
         <!--TODO: Bei Klick auf bearbeiten soll sich das Formular öffnen-->
         <button pButton type="button" icon="pi pi-pencil" (click)="selectRow(rezept); $event.stopPropagation()" class="p-button-text"></button>
