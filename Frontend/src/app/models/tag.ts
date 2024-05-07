@@ -1,4 +1,4 @@
-import {Dish} from "../rezepteliste/rezepteliste-desktop/tags/tags.component";
+import {Dish} from "../listen-container/rezepteliste/rezepteliste-desktop/tags/tags.component";
 
 export interface Tag {
   id?:number;

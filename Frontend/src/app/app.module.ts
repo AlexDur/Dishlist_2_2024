@@ -4,13 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
-import {ListenContainerComponent} from "./rezepteliste/listen-container/listen-container.component";
-import {RezeptelisteModule} from "./rezepteliste/rezepteliste-desktop/rezepteliste.module";
-import { RezeptErstellungComponent } from './rezepteliste/rezepteliste-mobil/listeninhalt-mobil/rezept-erstellung/rezept-erstellung.component';
-import { RezeptHinzufuegenButtonComponent } from './rezepteliste/rezepteliste-mobil/listeninhalt-mobil/rezept-hinzufuegen-button/rezept-hinzufuegen-button.component';
+import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
+import {ListenContainerComponent} from "./listen-container/listen-container.component";
+import {RezeptelisteModule} from "./listen-container/rezepteliste/rezepteliste.module";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
+import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
+import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
 
 
 
@@ -18,6 +18,8 @@ import {FormsModule} from "@angular/forms";
   declarations: [
     AppComponent,
     ListenContainerComponent,
+    SplashScreenComponent,
+    InfoScreenComponent,
   ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des

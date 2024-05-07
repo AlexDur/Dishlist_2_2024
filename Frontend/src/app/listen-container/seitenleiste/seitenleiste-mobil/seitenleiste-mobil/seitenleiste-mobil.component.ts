@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../../../models/rezepte";
+import {Rezept} from "../../../../models/rezepte";
 import {FilterService} from "primeng/api";
-import {RezeptService} from "../../../services/rezepte.service";
-import {Gerichtart} from "../../../models/gerichtart";
-import {Tag} from "../../../models/tag";
+import {RezeptService} from "../../../../services/rezepte.service";
+import {Gerichtart} from "../../../../models/gerichtart";
+import {Tag} from "../../../../models/tag";
 
 @Component({
   selector: 'app-seitenleiste-mobil',

@@ -1,0 +1,20 @@
+<div>
+  <p>Rezepterstellung</p>
+</div>
+<form>
+  <div *ngIf="rezepte && rezepte.length">
+    <p>Test</p>
+    <div class="p-fluid" *ngFor="let rezept of rezepte">
+      <div class="p-field">
+        <input placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="rezept.name" pInputText>
+      </div>
+      <div class="p-field">
+        <input placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="rezept.onlineAdresse" pInputText>
+      </div>
+      <!--<div class="p-field">
+        <input placeholder="Bewertung" type="number" id="bewertung" name="bewertung" [(ngModel)]="rezept.bewertung" pInputNumber [min]="0" [max]="5">
+      </div>-->
+      <button type="submit" (click)="saveChanges(rezept)" pButton>Speichern</button>
+    </div>
+  </div>
+</form>
