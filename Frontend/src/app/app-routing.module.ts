@@ -11,11 +11,11 @@ import {SplashScreenComponent} from "./intro/splash-screen/splash-screen.compone
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
 
 const routes: Routes = [
-  { path: 'splash-screen', component: SplashScreenComponent },
-  { path: 'info-screen', component: InfoScreenComponent },
-  { path: 'rezepterstellung', component: RezeptErstellungComponent },
+  { path: 'splash', component: SplashScreenComponent },
+  { path: 'intro', component: InfoScreenComponent },
   { path: 'listencontainer', component: ListenContainerComponent, children: [
       { path: 'listeninhalt', component: ListeninhaltMobilComponent },
+      { path: 'rezepterstellung', component: RezeptErstellungComponent }
     ]},
   { path: '**', redirectTo: '/' } // Fallback für alle anderen ungültigen Routen
 ];

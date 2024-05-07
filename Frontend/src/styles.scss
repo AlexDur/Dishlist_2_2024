@@ -1,12 +1,97 @@
-@import '~primeng/resources/primeng.min.css'; // Stellen Sie sicher, dass der Pfad korrekt ist
-@import '~primeicons/primeicons.css'; // Dies sollte der korrekte Pfad sein
+@import '~primeng/resources/primeng.min.css';
+@import '~primeicons/primeicons.css';
 
+body{
+  background-color: whitesmoke;
+}
+h1{
+  color: cornflowerblue;
+}
 
 $primary-color: #424242;
 $secondary-color: #f5f5f5;
 $tertiary-color: white;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
+
+/*Intro*/
+
+.splash-screen{
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+.splash-titel{
+  font-size:30px;
+  border-bottom:2px solid cornflowerblue;
+  color:cornflowerblue;
+  cursor: pointer;
+}
+
+
+.intro-screen{
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:gray;
+}
+
+.intro-text{
+  margin: 20px;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+
+.intro-button {
+  width: 200px;
+  height: 50px;
+  background-color: cornflowerblue !important;
+  outline:1px solid black;
+  border-color:blue;
+  color: cornflowerblue;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+
+/*Rezepterstellung*/
+
+.rezept-erstellung{
+  height: 100vh;
+  width: 100vw;
+}
+
+.rezept-formular{
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputfeld{
+  width: 250px;
+  height: 50px;
+  padding: 10px;
+  margin:10px;
+}
 
 @media screen and (max-width: 768px) {
 
@@ -53,7 +138,7 @@ $tertiary-color: white;
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 10px;
-  background-color: #575e65;
+
   color:white;
   padding: 1rem;
 
