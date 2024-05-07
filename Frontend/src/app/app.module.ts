@@ -11,6 +11,7 @@ import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
 import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
 import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
+import {ButtonModule} from "primeng/button";
 
 
 
@@ -32,7 +33,8 @@ import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
     SeitenleisteModule,
     RezeptelisteModule,
     CheckboxModule,
-    FormsModule
+    FormsModule,
+    ButtonModule
   ],
   providers: [],
   exports: [

@@ -4,18 +4,18 @@ import {TagsComponent} from "../rezepteliste/rezepteliste-desktop/tags/tags.comp
 import {Tag} from "../../models/tag";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-rezept-erstellung',
   templateUrl: './rezept-erstellung.component.html',
   styleUrls: ['./rezept-erstellung.component.scss']
 })
-export class RezeptErstellungComponent implements OnChanges{
+export class RezeptErstellungComponent{
 /*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
-
 
   newRecipe: any = {}
   selectedRow: any;
@@ -30,55 +30,17 @@ export class RezeptErstellungComponent implements OnChanges{
   selectedTag: Set<Tag> = new Set<Tag>();
 
 
-  constructor( private rezepteService: RezeptService,  private tagService: TagService) {
+  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router: Router) {
     this.selectedRow = {};
   }
-
+/*
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rezepte']) {
       console.log('R-Erstellung: Rezepte aktualisiert:', this.rezepte);
     }
-  }
+  }*/
 
-  onselectedTagChanged(selectedTag: Tag[]): void {
-    this.selectedTag = new Set(selectedTag);
-    console.log('Listeninhalt: selectedTag', selectedTag)
-  }
 
-  getSeverity(status: boolean | string): string {
-    if (typeof status === 'boolean') {
-      return status ? 'info' : 'warning'; // Wenn gekocht, dann 'info', sonst keine Farbe
-    } else if (typeof status === 'string') {
-      switch (status.toLowerCase()) {
-        case 'noch nicht gekocht':
-          return 'danger';
-
-        case 'schon gekocht':
-          return 'success';
-
-        default:
-          return 'null';
-      }
-    } else {
-      return 'null';
-    }
-  }
-
-  getTagValue(status: boolean, isTagToggled: boolean): string {
-    if (isTagToggled) {
-      return 'schon gekocht'; // Wenn das Tag getoggled ist
-    } else {
-      return status ? 'schon gekocht' : 'noch geplant';
-    }
-  }
-
-  toggleTag(rezept: any) {
-    this.tagToggleStates[rezept.id!] = !this.tagToggleStates[rezept.id!];
-
-    // Zusätzlich den `status` im `rezept`-Objekt aktualisieren
-    rezept.status = !rezept.status;
-    rezept.istGeaendert = true;
-  }
 
   setGeaendert(rezept: Rezept) {
     rezept.istGeaendert = true;
@@ -194,6 +156,18 @@ export class RezeptErstellungComponent implements OnChanges{
     } else {
       console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
     }
+  }
+
+
+  handleClick($event: any){
+    this.saveChanges($event);
+    this.navigateContainer($event)
+  }
+
+
+  navigateContainer(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/listeninhalt']);
   }
 
   onRezepteGeladen(rezepte: Rezept[]): void {
