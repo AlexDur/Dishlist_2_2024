@@ -2,7 +2,6 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, catchError, map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
-import {DatePipe} from "@angular/common";
 
 interface RezeptAntwort {
   id: number;

@@ -1,28 +1,21 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
-import {Rezept} from "../../../models/rezepte";
-import {RezeptService} from "../../../services/rezepte.service";
-import {TagService} from "../../../services/tags.service";
-
-import {Dish, TagsComponent} from "../tags/tags.component"
-import {Tag} from "../../../models/tag";
+import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Rezept} from "../../models/rezepte";
+import {TagsComponent} from "../rezepteliste/rezepteliste-desktop/tags/tags.component";
+import {Tag} from "../../models/tag";
+import {RezeptService} from "../../services/rezepte.service";
+import {TagService} from "../../services/tags.service";
 
 @Component({
-  selector: 'app-listeninhalt',
-  templateUrl: './listeninhalt.component.html',
-  styleUrls: ['./listeninhalt.component.scss']
+  selector: 'app-rezept-erstellung',
+  templateUrl: './rezept-erstellung.component.html',
+  styleUrls: ['./rezept-erstellung.component.scss']
 })
-export class ListeninhaltComponent implements OnChanges{
-  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
-  @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
+export class RezeptErstellungComponent implements OnChanges{
+/*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
+  @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
+
 
   newRecipe: any = {}
   selectedRow: any;
@@ -43,7 +36,7 @@ export class ListeninhaltComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rezepte']) {
-      console.log('Rezepte aktualisiert:', this.rezepte);
+      console.log('R-Erstellung: Rezepte aktualisiert:', this.rezepte);
     }
   }
 
@@ -100,8 +93,6 @@ export class ListeninhaltComponent implements OnChanges{
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
-      datum: currentDate,
-      status: false,
       bewertung: 0,
     };
 
@@ -112,9 +103,9 @@ export class ListeninhaltComponent implements OnChanges{
     this.selectedRow = this.newRecipe;
 
     // Setzen des Fokuses auf das Input-Element in der neuen Zeile
-    setTimeout(() => {
+  /*  setTimeout(() => {
       this.newRecipeNameInput?.nativeElement.focus();
-    });
+    });*/
   }
 
   saveChanges(rezept: Rezept) {
@@ -205,15 +196,8 @@ export class ListeninhaltComponent implements OnChanges{
     }
   }
 
-
-  openUrl(url: string): void {
-    // Grundlegende Validierung, um sicherzustellen, dass die URL mit "http://" oder "https://" beginnt.
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      window.open(url, '_blank');
-    } else {
-      console.warn('Ungültige URL');
-
-    }
+  onRezepteGeladen(rezepte: Rezept[]): void {
+    console.log('Geladene Rezepte im Kindkomponente:', rezepte);
+    // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
-
 }

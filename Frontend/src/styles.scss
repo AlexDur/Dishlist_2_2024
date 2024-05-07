@@ -272,3 +272,27 @@ p-tag + p-tag {
 .floating-button:hover {
   background-color: darkred;
 }
+
+/*Router-Outlet*/
+
+/* Standard-Layout */
+.router-outlet-desktop {
+  display: block;
+}
+
+/* Mobile Layout */
+.router-outlet-mobile {
+  display: none;
+}
+
+/* Media Query für Mobilgeräte */
+@media screen and (max-width: 768px) {
+  .router-outlet-desktop {
+    display: none;
+  }
+
+  .router-outlet-mobile {
+    display: block;
+  }
+}
+

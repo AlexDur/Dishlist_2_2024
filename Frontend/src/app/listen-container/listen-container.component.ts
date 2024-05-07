@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../../models/rezepte";
-import {RezeptService} from "../../services/rezepte.service";
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Rezept} from "../models/rezepte";
+import {RezeptService} from "../services/rezepte.service";
 
 
 @Component({
@@ -19,7 +19,7 @@ export class ListenContainerComponent implements OnInit{
 
   ngOnInit(): void {
     this.rezepteService.getAlleRezepte().subscribe(rezepte => {
-      console.log("Geladene Rezepte:", rezepte);
+      console.log("Container: Geladene Rezepte:", rezepte);
       this.rezepte = rezepte.map(rezept => ({
         ...rezept,
         datum: rezept.datum ? new Date(rezept.datum) : undefined
@@ -32,10 +32,9 @@ export class ListenContainerComponent implements OnInit{
   }
 
 
-  onRezepteFiltered(gefilterteRezepte: Rezept[]): void {
-    // Verarbeitung der gefilterten Rezepte
-    console.log('Gefilterte Rezepte:', gefilterteRezepte);
-    this.rezepte = gefilterteRezepte;
+  onRezepteGeladen(rezepte: Rezept[]): void {
+    console.log('Geladene Rezepte im Kindkomponente:', rezepte);
+    // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
 
 
