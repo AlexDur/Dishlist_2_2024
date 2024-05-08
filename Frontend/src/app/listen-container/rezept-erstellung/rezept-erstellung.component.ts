@@ -162,12 +162,13 @@ export class RezeptErstellungComponent{
   handleClick($event: any){
     this.saveChanges($event);
     this.navigateContainer($event)
+    this.addRow()
   }
 
 
   navigateContainer(event: MouseEvent) {
     event.preventDefault();
-    this.router.navigate(['/listeninhalt']);
+    this.router.navigate(['/listencontainer']);
   }
 
   onRezepteGeladen(rezepte: Rezept[]): void {

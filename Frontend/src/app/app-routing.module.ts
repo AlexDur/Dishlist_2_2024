@@ -9,15 +9,16 @@ import {
 import {InfoScreenComponent} from "./intro/info-screen/info-screen.component";
 import {SplashScreenComponent} from "./intro/splash-screen/splash-screen.component";
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
+import {SeitenleisteComponent} from "./listen-container/seitenleiste/seitenleiste-desktop/seitenleiste.component";
 
 const routes: Routes = [
   { path: 'splash', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },
-  { path: 'listencontainer', component: ListenContainerComponent, children: [
-      { path: 'listeninhalt', component: ListeninhaltMobilComponent },
-      { path: 'rezepterstellung', component: RezeptErstellungComponent }
-    ]},
-  { path: '**', redirectTo: '/' } // Fallback für alle anderen ungültigen Routen
+  { path: 'listencontainer', component: ListenContainerComponent},
+/*  { path: 'listeninhalt', component: ListeninhaltMobilComponent },*/
+  { path: 'rezepterstellung', component: RezeptErstellungComponent },
+  { path: 'seitenleiste', component: SeitenleisteComponent },
+  { path: '**', redirectTo: '//listeninhalt' } // Fallback für alle anderen ungültigen Routen
 ];
 
 

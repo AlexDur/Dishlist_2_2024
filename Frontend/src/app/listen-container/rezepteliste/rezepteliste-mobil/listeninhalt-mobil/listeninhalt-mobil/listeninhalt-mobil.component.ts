@@ -50,51 +50,9 @@ export class ListeninhaltMobilComponent implements OnChanges{
 
   }
 
-  onselectedTagChanged(selectedTag: Tag[]): void {
-    this.selectedTag = new Set(selectedTag);
-    console.log('Listeninhalt: selectedTag', selectedTag)
-  }
+/*TODO: In Rezept speichern - Button unterbringen*/
 
-  getSeverity(status: boolean | string): string {
-    if (typeof status === 'boolean') {
-      return status ? 'info' : 'warning'; // Wenn gekocht, dann 'info', sonst keine Farbe
-    } else if (typeof status === 'string') {
-      switch (status.toLowerCase()) {
-        case 'noch nicht gekocht':
-          return 'danger';
-
-        case 'schon gekocht':
-          return 'success';
-
-        default:
-          return 'null';
-      }
-    } else {
-      return 'null';
-    }
-  }
-
-  getTagValue(status: boolean, isTagToggled: boolean): string {
-    if (isTagToggled) {
-      return 'schon gekocht'; // Wenn das Tag getoggled ist
-    } else {
-      return status ? 'schon gekocht' : 'noch geplant';
-    }
-  }
-
-  toggleTag(rezept: any) {
-    this.tagToggleStates[rezept.id!] = !this.tagToggleStates[rezept.id!];
-
-    // Zusätzlich den `status` im `rezept`-Objekt aktualisieren
-    rezept.status = !rezept.status;
-    rezept.istGeaendert = true;
-  }
-
-  setGeaendert(rezept: Rezept) {
-    rezept.istGeaendert = true;
-  }
-
-  /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
+/*  /!*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*!/
   addRow() {
     console.log('selectedRow in addRow:', this.selectedRow);
     const currentDate = new Date();
@@ -118,7 +76,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
     setTimeout(() => {
       this.newRecipeNameInput?.nativeElement.focus();
     });
-  }
+  }*/
 
 
 
@@ -133,10 +91,10 @@ export class ListeninhaltMobilComponent implements OnChanges{
 
     });*/
 
-  onRatingChanged(newRating: number, rezept: any) {
+/*  onRatingChanged(newRating: number, rezept: any) {
     rezept.bewertung = newRating;
     rezept.istGeaendert = true;
-  }
+  }*/
 
   selectRow(rezept: any) {
     this.selectedRow = rezept;
@@ -159,10 +117,10 @@ export class ListeninhaltMobilComponent implements OnChanges{
     }
   }
 
-  isRatingReadonly(): boolean {
+/*  isRatingReadonly(): boolean {
     // Ihre Logik hier, z.B.:
     return true; // oder eine dynamischere Bedingung
-  }
+  }*/
 
 
   openUrl(url: string | undefined): void {
