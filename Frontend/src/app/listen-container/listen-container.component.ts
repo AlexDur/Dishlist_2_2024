@@ -32,7 +32,7 @@ export class ListenContainerComponent implements OnInit{
   }
 
 
-  onRezepteGeladen(rezepte: Rezept[]): void {
+  onRezepteFiltered(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
     // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }

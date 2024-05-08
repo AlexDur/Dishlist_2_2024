@@ -12,6 +12,7 @@ import {FormsModule} from "@angular/forms";
 import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
 import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
 import {ButtonModule} from "primeng/button";
+import {RouterModule} from "@angular/router";
 
 
 
@@ -34,7 +35,7 @@ import {ButtonModule} from "primeng/button";
     RezeptelisteModule,
     CheckboxModule,
     FormsModule,
-    ButtonModule
+    ButtonModule,
   ],
   providers: [],
   exports: [
