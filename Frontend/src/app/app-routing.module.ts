@@ -18,7 +18,7 @@ const routes: Routes = [
 /*  { path: 'listeninhalt', component: ListeninhaltMobilComponent },*/
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
   { path: 'seitenleiste', component: SeitenleisteComponent },
-  { path: '**', redirectTo: '//listeninhalt' } // Fallback für alle anderen ungültigen Routen
+  { path: '**', redirectTo: '//listencontainer' } // Fallback für alle anderen ungültigen Routen
 ];
 
 

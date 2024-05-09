@@ -10,9 +10,9 @@
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
         <!--TODO: Bei Klick auf bearbeiten soll sich das Formular öffnen-->
-        <button pButton type="button" icon="pi pi-pencil" (click)="selectRow(rezept); $event.stopPropagation()" class="p-button-text"></button>
+        <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm($event); $event.stopPropagation()" class="p-button-text"></button>
        <!--TODO: Bei Klick auf löschen, soll ja oder nein- dialog aufploppen-->
-        <button pButton type="button" icon="pi pi-trash" (click)="deleteRow(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
+        <button pButton type="button" icon="pi pi-trash" (click)="deleteCard(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
       </div>
     </p-card>
     <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>

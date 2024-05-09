@@ -13,7 +13,7 @@ export class ListenContainerComponent implements OnInit{
   @Input() isMobile?: boolean;
   rezepteGeladen: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
-  rezepteVerfügbar = false
+  rezepteVerfuegbar = false
 
   constructor(private rezepteService: RezeptService) {}
 
@@ -25,10 +25,9 @@ export class ListenContainerComponent implements OnInit{
         datum: rezept.datum ? new Date(rezept.datum) : undefined
       }));
       this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
-      this.rezepteVerfügbar =true
-      console.log('rezepteVerfügbar', this.rezepteVerfügbar)
+      this.rezepteVerfuegbar =true
+      console.log('rezepteVerfügbar', this.rezepteVerfuegbar)
     });
-
   }
 
 
