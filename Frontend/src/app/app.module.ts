@@ -1,31 +1,45 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {CheckboxModule} from "primeng/checkbox";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
-import {ListenContainerComponent} from "./rezepteliste/listen-container/listen-container.component";
-import {RezeptelisteModule} from "./rezepteliste/rezepteliste.module";
+import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
+import {ListenContainerComponent} from "./listen-container/listen-container.component";
+import {RezeptelisteModule} from "./listen-container/rezepteliste/rezepteliste.module";
+import {CheckboxModule} from "primeng/checkbox";
+import {FormsModule} from "@angular/forms";
+import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
+import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
+import {ButtonModule} from "primeng/button";
+import {RouterModule} from "@angular/router";
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ListenContainerComponent,
+    SplashScreenComponent,
+    InfoScreenComponent,
   ],
+
+  // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
+  // RezeptelistenModuls in seinen eigenen Komponenten oder in anderen Modulen, die es importiert, verwenden.
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ContextMenuModule,
     SeitenleisteModule,
-
- RezeptelisteModule
+    RezeptelisteModule,
+    CheckboxModule,
+    FormsModule,
+    ButtonModule,
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

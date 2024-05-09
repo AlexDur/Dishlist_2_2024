@@ -1,20 +1,17 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
-  OnInit,
-  Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Rezept} from "../../models/rezepte";
-import {RezeptService} from "../../services/rezepte.service";
-import {TagService} from "../../services/tags.service";
+import {Rezept} from "../../../../models/rezepte";
+import {RezeptService} from "../../../../services/rezepte.service";
+import {TagService} from "../../../../services/tags.service";
 
 import {Dish, TagsComponent} from "../tags/tags.component"
-import {Tag} from "../../models/tag";
+import {Tag} from "../../../../models/tag";
 
 @Component({
   selector: 'app-listeninhalt',

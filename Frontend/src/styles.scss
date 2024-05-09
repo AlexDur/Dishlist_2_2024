@@ -1,8 +1,127 @@
+@import '~primeng/resources/primeng.min.css';
+@import '~primeicons/primeicons.css';
+
+body{
+  background-color: cornflowerblue;
+}
+h1{
+  color: white;
+}
+
 $primary-color: #424242;
 $secondary-color: #f5f5f5;
 $tertiary-color: white;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
+
+/*Intro*/
+
+.splash-screen{
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+.splash-titel{
+  font-size:30px;
+  border-bottom:2px solid cornflowerblue;
+  color:white;
+  cursor: pointer;
+}
+
+
+.intro-screen{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding-top: 20px;
+  box-sizing: border-box;
+  background-color:cornflowerblue;
+}
+
+.intro-slogan{
+  font-size:30px;
+  font-weight:bolder;
+  color:white;
+  padding: 0 30px;
+  text-align:center;
+  margin-bottom: 120px;
+}
+
+.intro-text{
+  margin-bottom: 30px;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  width: 80%;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+
+.intro-button {
+  width: 200px;
+  height: 50px;
+  background-color: white !important;
+  outline:1px solid black;
+  border-color:blue;
+  color: cornflowerblue !important;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+
+/*Rezepterstellung*/
+
+.rezept-erstellung{
+  height: 100vh;
+  width: 100vw;
+}
+
+.rezept-formular{
+  margin-top:100px;
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputfeld{
+  width: 250px;
+  height: 50px;
+  padding: 10px;
+  margin:10px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  color: cornflowerblue;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #d32f2f; /* Dunkleres Rot beim Hover */
+}
 
 @media screen and (max-width: 768px) {
 
@@ -47,11 +166,12 @@ $tertiary-color: white;
 
 .grid-container {
   display: grid;
-  grid-template-columns: 250px 1fr; /* Seitenleiste mit fester Breite und der Rest für die Tabelle */
+  grid-template-columns: 200px 1fr;
   gap: 10px;
-  background-color: #575e65;
+
   color:white;
   padding: 1rem;
+
 }
 
 
@@ -67,6 +187,10 @@ $tertiary-color: white;
 
 .rot {
   color: #FF0000; /* Rot */
+}
+
+.hellblau{
+  color: white;
 }
 
 
@@ -115,16 +239,179 @@ p-tag + p-tag {
   font-size: 0.9rem;
 }
 
+.mobile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /*padding: 0.5rem;*/
+  border-bottom: 1px solid #ccc;
+/*  margin-bottom: 5px;*/
+}
 
-/*.green {
-  color: green;
+.p-card .p-card-body{
+  padding-bottom:0;
+  margin:0;
 }
-.orange {
-  color: orange;
+
+.p-card-body{
+  padding-bottom:0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.red {
-  color: red;
+
+.p-card {
+  display: flex;
+  flex: 0 1 calc(33.333% - 20px);
+  flex-direction: column;
+  padding-bottom:0;
+  justify-content: space-between; /* Stellt sicher, dass der Footer am unteren Rand der Karte bleibt */
+  min-height: 100px;
+  max-height: 150px;
 }
-.clicked {
-  color: #3b82f6;
-}*/
+
+
+.p-card-content{
+  padding-bottom:0;
+  margin-bottom:0;
+  font-size: 8px;
+}
+
+.p-card-title{
+  display: flex;
+  justify-content:center;
+  font-size: 14px !important;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.p-card-footer{
+  display: flex;
+  justify-content:center;
+  padding-top:0;
+}
+
+.p-card .p-card-footer{
+  padding-top: 0 !important;
+}
+
+.clickable-card {
+  cursor: pointer;
+}
+
+.mahlzeiten{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-around;
+}
+
+.p-field-checkbox {
+  font-size:6px;
+  margin: 5px; /* Rechter Abstand zwischen den Checkboxen */
+}
+
+@media screen and (max-width: 599px) {
+  .seitenleiste {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    order: -1;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container-listeninhalt{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container-listeninhalt{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+    gap: 20px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .p-card {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex: 0 1 calc(50% - 20px); /* Zwei Karten pro Zeile in kleineren Ansichten */
+  }
+}
+
+@media (max-width: 480px) {
+  .p-card {
+    flex: 0 1 100%;
+  }
+}
+
+.trennungsstrich {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+/*Rezept-Hinzufügen-Button*/
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.floating-button:hover {
+  background-color: darkred;
+}
+
+/*Router-Outlet*/
+
+/* Standard-Layout */
+.router-outlet-desktop {
+  display: block;
+}
+
+/* Mobile Layout */
+.router-outlet-mobile {
+  display: none;
+}
+
+/* Media Query für Mobilgeräte */
+@media screen and (max-width: 768px) {
+  .router-outlet-desktop {
+    display: none;
+  }
+
+  .router-outlet-mobile {
+    display: block;
+  }
+}
+
