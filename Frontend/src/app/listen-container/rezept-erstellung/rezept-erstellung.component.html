@@ -1,7 +1,10 @@
 <div class="rezept-erstellung">
   <div class="rezept-formular">
 
-  <h1>Rezepterstellung</h1>
+    <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
+
+
+    <h1>Rezepterstellung</h1>
 
   <form (ngSubmit)="saveChanges(newRecipe)">
     <div class="p-fluid">
@@ -11,9 +14,6 @@
       <div class="p-field">
         <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" pInputText>
       </div>
-      <!--<div class="p-field">
-        <input placeholder="Bewertung" type="number" id="bewertung" name="bewertung" [(ngModel)]="newRecipe.bewertung" pInputNumber [min]="0" [max]="5">
-      </div>-->
       <button (click)="handleClick($event)" class="intro-button" type="submit" pButton>Neues Rezept hinzufügen</button>
     </div>
   </form>

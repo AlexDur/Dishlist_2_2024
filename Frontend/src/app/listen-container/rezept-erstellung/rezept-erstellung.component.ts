@@ -51,11 +51,9 @@ export class RezeptErstellungComponent{
     console.log('selectedRow in addRow:', this.selectedRow);
     const currentDate = new Date();
 
-
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
-      bewertung: 0,
     };
 
     this.gefilterteRezepte.unshift(this.newRecipe);
@@ -71,53 +69,22 @@ export class RezeptErstellungComponent{
   }
 
   saveChanges(rezept: Rezept) {
-    // Erhalt der ausgewählten Tags vom TagService
-    const selectedTags: Tag[] = this.tagService.getSelectedTags();
-    console.log('listeninhalt: selectedTag', selectedTags)
-
-    // Setzen der ausgewählten Tags für das aktuelle Rezept
-    rezept.tags = selectedTags;
-
-    // Überprüfen, ob das Rezept bereits eine ID hat (also bereits existiert)
-    if (rezept.id === null || rezept.id === undefined) {
-      // Rezept erstellen
-      this.rezepteService.createRezept(rezept).subscribe(
-        (response) => {
-          if (response.body) {
-            // ID des neu erstellten Rezepts setzen
-            rezept.id = response.body.id;
-            this.updateUIAfterSave();
-          } else {
-            console.error('Fehler: Antwortkörper ist null');
-          }
-        },
-        (error) => {
-          console.error('Fehler beim Erstellen des Rezepts', error);
-          // Fehlerbehandlung für die Tags
-          this.restoreOriginalTags();
+    if (!rezept.id) {
+      this.rezepteService.createRezept(rezept).subscribe(response => {
+        if (response.body) {
+          rezept.id = response.body.id;
+          this.updateUIAfterSave();
+          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte, um die Liste zu aktualisieren
         }
-      );
+      });
     } else {
-      // Rezept aktualisieren
-      this.rezepteService.updateRezept(rezept.id, rezept).subscribe(
-        (response) => {
-          if (response.body) {
-
-            // ID des neu erstellten Rezepts setzen
-            rezept.id = response.body.id;
-            this.updateUIAfterSave();
-          } else {
-            console.error('Fehler: Antwortkörper ist null');
-          }
-        },
-        (error) => {
-          console.error('Fehler beim Aktualisieren des Rezepts', error);
-          // Fehlerbehandlung für die Tags
-          this.restoreOriginalTags();
-        }
-      );
+      this.rezepteService.updateRezept(rezept.id, rezept).subscribe(() => {
+        this.updateUIAfterSave();
+        this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte, um die Liste zu aktualisieren
+      });
     }
   }
+
 
   updateUIAfterSave() {
     this.istGeaendert = false;
@@ -142,22 +109,11 @@ export class RezeptErstellungComponent{
     this.editMode = true;
   }
 
-  deleteRow(id: number) {
-    if (this.rezeptGeladen) {
-      this.rezepteService.deleteRezept(id).subscribe(
-        () => {
-          console.log('Rezept erfolgreich gelöscht');
-          this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept => rezept.id !== id);
-        },
-        (error) => {
-          console.error('Fehler beim Löschen des Rezepts', error);
-        }
-      );
-    } else {
-      console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
-    }
-  }
 
+  navigateContainer(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/listencontainer']);
+  }
 
   handleClick($event: any){
     this.saveChanges($event);
@@ -166,10 +122,7 @@ export class RezeptErstellungComponent{
   }
 
 
-  navigateContainer(event: MouseEvent) {
-    event.preventDefault();
-    this.router.navigate(['/listencontainer']);
-  }
+
 
   onRezepteGeladen(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);

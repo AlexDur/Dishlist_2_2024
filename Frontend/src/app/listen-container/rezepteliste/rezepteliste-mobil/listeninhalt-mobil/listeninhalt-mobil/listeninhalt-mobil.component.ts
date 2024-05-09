@@ -12,6 +12,7 @@ import {TagService} from "../../../../../services/tags.service";
 
 import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";
 import {Tag} from "../../../../../models/tag";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-listeninhaltmobil',
@@ -38,7 +39,7 @@ export class ListeninhaltMobilComponent implements OnChanges{
   selectedTag: Set<Tag> = new Set<Tag>();
 
 
-  constructor( private rezepteService: RezeptService,  private tagService: TagService) {
+  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {
     this.selectedRow = {};
   }
 
@@ -101,7 +102,14 @@ export class ListeninhaltMobilComponent implements OnChanges{
     this.editMode = true;
   }
 
-  deleteRow(id: number) {
+  /*TODO: Nach Navigation ins Rezept, sollen die Inhalte in den Feldern stehen*/
+  navigateForm(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/rezepterstellung']);
+  }
+
+  deleteCard(id: number) {
+
     if (this.rezepteVerfügbar) {
       this.rezepteService.deleteRezept(id).subscribe(
         () => {

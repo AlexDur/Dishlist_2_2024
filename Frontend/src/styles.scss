@@ -2,10 +2,10 @@
 @import '~primeicons/primeicons.css';
 
 body{
-  background-color: gray;
+  background-color: cornflowerblue;
 }
 h1{
-  color: cornflowerblue;
+  color: white;
 }
 
 $primary-color: #424242;
@@ -27,25 +27,37 @@ $tertiary-color: white;
 .splash-titel{
   font-size:30px;
   border-bottom:2px solid cornflowerblue;
-  color:cornflowerblue;
+  color:white;
   cursor: pointer;
 }
 
 
 .intro-screen{
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color:gray;
+  padding-top: 20px;
+  box-sizing: border-box;
+  background-color:cornflowerblue;
+}
+
+.intro-slogan{
+  font-size:30px;
+  font-weight:bolder;
+  color:white;
+  padding: 0 30px;
+  text-align:center;
+  margin-bottom: 120px;
 }
 
 .intro-text{
-  margin: 20px;
+  margin-bottom: 30px;
   text-align: center;
   color: white;
   font-size: 20px;
+  width: 80%;
 }
 
 .button-container {
@@ -60,10 +72,10 @@ $tertiary-color: white;
 .intro-button {
   width: 200px;
   height: 50px;
-  background-color: cornflowerblue !important;
+  background-color: white !important;
   outline:1px solid black;
   border-color:blue;
-  color: cornflowerblue;
+  color: cornflowerblue !important;
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -80,6 +92,7 @@ $tertiary-color: white;
 }
 
 .rezept-formular{
+  margin-top:100px;
   display: flex;
   flex-direction:column;
   justify-content: center;
@@ -91,6 +104,23 @@ $tertiary-color: white;
   height: 50px;
   padding: 10px;
   margin:10px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  color: cornflowerblue;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #d32f2f; /* Dunkleres Rot beim Hover */
 }
 
 @media screen and (max-width: 768px) {
