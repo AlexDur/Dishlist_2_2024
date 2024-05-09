@@ -1,6 +1,7 @@
-package com.rezepte_app;
+package com.rezepte_app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rezepte_app.Tag;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,5 +1,6 @@
 package com.rezepte_app;
 
+import com.rezepte_app.model.Rezept;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;

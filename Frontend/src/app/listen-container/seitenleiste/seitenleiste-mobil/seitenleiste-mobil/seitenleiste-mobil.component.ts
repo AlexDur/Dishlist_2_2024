@@ -1,16 +1,16 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../models/rezepte";
+import {Rezept} from "../../../../models/rezepte";
 import {FilterService} from "primeng/api";
-import {RezeptService} from "../services/rezepte.service";
-import {Tag} from "../models/tag";
-import {Gerichtart} from "../models/gerichtart";
+import {RezeptService} from "../../../../services/rezepte.service";
+import {Gerichtart} from "../../../../models/gerichtart";
+import {Tag} from "../../../../models/tag";
 
 @Component({
-  selector: 'app-seitenleiste',
-  templateUrl: './seitenleiste.component.html',
-  styleUrls: ['./seitenleiste.component.scss']
+  selector: 'app-seitenleiste-mobil',
+  templateUrl: './seitenleiste-mobil.component.html',
+  styleUrls: ['./seitenleiste-mobil.component.scss']
 })
-export class SeitenleisteComponent implements OnInit {
+export class SeitenleisteMobilComponent implements OnInit{
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
   selectedGerichtarten: string[] = [];
@@ -54,9 +54,9 @@ export class SeitenleisteComponent implements OnInit {
     ];*/
 
 
-/*  selectedFilters: string[] = [];
-  selectedCategories: string[] = [];
-  selectedKuechen: string[] = [];*/
+  /*  selectedFilters: string[] = [];
+    selectedCategories: string[] = [];
+    selectedKuechen: string[] = [];*/
 
   gerichtArten: Gerichtart[] = [
     {label: 'Vorspeise', severity: 'vorspeise', count: 0 },
@@ -82,7 +82,7 @@ export class SeitenleisteComponent implements OnInit {
       this.gerichtArten.forEach((art) => {
         art.count = 0;
       });
-/*      console.log('gerichtarten', this.gerichtArten)*/
+      /*      console.log('gerichtarten', this.gerichtArten)*/
 
       // Rezepte durchlaufen und die Anzahl für jede Gerichtart zählen
       rezepte.forEach((rezept) => {
@@ -132,7 +132,7 @@ export class SeitenleisteComponent implements OnInit {
     // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
     console.log('SL:', this.originalRezepte)
     this.rezepte = [...this.originalRezepte];
-   /* this.filterRezepte();*/
+    /* this.filterRezepte();*/
     // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
   }
 
@@ -157,7 +157,5 @@ export class SeitenleisteComponent implements OnInit {
     console.log('Zustand NACH Toggle:', [...this.selectedGerichtarten]);
     this.filterRezepte(); // Aktualisiert die Filterung der Rezepte.
   }
-
-
 
 }
