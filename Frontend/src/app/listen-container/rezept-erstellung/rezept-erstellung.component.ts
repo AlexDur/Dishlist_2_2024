@@ -1,10 +1,10 @@
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
-import {TagsComponent} from "../rezepteliste/rezepteliste-desktop/tags/tags.component";
 import {Tag} from "../../models/tag";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
 import {Router} from "@angular/router";
+import {Observable, tap} from "rxjs";
 
 @Component({
   selector: 'app-rezept-erstellung',
@@ -14,6 +14,7 @@ import {Router} from "@angular/router";
 export class RezeptErstellungComponent{
 /*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
+  @Output() newRecipeCreated = new EventEmitter<Rezept>();
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
 
@@ -62,26 +63,27 @@ export class RezeptErstellungComponent{
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
     this.selectedRow = this.newRecipe;
 
-    // Setzen des Fokuses auf das Input-Element in der neuen Zeile
-  /*  setTimeout(() => {
-      this.newRecipeNameInput?.nativeElement.focus();
-    });*/
+
   }
 
-  saveChanges(rezept: Rezept) {
+  saveChanges(rezept: Rezept): Observable<any> {
     if (!rezept.id) {
-      this.rezepteService.createRezept(rezept).subscribe(response => {
-        if (response.body) {
-          rezept.id = response.body.id;
+      return this.rezepteService.createRezept(rezept).pipe(
+        tap(response => {
+          // Logik nach erfolgreicher Erstellung
+          // z.B. Aktualisieren des BehaviorSubject
           this.updateUIAfterSave();
-          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte, um die Liste zu aktualisieren
-        }
-      });
+          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte
+        })
+      );
     } else {
-      this.rezepteService.updateRezept(rezept.id, rezept).subscribe(() => {
-        this.updateUIAfterSave();
-        this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte, um die Liste zu aktualisieren
-      });
+      return this.rezepteService.updateRezept(rezept.id, rezept).pipe(
+        tap(() => {
+          // Logik nach erfolgreichem Update
+          this.updateUIAfterSave();
+          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte
+        })
+      );
     }
   }
 
@@ -93,7 +95,6 @@ export class RezeptErstellungComponent{
     this.editMode = false;
     this.istGespeichert = true;
   }
-
 
   restoreOriginalTags() {
     // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
@@ -109,19 +110,28 @@ export class RezeptErstellungComponent{
     this.editMode = true;
   }
 
-
   navigateContainer(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/listencontainer']);
   }
 
   handleClick($event: any){
-    this.saveChanges($event);
-    this.navigateContainer($event)
-    this.addRow()
+    // Emission des neuen Rezepts an übergeordnete Komponenten oder andere Interessenten
+    this.newRecipeCreated.emit(this.newRecipe);
+
+    // Speichern des Rezepts und Warten auf die erfolgreiche Speicherung
+    this.saveChanges(this.newRecipe).subscribe({
+      next: (response) => {
+        // Navigation nach erfolgreicher Speicherung
+        this.navigateContainer($event);
+        // Hinzufügen einer neuen Zeile falls notwendig
+        this.addRow();
+      },
+      error: (error) => {
+        console.error('Fehler beim Speichern des Rezepts', error);
+      }
+    });
   }
-
-
 
 
   onRezepteGeladen(rezepte: Rezept[]): void {
