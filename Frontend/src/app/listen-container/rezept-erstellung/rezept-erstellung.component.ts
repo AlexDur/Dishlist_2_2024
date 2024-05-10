@@ -4,7 +4,7 @@ import {Tag} from "../../models/tag";
 import {RezeptService} from "../../services/rezepte.service";
 import {TagService} from "../../services/tags.service";
 import {Router} from "@angular/router";
-import {Observable, tap} from "rxjs";
+import {catchError, Observable, switchMap, tap, throwError} from "rxjs";
 
 @Component({
   selector: 'app-rezept-erstellung',
@@ -67,25 +67,26 @@ export class RezeptErstellungComponent{
   }
 
   saveChanges(rezept: Rezept): Observable<any> {
+    let operation: Observable<any>;
+
     if (!rezept.id) {
-      return this.rezepteService.createRezept(rezept).pipe(
-        tap(response => {
-          // Logik nach erfolgreicher Erstellung
-          // z.B. Aktualisieren des BehaviorSubject
-          this.updateUIAfterSave();
-          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte
-        })
-      );
+      operation = this.rezepteService.createRezept(rezept);
     } else {
-      return this.rezepteService.updateRezept(rezept.id, rezept).pipe(
-        tap(() => {
-          // Logik nach erfolgreichem Update
-          this.updateUIAfterSave();
-          this.rezepteService.getAlleRezepte(); // Erneutes Laden der Rezepte
-        })
-      );
+      operation = this.rezepteService.updateRezept(rezept.id, rezept);
     }
+
+    return operation.pipe(
+      switchMap(response => {
+        this.updateUIAfterSave();
+        return this.rezepteService.getAlleRezepte();
+      }),
+      catchError(error => {
+        console.error('Fehler beim Speichern oder Aktualisieren des Rezepts', error);
+        return throwError(() => error);
+      })
+    );
   }
+
 
 
   updateUIAfterSave() {

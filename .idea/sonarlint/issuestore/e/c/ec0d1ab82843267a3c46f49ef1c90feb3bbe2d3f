@@ -1,2 +1,3 @@
 
-qtypescript:S1874h"NThe signature '(error: any): Observable<never>' of 'throwError' is deprecated.(ø—˜æ8ÝêÿÕç1
+Ftypescript:S1128"#Remove this unused import of 'map'.(è¼Íö8æ¼Ý€ö1
+qtypescript:S1874q"NThe signature '(error: any): Observable<never>' of 'throwError' is deprecated.(ø—˜æ8ÝêÿÕç1
