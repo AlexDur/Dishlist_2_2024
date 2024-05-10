@@ -23,23 +23,22 @@ export class RezeptService {
   constructor(private http: HttpClient) { }
 
   getAlleRezepte(): Observable<Rezept[]> {
-    // Prüfen, ob das BehaviorSubject bereits Daten enthält
-    if (this.rezepteSubject.getValue().length === 0) {
-      return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
-        tap(rezepte => {
-          // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
-          const processedRezepte = rezepte.map(rezept => ({
-            ...rezept,
-            datum: rezept.datum ? new Date(rezept.datum) : undefined
-          }));
-          this.rezepteSubject.next(processedRezepte);  // Aktualisieren des Subjects mit den neuen Daten
-        })
-      );
-    } else {
-      // Wenn Daten vorhanden sind, das bestehende BehaviorSubject als Observable zurückgeben
-      return this.rezepteSubject.asObservable();
-    }
+    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
+      tap(rezepte => {
+        // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
+        const processedRezepte = rezepte.map(rezept => ({
+          ...rezept,
+          datum: rezept.datum ? new Date(rezept.datum) : undefined
+        }));
+        this.rezepteSubject.next(processedRezepte); // Aktualisieren des Subjects mit den neuen Daten
+      }),
+      catchError(error => {
+        console.error("Fehler beim Laden der Rezepte", error);
+        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
+      })
+    );
   }
+
 
 
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
