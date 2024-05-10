@@ -2,7 +2,7 @@ import {
   Component,
   ElementRef,
   Input,
-  OnChanges,
+  OnChanges, OnInit,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -13,13 +13,14 @@ import {TagService} from "../../../../../services/tags.service";
 import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";
 import {Tag} from "../../../../../models/tag";
 import {Router} from "@angular/router";
+import {RezeptErstellungComponent} from "../../../../rezept-erstellung/rezept-erstellung.component";
 
 @Component({
   selector: 'app-listeninhaltmobil',
   templateUrl: './listeninhalt-mobil.component.html',
   styleUrls: ['./listeninhalt-mobil.component.scss']
 })
-export class ListeninhaltMobilComponent implements OnChanges{
+export class ListeninhaltMobilComponent implements OnInit{
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
@@ -43,15 +44,14 @@ export class ListeninhaltMobilComponent implements OnChanges{
     this.selectedRow = {};
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['rezepte']) {
-      console.log('Rezepte aktualisiert:', this.rezepte);
-
-    }
-
+  ngOnInit() {
+    this.rezepteService.rezepte$.subscribe(rezepte => {
+      this.gefilterteRezepte = rezepte;
+      console.log('Aktualisierte Rezepte:', rezepte);
+    });
   }
 
-/*TODO: In Rezept speichern - Button unterbringen*/
+
 
 /*  /!*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*!/
   addRow() {
