@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, forkJoin, Observable, throwError} from 'rxjs';
+import {BehaviorSubject, forkJoin, map, Observable, throwError} from 'rxjs';
 import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
+import {RezeptService} from "./rezepte.service";
 
 
 @Injectable({
@@ -13,7 +14,7 @@ export class TagService {
 
   private backendUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private rezepteService: RezeptService) {}
 
   updateTag(tag: Tag) {
     if (!tag.id) {
@@ -45,5 +46,16 @@ export class TagService {
 
   getSelectedTags(): Tag[] {
     return this.tagsSubject.getValue();
+  }
+
+  countTags(tagLabel: string): Observable<number> {
+    return this.rezepteService.rezepte$.pipe(
+      map(rezepte =>
+        rezepte.reduce((count, rezept) => {
+          const tagExists = rezept.tags?.some(tag => tag.label === tagLabel);
+          return count + (tagExists ? 1 : 0);
+        }, 0)
+      )
+    );
   }
 }
