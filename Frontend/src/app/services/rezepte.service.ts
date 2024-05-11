@@ -23,23 +23,22 @@ export class RezeptService {
   constructor(private http: HttpClient) { }
 
   getAlleRezepte(): Observable<Rezept[]> {
-    // Prüfen, ob das BehaviorSubject bereits Daten enthält
-    if (this.rezepteSubject.getValue().length === 0) {
-      return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
-        tap(rezepte => {
-          // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
-          const processedRezepte = rezepte.map(rezept => ({
-            ...rezept,
-            datum: rezept.datum ? new Date(rezept.datum) : undefined
-          }));
-          this.rezepteSubject.next(processedRezepte);  // Aktualisieren des Subjects mit den neuen Daten
-        })
-      );
-    } else {
-      // Wenn Daten vorhanden sind, das bestehende BehaviorSubject als Observable zurückgeben
-      return this.rezepteSubject.asObservable();
-    }
+    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
+      tap(rezepte => {
+        // Verarbeiten der Rezepte und Umwandeln der Datumsstrings in Date-Objekte
+        const processedRezepte = rezepte.map(rezept => ({
+          ...rezept,
+          datum: rezept.datum ? new Date(rezept.datum) : undefined
+        }));
+        this.rezepteSubject.next(processedRezepte); // Aktualisieren des Subjects mit den neuen Daten
+      }),
+      catchError(error => {
+        console.error("Fehler beim Laden der Rezepte", error);
+        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
+      })
+    );
   }
+
 
 
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
@@ -47,8 +46,6 @@ export class RezeptService {
 
     const rezeptMitFormatiertenTags = {
       ...rezept,
-      /*Wenn das tags-Attribut des ursprünglichen rezept-Objekts nicht vorhanden ist
-      oder null oder undefined ist, wird stattdessen ein leeres Array [] zugewiesen.*/
       tags: rezept.tags ?? []
     };
 
@@ -59,10 +56,12 @@ export class RezeptService {
       rezeptMitFormatiertenTags,
       { headers, observe: 'response', responseType: 'json' }
     ).pipe(
-      map(response => {
-        console.log('Message:', response.body?.message);
-        console.log('ID:', response.body?.id);
-        return response;
+      tap(response => {
+        if (response.body) {
+          // Rezept-Array aktualisieren nach dem Hinzufügen
+          const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
+          this.rezepteSubject.next(updatedRezepte);
+        }
       }),
       catchError(error => {
         console.error('Ein Fehler ist aufgetreten:', error);
@@ -72,24 +71,34 @@ export class RezeptService {
   }
 
 
+
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
-
-    // Überprüfen, ob `tags` definiert ist, und Verwendung eines leeren Arrays als Fallback
     const rezeptMitFormatiertenTags = {
       ...rezept,
-      /*Wenn das tags-Attribut des ursprünglichen rezept-Objekts nicht vorhanden ist
-      oder null oder undefined ist, wird stattdessen ein leeres Array [] zugewiesen.*/
       tags: rezept.tags ?? []
     };
 
     return this.http.put(apiUrl, rezeptMitFormatiertenTags, { headers: this.getJsonHeaders(), observe: 'response', responseType: 'json' }).pipe(
+      tap(() => {
+        const existingRezepte = this.rezepteSubject.getValue();
+        const index = existingRezepte.findIndex(r => r.id === rezeptId);
+        if (index !== -1) {
+          const updatedRezepte = [
+            ...existingRezepte.slice(0, index),
+            {...existingRezepte[index], ...rezept},
+            ...existingRezepte.slice(index + 1)
+          ];
+          this.rezepteSubject.next(updatedRezepte);
+        }
+      }),
       catchError((error) => {
         console.error('Fehler beim Aktualisieren des Rezepts', error);
         return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts'));
       })
     );
   }
+
 
 
 

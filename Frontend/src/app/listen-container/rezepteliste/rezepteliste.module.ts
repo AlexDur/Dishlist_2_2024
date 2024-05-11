@@ -16,6 +16,7 @@ import {
 import {
   RezeptErstellungComponent
 } from "../rezept-erstellung/rezept-erstellung.component";
+import {ToggleButtonModule} from "primeng/togglebutton";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {
     TagModule,
     RatingModule,
     ButtonModule,
-    CardModule
+    CardModule,
+    ToggleButtonModule
   ]
 })
 export class RezeptelisteModule { }
