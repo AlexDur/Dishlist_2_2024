@@ -1,0 +1,6 @@
+
+Ktypescript:S4323"*Replace this union type with a type alias.(ªƒ±ýúÿÿÿÿ
+wtypescript:S65828"[Prefer using an optional chain expression instead, as it's more concise and easier to read.(¬Ò¦ù
+wtypescript:S6582>"[Prefer using an optional chain expression instead, as it's more concise and easier to read.(Ú£Ù½
+ktypescript:S6653p"JUse 'Object.hasOwn()' instead of 'Object.prototype.hasOwnProperty.call()'.(Î·ø˜ùÿÿÿÿ
+Btypescript:S1186|"&Unexpected empty method 'ngOnDestroy'.(ÜŠòž
