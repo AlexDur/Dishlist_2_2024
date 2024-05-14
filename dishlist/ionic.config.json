@@ -1,7 +1,0 @@
-{
-  "name": "dishlist",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
-}
