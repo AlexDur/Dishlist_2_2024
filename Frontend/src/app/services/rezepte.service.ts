@@ -1,7 +1,8 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, catchError, map, Observable, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError,  map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
+import {config} from "../../../config";
 
 interface RezeptAntwort {
   id: number;
@@ -13,7 +14,7 @@ interface RezeptAntwort {
 })
 export class RezeptService {
 
-  private backendUrl = 'http://localhost:8080';
+  private backendUrl = config.apiUrl;
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
 
@@ -69,8 +70,6 @@ export class RezeptService {
       })
     );
   }
-
-
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
