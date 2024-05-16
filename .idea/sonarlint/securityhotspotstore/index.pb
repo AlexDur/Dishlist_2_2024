@@ -17,3 +17,5 @@ X
 Backend/.env,0\9\0930996c5c072b4caa730df7bd67ba4ea23debe1
 „
 TFrontend/src/app/listen-container/rezept-erstellung/rezept-erstellung.component.html,d\f\dfc5f470f18dea772ef864b08d80212b52312d02
+C
+Backend/vercel.json,d\2\d22928edf8761dc2e587a17b501e562ee2649947
