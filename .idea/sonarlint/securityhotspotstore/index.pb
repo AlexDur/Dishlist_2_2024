@@ -11,3 +11,5 @@ B
 Backend/Dockerfile,c\b\cb4be36eed51e75adb18dd1c6ecebf1c09791f15
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+X
+(Frontend/src/environments/environment.ts,e\1\e155b763a331d305c57d20861a94ac9bd7e72ba1
