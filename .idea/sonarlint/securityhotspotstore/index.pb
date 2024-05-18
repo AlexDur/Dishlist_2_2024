@@ -19,3 +19,7 @@ X
 TFrontend/src/app/listen-container/rezept-erstellung/rezept-erstellung.component.html,d\f\dfc5f470f18dea772ef864b08d80212b52312d02
 C
 Backend/vercel.json,d\2\d22928edf8761dc2e587a17b501e562ee2649947
+S
+#Frontend/src/app/app.component.html,9\3\9345d4e37836356134a20a446053d32434f56608
+B
+Backend/.env.local,d\e\de90dc9ebd6ecc3a6c64575bc36e992a9b39f6a6
