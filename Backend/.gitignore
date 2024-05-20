@@ -39,3 +39,8 @@ build/
 
 ### SonarLint ###
 .sonarlint/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

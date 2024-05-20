@@ -1,0 +1,5 @@
+branch-defaults:
+  develop:
+    environment: Dishlist-env
+global:
+  profile: null
