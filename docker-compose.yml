@@ -1,0 +1,38 @@
+version: '3'
+services:
+  frontend:
+    image: 654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-frontend:latest
+    ports:
+      - "4200:80"
+    links:
+      - backend
+    environment:
+      - VIRTUAL_HOST=frontend.local
+
+  backend:
+    image: 654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:latest
+    ports:
+      - "3000:8080"
+    links:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dishlist
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=|]{>#k3siGE}}o9kyCtY2t]9MdvC
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=|]{>#k3siGE}}o9kyCtY2t]9MdvC
+      - MYSQL_DATABASE=dishlist
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=|]{>#k3siGE}}o9kyCtY2t]9MdvC
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+
+volumes:
+  db_data:
