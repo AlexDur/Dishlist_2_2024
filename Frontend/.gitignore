@@ -46,3 +46,46 @@ Thumbs.db
 sonarlint/
 .sonarlint/
 sonar-report.json
+
+# Ignoriere alle XML-Dateien
+*.xml
+
+# Ignoriere spezifische XML-Dateien
+path/to/your/file.xml
+
+# Ignoriere Build-Ausgaben für Java-Projekte
+/target/
+/build/
+
+# Ignoriere Eclipse spezifische Dateien
+.csettings/
+
+
+# Ignoriere NetBeans spezifische Dateien
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Ignoriere IntelliJ IDEA spezifische Dateien
+*.iml
+
+# Ignoriere temporäre Dateien
+*.tmp
+*.temp
+
+# Ignoriere Log-Dateien
+*.log
+
+# Ignoriere Maven spezifische Dateien
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Ignoriere Gradle spezifische Dateien
+.gradle/
