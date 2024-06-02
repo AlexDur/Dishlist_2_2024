@@ -19,3 +19,7 @@ S
 #Frontend/src/app/app.component.html,9\3\9345d4e37836356134a20a446053d32434f56608
 B
 Backend/.env.local,d\e\de90dc9ebd6ecc3a6c64575bc36e992a9b39f6a6
+C
+Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
+B
+Backend/.gitignore,9\a\9a1715d06494ea7aa881e88967fc390b8824fb16
