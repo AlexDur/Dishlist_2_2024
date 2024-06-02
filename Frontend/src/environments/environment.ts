@@ -1,15 +1,16 @@
+
 export const environment = {
-    production: true,
-        apiUrl: 'https://dishlist-2023-qz4p.vercel.app/api',
-    enableDebug: false,
-    featureToggle: {
-        enableNewFeature: true,
-        enableExperimentalFeatures: false
-    },
-    analytics: {
-        googleTrackingId: 'UA-123456789-1'
-    },
-    security: {
-        enableStrictSecurityMode: true
-    }
+  production: false,
+  apiUrl: 'http://localhost:8080',
+  enableDebug: true,
+  featureToggle: {
+    enableNewFeature: true,
+    enableExperimentalFeatures: true
+  },
+  analytics: {
+    googleTrackingId: 'UA-123456789-0'
+  },
+  security: {
+    enableStrictSecurityMode: false
+  }
 };

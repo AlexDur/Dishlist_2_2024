@@ -1,3 +1,3 @@
 export const config = {
-  apiUrl: 'https://dishlist-2023-qz4p.vercel.app'
+  apiUrl: 'http://localhost:8080'
 };
