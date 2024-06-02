@@ -2,7 +2,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, catchError,  map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
-import {config} from "../../../config";
+import {config} from "../../environments/config";
 
 interface RezeptAntwort {
   id: number;
