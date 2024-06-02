@@ -45,6 +45,9 @@ Thumbs.db
 sonarlint/
 .sonarlint/
 sonar-report.json
+sonarlint/issuestore
+sonarlint/securityhotspotstore
+
 
 # Ignoriere alle XML-Dateien
 *.xml

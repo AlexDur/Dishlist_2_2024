@@ -6,8 +6,6 @@ l
 \
 ,Frontend/src/app/services/rezepte.service.ts,e\c\ec0d1ab82843267a3c46f49ef1c90feb3bbe2d3f
 B
-Frontend/config.ts,7\0\7023dfca3fefe9eade0b8d2b7acbb11c9bab9d8f
-B
 Backend/Dockerfile,c\b\cb4be36eed51e75adb18dd1c6ecebf1c09791f15
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
@@ -23,3 +21,11 @@ C
 Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
 B
 Backend/.gitignore,9\a\9a1715d06494ea7aa881e88967fc390b8824fb16
+X
+(Frontend/src/environments/config.prod.ts,7\3\737451729213ffdd3809e1f3eb6b4a3710b2245b
+S
+#Frontend/src/environments/config.ts,7\7\770c5f2f3e503b264223bddf1930259e859d19d3
+@
+nginx/nginx.conf,6\6\665698d0c16ad6d96892b8344874c01c8e00f8f7
+B
+docker-compose.yml,3\5\35b8c13cf2eb2a194eada000eb310d65aed53b2a
