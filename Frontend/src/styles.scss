@@ -193,12 +193,25 @@ p-dialog .p-dialog-header{
 
 .p-dialog-content{
   padding:0;
-padding-bottom: .3px;
+  padding-bottom: .3px;
   margin:0;
 }
 
 .dialog-message{
 }
+
+.custom-left {
+  background-color: white;
+  border: 2px solid cornflowerblue;
+  color: cornflowerblue;
+}
+
+.custom-right {
+  background-color: white;
+  border: 2px solid red;
+  color: red;
+}
+
 
 @media screen and (max-width: 768px) {
 
