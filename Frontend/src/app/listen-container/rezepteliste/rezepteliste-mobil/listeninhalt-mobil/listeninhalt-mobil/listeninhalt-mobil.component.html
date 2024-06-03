@@ -2,19 +2,15 @@
   <div *ngFor="let rezept of gefilterteRezepte" class="p-col-12 p-md-6 p-lg-4">
     <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
       <div class="p-card-title">{{ rezept.name }}</div>
-   <!--   <div class="p-card-content">
-        <div class="mobile-row">
-          <p-rating [ngModel]="rezept.bewertung" [readonly]="isRatingReadonly()" [cancel]="false"></p-rating>
-        </div>
-      </div>-->
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
-        <!--TODO: Bei Klick auf bearbeiten soll sich das Formular öffnen-->
         <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-text"></button>
-       <!--TODO: Bei Klick auf löschen, soll ja oder nein- dialog aufploppen-->
-        <button pButton type="button" icon="pi pi-trash" (click)="deleteCard(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
+        <button pButton type="button" icon="pi pi-trash" (click)="showDeleteDialog(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
       </div>
     </p-card>
   </div>
+  <app-dialog [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
   <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
 </div>
+
+

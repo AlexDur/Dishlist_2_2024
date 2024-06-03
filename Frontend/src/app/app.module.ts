@@ -13,6 +13,7 @@ import { SplashScreenComponent } from './intro/splash-screen/splash-screen.compo
 import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
 import {ButtonModule} from "primeng/button";
 import {RouterModule} from "@angular/router";
+import {SharedModule} from "./shared/shared.module";
 
 
 
@@ -36,6 +37,7 @@ import {RouterModule} from "@angular/router";
     CheckboxModule,
     FormsModule,
     ButtonModule,
+    SharedModule
   ],
   providers: [],
   exports: [

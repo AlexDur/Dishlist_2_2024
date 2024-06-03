@@ -177,6 +177,28 @@ $tertiary-color: white;
   box-sizing: border-box;
 }
 
+// Dialog
+
+.dialog{
+  padding:0;
+  display:flex;
+  height:50px;
+  justify-content:center;
+  text-align: center;
+}
+
+p-dialog .p-dialog-header{
+  padding:.3px;
+}
+
+.p-dialog-content{
+  padding:0;
+padding-bottom: .3px;
+  margin:0;
+}
+
+.dialog-message{
+}
 
 @media screen and (max-width: 768px) {
 

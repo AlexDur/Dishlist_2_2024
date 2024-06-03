@@ -14,6 +14,7 @@ import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.compo
 import {Tag} from "../../../../../models/tag";
 import {Router} from "@angular/router";
 import {RezeptErstellungComponent} from "../../../../rezept-erstellung/rezept-erstellung.component";
+import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 
 @Component({
   selector: 'app-listeninhaltmobil',
@@ -21,11 +22,15 @@ import {RezeptErstellungComponent} from "../../../../rezept-erstellung/rezept-er
   styleUrls: ['./listeninhalt-mobil.component.scss']
 })
 export class ListeninhaltMobilComponent implements OnInit{
+  @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
   @Input() rezepteVerfügbar: boolean = false;
+  @Input() visible: boolean = false;
+  displayDeleteDialog: boolean = false;
+  selectedRezeptId: number | null = null;
 
   newRecipe: any = {}
   selectedRow: any;
@@ -52,71 +57,40 @@ export class ListeninhaltMobilComponent implements OnInit{
   }
 
 
-
-/*  /!*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*!/
-  addRow() {
-    console.log('selectedRow in addRow:', this.selectedRow);
-    const currentDate = new Date();
-
-
-    this.newRecipe = {
-      name: '',
-      onlineAdresse: '',
-      datum: currentDate,
-      status: false,
-      bewertung: 0,
-    };
-
-    this.gefilterteRezepte.unshift(this.newRecipe);
-    this.editMode = true;
-
-    // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
-    this.selectedRow = this.newRecipe;
-
-    // Setzen des Fokuses auf das Input-Element in der neuen Zeile
-    setTimeout(() => {
-      this.newRecipeNameInput?.nativeElement.focus();
-    });
-  }*/
-
-
-
-
-  /*loadRezept(): Promise<void> {
-    // Hier wird das Rezept asynchron geladen
-    // rezeptGeladen muss auf true gesetzt sein, wenn das Rezept vollständig geladen ist
-    return new Promise<void>((resolve, reject) => {
-      // Annahme: this.rezeptGeladen wird auf true gesetzt, wenn das Rezept erfolgreich geladen ist
-      this.rezeptGeladen = true;
-      resolve();
-
-    });*/
-
-/*  onRatingChanged(newRating: number, rezept: any) {
-    rezept.bewertung = newRating;
-    rezept.istGeaendert = true;
-  }*/
-
   selectRow(rezept: any) {
     this.selectedRow = rezept;
     this.editMode = true;
   }
 
-  /*TODO: Nach Navigation ins Rezept, sollen die Inhalte in den Feldern stehen*/
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
   }
 
-  deleteCard(id: number) {
+  showDeleteDialog(rezeptId: number) {
+    this.selectedRezeptId  = rezeptId;
+    this.Dialog.message = 'Rezept löschen?';
+    this.displayDeleteDialog = false;
+    setTimeout(() => {
+      this.displayDeleteDialog = true;
+    }, 0);
+  }
 
+  confirmDelete(isConfirmed: boolean) {
+    if (isConfirmed && this.selectedRezeptId !== null) {
+      this.deleteCard(this.selectedRezeptId);
+    }
+    this.displayDeleteDialog = false;
+  }
+
+  deleteCard(id: number) {
     if (this.rezepteVerfügbar) {
       this.rezepteService.deleteRezept(id).subscribe(
         () => {
-          console.log('Rezept erfolgreich gelöscht');
           this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept => rezept.id !== id);
+          this.displayDeleteDialog = false;
         },
-        (error) => {
+        error => {
           console.error('Fehler beim Löschen des Rezepts', error);
         }
       );
@@ -124,12 +98,6 @@ export class ListeninhaltMobilComponent implements OnInit{
       console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
     }
   }
-
-/*  isRatingReadonly(): boolean {
-    // Ihre Logik hier, z.B.:
-    return true; // oder eine dynamischere Bedingung
-  }*/
-
 
   openUrl(url: string | undefined): void {
     if (!url) {
@@ -147,6 +115,4 @@ export class ListeninhaltMobilComponent implements OnInit{
       console.warn('Ungültige URL');
     }
   }
-
-
 }
