@@ -74,15 +74,23 @@ $tertiary-color: white;
   height: 50px;
   background-color: white;
   color: cornflowerblue;
-  border: 1px solid blue;
+  border: 1px transparent solid;
   font-size: 16px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 10px auto;
+  transition: background-color 0.3s ease;
 }
 
+.intro-button:hover {
+  background-color: #f0f0f0;
+}
+
+.intro-button:active {
+  background-color: #f0f0f0;
+}
 
 /*Rezepterstellung*/
 

@@ -103,9 +103,9 @@ export class ListeninhaltMobilComponent implements OnInit{
   }
 
   /*TODO: Nach Navigation ins Rezept, sollen die Inhalte in den Feldern stehen*/
-  navigateForm(event: MouseEvent) {
+  navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
-    this.router.navigate(['/rezepterstellung']);
+    this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
   }
 
   deleteCard(id: number) {
