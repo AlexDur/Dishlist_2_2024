@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Rezept} from "../../models/rezepte";
 import {Tag} from "../../models/tag";
 import {RezeptService} from "../../services/rezepte.service";
@@ -11,7 +21,7 @@ import {catchError, Observable, switchMap, tap, throwError} from "rxjs";
   templateUrl: './rezept-erstellung.component.html',
   styleUrls: ['./rezept-erstellung.component.scss']
 })
-export class RezeptErstellungComponent{
+export class RezeptErstellungComponent implements OnInit{
 /*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
@@ -34,13 +44,13 @@ export class RezeptErstellungComponent{
   constructor( private rezepteService: RezeptService,  private tagService: TagService, private router: Router) {
     this.selectedRow = {};
   }
-/*
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['rezepte']) {
-      console.log('R-Erstellung: Rezepte aktualisiert:', this.rezepte);
-    }
-  }*/
 
+  ngOnInit() {
+    if (history.state.data) {
+      this.newRecipe = history.state.data;
+      this.editMode = true;
+    }
+  }
 
 
   setGeaendert(rezept: Rezept) {
@@ -62,8 +72,6 @@ export class RezeptErstellungComponent{
 
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
     this.selectedRow = this.newRecipe;
-
-
   }
 
   saveChanges(rezept: Rezept): Observable<any> {
@@ -86,8 +94,6 @@ export class RezeptErstellungComponent{
       })
     );
   }
-
-
 
   updateUIAfterSave() {
     this.istGeaendert = false;
