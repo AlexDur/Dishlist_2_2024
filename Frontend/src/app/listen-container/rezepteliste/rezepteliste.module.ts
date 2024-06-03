@@ -17,6 +17,7 @@ import {
   RezeptErstellungComponent
 } from "../rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
+import {SharedModule} from "../../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -32,16 +33,17 @@ import {ToggleButtonModule} from "primeng/togglebutton";
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,
   ],
-  imports: [
-    CommonModule,
-    TableModule,
-    HttpClientModule,
-    FormsModule,
-    TagModule,
-    RatingModule,
-    ButtonModule,
-    CardModule,
-    ToggleButtonModule
-  ]
+    imports: [
+        CommonModule,
+        TableModule,
+        HttpClientModule,
+        FormsModule,
+        TagModule,
+        RatingModule,
+        ButtonModule,
+        CardModule,
+        ToggleButtonModule,
+        SharedModule
+    ]
 })
 export class RezeptelisteModule { }
