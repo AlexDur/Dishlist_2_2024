@@ -65,6 +65,7 @@ export class RezeptErstellungComponent implements OnInit{
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
+
     };
 
     this.gefilterteRezepte.unshift(this.newRecipe);
