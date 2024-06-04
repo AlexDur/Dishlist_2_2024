@@ -1,7 +1,7 @@
 <p-dialog class="dialog" header="" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
 
   <p class="dialog-message">{{ message }}</p>
-  <p-footer>
+  <p-footer class="footer-buttons">
     <button type="button" pButton label="Ja" (click)="onConfirm()" class="p-button-success custom-left"></button>
     <button type="button" pButton label="Nein" (click)="onDecline()" class="p-button-danger custom-right"></button>
   </p-footer>
