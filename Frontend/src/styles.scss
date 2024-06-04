@@ -212,6 +212,16 @@ p-dialog .p-dialog-header{
   color: cornflowerblue;
 }
 
+.footer-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.footer-buttons .custom-left, .footer-buttons .custom-right {
+  margin: 0;
+}
 
 @media screen and (max-width: 768px) {
 
