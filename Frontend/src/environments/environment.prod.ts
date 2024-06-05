@@ -1,6 +1,8 @@
+import {config} from "./config.prod";
+
 export const environment = {
   production: true,
-  apiUrl: 'http://Dichlistdockerneu-env.eba-mv3t3g5c.eu-central-1.elasticbeanstalk.com',
+  apiUrl: config.apiUrl,
   enableDebug: false,
   featureToggle: {
     enableNewFeature: true,

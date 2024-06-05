@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, catchError,  map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {config} from "../../environments/config";
+import {environment} from "../../environments/environment";
 
 interface RezeptAntwort {
   id: number;
@@ -14,7 +15,7 @@ interface RezeptAntwort {
 })
 export class RezeptService {
 
-  private backendUrl = config.apiUrl;
+  private backendUrl = environment.apiUrl;
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
 
@@ -39,7 +40,6 @@ export class RezeptService {
       })
     );
   }
-
 
 
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
@@ -97,8 +97,6 @@ export class RezeptService {
       })
     );
   }
-
-
 
 
   deleteRezept(id: number): Observable<any> {
