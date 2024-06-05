@@ -4,7 +4,12 @@ info:
   description: Eine API für die Verwaltung von Rezepten.
   version: 1.0.0
 servers:
-  - url: 'https'
+  servers:
+    - url: 'http://localhost:8080'
+      description: Entwicklungsserver
+    - url: 'Dichlistdockerneu-env.eba-mv3t3g5c.eu-central-1.elasticbeanstalk.com'
+      description: Produktionsserver
+
 
 paths:
   /rezepte:
@@ -100,4 +105,114 @@ paths:
           description: Rezept erfolgreich gelöscht
         '404':
           description: Rezept nicht gefunden
+
+
+  /tags/{id}:
+    get:
+      summary: Einen Tag anhand der ID abrufen
+      operationId: getTagById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Tags
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Erfolgreiche Anfrage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '404':
+          description: Tag nicht gefunden
+
+    put:
+      summary: Tag aktualisieren
+      operationId: updateTag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Tags
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '200':
+          description: Tag erfolgreich aktualisiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '404':
+          description: Tag nicht gefunden
+
+    delete:
+      summary: Tag löschen
+      operationId: deleteTag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die ID des Tags
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Tag erfolgreich gelöscht
+        '404':
+          description: Tag nicht gefunden
+
+components:
+  schemas:
+    Rezept:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Die eindeutige ID des Rezepts
+        name:
+          type: string
+          description: Der Name des Rezepts
+        onlineAdresse:
+          type: string
+          description: Die URL des Rezepts
+        datum:
+          type: string
+          format: date
+          description: Das Datum, an dem das Rezept erstellt wurde
+        status:
+          type: boolean
+          description: Der Status des Rezepts
+        bewertung:
+          type: integer
+          format: int32
+          description: Die Bewertung des Rezepts
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          description: Die Tags, die mit dem Rezept verknüpft sind
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Die eindeutige ID des Tags
+        label:
+          type: string
+          description: Die Bezeichnung des Tags
+        severity:
+          type: string
+          description: Der Schweregrad fuer die Darstelliung der Farbe des Tags in der Desktopversion
 

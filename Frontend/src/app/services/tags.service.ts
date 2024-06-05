@@ -3,6 +3,7 @@ import {BehaviorSubject, forkJoin, map, Observable, throwError} from 'rxjs';
 import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
 import {RezeptService} from "./rezepte.service";
+import {environment} from "../../environments/environment";
 
 
 @Injectable({
@@ -12,7 +13,7 @@ export class TagService {
   private tagsSubject = new BehaviorSubject<Tag[]>([]);
   public tags$ = this.tagsSubject.asObservable();
 
-  private backendUrl = 'http://localhost:8080';
+  private backendUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private rezepteService: RezeptService) {}
 
