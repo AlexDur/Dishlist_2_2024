@@ -15,8 +15,6 @@ X
 TFrontend/src/app/listen-container/rezept-erstellung/rezept-erstellung.component.html,d\f\dfc5f470f18dea772ef864b08d80212b52312d02
 S
 #Frontend/src/app/app.component.html,9\3\9345d4e37836356134a20a446053d32434f56608
-B
-Backend/.env.local,d\e\de90dc9ebd6ecc3a6c64575bc36e992a9b39f6a6
 C
 Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
 B
@@ -25,8 +23,6 @@ X
 (Frontend/src/environments/config.prod.ts,7\3\737451729213ffdd3809e1f3eb6b4a3710b2245b
 S
 #Frontend/src/environments/config.ts,7\7\770c5f2f3e503b264223bddf1930259e859d19d3
-@
-nginx/nginx.conf,6\6\665698d0c16ad6d96892b8344874c01c8e00f8f7
 B
 docker-compose.yml,3\5\35b8c13cf2eb2a194eada000eb310d65aed53b2a
 ¸
@@ -55,10 +51,6 @@ N
 Backend/Spring boot/.gitignore,7\f\7f61b6025e300c50aadb1aca88f21318bb0e6004
 P
  Backend/Spring boot/build.gradle,c\8\c879c00fbeabdfefa02d9eae632877cf7488ce30
-c
-3Backend/untitled/src/main/java/org/example/App.java,f\8\f8ff6ddc9580d1b0a1f6f5d69e8585261059e720
-g
-7Backend/untitled/src/test/java/org/example/AppTest.java,4\3\43214ce18e4a8fb4a4bfb214b06987d71e6307ac
 O
 Backend/Spring boot/gradlew.bat,c\0\c0270521ba1a3bf49ffed2d052c79eb7c84aa747
 w
@@ -67,20 +59,12 @@ S
 #Backend/Spring boot/settings.gradle,e\6\e6acd3623597efa469c42ca3ec08e85e1164e8e9
 K
 Backend/Spring boot/gradlew,d\4\d4ae7a4bac5fbd8c3d3326618146e1943683a32d
-A
-Backend/.env.prod,b\7\b7bfa97991216251c4fb152a322180b9dbbf8bc4
 m
 =Backend/Spring boot/src/main/resources/application.properties,9\f\9faad953a5bda3ea3335d781ce6642bacaa75dce
 l
 <Backend/Spring boot/gradle/wrapper/gradle-wrapper.properties,3\9\394ff0d2e75e5fc7af369fbe6617f4a2f52bf395
-<
-Backend/.env,0\9\0930996c5c072b4caa730df7bd67ba4ea23debe1
-H
-Backend/untitled/pom.xml,5\c\5c751f9289d07f4c07fe20f12bb5dd3b819c4cb2
 ?
 Backend/pom.xml,6\f\6f5a34a61856e01a5e5abd8b3142ee6665a5d397
-K
-Backend/untitled/.gitignore,e\3\e3e06bd8d5f471acc8ad653afd73d42f141b05f6
 z
 JBackend/Spring boot/src/main/java/com/example/spring_boot/Application.java,3\6\36bca634b4851a1a80e625403b1d0db81d6256a8
 
@@ -109,3 +93,7 @@ j
 :Backend/src/main/java/com/rezepte_app/model/Kategorie.java,d\e\de84007cd918606b4cb205c71879f2cb33d1a589
 g
 7Backend/src/main/java/com/rezepte_app/model/Rezept.java,4\e\4e7b3b65adbb0892e315a4ebfb9a6a91c4b72a6d
+H
+Backend/config/.env.prod,2\8\2872b46b081732f8e5630e0f726c210e2af26ca9
+I
+Backend/config/.env.local,9\6\96479aede02884aa913554410a6c8173561762bb
