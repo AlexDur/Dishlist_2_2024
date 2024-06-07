@@ -1,7 +1,9 @@
 
+X
+java:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ8„ŞµÁş1
 _
-java:S6813%"BRemove this field injection and use constructor injection instead.(êæÄŞ8›ÇùÒÇ1
+java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8›ÇùÒÇ1
 _
-java:S6813*"BRemove this field injection and use constructor injection instead.(êæÄŞ8©µ›Êî1
+java:S6813,"BRemove this field injection and use constructor injection instead.(êæÄŞ8©µ›Êî1
 H
-java:S1452{"&Remove usage of generic wildcard type.(‚„ıòıÿÿÿÿ8ÓÜœÉô1
+java:S1452}"&Remove usage of generic wildcard type.(‚„ıòıÿÿÿÿ8ÓÜœÉô1

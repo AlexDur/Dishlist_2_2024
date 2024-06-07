@@ -8,13 +8,14 @@ services:
   backend:
     image: 654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:latest
     environment:
+      - ENV=production 
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/dishlist
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=|]{>#k3siGE}}o9kyCtY2t]9MdvC
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
       - CONFIG_PATH=/config
     volumes:
-      - ./config:/config
+      - ./backend/config:/config
       
   db:
     image: mysql:5.7
