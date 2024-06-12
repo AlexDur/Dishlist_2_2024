@@ -16,7 +16,7 @@ Features:
 
     Filteroptionen: Sortiere und filtere deine Rezepte nach deinen Bedürfnissen.
 
-    Foto-Upload: Teile deine Kochkünste mit der Welt.
+    Foto-Upload: Halte deine Kochkünste auch bildlich fest.
 
     Datenbank-Management: Deine Rezepte werden sicher in einer Datenbank gespeichert.
 
