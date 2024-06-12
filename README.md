@@ -27,3 +27,5 @@ Technologien:
     Backend: Java Spring Boot
 
     Datenbank MySQL
+
+    DevOps: Docker, AWS
