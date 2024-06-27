@@ -23,8 +23,6 @@ X
 (Frontend/src/environments/config.prod.ts,7\3\737451729213ffdd3809e1f3eb6b4a3710b2245b
 S
 #Frontend/src/environments/config.ts,7\7\770c5f2f3e503b264223bddf1930259e859d19d3
-B
-docker-compose.yml,3\5\35b8c13cf2eb2a194eada000eb310d65aed53b2a
 ¸
 ‡Frontend/src/app/listen-container/rezepteliste/rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil/listeninhalt-mobil.component.ts,8\f\8fdf9f92de2146f9613de29795fbf7759aa124cb
 º
@@ -85,3 +83,5 @@ g
 7Backend/src/main/java/com/rezepte_app/model/Rezept.java,4\e\4e7b3b65adbb0892e315a4ebfb9a6a91c4b72a6d
 <
 Backend/.env,0\9\0930996c5c072b4caa730df7bd67ba4ea23debe1
+F
+Frontend/.dockerignore,2\6\26e22d55496fff2b9428ba7d2ef2ffe6918f89dc
