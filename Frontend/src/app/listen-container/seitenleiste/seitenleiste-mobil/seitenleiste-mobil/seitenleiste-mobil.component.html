@@ -1,12 +1,14 @@
 <div class="seitenleiste">
   <h3 class="hellblau">Mahlzeit</h3>
   <div class="mahlzeiten">
-  <div class="p-field-checkbox" *ngFor="let art of gerichtArten; let i = index">
-    <p-checkbox [value]="art" [(ngModel)]="selectedGerichtarten[i]" (ngModelChange)="toggleGerichtsart(art.label)" inputId="type_{{i}}"></p-checkbox>
-    <label for="type_{{i}}" class="label-abstand">{{ art.label }} ({{ art.count }})</label>
-  </div>
+    <div class="p-field-checkbox" *ngFor="let art of tags; trackBy: trackById">
+      <p-checkbox [(ngModel)]="art.selected" (ngModelChange)="toggleGerichtsart(art.label)" inputId="type_{{art.id}}">
+      </p-checkbox>
+      <label for="type_{{art.id}}" class="label-abstand">{{ art.label }} ({{ art.count }})</label>
+    </div>
   </div>
 </div>
+
 
 
 

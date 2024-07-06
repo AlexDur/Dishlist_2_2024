@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {TagsComponent} from "./rezepteliste-desktop/tags/tags.component";
+/*import {TagsComponent} from "./rezepteliste-desktop/tags/tags.component";*/
 import {ListeninhaltComponent} from "./rezepteliste-desktop/listeninhalt/listeninhalt.component";
 import {TableModule} from "primeng/table";
 import {HttpClientModule} from "@angular/common/http";
@@ -21,7 +21,7 @@ import {SharedModule} from "../../shared/shared.module";
 
 @NgModule({
   declarations: [
-    TagsComponent,
+  /*  TagsComponent,*/
     ListeninhaltComponent,
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,

@@ -10,7 +10,7 @@ import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {TagService} from "../../../../../services/tags.service";
 
-import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";
+/*import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";*/
 import {Tag} from "../../../../../models/tag";
 import {Router} from "@angular/router";
 import {RezeptErstellungComponent} from "../../../../rezept-erstellung/rezept-erstellung.component";
@@ -23,7 +23,7 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 })
 export class ListeninhaltMobilComponent implements OnInit{
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
-  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
+/*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;*/
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
@@ -98,6 +98,10 @@ export class ListeninhaltMobilComponent implements OnInit{
       console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
     }
   }
+
+
+
+
 
   openUrl(url: string | undefined): void {
     if (!url) {

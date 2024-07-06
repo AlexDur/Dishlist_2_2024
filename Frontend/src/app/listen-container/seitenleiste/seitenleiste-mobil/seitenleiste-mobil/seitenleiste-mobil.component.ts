@@ -4,6 +4,7 @@ import {FilterService} from "primeng/api";
 import {RezeptService} from "../../../../services/rezepte.service";
 import {Gerichtart} from "../../../../models/gerichtart";
 import {Tag} from "../../../../models/tag";
+import {map, tap} from "rxjs";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
@@ -19,23 +20,20 @@ export class SeitenleisteMobilComponent implements OnInit{
 
   constructor(private filterService: FilterService, private rezepteService: RezeptService) {  }
   ngOnInit(): void {
-    this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.rezepte = rezepte.map(rezept => ({
+    this.rezepteService.rezepte$.pipe(
+      map(rezepte => rezepte.map(rezept => ({
         ...rezept,
         datum: rezept.datum ? new Date(rezept.datum) : undefined
-      }));
-      this.originalRezepte = [...this.rezepte];
-
-      if (this.rezepte.length > 0) {
-        this.loadRezept(); // Angenommen, Sie möchten hier eine spezielle Logik ausführen
-      }
-      console.log('Listeninhalt_originalRezepte', this.originalRezepte);
-      this.updateGerichtArtCount();
-    });
-
-    // Stellen Sie sicher, dass die Rezeptdaten geladen sind
-    this.rezepteService.getAlleRezepte();
+      }))),
+      tap(rezepte => {
+        this.originalRezepte = [...rezepte];
+        console.log('Listeninhalt_originalRezepte', this.originalRezepte);
+        this.resetRezepte();
+        this.updateGerichtArtCount();
+      })
+    ).subscribe();
   }
+
 
   loadRezept(): Promise<void> {
     // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
@@ -58,11 +56,16 @@ export class SeitenleisteMobilComponent implements OnInit{
     selectedCategories: string[] = [];
     selectedKuechen: string[] = [];*/
 
-  gerichtArten: Gerichtart[] = [
-    {label: 'Vorspeise', severity: 'vorspeise', count: 0 },
-    {label: 'Hauptgang', severity: 'hauptgang', count: 0 },
-    {label: 'Nachtisch', severity: 'nachtisch', count: 0 },
+  tags: Tag[] = [
+    {label: 'Vorspeise', count: 0, selected: false },
+    {label: 'Hauptgang', count: 0, selected: false },
+    {label: 'Nachtisch', count: 0, selected: false },
   ];
+
+  trackById(index: number, item: Tag): any {
+    return item.id || index; // Verwenden Sie item.id, wenn verfügbar, sonst index
+  }
+
 
   /*  gerichtEigenschaften = [
       { label: 'schnell', severity: 'schnell', count: 2 },
@@ -75,31 +78,11 @@ export class SeitenleisteMobilComponent implements OnInit{
   selectedGerichtEigenschaften: string[] = [];
 
 
-  updateGerichtArtCount(): void {
-    // Erhalt aller Rezepte
-    this.rezepteService.rezepte$.subscribe(rezepte => {
-      // Zähler für jede Gerichtart auf 0 zurücksetzen
-      this.gerichtArten.forEach((art) => {
-        art.count = 0;
-      });
-      /*      console.log('gerichtarten', this.gerichtArten)*/
-
-      // Rezepte durchlaufen und die Anzahl für jede Gerichtart zählen
-      rezepte.forEach((rezept) => {
-        if (rezept.tags) {
-
-          // Durch jede Tag-Instanz iterieren
-          rezept.tags.forEach((tag:Tag) => {
-            // Überprüfen, ob der Tag zu einer Gerichtart gehört
-            const gerichtart = this.gerichtArten.find((g) => g.label === tag.label);
-            if (gerichtart) {
-              gerichtart.count++;
-            }
-          });
-        }
-      });
+/*  updateGerichtArtCount(): void {
+    this.tags.forEach((art) => {
+      art.count = this.rezepte.filter(rezept => rezept.tags?.some(tag => tag.label === art.label)).length;
     });
-  }
+  }*/
 
   filterRezepte(): void {
     if (!this.rezepte) {
@@ -136,7 +119,7 @@ export class SeitenleisteMobilComponent implements OnInit{
     // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
   }
 
-  toggleGerichtsart(label: string): void {
+  toggleGerichtsart(label: "Vorspeise" | "Hauptgang" | "Nachtisch" | undefined): void {
     console.log('Zustand VOR Toggle:', [...this.selectedGerichtarten]);
     if (!label || !Array.isArray(this.selectedGerichtarten)) return;
 
@@ -156,6 +139,23 @@ export class SeitenleisteMobilComponent implements OnInit{
 
     console.log('Zustand NACH Toggle:', [...this.selectedGerichtarten]);
     this.filterRezepte(); // Aktualisiert die Filterung der Rezepte.
+  }
+
+  updateGerichtArtCount(): void {
+    // Setze alle Zähler zurück, um eine korrekte Neuzählung zu gewährleisten
+    this.tags.forEach(tag => tag.count = 0);
+
+    // Gehe jedes Rezept durch
+    this.rezepte.forEach(rezept => {
+      // Gehe jedes Tag im Rezept durch
+      rezept.tags?.forEach(rezeptTag => {
+        // Finde das entsprechende Tag in der 'tags'-Liste und erhöhe den Zähler
+        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
+        if (foundTag) {
+          foundTag.count++;
+        }
+      });
+    });
   }
 
 }
