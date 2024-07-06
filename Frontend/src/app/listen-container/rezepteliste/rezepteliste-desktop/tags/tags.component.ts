@@ -1,3 +1,4 @@
+/*
 import {
   ChangeDetectorRef,
   Component,
@@ -25,7 +26,7 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges{
   @Output() selectedTagsChanged = new EventEmitter<Tag[]>();
 
 
-  /*  private tagsSubject = new BehaviorSubject<Tag[]>([]);*/
+  /!*  private tagsSubject = new BehaviorSubject<Tag[]>([]);*!/
   currentSeverities: Record<'Vorspeise' | 'Hauptgang' | 'Nachtisch', 'success' | 'info' | 'warning' | 'danger' | 'default'> = {
     Vorspeise: 'success',
     Hauptgang: 'warning',
@@ -124,3 +125,4 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges{
   ngOnDestroy() {
   }
 }
+*/

@@ -22,8 +22,8 @@ import {catchError, Observable, switchMap, tap, throwError} from "rxjs";
   styleUrls: ['./rezept-erstellung.component.scss']
 })
 export class RezeptErstellungComponent implements OnInit{
-/*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
-  @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
+  /*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
+    @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
@@ -85,8 +85,12 @@ export class RezeptErstellungComponent implements OnInit{
     }
 
     return operation.pipe(
-      switchMap(response => {
+      tap(() => {
+        // Aktualisiere die UI und die Zähler sofort nach dem Speichern
         this.updateUIAfterSave();
+      }),
+      switchMap(response => {
+        // Lade alle Rezepte erneut, falls notwendig
         return this.rezepteService.getAlleRezepte();
       }),
       catchError(error => {
@@ -95,6 +99,7 @@ export class RezeptErstellungComponent implements OnInit{
       })
     );
   }
+
 
   updateUIAfterSave() {
     this.istGeaendert = false;
@@ -146,4 +151,5 @@ export class RezeptErstellungComponent implements OnInit{
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
     // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
+
 }

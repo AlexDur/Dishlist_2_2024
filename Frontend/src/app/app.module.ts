@@ -14,6 +14,8 @@ import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
 import {ButtonModule} from "primeng/button";
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "./shared/shared.module";
+import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/rezept-erstellung.component";
+import {ToggleButtonModule} from "primeng/togglebutton";
 
 
 
@@ -23,7 +25,7 @@ import {SharedModule} from "./shared/shared.module";
     ListenContainerComponent,
     SplashScreenComponent,
     InfoScreenComponent,
-  ],
+   ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
   // RezeptelistenModuls in seinen eigenen Komponenten oder in anderen Modulen, die es importiert, verwenden.
@@ -37,7 +39,8 @@ import {SharedModule} from "./shared/shared.module";
     CheckboxModule,
     FormsModule,
     ButtonModule,
-    SharedModule
+    SharedModule,
+    ToggleButtonModule
   ],
   providers: [],
   exports: [
