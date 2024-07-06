@@ -1,9 +1,10 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, catchError,  map, Observable, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, finalize, map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {config} from "../../environments/config";
 import {environment} from "../../environments/environment";
+import {Tag} from "../models/tag";
 
 interface RezeptAntwort {
   id: number;
@@ -18,6 +19,8 @@ export class RezeptService {
   private backendUrl = environment.apiUrl;
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
+  private kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
+  public kategorieZaehler$ = this.kategorieZaehlerSubject.asObservable();
 
   private getJsonHeaders() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -42,26 +45,21 @@ export class RezeptService {
   }
 
 
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingSubject.asObservable();
+
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+    this.loadingSubject.next(true);
     const headers = this.getJsonHeaders();
-
-    const rezeptMitFormatiertenTags = {
-      ...rezept,
-      tags: rezept.tags ?? []
-    };
-
-    console.log('Rezepte.service: rezeptMitFormatiertenTags:', rezeptMitFormatiertenTags)
-
-    return this.http.post<RezeptAntwort>(
-      `${this.backendUrl}/api/rezepte/create`,
-      rezeptMitFormatiertenTags,
-      { headers, observe: 'response', responseType: 'json' }
-    ).pipe(
+    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
       tap(response => {
         if (response.body) {
-          // Rezept-Array aktualisieren nach dem Hinzufügen
           const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
           this.rezepteSubject.next(updatedRezepte);
+          this.updateKategorieZaehler(rezept.tags);
+        } else {
+          // Geeignete Fehlerbehandlung, falls response.body null ist
+          console.error('Received null response body');
         }
       }),
       catchError(error => {
@@ -70,6 +68,27 @@ export class RezeptService {
       })
     );
   }
+
+
+  private updateKategorieZaehler(tags: Tag[] | undefined): void {
+    const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
+    const aktualisierteZaehler = {...aktuelleZaehler};
+
+    if (tags) {
+      tags.forEach(tag => {
+        // Sicherstellen, dass sowohl tag als auch tag.label definiert sind
+        if (tag && tag.label) {
+          const kategorieName = tag.label;
+          aktualisierteZaehler[kategorieName] = (aktualisierteZaehler[kategorieName] || 0) + 1;
+        }
+      });
+    }
+
+    this.kategorieZaehlerSubject.next(aktualisierteZaehler);
+  }
+
+
+
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
