@@ -1,7 +1,7 @@
-import {Dish} from "../listen-container/rezepteliste/rezepteliste-desktop/tags/tags.component";
-
 export interface Tag {
   id?:number;
-  label?: Dish;
+  label?: 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   severity?: 'success' | 'info' | 'warning' | 'danger' | 'default';
+  count: number;
+  selected: boolean;
 }
