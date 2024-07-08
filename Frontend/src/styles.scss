@@ -334,9 +334,22 @@ p-tag + p-tag {
 }
 
 .label-abstand {
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  margin-right:14px;
 }
+
+.label-abstand span {
+  display: block;
+}
+
+
+
+
 
 .mobile-row {
   display: flex;
@@ -358,6 +371,9 @@ p-tag + p-tag {
   display: flex;
   flex-direction: column;
 }
+
+
+
 
 .p-card {
   display: flex;
@@ -401,13 +417,19 @@ p-tag + p-tag {
 .mahlzeiten{
   display:flex;
   flex-direction:row;
-  justify-content:space-around;
+  align-items:center;
+  justify-content:center;
 }
 
 .p-field-checkbox {
-  font-size:6px;
-  margin: 5px; /* Rechter Abstand zwischen den Checkboxen */
+  display:flex;
+  align-items:center;
+  justify-content: flex-start;
+  margin: 3px 0;
+  flex-direction: column;
 }
+
+
 
 @media screen and (max-width: 599px) {
   .seitenleiste {
