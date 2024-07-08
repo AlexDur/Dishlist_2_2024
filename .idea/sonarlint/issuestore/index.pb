@@ -85,3 +85,15 @@ g
 Backend/.env,0\9\0930996c5c072b4caa730df7bd67ba4ea23debe1
 F
 Frontend/.dockerignore,2\6\26e22d55496fff2b9428ba7d2ef2ffe6918f89dc
+d
+4Backend/src/main/java/com/rezepte_app/model/Tag.java,2\0\20b487c0a8f12db6583e586ba620899816378d5e
+N
+Frontend/src/app/models/tag.ts,e\f\ef69baf8b81136d68783c6082f3f0c91908fe8f1
+Š
+ZFrontend/src/app/listen-container/rezepteliste/rezepteliste-desktop/tags/tags.component.ts,b\9\b98589ce5456afdace83031b12009a2e56f2e6f3
+¤
+tFrontend/src/app/listen-container/seitenleiste/seitenleiste-mobil/seitenleiste-mobil/seitenleiste-mobil.component.ts,d\8\d8d64a60203adf5c1a4e6cff0273ca78ef16d8f6
+œ
+lFrontend/src/app/listen-container/rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component.html,1\e\1e81f95282417aa6c835292867cc0b72ed52b4a2
+š
+jFrontend/src/app/listen-container/rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component.ts,1\1\114dde8a842c5ceb8649c479d016046bc851c8e4

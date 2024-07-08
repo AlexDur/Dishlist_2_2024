@@ -5,5 +5,6 @@ _
 java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8›ÇùÒÇ1
 _
 java:S6813,"BRemove this field injection and use constructor injection instead.(êæÄŞ8©µ›Êî1
+]	java:S1250"<This block of commented-out lines of code should be removed.(äÙÜĞúÿÿÿÿ8ÓÆÓÉˆ2
 I
 java:S1452‚"&Remove usage of generic wildcard type.(‚„ıòıÿÿÿÿ8ÓÜœÉô1

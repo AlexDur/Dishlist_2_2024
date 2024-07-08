@@ -1,7 +1,6 @@
 
 Qtypescript:S1128")Remove this unused import of 'OnChanges'.(®úÇàüÿÿÿÿ8±ºÝ€ö1
 Utypescript:S1128"-Remove this unused import of 'SimpleChanges'.(ÚØúƒøÿÿÿÿ8³ºÝ€ö1
-@typescript:S1128"$Remove this unused import of 'Dish'.(Õ·Ç
+Ftypescript:S125"Remove this commented out code.(áûÈÿÿÿÿÿ8Ò‘†Êˆ2
 atypescript:S1128"9Remove this unused import of 'RezeptErstellungComponent'.(ûÔ©¦ûÿÿÿÿ8³ºÝ€ö1
-\typescript:S1135i"4Complete the task associated to this "TODO" comment.(¬‚ƒúÿÿÿÿ8¦„¯Õõ1
-Òtypescript:S1874r"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(¥Þµºÿÿÿÿÿ
+Òtypescript:S1874X"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(¥Þµºÿÿÿÿÿ

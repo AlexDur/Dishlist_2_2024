@@ -1,10 +1,17 @@
+<script src="../../../../../../capacitor.config.ts"></script>
 <div class="seitenleiste">
   <h3 class="hellblau">Mahlzeit</h3>
   <div class="mahlzeiten">
     <div class="p-field-checkbox" *ngFor="let art of tags; trackBy: trackById">
+      <div>
       <p-checkbox [(ngModel)]="art.selected" (ngModelChange)="toggleGerichtsart(art.label)" inputId="type_{{art.id}}">
       </p-checkbox>
-      <label for="type_{{art.id}}" class="label-abstand">{{ art.label }} ({{ art.count }})</label>
+      </div>
+      <label for="type_{{art.id}}" class="label-abstand">
+        <span>{{ art.label }}</span><br>
+        <span class="count">({{ art.count }})</span>
+      </label>
+
     </div>
   </div>
 </div>
