@@ -30,16 +30,8 @@ export class RezeptErstellungComponent implements OnInit{
 
   newRecipe: any = {}
   selectedRow: any;
-  istGeaendert: boolean = false;
-  istGespeichert: boolean = false;
-  showSaveButton: boolean = false;
-  showDeleteButton: boolean = false;
   editMode = false;
   rezeptGeladen: boolean = false;
-  tagToggleStates: { [key: number]: boolean } = {};
-  currentRecipe: Rezept | undefined;
-  selectedTag: Set<Tag> = new Set<Tag>();
-
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService, private router: Router) {
     this.selectedRow = {};
@@ -51,7 +43,6 @@ export class RezeptErstellungComponent implements OnInit{
       this.editMode = true;
     }
   }
-
 
   setGeaendert(rezept: Rezept) {
     rezept.istGeaendert = true;
@@ -70,7 +61,6 @@ export class RezeptErstellungComponent implements OnInit{
 
     this.gefilterteRezepte.unshift(this.newRecipe);
     this.editMode = true;
-
     // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
     this.selectedRow = this.newRecipe;
   }
@@ -87,7 +77,7 @@ export class RezeptErstellungComponent implements OnInit{
     return operation.pipe(
       tap(() => {
         // Aktualisiere die UI und die Zähler sofort nach dem Speichern
-        this.updateUIAfterSave();
+    /*    this.updateUIAfterSave();*/
       }),
       switchMap(response => {
         // Lade alle Rezepte erneut, falls notwendig
@@ -98,19 +88,6 @@ export class RezeptErstellungComponent implements OnInit{
         return throwError(() => error);
       })
     );
-  }
-
-
-  updateUIAfterSave() {
-    this.istGeaendert = false;
-    this.showSaveButton = false;
-    this.showDeleteButton = true;
-    this.editMode = false;
-    this.istGespeichert = true;
-  }
-
-  restoreOriginalTags() {
-    // Hier kannst du den Code einfügen, um die ursprünglichen Tags wiederherzustellen
   }
 
   onRatingChanged(newRating: number, rezept: any) {
@@ -144,12 +121,6 @@ export class RezeptErstellungComponent implements OnInit{
         console.error('Fehler beim Speichern des Rezepts', error);
       }
     });
-  }
-
-
-  onRezepteGeladen(rezepte: Rezept[]): void {
-    console.log('Geladene Rezepte im Kindkomponente:', rezepte);
-    // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
 
 }
