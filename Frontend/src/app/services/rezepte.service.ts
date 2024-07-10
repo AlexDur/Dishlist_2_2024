@@ -21,6 +21,8 @@ export class RezeptService {
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   private kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   public kategorieZaehler$ = this.kategorieZaehlerSubject.asObservable();
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingSubject.asObservable();
 
   private getJsonHeaders() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -45,8 +47,6 @@ export class RezeptService {
   }
 
 
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingSubject.asObservable();
 
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
@@ -69,7 +69,6 @@ export class RezeptService {
     );
   }
 
-
   private updateKategorieZaehler(tags: Tag[] | undefined): void {
     const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
     const aktualisierteZaehler = {...aktuelleZaehler};
@@ -86,8 +85,6 @@ export class RezeptService {
 
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
-
-
 
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
