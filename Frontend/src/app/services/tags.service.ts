@@ -12,7 +12,6 @@ import {environment} from "../../environments/environment";
 export class TagService {
   private tagsSubject = new BehaviorSubject<Tag[]>([]);
   public tags$ = this.tagsSubject.asObservable();
-
   private backendUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private rezepteService: RezeptService) {}
@@ -24,7 +23,6 @@ export class TagService {
     }
     return this.http.put<Tag>(`${this.backendUrl}/${tag.id}`, tag);
   }
-
 
   updateSelectedTags(selectedTags: Tag[]): void {
     const validTags = selectedTags.filter(tag => tag.id !== undefined);
