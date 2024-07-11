@@ -212,7 +212,5 @@ components:
         label:
           type: string
           description: Die Bezeichnung des Tags
-        severity:
-          type: string
-          description: Der Schweregrad fuer die Darstelliung der Farbe des Tags in der Desktopversion
+
 
