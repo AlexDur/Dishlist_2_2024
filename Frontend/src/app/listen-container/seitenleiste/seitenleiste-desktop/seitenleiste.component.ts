@@ -1,9 +1,9 @@
+/*
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rezept} from "../../../models/rezepte";
 import {FilterService} from "primeng/api";
 import {RezeptService} from "../../../services/rezepte.service";
 import {Tag} from "../../../models/tag";
-import {Gerichtart} from "../../../models/gerichtart";
 
 @Component({
   selector: 'app-seitenleiste',
@@ -45,31 +45,31 @@ export class SeitenleisteComponent implements OnInit {
     });
   }
 
-  /*  interKuechen = [
+  /!*  interKuechen = [
       { label: 'Deutsch', severity: 'deutsch', count: 3 },
       { label: 'Chinesisch', severity: 'chinesisch', count: 1 },
       { label: 'Japanisch', severity: 'japanisch', count: 0 },
       { label: 'Italienisch', severity: 'italienisch', count: 0 },
       { label: 'Indisch', severity: 'indisch', count: 4 },
-    ];*/
+    ];*!/
 
 
-/*  selectedFilters: string[] = [];
+/!*  selectedFilters: string[] = [];
   selectedCategories: string[] = [];
-  selectedKuechen: string[] = [];*/
+  selectedKuechen: string[] = [];*!/
 
-  gerichtArten: Gerichtart[] = [
-    {label: 'Vorspeise', severity: 'vorspeise', count: 0 },
-    {label: 'Hauptgang', severity: 'hauptgang', count: 0 },
-    {label: 'Nachtisch', severity: 'nachtisch', count: 0 },
+  tags: Tag[] = [
+    {label: 'Vorspeise', count: 0,  },
+    {label: 'Hauptgang',  count: 0 },
+    {label: 'Nachtisch',  count: 0 },
   ];
 
-  /*  gerichtEigenschaften = [
+  /!*  gerichtEigenschaften = [
       { label: 'schnell', severity: 'schnell', count: 2 },
       { label: 'kalorienreich', severity: 'kalorienreich', count: 3 },
       { label: 'vegetarisch', severity: 'vegetarisch', count: 2 },
       { label: 'proteinreich', severity: 'preoteinreich', count: 0 },
-    ];*/
+    ];*!/
 
 
   selectedGerichtEigenschaften: string[] = [];
@@ -82,7 +82,7 @@ export class SeitenleisteComponent implements OnInit {
       this.gerichtArten.forEach((art) => {
         art.count = 0;
       });
-/*      console.log('gerichtarten', this.gerichtArten)*/
+/!*      console.log('gerichtarten', this.gerichtArten)*!/
 
       // Rezepte durchlaufen und die Anzahl für jede Gerichtart zählen
       rezepte.forEach((rezept) => {
@@ -132,7 +132,7 @@ export class SeitenleisteComponent implements OnInit {
     // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
     console.log('SL:', this.originalRezepte)
     this.rezepte = [...this.originalRezepte];
-   /* this.filterRezepte();*/
+   /!* this.filterRezepte();*!/
     // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
   }
 
@@ -161,3 +161,4 @@ export class SeitenleisteComponent implements OnInit {
 
 
 }
+*/

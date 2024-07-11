@@ -1,5 +1,5 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {BehaviorSubject, catchError, finalize, map, Observable, tap, throwError} from 'rxjs';
 import { Rezept } from '../models/rezepte';
 import {config} from "../../environments/config";
@@ -15,7 +15,7 @@ interface RezeptAntwort {
   providedIn: 'root'
 })
 export class RezeptService {
-
+  public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
@@ -47,8 +47,9 @@ export class RezeptService {
   }
 
 
-
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+    console.log("Rezept vor dem Senden:", rezept);  // Loggen des Rezepts, um die Tags zu überprüfen
+
     this.loadingSubject.next(true);
     const headers = this.getJsonHeaders();
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
@@ -57,17 +58,18 @@ export class RezeptService {
           const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
           this.rezepteSubject.next(updatedRezepte);
           this.updateKategorieZaehler(rezept.tags);
+          this.onRezeptUpdated.emit();
         } else {
-          // Geeignete Fehlerbehandlung, falls response.body null ist
           console.error('Received null response body');
         }
       }),
       catchError(error => {
-        console.error('Ein Fehler ist aufgetreten:', error);
+        console.error('Unerwartete Antwort vom Server:', Response);
         return throwError(() => error);
       })
     );
   }
+
 
   private updateKategorieZaehler(tags: Tag[] | undefined): void {
     const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();

@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rezept} from "../../../../models/rezepte";
 import {FilterService} from "primeng/api";
 import {RezeptService} from "../../../../services/rezepte.service";
-import {Gerichtart} from "../../../../models/gerichtart";
 import {Tag} from "../../../../models/tag";
 import {map, tap} from "rxjs";
 
@@ -18,7 +17,19 @@ export class SeitenleisteMobilComponent implements OnInit{
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
 
-  constructor(private filterService: FilterService, private rezepteService: RezeptService) {  }
+  tags: Tag[] = [
+    {label: 'Vorspeise', count: 0, selected: false },
+    {label: 'Hauptgang', count: 0, selected: false },
+    {label: 'Nachtisch', count: 0, selected: false },
+  ];
+
+  selectedGerichtEigenschaften: string[] = [];
+
+  constructor(private filterService: FilterService, private rezepteService: RezeptService) {
+    this.rezepteService.onRezeptUpdated.subscribe(() => {
+      this.updateGerichtArtCount();
+    });
+  }
   ngOnInit(): void {
     this.rezepteService.rezepte$.pipe(
       map(rezepte => rezepte.map(rezept => ({
@@ -56,11 +67,7 @@ export class SeitenleisteMobilComponent implements OnInit{
     selectedCategories: string[] = [];
     selectedKuechen: string[] = [];*/
 
-  tags: Tag[] = [
-    {label: 'Vorspeise', count: 0, selected: false },
-    {label: 'Hauptgang', count: 0, selected: false },
-    {label: 'Nachtisch', count: 0, selected: false },
-  ];
+
 
   trackById(index: number, item: Tag): any {
     return item.id || index; // Verwenden Sie item.id, wenn verfügbar, sonst index
@@ -75,14 +82,8 @@ export class SeitenleisteMobilComponent implements OnInit{
     ];*/
 
 
-  selectedGerichtEigenschaften: string[] = [];
 
 
-/*  updateGerichtArtCount(): void {
-    this.tags.forEach((art) => {
-      art.count = this.rezepte.filter(rezept => rezept.tags?.some(tag => tag.label === art.label)).length;
-    });
-  }*/
 
   filterRezepte(): void {
     if (!this.rezepte) {
@@ -120,26 +121,19 @@ export class SeitenleisteMobilComponent implements OnInit{
   }
 
   toggleGerichtsart(label: "Vorspeise" | "Hauptgang" | "Nachtisch" | undefined): void {
-    console.log('Zustand VOR Toggle:', [...this.selectedGerichtarten]);
-    if (!label || !Array.isArray(this.selectedGerichtarten)) return;
-
-    // Filtert das Array, um nur Strings zu behalten.
-    this.selectedGerichtarten = this.selectedGerichtarten
-      .filter(item => typeof item === 'string');
+    if (!label) return;
 
     const index = this.selectedGerichtarten.indexOf(label);
-
-    if (index !== -1) {
-      // Entfernt das Label, wenn es bereits ausgewählt ist.
-      this.selectedGerichtarten.splice(index, 1);
+    if (index > -1) {
+      this.selectedGerichtarten.splice(index, 1);  // Entfernt das Label
     } else {
-      // Fügt das Label hinzu, wenn es noch nicht ausgewählt ist.
-      this.selectedGerichtarten.push(label);
+      this.selectedGerichtarten.push(label);  // Fügt das Label hinzu
     }
 
-    console.log('Zustand NACH Toggle:', [...this.selectedGerichtarten]);
-    this.filterRezepte(); // Aktualisiert die Filterung der Rezepte.
+    console.log('Aktualisierter Zustand der ausgewählten Gerichtsarten:', this.selectedGerichtarten);
+    this.filterRezepte();  // Aktualisiert die Anzeige basierend auf den ausgewählten Gerichtsarten
   }
+
 
   updateGerichtArtCount(): void {
     // Setze alle Zähler zurück, um eine korrekte Neuzählung zu gewährleisten

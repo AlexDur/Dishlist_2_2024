@@ -4,4 +4,5 @@ Ltypescript:S1128")Remove this unused import of 'OnChanges'.(£„­…8ï·éîı1
 Utypescript:S1128	"-Remove this unused import of 'SimpleChanges'.(ÚØúƒøÿÿÿÿ8ï·éîı1
 Qtypescript:S1128
 ")Remove this unused import of 'ViewChild'.(ĞÑ©Çÿÿÿÿÿ8ï·éîı1
-Utypescript:S1854?"9Remove this useless assignment to variable "currentDate".(ìÔ©
+Ktypescript:S1128"#Remove this unused import of 'Tag'.(ŒÍ¶Õùÿÿÿÿ8ÅÄÌÒ‰2
+@typescript:S125Y"Remove this commented out code.(û•çN8ÅÄÌÒ‰2

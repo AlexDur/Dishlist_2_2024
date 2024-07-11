@@ -1,7 +1,6 @@
 export interface Tag {
+  selected: boolean;
   id?:number;
   label?: 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
-  severity?: 'success' | 'info' | 'warning' | 'danger' | 'default';
   count: number;
-  selected: boolean;
 }

@@ -22,13 +22,11 @@ import {catchError, Observable, switchMap, tap, throwError} from "rxjs";
   styleUrls: ['./rezept-erstellung.component.scss']
 })
 export class RezeptErstellungComponent implements OnInit{
-  /*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;
-    @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;*/
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
 
-  newRecipe: any = {}
+  newRecipe: any;
   selectedRow: any;
   editMode = false;
   rezeptGeladen: boolean = false;
@@ -41,7 +39,26 @@ export class RezeptErstellungComponent implements OnInit{
     if (history.state.data) {
       this.newRecipe = history.state.data;
       this.editMode = true;
+    } else {
+      this.initNewRecipe(); // Stelle sicher, dass newRecipe initialisiert ist
     }
+  }
+
+  initNewRecipe() {
+    this.newRecipe = {
+      name: '',
+      onlineAdresse: '',
+      tags: this.initTags()  // Initialisiert die Tags entsprechend
+    };
+  }
+
+  initTags() {
+    // Hier kannst du die Logik definieren, um die Tags initial zu setzen
+    return [
+      { label: 'Vorspeise', selected: false },
+      { label: 'Hauptgang', selected: false },
+      { label: 'Nachtisch', selected: false }
+    ];
   }
 
   setGeaendert(rezept: Rezept) {
@@ -51,18 +68,10 @@ export class RezeptErstellungComponent implements OnInit{
   /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
   addRow() {
     console.log('selectedRow in addRow:', this.selectedRow);
-    const currentDate = new Date();
-
-    this.newRecipe = {
-      name: '',
-      onlineAdresse: '',
-
-    };
-
+    this.initNewRecipe();  // Setzt newRecipe zurück auf den Initialzustand
     this.gefilterteRezepte.unshift(this.newRecipe);
     this.editMode = true;
-    // Setzen von selectedRow auf das neue Rezept, um Bearbeitungsmodus zu aktivieren
-    this.selectedRow = this.newRecipe;
+    this.selectedRow = this.newRecipe;  // Aktiviert den Bearbeitungsmodus für das neue Rezept
   }
 
   saveChanges(rezept: Rezept): Observable<any> {
