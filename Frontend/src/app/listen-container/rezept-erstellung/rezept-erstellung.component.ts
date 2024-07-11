@@ -1,135 +1,98 @@
 import {
   Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
   OnInit,
+  EventEmitter,
   Output,
-  SimpleChanges,
-  ViewChild
+  Input,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import {Rezept} from "../../models/rezepte";
-import {Tag} from "../../models/tag";
-import {RezeptService} from "../../services/rezepte.service";
-import {TagService} from "../../services/tags.service";
-import {Router} from "@angular/router";
-import {catchError, Observable, switchMap, tap, throwError} from "rxjs";
+import { Rezept } from "../../models/rezepte";
+import { Tag } from "../../models/tag";
+import { RezeptService } from "../../services/rezepte.service";
+import { Router } from "@angular/router";
+import {catchError, Observable, tap, throwError} from "rxjs";
 
 @Component({
   selector: 'app-rezept-erstellung',
   templateUrl: './rezept-erstellung.component.html',
-  styleUrls: ['./rezept-erstellung.component.scss']
+  styleUrls: ['./rezept-erstellung.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RezeptErstellungComponent implements OnInit{
+export class RezeptErstellungComponent implements OnInit {
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
 
   newRecipe: any;
-  selectedRow: any;
-  editMode = false;
-  rezeptGeladen: boolean = false;
+  selectedTags: Tag[] = [];
 
-  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router: Router) {
-    this.selectedRow = {};
-  }
+  constructor(private rezepteService: RezeptService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    if (history.state.data) {
-      this.newRecipe = history.state.data;
-      this.editMode = true;
-    } else {
-      this.initNewRecipe(); // Stelle sicher, dass newRecipe initialisiert ist
-    }
+    this.initNewRecipe();
   }
 
   initNewRecipe() {
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
-      tags: this.initTags()  // Initialisiert die Tags entsprechend
+      tags: []
     };
-  }
-
-  initTags() {
-    // Hier kannst du die Logik definieren, um die Tags initial zu setzen
-    return [
-      { label: 'Vorspeise', selected: false },
-      { label: 'Hauptgang', selected: false },
-      { label: 'Nachtisch', selected: false }
+    this.selectedTags = [
+      { label: 'Vorspeise', selected: false, count:0 },
+      { label: 'Hauptgang', selected: false, count:0 },
+      { label: 'Nachtisch', selected: false, count:0 }
     ];
   }
 
-  setGeaendert(rezept: Rezept) {
-    rezept.istGeaendert = true;
+  toggleTagSelection(tag: Tag, $event: any) {
+    tag.selected = !tag.selected;
+    console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
+    this.cdr.detectChanges();
   }
 
-  /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
-  addRow() {
-    console.log('selectedRow in addRow:', this.selectedRow);
-    this.initNewRecipe();  // Setzt newRecipe zurück auf den Initialzustand
-    this.gefilterteRezepte.unshift(this.newRecipe);
-    this.editMode = true;
-    this.selectedRow = this.newRecipe;  // Aktiviert den Bearbeitungsmodus für das neue Rezept
-  }
 
-  saveChanges(rezept: Rezept): Observable<any> {
-    let operation: Observable<any>;
-
-    if (!rezept.id) {
-      operation = this.rezepteService.createRezept(rezept);
+  saveRecipe(newRecipe: any): Observable<any> {
+    this.newRecipe.tags = this.selectedTags.filter(tag => tag.selected);
+    // Entferne die Prüfung, ob alle Felder ausgefüllt sind, und prüfe stattdessen nur, ob Tags ausgewählt wurden.
+    if (this.newRecipe.tags.length > 0) {
+      return this.rezepteService.createRezept(this.newRecipe).pipe(
+        tap(response => {
+          console.log('Rezept erfolgreich gespeichert:', response);
+          this.newRecipeCreated.emit(this.newRecipe);
+          this.initNewRecipe(); // Reset nach dem Speichern
+          this.router.navigate(['/listencontainer']);
+        }),
+        catchError(error => {
+          console.error('Fehler beim Speichern des Rezepts:', error);
+          return throwError(() => new Error('Fehler beim Speichern des Rezepts'));
+        })
+      );
     } else {
-      operation = this.rezepteService.updateRezept(rezept.id, rezept);
+      // Fehlermeldung, falls keine Tags ausgewählt sind
+      console.error('Bitte wählen Sie mindestens einen Tag aus.');
+      return throwError(() => new Error('Bitte wählen Sie mindestens einen Tag aus.'));
     }
-
-    return operation.pipe(
-      tap(() => {
-        // Aktualisiere die UI und die Zähler sofort nach dem Speichern
-    /*    this.updateUIAfterSave();*/
-      }),
-      switchMap(response => {
-        // Lade alle Rezepte erneut, falls notwendig
-        return this.rezepteService.getAlleRezepte();
-      }),
-      catchError(error => {
-        console.error('Fehler beim Speichern oder Aktualisieren des Rezepts', error);
-        return throwError(() => error);
-      })
-    );
   }
 
-  onRatingChanged(newRating: number, rezept: any) {
-    rezept.bewertung = newRating;
-    rezept.istGeaendert = true;
-  }
-
-  selectRow(rezept: any) {
-    this.selectedRow = rezept;
-    this.editMode = true;
-  }
-
-  navigateContainer(event: MouseEvent) {
+  navigateContainer(event: Event) {
     event.preventDefault();
     this.router.navigate(['/listencontainer']);
   }
 
-  handleClick($event: any){
-    // Emission des neuen Rezepts an übergeordnete Komponenten oder andere Interessenten
-    this.newRecipeCreated.emit(this.newRecipe);
-
-    // Speichern des Rezepts und Warten auf die erfolgreiche Speicherung
-    this.saveChanges(this.newRecipe).subscribe({
-      next: (response) => {
-        // Navigation nach erfolgreicher Speicherung
-        this.navigateContainer($event);
-        // Hinzufügen einer neuen Zeile falls notwendig
-        this.addRow();
+  handleClick(event: Event) {
+    event.preventDefault();
+    this.saveRecipe(this.newRecipe).subscribe({
+      next: response => {
+        console.log('Rezept erfolgreich gespeichert:', response);
+        this.router.navigate(['/listencontainer']);
       },
-      error: (error) => {
-        console.error('Fehler beim Speichern des Rezepts', error);
+      error: error => {
+        console.error('Fehler beim Speichern des Rezepts:', error);
       }
     });
   }
+
 
 }
