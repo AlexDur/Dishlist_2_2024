@@ -11,8 +11,8 @@ export class InfoScreenComponent {
   constructor(private router:Router) {
   }
 
-  navigateContainer(event: MouseEvent) {
+  navigateAnmeldung(event: MouseEvent) {
     event.preventDefault();
-    this.router.navigate(['/listencontainer']);
+    this.router.navigate(['/anmeldung']);
   }
 }

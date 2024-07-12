@@ -8,6 +8,11 @@ h1{
   color: white;
 }
 
+a {
+  color: navy;
+  text-decoration: none;
+}
+
 $primary-color: #424242;
 $secondary-color: #f5f5f5;
 $tertiary-color: white;
@@ -92,6 +97,20 @@ $tertiary-color: white;
   background-color: #f0f0f0;
 }
 
+//Anmeldung
+
+.registrierung-hinweis {
+  text-align: center;
+  margin-top: 20px;
+  color:white;
+}
+
+.registrierung-hinweis a:hover, .registrierung-hinweis a:focus {
+  color: navy;
+  text-decoration: underline;
+
+}
+
 /*Rezepterstellung*/
 
 .p-fluid {
@@ -101,12 +120,12 @@ $tertiary-color: white;
   width: 100%;
 }
 
-.rezept-erstellung{
+.screen{
   height: 100vh;
   width: 100vw;
 }
 
-.rezept-formular {
+.zentriertes-formular {
   display: flex;
   flex-direction: column;
   align-items: center; /* Wichtig für die Zentrierung der Kinder */
@@ -137,7 +156,6 @@ $tertiary-color: white;
 .p-button .p-button-label {
   padding: 5px;
 }
-
 
 .close-button {
   position: absolute;
@@ -346,9 +364,6 @@ p-tag + p-tag {
 .label-abstand span {
   display: block;
 }
-
-
-
 
 
 .mobile-row {

@@ -1,0 +1,28 @@
+<div class="screen">
+
+  <div class="zentriertes-formular">
+
+  <h1 (click)="navigateListe($event)">Anmeldung</h1>
+    <!--<form (ngSubmit)="signinUser">-->
+      <form>
+      <div class="p-fluid">
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Nutzername" type="text" id="nutzername"  required name="nutzername"  pInputText><!--[(ngModel)]="user.name"-->
+        </div>
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Passwort" type="text" id="passwort"  required name="passwort"  pInputText><!--[(ngModel)]="user.name"-->
+        </div>
+
+        <button  class="intro-button" type="submit" pButton>Anmelden</button> <!--(click)="handleClick($event)"-->
+
+        <p class="registrierung-hinweis">
+        Noch nicht registriert? <a routerLink="/registrierung">Hier registrieren</a>
+
+
+        </p>
+      </div>
+    </form>
+
+  </div>
+
+</div>
