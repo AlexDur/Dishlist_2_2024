@@ -87,10 +87,6 @@
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
         </td>
 
-   <!--     <td>
-          <app-tags  [currentRecipe]="currentRecipe"  (selectedTagsChanged)="onselectedTagChanged($event)" ></app-tags>
-        </td>-->
-
         <td>
           <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd.MM.yyyy' }}</span>
         </td>

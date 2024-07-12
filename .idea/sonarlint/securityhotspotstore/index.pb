@@ -113,3 +113,17 @@ EFrontend/src/app/listen-container/seitenleiste/seitenleiste.module.ts,d\a\dae6
 _Frontend/src/app/listen-container/seitenleiste/seitenleiste-desktop/seitenleiste.component.html,d\3\d3124cf8d68c718cb85d686bb4f08814c2fd4cd9
 V
 &Frontend/src/app/app-routing.module.ts,f\2\f24d10e6cac907ccf7376053c8164943576ec53f
+e
+5Backend/src/main/java/com/rezepte_app/model/User.java,6\c\6cd7a9ad11e2f4fb8497768ddafb8665557bf1eb
+m
+=Frontend/src/app/intro/info-screen/info-screen.component.html,0\4\045a2e4f8e5be9acce52c6e84d66358e30dbd5c3
+k
+;Frontend/src/app/intro/info-screen/info-screen.component.ts,1\8\189ea64acfb5caa9fddd7bbe8c6c58910db3a590
+q
+AFrontend/src/app/intro/splash-screen/splash-screen.component.html,7\f\7f9d4eafac243e62d44cc3ba8d798ff7fb4bb313
+w
+GFrontend/src/app/intro/nutzer-anmeldung/nutzer-anmeldung.component.scss,4\c\4c1847052d0dcccf9a9445787153c3b2d68649a3
+w
+GFrontend/src/app/intro/nutzer-anmeldung/nutzer-anmeldung.component.html,f\c\fcfa6b77a0e6b6eeb645e72cf1d3e12189bddeff
+u
+EFrontend/src/app/intro/nutzer-anmeldung/nutzer-anmeldung.component.ts,9\a\9af79035a0304bbac2d9947b4b4546eb7c3f06b0
