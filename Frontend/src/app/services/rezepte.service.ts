@@ -119,16 +119,36 @@ export class RezeptService {
 
   deleteRezept(id: number): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
-    // Keine Notwendigkeit, Content-Type Header für eine DELETE-Anfrage zu setzen,
-    // besonders wenn kein Body gesendet wird.
     return this.http.delete(apiUrl, { responseType: 'text' }).pipe(
+      tap(() => {
+        // Hier könnte die Methode zum Aktualisieren der Zähler aufgerufen werden
+        this.updateTagCountsAfterDeletion(id);
+      }),
       catchError((error) => {
         console.error('Fehler beim Löschen des Rezepts', error);
-        // Direkte Verwendung von throwError ohne Funktion, um die Konsistenz mit RxJS 6+ zu wahren
         return throwError(new Error('Fehler beim Löschen des Rezepts'));
       })
     );
   }
+
+  updateTagCountsAfterDeletion(id: number) {
+    let currentRezepte = this.rezepteSubject.getValue();
+    let deletedRezept = currentRezepte.find(rezept => rezept.id === id);
+
+    if (deletedRezept && deletedRezept.tags) {
+      let zaehler = this.kategorieZaehlerSubject.getValue();
+
+      deletedRezept.tags.forEach(tag => {
+        if (tag.label && zaehler[tag.label] && zaehler[tag.label] > 0) {
+          zaehler[tag.label] -= 1;
+        }
+      });
+
+      this.kategorieZaehlerSubject.next(zaehler);
+      this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
+    }
+  }
+
 
 
 }
