@@ -23,7 +23,6 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 })
 export class ListeninhaltMobilComponent implements OnInit{
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
-/*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;*/
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
@@ -31,19 +30,8 @@ export class ListeninhaltMobilComponent implements OnInit{
   @Input() visible: boolean = false;
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
-
-  newRecipe: any = {}
   selectedRow: any;
-  istGeaendert: boolean = false;
-  istGespeichert: boolean = false;
-  showSaveButton: boolean = false;
-  showDeleteButton: boolean = false;
   editMode = false;
-  rezepteGeladen: boolean = false;
-  tagToggleStates: { [key: number]: boolean } = {};
-  currentRecipe: Rezept | undefined;
-  selectedTag: Set<Tag> = new Set<Tag>();
-
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {
     this.selectedRow = {};
@@ -55,7 +43,6 @@ export class ListeninhaltMobilComponent implements OnInit{
       console.log('Aktualisierte Rezepte:', rezepte);
     });
   }
-
 
   selectRow(rezept: any) {
     this.selectedRow = rezept;
@@ -98,10 +85,6 @@ export class ListeninhaltMobilComponent implements OnInit{
       console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
     }
   }
-
-
-
-
 
   openUrl(url: string | undefined): void {
     if (!url) {

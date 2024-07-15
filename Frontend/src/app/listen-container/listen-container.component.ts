@@ -14,6 +14,7 @@ export class ListenContainerComponent implements OnInit{
   rezepteGeladen: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
   rezepteVerfuegbar = false
+  gefilterteRezepte: Rezept[] = [];
 
   constructor(private rezepteService: RezeptService) {}
 
@@ -25,14 +26,16 @@ export class ListenContainerComponent implements OnInit{
         datum: rezept.datum ? new Date(rezept.datum) : undefined
       }));
       this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
-      this.rezepteVerfuegbar =true
-      console.log('rezepteVerfügbar', this.rezepteVerfuegbar)
+      this.gefilterteRezepte = [...this.rezepte]; // Initialisiere gefilterte Rezepte mit allen Rezepten
+      this.rezepteVerfuegbar = true;
+      console.log('rezepteVerfügbar', this.rezepteVerfuegbar);
     });
   }
 
 
   onRezepteFiltered(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
+    this.gefilterteRezepte = rezepte;
     // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
 

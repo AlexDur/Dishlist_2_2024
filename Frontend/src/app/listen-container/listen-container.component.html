@@ -1,7 +1,9 @@
 <div class="grid-container">
-  <app-seitenleiste-mobil  (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste-mobil>
-  <app-listeninhaltmobil [rezepteVerfügbar]="rezepteVerfuegbar"  [gefilterteRezepte]="rezepte"></app-listeninhaltmobil>
+  <app-seitenleiste-mobil (gefilterteRezepte)="onRezepteFiltered($event)" [rezepte]="rezepte"></app-seitenleiste-mobil>
+  <app-listeninhaltmobil [rezepteVerfügbar]="rezepteVerfuegbar" [gefilterteRezepte]="gefilterteRezepte"></app-listeninhaltmobil>
 </div>
+
+
 
 
 
