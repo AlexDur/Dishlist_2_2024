@@ -2,5 +2,6 @@
 Qtypescript:S1128")Remove this unused import of 'OnChanges'.(®úÇàüÿÿÿÿ8±ºÝ€ö1
 Utypescript:S1128"-Remove this unused import of 'SimpleChanges'.(ÚØúƒøÿÿÿÿ8³ºÝ€ö1
 Ftypescript:S125"Remove this commented out code.(áûÈÿÿÿÿÿ8Ò‘†Êˆ2
+Ftypescript:S1128"#Remove this unused import of 'Tag'.(€¿„…8•ŠŠµ‹2
 atypescript:S1128"9Remove this unused import of 'RezeptErstellungComponent'.(ûÔ©¦ûÿÿÿÿ8³ºÝ€ö1
-Òtypescript:S1874X"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(¥Þµºÿÿÿÿÿ
+Òtypescript:S1874K"°'(next?: ((value: any) => void) | null | undefined, error?: ((error: any) => void) | null | undefined, complete?: (() => void) | null | undefined): Subscription' is deprecated.(¥Þµºÿÿÿÿÿ

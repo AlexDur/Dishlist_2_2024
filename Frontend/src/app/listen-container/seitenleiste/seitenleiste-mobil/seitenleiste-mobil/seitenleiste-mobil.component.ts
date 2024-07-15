@@ -42,7 +42,6 @@ export class SeitenleisteMobilComponent implements OnInit{
     ).subscribe();
   }
 
-
   loadRezept(): Promise<void> {
     // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
     return new Promise<void>(resolve => {
@@ -51,25 +50,16 @@ export class SeitenleisteMobilComponent implements OnInit{
     });
   }
 
-
-
-
-
   trackById(index: number, item: Tag): any {
     return item.id || index; // Verwenden Sie item.id, wenn verfügbar, sonst index
   }
 
-
-
   resetRezepte():void{
     // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
     this.rezepte = [...this.originalRezepte];
-    /* this.filterRezepte();*/
-    // Filtern der Rezepte basierend auf den aktualisierten ausgewählten Gerichtsarten
   }
 
   toggleGerichtsart(tag: Tag): void {
-    tag.selected = !tag.selected;
     this.selectedGerichtarten = this.tags.filter(t => t.selected).map(t => t.label);
     this.filterRezepte(); // Direktes Aufrufen der Filtermethode
   }
