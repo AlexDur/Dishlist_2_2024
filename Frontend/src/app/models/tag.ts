@@ -1,6 +1,6 @@
 export interface Tag {
   selected: boolean;
   id?:number;
-  label?: 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
+  label: 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
   count: number;
 }
