@@ -48,7 +48,6 @@ sonar-report.json
 sonarlint/issuestore
 sonarlint/securityhotspotstore
 
-
 # Ignoriere alle XML-Dateien
 *.xml
 
@@ -61,7 +60,6 @@ path/to/your/file.xml
 
 # Ignoriere Eclipse spezifische Dateien
 .csettings/
-
 
 # Ignoriere NetBeans spezifische Dateien
 nbproject/private/
@@ -91,3 +89,9 @@ release.properties
 
 # Ignoriere Gradle spezifische Dateien
 .gradle/
+
+# Spring Boot spezifische Dateien
+/logs/
+*.log
+application.yml
+application.properties
