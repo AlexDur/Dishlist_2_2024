@@ -1,5 +1,3 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
 # Compiled output
 /dist
 /tmp
@@ -41,27 +39,27 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# SonarLint-spezifische Dateien
+# SonarLint specific files
 sonarlint/
 .sonarlint/
 sonar-report.json
 sonarlint/issuestore
 sonarlint/securityhotspotstore
 
-# Ignoriere alle XML-Dateien
+# Ignore all XML files
 *.xml
 
-# Ignoriere spezifische XML-Dateien
+# Ignore specific XML files
 path/to/your/file.xml
 
-# Ignoriere Build-Ausgaben für Java-Projekte
+# Ignore build outputs for Java projects
 /target/
 /build/
 
-# Ignoriere Eclipse spezifische Dateien
+# Eclipse specific files
 .csettings/
 
-# Ignoriere NetBeans spezifische Dateien
+# NetBeans specific files
 nbproject/private/
 build/
 nbbuild/
@@ -69,17 +67,17 @@ dist/
 nbdist/
 .nb-gradle/
 
-# Ignoriere IntelliJ IDEA spezifische Dateien
+# IntelliJ IDEA specific files
 *.iml
 
-# Ignoriere temporäre Dateien
+# Temporary files
 *.tmp
 *.temp
 
-# Ignoriere Log-Dateien
+# Log files
 *.log
 
-# Ignoriere Maven spezifische Dateien
+# Maven specific files
 .mvn/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -87,10 +85,10 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
-# Ignoriere Gradle spezifische Dateien
+# Gradle specific files
 .gradle/
 
-# Spring Boot spezifische Dateien
+# Spring Boot specific files
 /logs/
 *.log
 application.yml
