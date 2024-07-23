@@ -1,8 +1,9 @@
+<!-- rezept-erstellung.component.html -->
 <div class="screen">
   <div class="zentriertes-formular">
     <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
     <h1>Rezepterstellung</h1>
-    <form (ngSubmit)="saveRecipe(newRecipe)">
+    <form (ngSubmit)="handleClick($event)">
       <div class="p-fluid">
         <div class="p-field">
           <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText>
@@ -10,18 +11,20 @@
         <div class="p-field">
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" pInputText>
         </div>
-        <div class="p-field toggle-buttons-container">
-          <p-toggleButton *ngFor="let tag of selectedTags"
-                          [(ngModel)]="tag.selected"
-                          (ngModelChange)="tag.selected = $event"
-                          name="{{tag.label}}"
-                          onLabel="{{tag.label}}"
-                          offLabel="{{tag.label}}"
-                          [ngModelOptions]="{standalone: true}">
-          </p-toggleButton>
+        <div>
+          <h3 class="weiss">Tags</h3>
+          <div class="p-field toggle-buttons-container">
+            <p-toggleButton *ngFor="let tag of tags"
+                            [(ngModel)]="tag.selected"
+                            (ngModelChange)="tag.selected = $event"
+                            name="{{tag.label}}"
+                            onLabel="{{tag.label}}"
+                            offLabel="{{tag.label}}"
+                            [ngModelOptions]="{standalone: true}">
+            </p-toggleButton>
+          </div>
         </div>
-
-        <button (click)="handleClick($event)" class="intro-button" type="submit" pButton>Neues Rezept hinzufügen</button>
+        <button class="intro-button" type="submit" pButton>Neues Rezept hinzufügen</button>
       </div>
     </form>
   </div>

@@ -20,9 +20,7 @@ export class RezeptService {
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   private kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
-  public kategorieZaehler$ = this.kategorieZaehlerSubject.asObservable();
   private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingSubject.asObservable();
 
   private getJsonHeaders() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });

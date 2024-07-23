@@ -1,30 +1,33 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rezept} from "../../../../models/rezepte";
-import {RezeptService} from "../../../../services/rezepte.service";
-import {Tag} from "../../../../models/tag";
-import {map, tap} from "rxjs";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Rezept } from '../../../../models/rezepte';
+import { RezeptService } from '../../../../services/rezepte.service';
+import { map, tap } from 'rxjs/operators';
+import { Tag } from '../../../../models/tag';
 
 @Component({
   selector: 'app-seitenleiste-mobil',
   templateUrl: './seitenleiste-mobil.component.html',
   styleUrls: ['./seitenleiste-mobil.component.scss']
 })
-export class SeitenleisteMobilComponent implements OnInit{
+export class SeitenleisteMobilComponent implements OnInit {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
-  selectedGerichtarten: string[] = [];
+  selectedTags: string[] = [];
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
 
   tags: Tag[] = [
-    {label: 'Vorspeise', count: 0, selected: false },
-    {label: 'Hauptgang', count: 0, selected: false },
-    {label: 'Nachtisch', count: 0, selected: false },
+    { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
+    { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
+    { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
   ];
 
   constructor(private rezepteService: RezeptService) {
     this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateGerichtArtCount();
+      this.updateTagCount();
     });
   }
 
@@ -37,13 +40,12 @@ export class SeitenleisteMobilComponent implements OnInit{
       tap(rezepte => {
         this.originalRezepte = [...rezepte];
         this.resetRezepte();
-        this.updateGerichtArtCount();
+        this.updateTagCount();
       })
     ).subscribe();
   }
 
   loadRezept(): Promise<void> {
-    // Asynchrone Logik zur Verarbeitung des geladenen Rezepts
     return new Promise<void>(resolve => {
       this.rezeptGeladen = true;
       resolve();
@@ -51,31 +53,31 @@ export class SeitenleisteMobilComponent implements OnInit{
   }
 
   trackById(index: number, item: Tag): any {
-    return item.id || index; // Verwenden Sie item.id, wenn verfügbar, sonst index
+    return item.id || index;
   }
 
-  resetRezepte():void{
-    // [...] = Spread-Syntax, ermöglicht, die Elemente eines Arrays in ein anderes Array zu kopieren.
+  resetRezepte(): void {
     this.rezepte = [...this.originalRezepte];
   }
 
-  toggleGerichtsart(tag: Tag): void {
-    this.selectedGerichtarten = this.tags.filter(t => t.selected).map(t => t.label);
-    this.filterRezepte(); // Direktes Aufrufen der Filtermethode
+  toggleTag(tag: Tag): void {
+    tag.selected = !tag.selected;
+    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
+    this.filterRezepte();
   }
 
   filterRezepte(): void {
-    if (this.selectedGerichtarten.length === 0) {
+    if (this.selectedTags.length === 0) {
       this.gefilterteRezepte.emit(this.originalRezepte);
     } else {
       const gefilterteRezepte = this.originalRezepte.filter(rezept =>
-        rezept.tags?.some(tag => this.selectedGerichtarten.includes(tag.label))
+        rezept.tags?.some(tag => this.selectedTags.includes(tag.label))
       );
       this.gefilterteRezepte.emit(gefilterteRezepte);
     }
   }
 
-  updateGerichtArtCount(): void {
+  updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);
     this.rezepte.forEach(rezept => {
       rezept.tags?.forEach(rezeptTag => {
@@ -86,26 +88,12 @@ export class SeitenleisteMobilComponent implements OnInit{
       });
     });
   }
-  /*  interKuechen = [
-       { label: 'Deutsch', severity: 'deutsch', count: 3 },
-       { label: 'Chinesisch', severity: 'chinesisch', count: 1 },
-       { label: 'Japanisch', severity: 'japanisch', count: 0 },
-       { label: 'Italienisch', severity: 'italienisch', count: 0 },
-       { label: 'Indisch', severity: 'indisch', count: 4 },
-     ];*/
 
+  getGerichtartenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Gerichtart');
+  }
 
-  /*  selectedFilters: string[] = [];
-    selectedCategories: string[] = [];
-    selectedKuechen: string[] = [];*/
-
-
-  /*  gerichtEigenschaften = [
-      { label: 'schnell', severity: 'schnell', count: 2 },
-      { label: 'kalorienreich', severity: 'kalorienreich', count: 3 },
-      { label: 'vegetarisch', severity: 'vegetarisch', count: 2 },
-      { label: 'proteinreich', severity: 'preoteinreich', count: 0 },
-    ];*/
-
-
+  getKuechenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Küche');
+  }
 }
