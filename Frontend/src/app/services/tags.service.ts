@@ -14,7 +14,20 @@ export class TagService {
   public tags$ = this.tagsSubject.asObservable();
   private backendUrl = environment.apiUrl;
 
+  public tags: Tag[] = [
+    { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
+    { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
+    { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
+    { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
+  ];
+
   constructor(private http: HttpClient, private rezepteService: RezeptService) {}
+
+  getTags(): Tag[] {
+    return this.tags;
+  }
 
   updateTag(tag: Tag) {
     if (!tag.id) {
@@ -56,5 +69,13 @@ export class TagService {
         }, 0)
       )
     );
+  }
+
+  getGerichtartenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Gerichtart');
+  }
+
+  getKuechenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Küche');
   }
 }

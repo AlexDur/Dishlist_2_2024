@@ -353,3 +353,6 @@ QSoftwareentwicklung/Webentwicklung/4_DishList/rezepte_app_maerz/package-lock.js
 LSoftwareentwicklung/Webentwicklung/4_DishList/rezepte_app_maerz/package.json,4\8\489fd18564b53acf181bfcdd97e0c914c9832b75
 Å
 ”Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_Beetgott/.idea/sonarlint/securityhotspotstore/c/f/cf4c55591ce297ed3d6694c12c712af209667860,6\8\68c188989a054b6cc80b0f6b83e58c38484ae8f8
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

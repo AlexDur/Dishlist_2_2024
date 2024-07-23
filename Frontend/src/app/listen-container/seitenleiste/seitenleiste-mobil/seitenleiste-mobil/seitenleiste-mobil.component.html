@@ -1,12 +1,11 @@
-<script src="../../../../../../capacitor.config.ts"></script>
 <div class="seitenleiste">
-  <h3 class="hellblau">Mahlzeit</h3>
-  <div class="mahlzeiten">
-    <div class="p-field-checkbox" *ngFor="let art of tags; trackBy: trackById">
+  <h3 class="weiss">Mahlzeit</h3>
+  <div class="filter-anzeige">
+    <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
       <p-checkbox
         [(ngModel)]="art.selected"
         [binary]="true"
-        (onChange)="toggleGerichtsart(art)"
+        (onChange)="toggleTag(art)"
         inputId="type_{{art.label}}">
       </p-checkbox>
       <label for="type_{{art.label}}" class="label-abstand">
@@ -15,27 +14,14 @@
       </label>
     </div>
   </div>
-</div>
 
-
-
-
-
-
-
-
-<!--<div>
-  <h3 class="orange">Internationale Küchen</h3>
-  <div class="p-field-checkbox" *ngFor="let type of interKuechen; let i = index">
-    <p-checkbox [value]="type" [(ngModel)]="selectedKuechen[i]" inputId="type_{{i}}"></p-checkbox>
-    <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+  <div>
+    <h3 class="weiss">Internationale Küchen</h3>
+    <div class="filter-anzeige">
+      <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
+        <p-checkbox [value]="type" [(ngModel)]="type.selected" inputId="type_{{i}}" (onChange)="toggleTag(type)"></p-checkbox>
+        <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+      </div>
+    </div>
   </div>
 </div>
-
-<div>
-  <h3 class="rot">Attribute</h3>
-  <div class="p-field-checkbox" *ngFor="let type of gerichtEigenschaften; let i = index">
-    <p-checkbox [value]="type" [(ngModel)]="selectedGerichtEigenschaften[i]" inputId="type_{{i}}"></p-checkbox>
-    <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
-  </div>
-</div>-->

@@ -11,7 +11,8 @@ import { Rezept } from "../../models/rezepte";
 import { Tag } from "../../models/tag";
 import { RezeptService } from "../../services/rezepte.service";
 import { Router } from "@angular/router";
-import {catchError, Observable, tap, throwError} from "rxjs";
+import { catchError, Observable, tap, throwError } from "rxjs";
+import { TagService} from "../../services/tags.service";
 
 @Component({
   selector: 'app-rezept-erstellung',
@@ -25,9 +26,15 @@ export class RezeptErstellungComponent implements OnInit {
   @Input() gefilterteRezepte: Rezept[] = [];
 
   newRecipe: any;
+  tags: Tag[] = [];
   selectedTags: Tag[] = [];
 
-  constructor(private rezepteService: RezeptService, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private rezepteService: RezeptService,
+    private tagService: TagService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.initNewRecipe();
@@ -39,23 +46,24 @@ export class RezeptErstellungComponent implements OnInit {
       onlineAdresse: '',
       tags: []
     };
-    this.selectedTags = [
-      { label: 'Vorspeise', selected: false, count:0 },
-      { label: 'Hauptgang', selected: false, count:0 },
-      { label: 'Nachtisch', selected: false, count:0 }
-    ];
+    this.tags = this.tagService.getTags();
+    this.selectedTags = [];
   }
 
   toggleTagSelection(tag: Tag, $event: any) {
     tag.selected = !tag.selected;
-    console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
+    if (tag.selected) {
+      this.selectedTags.push(tag);
+    } else {
+      this.selectedTags = this.selectedTags.filter(t => t.label !== tag.label);
+    }
+    console.log('Selected Tags:', this.selectedTags);
     this.cdr.detectChanges();
   }
 
-
   saveRecipe(newRecipe: any): Observable<any> {
-    this.newRecipe.tags = this.selectedTags.filter(tag => tag.selected);
-    // Entferne die Prüfung, ob alle Felder ausgefüllt sind, und prüfe stattdessen nur, ob Tags ausgewählt wurden.
+    console.log('Selected Tags before saving:', this.selectedTags); // Debugging-Meldung
+    this.newRecipe.tags = this.selectedTags;
     if (this.newRecipe.tags.length > 0) {
       return this.rezepteService.createRezept(this.newRecipe).pipe(
         tap(response => {
@@ -70,7 +78,6 @@ export class RezeptErstellungComponent implements OnInit {
         })
       );
     } else {
-      // Fehlermeldung, falls keine Tags ausgewählt sind
       console.error('Bitte wählen Sie mindestens einen Tag aus.');
       return throwError(() => new Error('Bitte wählen Sie mindestens einen Tag aus.'));
     }
@@ -94,5 +101,11 @@ export class RezeptErstellungComponent implements OnInit {
     });
   }
 
+  getGerichtartenTags(): Tag[] {
+    return this.tagService.getGerichtartenTags();
+  }
 
+  getKuechenTags(): Tag[] {
+    return this.tagService.getKuechenTags();
+  }
 }
