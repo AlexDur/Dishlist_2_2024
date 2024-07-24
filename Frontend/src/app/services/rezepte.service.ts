@@ -17,6 +17,10 @@ interface RezeptAntwort {
 export class RezeptService {
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
+
+  // BehaviorSubject speichert den zuletzt gesendeten Wert und gibt diesen Wert sofort an neue Abonnenten weiter.
+  // Speichert Arrays vom Type Rezept
+  // Initialisiert das BehaviorSubject mit leerem Array
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   private kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
@@ -44,15 +48,21 @@ export class RezeptService {
     );
   }
 
-
+ // Methode, die Rezept-Objekt akzeptiert und ein Observable zurückgibt, das eine HTTP-Antwort enthält
+ // LoadingSubject, um Ladezustand zu aktualisieren und um e. UI-Komponente darüber zu benachrichtigen (Subject = Observable UND Observer)
+ // JSON-Header (enthält Metadaten, s. oben) werden für die HTTP-Anfrage abgerufen, um sicherzustellen, dass die Anfrage als JSON formatiert ist.
+ // HTTP-POST-Anfrage wird an Server gesendet, um das Rezept zu erstellen (Rezept-Objekt + vorbereitete Header)
+ // tap (von "Anzapfen" eines Stroms [Observable]) zur Verarbeitung der Antwort, also zum Ausführen von Aktion beim Durchfluss der Daten
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
-    console.log("Rezept vor dem Senden:", rezept);  // Loggen des Rezepts, um die Tags zu überprüfen
+    console.log("Rezept vor dem Senden:", rezept);
 
     this.loadingSubject.next(true);
     const headers = this.getJsonHeaders();
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
       tap(response => {
+        console.log('Server Response:', response); // Debugging-Meldung hinzufügen
         if (response.body) {
+          console.log('Response Body:', response.body); // Debugging-Meldung hinzufügen
           const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
           this.rezepteSubject.next(updatedRezepte);
           this.updateKategorieZaehler(rezept.tags);
@@ -62,7 +72,7 @@ export class RezeptService {
         }
       }),
       catchError(error => {
-        console.error('Unerwartete Antwort vom Server:', Response);
+        console.error('Unerwartete Antwort vom Server:', error); // Ändere von Response zu error
         return throwError(() => error);
       })
     );
@@ -85,7 +95,6 @@ export class RezeptService {
 
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
-
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
@@ -113,7 +122,6 @@ export class RezeptService {
       })
     );
   }
-
 
   deleteRezept(id: number): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
@@ -146,7 +154,4 @@ export class RezeptService {
       this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
     }
   }
-
-
-
 }

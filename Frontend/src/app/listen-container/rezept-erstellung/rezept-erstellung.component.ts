@@ -46,12 +46,23 @@ export class RezeptErstellungComponent implements OnInit {
       onlineAdresse: '',
       tags: []
     };
-    this.tags = this.tagService.getTags();
+    this.resetTags()
     this.selectedTags = [];
+    console.log('Initial Tags:', this.tags);
   }
 
-  toggleTagSelection(tag: Tag, $event: any) {
-    tag.selected = !tag.selected;
+  resetTags() {
+    // Initialisiere Tags neu und setzt `selected` auf false
+    this.tags = this.tagService.getTags().map(tag => ({
+      ...tag,
+      selected: false
+    }));
+    this.cdr.detectChanges();
+  }
+
+  toggleTagSelection(tag: Tag) {
+    /*tag.selected = !tag.selected;*/
+    console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
     if (tag.selected) {
       this.selectedTags.push(tag);
     } else {
@@ -62,7 +73,7 @@ export class RezeptErstellungComponent implements OnInit {
   }
 
   saveRecipe(newRecipe: any): Observable<any> {
-    console.log('Selected Tags before saving:', this.selectedTags); // Debugging-Meldung
+    console.log('Selected Tags before saving:', this.selectedTags);
     this.newRecipe.tags = this.selectedTags;
     if (this.newRecipe.tags.length > 0) {
       return this.rezepteService.createRezept(this.newRecipe).pipe(
