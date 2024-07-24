@@ -12,9 +12,20 @@
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" pInputText>
         </div>
         <div>
-          <h3 class="weiss">Tags</h3>
+          <h3 class="weiss">Mahlzeit</h3>
           <div class="p-field toggle-buttons-container">
-            <p-toggleButton *ngFor="let tag of tags"
+            <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
+                            [(ngModel)]="tag.selected"
+                            (ngModelChange)="tag.selected = $event"
+                            name="{{tag.label}}"
+                            onLabel="{{tag.label}}"
+                            offLabel="{{tag.label}}"
+                            [ngModelOptions]="{standalone: true}">
+            </p-toggleButton>
+          </div>
+          <h3 class="weiss">Küche</h3>
+          <div class="p-field toggle-buttons-container">
+            <p-toggleButton *ngFor="let tag of getKuechenTags()"
                             [(ngModel)]="tag.selected"
                             (ngModelChange)="tag.selected = $event"
                             name="{{tag.label}}"
