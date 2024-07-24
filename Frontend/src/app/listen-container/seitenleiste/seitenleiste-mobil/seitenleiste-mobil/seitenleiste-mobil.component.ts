@@ -62,8 +62,12 @@ export class SeitenleisteMobilComponent implements OnInit {
 
   toggleTag(tag: Tag): void {
     tag.selected = !tag.selected;
-    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
+    this.updateSelectedTags();
     this.filterRezepte();
+  }
+
+  updateSelectedTags(): void {
+    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
   }
 
   filterRezepte(): void {
