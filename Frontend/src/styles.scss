@@ -307,9 +307,12 @@ p-dialog .p-dialog-header{
 
 .weiss{
   color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
-.filter-sidebar {
+/*.filter-sidebar {
   width: 250px;
   background: #f8f9fa;
 }
@@ -325,7 +328,7 @@ p-dialog .p-dialog-header{
 
 .filter-sidebar .p-field-checkbox {
   margin: 0.5em;
-}
+}*/
 
 .tag-container{
   display:flex;
