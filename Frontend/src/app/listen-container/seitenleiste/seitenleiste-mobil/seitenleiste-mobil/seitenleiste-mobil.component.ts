@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
-import { map, tap } from 'rxjs/operators';
 import { Tag } from '../../../../models/tag';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-seitenleiste-mobil',
   templateUrl: './seitenleiste-mobil.component.html',
   styleUrls: ['./seitenleiste-mobil.component.scss']
 })
-export class SeitenleisteMobilComponent implements OnInit {
+export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
   selectedTags: string[] = [];
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
+  private subscription: Subscription;
 
   tags: Tag[] = [
     { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
@@ -26,24 +27,26 @@ export class SeitenleisteMobilComponent implements OnInit {
   ];
 
   constructor(private rezepteService: RezeptService) {
-    this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateTagCount();
+    this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
+      this.updateTagCounts(this.rezepteService.kategorieZaehlerSubject.getValue());
     });
   }
 
+
   ngOnInit(): void {
-    this.rezepteService.rezepte$.pipe(
-      map(rezepte => rezepte.map(rezept => ({
-        ...rezept,
-        datum: rezept.datum ? new Date(rezept.datum) : undefined
-      }))),
-      tap(rezepte => {
-        this.originalRezepte = [...rezepte];
-        this.resetRezepte();
-        this.updateTagCount();
-      })
-    ).subscribe();
+    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
+      this.originalRezepte = [...rezepte];
+      this.resetRezepte();
+      this.updateTagCounts(this.rezepteService.kategorieZaehlerSubject.getValue());
+    });
   }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
 
   loadRezept(): Promise<void> {
     return new Promise<void>(resolve => {
@@ -61,6 +64,7 @@ export class SeitenleisteMobilComponent implements OnInit {
   }
 
   toggleTag(tag: Tag): void {
+    tag.selected = !tag.selected;
     this.updateSelectedTags();
     this.filterRezepte();
   }
@@ -80,15 +84,11 @@ export class SeitenleisteMobilComponent implements OnInit {
     }
   }
 
-  updateTagCount(): void {
-    this.tags.forEach(tag => tag.count = 0);
-    this.rezepte.forEach(rezept => {
-      rezept.tags?.forEach(rezeptTag => {
-        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
-        if (foundTag) {
-          foundTag.count++;
-        }
-      });
+  private updateTagCounts(zaehler: { [key: string]: number }) {
+    this.tags.forEach(tag => {
+      if (zaehler[tag.label] !== undefined) {
+        tag.count = zaehler[tag.label];
+      }
     });
   }
 
@@ -100,3 +100,20 @@ export class SeitenleisteMobilComponent implements OnInit {
     return this.tags.filter(tag => tag.type === 'Küche');
   }
 }
+
+
+/*
+tags: Tag[] = [
+  { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
+  { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
+  { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
+  { label: 'CH', count: 0, selected: false, type: 'Küche' },
+  { label: 'DE/AT', count: 0, selected: false, type: 'Küche' },
+  { label: 'FR', count: 0, selected: false, type: 'Küche' },
+  { label: 'IND', count: 0, selected: false, type: 'Küche' },
+  { label: 'IT', count: 0, selected: false, type: 'Küche' },
+  { label: 'JAP', count: 0, selected: false, type: 'Küche' },
+  { label: 'KOR', count: 0, selected: false, type: 'Küche' },
+  { label: 'MEX', count: 0, selected: false, type: 'Küche' },
+  { label: 'SPA', count: 0, selected: false, type: 'Küche' },
+];*/

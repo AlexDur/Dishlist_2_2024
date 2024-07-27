@@ -2,14 +2,14 @@ import {
   Component,
   ElementRef,
   Input,
-  OnChanges, OnInit,
-  SimpleChanges,
+  OnInit,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {TagService} from "../../../../../services/tags.service";
-
+import { Subscription } from 'rxjs';
 /*import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";*/
 import {Tag} from "../../../../../models/tag";
 import {Router} from "@angular/router";
@@ -21,7 +21,7 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
   templateUrl: './listeninhalt-mobil.component.html',
   styleUrls: ['./listeninhalt-mobil.component.scss']
 })
-export class ListeninhaltMobilComponent implements OnInit{
+export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
@@ -30,24 +30,23 @@ export class ListeninhaltMobilComponent implements OnInit{
   @Input() visible: boolean = false;
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
-  selectedRow: any;
-  editMode = false;
+  private subscription: Subscription | undefined;
 
-  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {
-    this.selectedRow = {};
-  }
+  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {}
 
-  ngOnInit() {
-    this.rezepteService.rezepte$.subscribe(rezepte => {
+  ngOnInit(){
+     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.gefilterteRezepte = rezepte;
       console.log('Aktualisierte Rezepte:', rezepte);
     });
   }
 
-  selectRow(rezept: any) {
-    this.selectedRow = rezept;
-    this.editMode = true;
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
+
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();

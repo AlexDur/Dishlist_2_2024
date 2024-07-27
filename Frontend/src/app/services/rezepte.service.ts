@@ -23,7 +23,7 @@ export class RezeptService {
   // Initialisiert das BehaviorSubject mit leerem Array
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
-  private kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
+  kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   private getJsonHeaders() {
@@ -60,9 +60,11 @@ export class RezeptService {
     const headers = this.getJsonHeaders();
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
       tap(response => {
-        console.log('Server Response:', response); // Debugging-Meldung hinzufügen
+
         if (response.body) {
-          console.log('Response Body:', response.body); // Debugging-Meldung hinzufügen
+          console.log('Response Body:', response.body);
+          console.log('Server Response:', response);
+
           const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
           this.rezepteSubject.next(updatedRezepte);
           this.updateKategorieZaehler(rezept.tags);
@@ -137,7 +139,7 @@ export class RezeptService {
     );
   }
 
-  updateTagCountsAfterDeletion(id: number) {
+  private updateTagCountsAfterDeletion(id: number) {
     let currentRezepte = this.rezepteSubject.getValue();
     let deletedRezept = currentRezepte.find(rezept => rezept.id === id);
 
