@@ -27,9 +27,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
   ];
 
+  //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateTagCounts(this.rezepteService.kategorieZaehlerSubject.getValue());
+      this.updateTagCounts();
     });
   }
 
@@ -37,7 +38,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte  => {
       this.originalRezepte = [...rezepte];
       this.resetRezepte();
-      this.updateTagCounts(this.rezepteService.kategorieZaehlerSubject.getValue());
+      this.updateTagCounts();
     });
   }
 
@@ -82,11 +83,19 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateTagCounts(zaehler: { [key: string]: number }) {
+  private updateTagCounts(): void {
+    const zaehler: { [key: string]: number } = {};
+    this.originalRezepte.forEach(rezept => {
+      rezept.tags?.forEach(tag => {
+        if (tag && tag.label) {
+          const kategorieName = tag.label;
+          zaehler[kategorieName] = (zaehler[kategorieName] || 0) + 1;
+        }
+      });
+    });
+
     this.tags.forEach(tag => {
-      if (zaehler[tag.label] !== undefined) {
-        tag.count = zaehler[tag.label];
-      }
+      tag.count = zaehler[tag.label] || 0;
     });
   }
 
@@ -96,5 +105,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
 
   getKuechenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Küche');
+  }
+
+  updateTagCount(): void {
+    this.tags.forEach(tag => tag.count = 0);
+    this.rezepte.forEach(rezept => {
+      rezept.tags?.forEach(rezeptTag => {
+        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
+        if (foundTag) {
+          foundTag.count++;
+        }
+      });
+    });
   }
 }
