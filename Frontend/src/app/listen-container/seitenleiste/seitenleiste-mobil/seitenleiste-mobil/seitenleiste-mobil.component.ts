@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
+import { map, tap } from 'rxjs/operators';
 import { Tag } from '../../../../models/tag';
 import { Subscription } from 'rxjs';
 
@@ -32,9 +33,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
   }
 
-
   ngOnInit(): void {
-    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
+    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte  => {
       this.originalRezepte = [...rezepte];
       this.resetRezepte();
       this.updateTagCounts(this.rezepteService.kategorieZaehlerSubject.getValue());
@@ -46,7 +46,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
-
 
   loadRezept(): Promise<void> {
     return new Promise<void>(resolve => {
@@ -64,7 +63,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   toggleTag(tag: Tag): void {
-    tag.selected = !tag.selected;
     this.updateSelectedTags();
     this.filterRezepte();
   }
@@ -100,20 +98,3 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     return this.tags.filter(tag => tag.type === 'Küche');
   }
 }
-
-
-/*
-tags: Tag[] = [
-  { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
-  { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
-  { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
-  { label: 'CH', count: 0, selected: false, type: 'Küche' },
-  { label: 'DE/AT', count: 0, selected: false, type: 'Küche' },
-  { label: 'FR', count: 0, selected: false, type: 'Küche' },
-  { label: 'IND', count: 0, selected: false, type: 'Küche' },
-  { label: 'IT', count: 0, selected: false, type: 'Küche' },
-  { label: 'JAP', count: 0, selected: false, type: 'Küche' },
-  { label: 'KOR', count: 0, selected: false, type: 'Küche' },
-  { label: 'MEX', count: 0, selected: false, type: 'Küche' },
-  { label: 'SPA', count: 0, selected: false, type: 'Küche' },
-];*/
