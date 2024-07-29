@@ -1,7 +1,9 @@
+/*TODO: Zählung von Tags, die nach dem ersten Tag je Rezeot gesetzt wurden fixen. Es hat bereits in einer früheren REvision gefunkt.*/
+/*Ursache dürfte liegen in den Methoden updateTagCountS und updateTagCounts und  */
+
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
-import { map, tap } from 'rxjs/operators';
 import { Tag } from '../../../../models/tag';
 import { Subscription } from 'rxjs';
 
