@@ -1,20 +1,24 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+/*TODO: Zählung von Tags, die nach dem ersten Tag je Rezeot gesetzt wurden fixen. Es hat bereits in einer früheren REvision gefunkt.*/
+/*Ursache dürfte liegen in den Methoden updateTagCountS und updateTagCounts und  */
+
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
-import { map, tap } from 'rxjs/operators';
 import { Tag } from '../../../../models/tag';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-seitenleiste-mobil',
   templateUrl: './seitenleiste-mobil.component.html',
   styleUrls: ['./seitenleiste-mobil.component.scss']
 })
-export class SeitenleisteMobilComponent implements OnInit {
+export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
   selectedTags: string[] = [];
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
+  private subscription: Subscription;
 
   tags: Tag[] = [
     { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
@@ -25,24 +29,25 @@ export class SeitenleisteMobilComponent implements OnInit {
     { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
   ];
 
+  //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
-    this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateTagCount();
+    this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
+      this.updateTagCounts();
     });
   }
 
   ngOnInit(): void {
-    this.rezepteService.rezepte$.pipe(
-      map(rezepte => rezepte.map(rezept => ({
-        ...rezept,
-        datum: rezept.datum ? new Date(rezept.datum) : undefined
-      }))),
-      tap(rezepte => {
-        this.originalRezepte = [...rezepte];
-        this.resetRezepte();
-        this.updateTagCount();
-      })
-    ).subscribe();
+    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte  => {
+      this.originalRezepte = [...rezepte];
+      this.resetRezepte();
+      this.updateTagCounts();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   loadRezept(): Promise<void> {
@@ -61,9 +66,12 @@ export class SeitenleisteMobilComponent implements OnInit {
   }
 
   toggleTag(tag: Tag): void {
-    tag.selected = !tag.selected;
-    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
+    this.updateSelectedTags();
     this.filterRezepte();
+  }
+
+  updateSelectedTags(): void {
+    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
   }
 
   filterRezepte(): void {
@@ -77,6 +85,30 @@ export class SeitenleisteMobilComponent implements OnInit {
     }
   }
 
+  private updateTagCounts(): void {
+    const zaehler: { [key: string]: number } = {};
+    this.originalRezepte.forEach(rezept => {
+      rezept.tags?.forEach(tag => {
+        if (tag && tag.label) {
+          const kategorieName = tag.label;
+          zaehler[kategorieName] = (zaehler[kategorieName] || 0) + 1;
+        }
+      });
+    });
+
+    this.tags.forEach(tag => {
+      tag.count = zaehler[tag.label] || 0;
+    });
+  }
+
+  getGerichtartenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Gerichtart');
+  }
+
+  getKuechenTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Küche');
+  }
+
   updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);
     this.rezepte.forEach(rezept => {
@@ -87,13 +119,5 @@ export class SeitenleisteMobilComponent implements OnInit {
         }
       });
     });
-  }
-
-  getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gerichtart');
-  }
-
-  getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Küche');
   }
 }

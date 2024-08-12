@@ -1,11 +1,13 @@
+<!-- seitenleiste-mobil.component.html -->
 <div class="seitenleiste">
+  <div class="mahlzeiten">
   <h3 class="weiss">Mahlzeit</h3>
   <div class="filter-anzeige">
     <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
       <p-checkbox
         [(ngModel)]="art.selected"
         [binary]="true"
-        (onChange)="toggleTag(art)"
+        (ngModelChange)="toggleTag(art)"
         inputId="type_{{art.label}}">
       </p-checkbox>
       <label for="type_{{art.label}}" class="label-abstand">
@@ -14,14 +16,26 @@
       </label>
     </div>
   </div>
+  </div>
 
-  <div>
+  <!--Verwende Interpolation für Zähler zur Generation eindeutiger IDs-->
+  <div class="kuechen">
     <h3 class="weiss">Internationale Küchen</h3>
     <div class="filter-anzeige">
-      <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
-        <p-checkbox [value]="type" [(ngModel)]="type.selected" inputId="type_{{i}}" (onChange)="toggleTag(type)"></p-checkbox>
-        <label for="type_{{i}}" class="label-abstand">{{ type.label }} ({{ type.count }})</label>
+      <div class="filter-format">
+        <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
+          <p-checkbox
+            [(ngModel)]="type.selected"
+            [binary]="true"
+            (ngModelChange)="toggleTag(type)"
+            inputId="type_{{i}}">
+          </p-checkbox>
+          <label for="type_{{i}}" class="label-abstand">
+            <span>{{ type.label }}</span><br>
+            <span class="count">({{ type.count }})</span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  </div>
