@@ -46,12 +46,22 @@ export class RezeptErstellungComponent implements OnInit {
       onlineAdresse: '',
       tags: []
     };
-    this.tags = this.tagService.getTags();
+    this.resetTags();
     this.selectedTags = [];
+    console.log('Initial Tags:', this.tags);
   }
 
-  toggleTagSelection(tag: Tag, $event: any) {
-    tag.selected = !tag.selected;
+  resetTags() {
+    // Initialisiert Tags neu und setzt `selected` auf false
+    this.tags = this.tagService.getTags().map(tag => ({
+      ...tag,
+      selected: false
+    }));
+    this.cdr.detectChanges();
+  }
+
+  toggleTagSelection(tag: Tag) {
+    console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
     if (tag.selected) {
       this.selectedTags.push(tag);
     } else {
@@ -61,15 +71,28 @@ export class RezeptErstellungComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  updateTagCount(): void {
+    this.tags.forEach(tag => tag.count = 0);
+    this.rezepte.forEach(rezept => {
+      rezept.tags?.forEach(rezeptTag => {
+        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
+        if (foundTag) {
+          foundTag.count++;
+        }
+      });
+    });
+  }
+
   saveRecipe(newRecipe: any): Observable<any> {
-    console.log('Selected Tags before saving:', this.selectedTags); // Debugging-Meldung
+    console.log('Selected Tags before saving:', this.selectedTags);
     this.newRecipe.tags = this.selectedTags;
     if (this.newRecipe.tags.length > 0) {
+      console.log('Rezept vor dem Senden:', this.newRecipe);
       return this.rezepteService.createRezept(this.newRecipe).pipe(
         tap(response => {
           console.log('Rezept erfolgreich gespeichert:', response);
           this.newRecipeCreated.emit(this.newRecipe);
-          this.initNewRecipe(); // Reset nach dem Speichern
+          this.updateTagCount();
           this.router.navigate(['/listencontainer']);
         }),
         catchError(error => {
