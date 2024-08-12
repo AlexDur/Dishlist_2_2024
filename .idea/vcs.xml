@@ -3,26 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Backend" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Open Source" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Open Source/java-angular-basic" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Open Source/spring-angular-demo" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Open Source/spring-angular-demo/SpringAngularDemo" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/4_DishList/dislish_react" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/4_DishList/rezepte_app_ende_märz" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/4_DishList/rezepte_app_ende_märz/Frontend/rezepte_app_ende_maerz" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/4_DishList/rezepte_app_maerz" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/Angular" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_Beetgott" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/fullStack_rezepteApp" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/fullStack_rezepteApp/Backend" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/OpenSource/Java-Grundlagen/commons-lang" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/OpenSource/spring-framework" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/portfolio-website/Version 1/portfolio_mai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/portfolio-website/Version 2 - Dez 2023" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/rezeppteApp_Dez23" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/rezeppteApp_Dez23/RezepteApp_Dez23" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/springboot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/springboot/spring-boot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Softwareentwicklung/Webentwicklung/sqlmap" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Dishlist_2_2024_clean" vcs="Git" />
   </component>
 </project>
