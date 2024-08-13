@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-registrierung',
@@ -8,11 +9,37 @@ import {Router} from "@angular/router";
 })
 export class RegistrierungComponent {
 
-  constructor(private router:Router) {
+  email:string = "";
+  username: string = '';
+  password: string = '';
+
+  constructor(private authService: AuthService, private router: Router) { }
+
+  onRegister() {
+    this.authService.register(this.username, this.password).subscribe(
+      response => {
+        console.log('Registrierung erfolgreich');
+        this.router.navigate(['/login']);  // Nach der Registrierung zum Login weiterleiten
+      },
+      error => {
+        console.error('Registrierung fehlgeschlagen', error);
+      }
+    );
+    this.navigateListe(event);
   }
 
-  navigateListe(event: MouseEvent) {
+
+  navigateAnmeldung(event: Event) {
     event.preventDefault();
+    this.router.navigate(['/anmeldung']);
+  }
+
+  navigateListe(event: Event | undefined) {
+    if(event){
+      event.preventDefault();
+    }
     this.router.navigate(['/listencontainer']);
   }
 }
+
+
