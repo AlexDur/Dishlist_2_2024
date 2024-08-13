@@ -1,28 +1,19 @@
 <div class="screen">
-
   <div class="zentriertes-formular">
-
-  <h1 (click)="navigateListe($event)">Anmeldung</h1>
-    <!--<form (ngSubmit)="signinUser">-->
-      <form>
+    <h1 (click)="navigateListe($event)">Anmeldung</h1>
+    <form (ngSubmit)="onLogin()">
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Nutzername" type="text" id="nutzername"  required name="nutzername"  pInputText><!--[(ngModel)]="user.name"-->
+          <input class="inputfeld" placeholder="Nutzername" type="text" [(ngModel)]="username" required name="username" pInputText>
         </div>
         <div class="p-field">
-          <input class="inputfeld" placeholder="Passwort" type="text" id="passwort"  required name="passwort"  pInputText><!--[(ngModel)]="user.name"-->
+          <input class="inputfeld" placeholder="Passwort" type="password" [(ngModel)]="password" required name="password" pInputText>
         </div>
-
-        <button  class="intro-button" type="submit" pButton>Anmelden</button> <!--(click)="handleClick($event)"-->
-
+        <button class="intro-button" type="submit" pButton>Anmelden</button>
         <p class="registrierung-hinweis">
-        Noch nicht registriert? <a routerLink="/registrierung">Hier registrieren</a>
-
-
+          Noch nicht registriert? <a routerLink="/registrierung">Hier registrieren</a>
         </p>
       </div>
     </form>
-
   </div>
-
 </div>

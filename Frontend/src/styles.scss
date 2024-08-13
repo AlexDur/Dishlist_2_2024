@@ -166,11 +166,22 @@ $tertiary-color: white;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-
   cursor: pointer;
 }
 
-.close-button:hover, .close-button:active {
+.zurueck-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  color: cornflowerblue;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.close-button:hover, .close-button:active, .zurueck-button:hover, .zurueck-button:active  {
   background-color: #cc2a2a;
   color: white;
   border:#cc2a2a;
