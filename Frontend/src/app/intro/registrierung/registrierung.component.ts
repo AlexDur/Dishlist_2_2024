@@ -28,7 +28,6 @@ export class RegistrierungComponent {
     this.navigateListe(event);
   }
 
-
   navigateAnmeldung(event: Event) {
     event.preventDefault();
     this.router.navigate(['/anmeldung']);
