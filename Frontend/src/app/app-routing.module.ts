@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'anmeldung', component: NutzerAnmeldungComponent },
   { path: 'registrierung', component: RegistrierungComponent },
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-  { path: '**', redirectTo: '//listencontainer' } // Fallback für alle anderen ungültigen Routen
+  { path: '**', redirectTo: 'anmeldung' } // Fallback für alle anderen ungültigen Routen
 ];
 
 
