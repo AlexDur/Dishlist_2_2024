@@ -26,10 +26,29 @@ export class RezeptService {
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
-  private getJsonHeaders() {
-    return new HttpHeaders({ 'Content-Type': 'application/json' });
-  }
   constructor(private http: HttpClient) { }
+
+  private getCsrfToken(): string | null {
+    const name = 'XSRF-TOKEN=';
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name)) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return null;
+  }
+
+  private getJsonHeaders(): HttpHeaders {
+    const csrfToken = this.getCsrfToken();
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    if (csrfToken) {
+      headers = headers.set('X-CSRF-TOKEN', csrfToken);
+    }
+    return headers;
+  }
+
 
   getAlleRezepte(): Observable<Rezept[]> {
     return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
@@ -60,10 +79,10 @@ export class RezeptService {
     const headers = this.getJsonHeaders();
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
       tap(response => {
-        console.log('Server Response:', response); // Debugging-Meldung hinzufügen
+        console.log('Server Response:', response);
         if (response.body) {
-          console.log('Response Body:', response.body); // Debugging-Meldung hinzufügen
-          const updatedRezepte = [...this.rezepteSubject.getValue(), {...rezept, id: response.body.id}];
+          console.log('Response Body:', response.body);
+          const updatedRezepte = [...this.rezepteSubject.getValue(), { ...rezept, id: response.body.id }];
           this.rezepteSubject.next(updatedRezepte);
           this.updateKategorieZaehler(rezept.tags);
           this.onRezeptUpdated.emit();
@@ -72,11 +91,12 @@ export class RezeptService {
         }
       }),
       catchError(error => {
-        console.error('Unerwartete Antwort vom Server:', error); // Ändere von Response zu error
+        console.error('Unerwartete Antwort vom Server:', error);
         return throwError(() => error);
       })
     );
   }
+
 
 
   private updateKategorieZaehler(tags: Tag[] | undefined): void {
