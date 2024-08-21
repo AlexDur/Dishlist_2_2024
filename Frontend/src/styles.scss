@@ -97,7 +97,22 @@ $tertiary-color: white;
   background-color: #f0f0f0;
 }
 
-//Anmeldung
+//Anmeldung/Registrierung
+
+.anmeldung-validierung{
+  text-align: center;
+}
+
+.success-message {
+  color: green;
+  margin-top: 3rem;
+}
+
+.error-message {
+  color: #ffffff;
+  margin-top: 3rem;
+}
+
 
 .registrierung-hinweis {
   text-align: center;
@@ -110,6 +125,8 @@ $tertiary-color: white;
   text-decoration: underline;
 
 }
+
+
 
 /*Rezepterstellung*/
 

@@ -11,6 +11,9 @@ export class NutzerAnmeldungComponent {
 
   username: string = '';
   password: string = '';
+  loginSuccess: boolean = false;
+  loginError: boolean = false;
+
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -19,9 +22,13 @@ export class NutzerAnmeldungComponent {
       response => {
         console.log('Login erfolgreich');
         this.router.navigate(['/listencontainer']);
+        this.loginSuccess = true;
+        this.loginError = false;
       },
       error => {
         console.error('Login fehlgeschlagen', error);
+        this.loginError = true;
+        this.loginSuccess = false;
       }
     );
   }
