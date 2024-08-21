@@ -14,6 +14,14 @@
           Noch nicht registriert? <a routerLink="/registrierung">Hier registrieren</a>
         </p>
       </div>
+      <div class="anmeldung-validierung">
+      <div *ngIf="loginSuccess" class="success-message">
+        Login erfolgreich!
+      </div>
+      <div *ngIf="loginError" class="error-message">
+        Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.
+      </div>
+      </div>
     </form>
   </div>
 </div>
