@@ -32,7 +32,6 @@ export class ListenContainerComponent implements OnInit{
     });
   }
 
-
   onRezepteFiltered(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
     this.gefilterteRezepte = rezepte;
