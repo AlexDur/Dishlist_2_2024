@@ -1,8 +1,14 @@
 @import '~primeng/resources/primeng.min.css';
 @import '~primeicons/primeicons.css';
 
-body{
-  background-color: cornflowerblue;
+$color-start: #0b6eaa; // Hellgrün
+$color-end: #264fa8;   // Pastellorange
+
+body {
+  background: linear-gradient(135deg, $color-start, $color-end);
+  background-attachment: fixed; // Hält den Hintergrund fest, während der Inhalt scrollt
+  background-size: cover; // Stellt sicher, dass der Hintergrund den gesamten Bildschirm abdeckt
+  background-repeat: no-repeat; // Verhindert das Wiederholen des Hintergrundbildes
 }
 h1{
   color: white;

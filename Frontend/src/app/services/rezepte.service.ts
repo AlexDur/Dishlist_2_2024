@@ -77,7 +77,7 @@ export class RezeptService {
 
     this.loadingSubject.next(true);
     const headers = this.getJsonHeaders();
-    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
+    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response', withCredentials:true }).pipe(
       tap(response => {
         console.log('Server Response:', response);
         if (response.body) {
