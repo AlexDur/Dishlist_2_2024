@@ -13,6 +13,7 @@ import { RezeptService } from "../../services/rezepte.service";
 import { Router } from "@angular/router";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { TagService} from "../../services/tags.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-rezept-erstellung',
@@ -25,12 +26,13 @@ export class RezeptErstellungComponent implements OnInit {
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
 
-  newRecipe: any;
+  newRecipe: any = {};
   tags: Tag[] = [];
   selectedTags: Tag[] = [];
 
   constructor(
     private rezepteService: RezeptService,
+    private authService: AuthService,
     private tagService: TagService,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -113,16 +115,27 @@ export class RezeptErstellungComponent implements OnInit {
 
   handleClick(event: Event) {
     event.preventDefault();
-    this.saveRecipe(this.newRecipe).subscribe({
-      next: response => {
+
+    // Authentifizierungsüberprüfung
+    if (!this.authService.isAuthenticated()) {
+      console.log("Zu Login, weil User nicht eingeloggt")
+      this.router.navigate(['/login']);  // Weiterleitung zur Login-Seite, wenn nicht eingeloggt
+      return;
+    }
+
+    // Rezept speichern
+    this.saveRecipe(this.newRecipe).subscribe(
+      response => {
         console.log('Rezept erfolgreich gespeichert:', response);
-        this.router.navigate(['/listencontainer']);
+        this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
       },
-      error: error => {
+      error => {
         console.error('Fehler beim Speichern des Rezepts:', error);
+        // Hier kann zusätzliche Fehlerbehandlung hinzugefügt werden
       }
-    });
+    );
   }
+
 
   getGerichtartenTags(): Tag[] {
     return this.tagService.getGerichtartenTags();
