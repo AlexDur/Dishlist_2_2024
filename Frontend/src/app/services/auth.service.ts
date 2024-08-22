@@ -17,26 +17,32 @@ export class AuthService {
   // Registrierung eines neuen Benutzers
   register(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.registerUrl, { username, password }, { headers });
+    return this.http.post<any>(this.registerUrl, { username, password }, { headers, withCredentials: true });
   }
 
   // Login und Speicherung des Tokens
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.loginUrl, { username, password }, { headers })
+    return this.http.post<any>(this.loginUrl, { username, password }, { headers, withCredentials: true })
       .pipe(
         tap(response => {
-          // Annahme: Das Token ist im Feld `token` der Antwort enthalten
+          console.log('Login Response:', response);
           if (response && response.token) {
+            console.log('Saving Token:', response.token);
             localStorage.setItem(this.authTokenKey, response.token);
           }
         })
       );
   }
 
+
+
   // Methode zur Überprüfung, ob der Benutzer eingeloggt ist
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(this.authTokenKey);
+    // Überprüft, ob das Token unter dem authTokenKey vorhanden ist
+    const token = localStorage.getItem(this.authTokenKey);
+    console.log("Abgerufener Token in isAuthenticated:", token);
+    return !!token;
   }
 
   // Methode zum Abrufen des Tokens
