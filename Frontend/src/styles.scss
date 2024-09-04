@@ -6,9 +6,9 @@ $color-end: #264fa8;   // Pastellorange
 
 body {
   background: linear-gradient(135deg, $color-start, $color-end);
-  background-attachment: fixed; // Hält den Hintergrund fest, während der Inhalt scrollt
-  background-size: cover; // Stellt sicher, dass der Hintergrund den gesamten Bildschirm abdeckt
-  background-repeat: no-repeat; // Verhindert das Wiederholen des Hintergrundbildes
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 h1{
   color: white;
@@ -22,6 +22,9 @@ a {
 $primary-color: #424242;
 $secondary-color: #f5f5f5;
 $tertiary-color: white;
+
+$detail-color: #0b6eaa; ;
+$detail_2-color: #d51616;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
@@ -37,7 +40,7 @@ $tertiary-color: white;
 
 .splash-titel{
   font-size:30px;
-  border-bottom:2px solid cornflowerblue;
+  border-bottom:2px solid $detail-color;
   color:white;
   cursor: pointer;
 }
@@ -49,9 +52,10 @@ $tertiary-color: white;
   justify-content: center;
   align-items: center;
   height: 100vh;
+
   padding-top: 20px;
   box-sizing: border-box;
-  background-color:cornflowerblue;
+  background-color:$detail-color;
 }
 
 .intro-slogan{
@@ -84,16 +88,17 @@ $tertiary-color: white;
   width: 200px;
   height: 50px;
   background-color: white;
-  color: cornflowerblue;
+  color: #292324;
   border: 1px transparent solid;
   font-size: 16px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px auto;
   transition: background-color 0.3s ease;
 }
+
+
 
 .intro-button:hover {
   background-color: #f0f0f0;
@@ -130,6 +135,21 @@ $tertiary-color: white;
   color: navy;
   text-decoration: underline;
 
+}
+
+.anmelde-button {
+  width: 200px;
+  height: 50px;
+  background-color: white;
+  color: #292324;
+  border: 1px transparent solid;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  transition: background-color 0.3s ease;
 }
 
 
@@ -185,7 +205,7 @@ $tertiary-color: white;
   top: 10px;
   right: 10px;
   background: white;
-  color: cornflowerblue;
+  color: $detail-color;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
@@ -197,7 +217,7 @@ $tertiary-color: white;
   top: 10px;
   left: 10px;
   background: white;
-  color: cornflowerblue;
+  color: $detail-color;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
@@ -259,8 +279,8 @@ p-dialog .p-dialog-header{
 
 .custom-right {
   background-color: white;
-  border: 2px solid cornflowerblue;
-  color: cornflowerblue;
+  border: 2px solid $detail-color;
+  color: $detail-color;
 }
 
 .footer-buttons{
@@ -274,7 +294,7 @@ p-dialog .p-dialog-header{
   margin: 0;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 750px) {
 
   .p-table .p-tablewrapper table {
     display: flex;
@@ -315,15 +335,7 @@ p-dialog .p-dialog-header{
   justify-content: flex-end;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 10px;
 
-  color:white;
-  padding: 1rem;
-
-}
 
 /*Seitenleiste*/
 
@@ -346,23 +358,7 @@ p-dialog .p-dialog-header{
   justify-content: center;
 }
 
-/*.filter-sidebar {
-  width: 250px;
-  background: #f8f9fa;
-}
 
-.filter-sidebar h3 {
-  text-align:center;
-  padding: 0.5em;
-  margin: 0;
-  background: #dee2e6;
-  color: #495057;
-
-}
-
-.filter-sidebar .p-field-checkbox {
-  margin: 0.5em;
-}*/
 
 .tag-container{
   display:flex;
@@ -424,16 +420,12 @@ p-tag + p-tag {
   flex-direction: column;
 }
 
-
-
-
 .p-card {
   display: flex;
   flex: 0 1 calc(33.333% - 20px);
   flex-direction: column;
   padding-bottom:0;
-  justify-content: space-between; /* Stellt sicher, dass der Footer am unteren Rand der Karte bleibt */
-  min-height: 100px;
+  justify-content: space-between;   min-height: 100px;
   max-height: 150px;
 }
 
@@ -513,7 +505,7 @@ p-tag + p-tag {
   width: 100%;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 750px) {
   .seitenleiste {
     display: flex;
     flex-direction: column;
@@ -522,60 +514,112 @@ p-tag + p-tag {
     justify-content: center;
     order: -1;
     width: 100%;
-
   }
-}
 
-@media screen and (max-width: 768px) {
-  .filter-anzeige{
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    justify-content:center;
-
+  .filter-anzeige {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
   }
-}
 
-@media screen and (max-width: 768px) {
   .grid-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-  }
-}
+    padding:1rem;
+    color:white;
 
-@media screen and (max-width: 768px) {
-  .container-listeninhalt{
+  }
+
+
+  .container-listeninhalt {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(0, auto);
     padding: 10px;
-    gap: 20px;
+    width: 100%;
+    gap:20px;
+    align-items: start;
+    margin-top:2rem;
   }
-}
 
-@media screen and (max-width: 768px) {
-  .container-listeninhalt{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    padding: 10px;
-    gap: 20px;
-  }
-}
-
-
-@media (max-width: 768px) {
   .p-card {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    flex: 0 1 calc(50% - 20px); /* Zwei Karten pro Zeile in kleineren Ansichten */
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex:  none;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-}
 
-@media (max-width: 480px) {
-  .p-card {
-    flex: 0 1 100%;
+  .clickable-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
-}
+
+  .p-card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .p-card-body{
+    display: flex;
+    justify-content: center;
+  }
+
+  .p-card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    max-height: 4.5em;
+    word-break: break-word;
+  }
+
+  .p-card-body{
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+/*  .scroll-indicator {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px; !* Erhöhte Höhe des Schleiers *!
+    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%); !* Weicher Verlauf *!
+
+    pointer-events: none;
+    z-index: 1000;
+  }*/
+
+
+  .router-outlet-desktop {
+      display: none;
+    }
+
+    .router-outlet-mobile {
+      display: block;
+    }
+
+
+  }
+
 
 .trennungsstrich {
   border-bottom: 1px solid #ccc;
@@ -618,14 +662,4 @@ p-tag + p-tag {
   display: none;
 }
 
-/* Media Query für Mobilgeräte */
-@media screen and (max-width: 768px) {
-  .router-outlet-desktop {
-    display: none;
-  }
-
-  .router-outlet-mobile {
-    display: block;
-  }
-}
 
