@@ -52,7 +52,7 @@ export class ListeninhaltComponent implements OnChanges{
     console.log('Listeninhalt: selectedTag', selectedTag)
   }
 
-  getSeverity(status: boolean | string): string {
+/*  getSeverity(status: boolean | string): string {
     if (typeof status === 'boolean') {
       return status ? 'info' : 'warning'; // Wenn gekocht, dann 'info', sonst keine Farbe
     } else if (typeof status === 'string') {
@@ -69,7 +69,7 @@ export class ListeninhaltComponent implements OnChanges{
     } else {
       return 'null';
     }
-  }
+  }*/
 
   getTagValue(status: boolean, isTagToggled: boolean): string {
     if (isTagToggled) {

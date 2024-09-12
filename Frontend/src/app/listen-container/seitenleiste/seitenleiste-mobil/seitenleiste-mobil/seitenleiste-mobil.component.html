@@ -1,8 +1,11 @@
 <!-- seitenleiste-mobil.component.html -->
 <div class="seitenleiste">
+<div class="seiten-ueberschrift">Dishes</div>
   <div class="mahlzeiten">
-  <h3 class="weiss">Mahlzeit</h3>
+    <hr class="linie-seite">
+  <h3 class="weiss">Gänge</h3>
   <div class="filter-anzeige">
+    <div class="filter-format">
     <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
       <p-checkbox
         [(ngModel)]="art.selected"
@@ -15,12 +18,14 @@
         <span class="count">({{ art.count }})</span>
       </label>
     </div>
+    </div>
   </div>
   </div>
 
   <!--Verwende Interpolation für Zähler zur Generation eindeutiger IDs-->
   <div class="kuechen">
-    <h3 class="weiss">Internationale Küchen</h3>
+    <hr class="linie-seite">
+    <h3 class="weiss">Küche</h3>
     <div class="filter-anzeige">
       <div class="filter-format">
         <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">

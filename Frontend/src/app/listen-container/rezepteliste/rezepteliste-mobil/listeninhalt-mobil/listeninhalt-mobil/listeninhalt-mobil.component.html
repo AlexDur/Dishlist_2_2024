@@ -4,8 +4,8 @@
       <div class="p-card-title">{{ rezept.name }}</div>
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
-        <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-text"></button>
-        <button pButton type="button" icon="pi pi-trash" (click)="showDeleteDialog(rezept.id); $event.stopPropagation()" class="p-button-danger p-button-text"></button>
+        <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-contrast p-button-text "></button>
+        <button pButton type="button" icon="pi pi-trash" (click)="showDeleteDialog(rezept.id); $event.stopPropagation()" class="p-button-warning p-button-text"></button>
       </div>
     </p-card>
   </div>
@@ -13,4 +13,4 @@
   <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
 </div>
 
-<!--<div class="scroll-indicator"></div>-->
+<div class="scroll-indicator"></div>
