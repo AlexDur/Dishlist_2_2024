@@ -52,14 +52,14 @@
         <th style="min-width:5rem">
           <div class="flex align-items-center">
             Status
-            <p-columnFilter field="status" matchMode="equals" display="menu">
+       <!--     <p-columnFilter field="status" matchMode="equals" display="menu">
               <p>Gekocht</p>
               <ng-template pTemplate="filter" let-value let-filter="filterCallback">
                   <ng-template let-option pTemplate="item">
                     <p-tag [value]="option.value" [severity]="getSeverity(option.label)"></p-tag>
                   </ng-template>
               </ng-template>
-            </p-columnFilter>
+            </p-columnFilter>-->
           </div>
         </th>
 
@@ -87,13 +87,11 @@
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
         </td>
 
-        <td>
+       <!-- <td>
           <span *ngIf="rezept.datum">{{ rezept.datum | date: 'dd.MM.yyyy' }}</span>
-        </td>
+        </td>-->
 
-        <td>
-          <p-tag [value]="getTagValue(rezept.status, tagToggleStates[rezept.id])"  [severity]="getSeverity(rezept.status)" (click)="toggleTag(rezept)"></p-tag>
-        </td>
+
 
         <td>
           <span class="p-column-title">Reviews</span>

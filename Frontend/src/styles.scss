@@ -1,11 +1,11 @@
 @import '~primeng/resources/primeng.min.css';
 @import '~primeicons/primeicons.css';
 
-$color-start: #0b6eaa; // Hellgrün
-$color-end: #264fa8;   // Pastellorange
+$color-start: #f6a257;
+$color-end: #b34f09;
 
 body {
-  background: linear-gradient(135deg, $color-start, $color-end);
+  background: linear-gradient(to bottom,$color-start, $color-end);
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
@@ -19,12 +19,12 @@ a {
   text-decoration: none;
 }
 
-$primary-color: #424242;
-$secondary-color: #f5f5f5;
-$tertiary-color: white;
+$primary-color: #b61919;
+$secondary-color: #b34f09;
+$tertiary-color: #f8f6f6;
 
-$detail-color: #0b6eaa; ;
-$detail_2-color: #d51616;
+$detail-color: #000000; ;
+$detail_2-color: #221f1f;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
@@ -32,17 +32,62 @@ $detail_2-color: #d51616;
 
 .splash-screen{
   display:flex;
+  flex-direction: column;
   justify-content:center;
   align-items: center;
   height: 100vh;
 }
 
+@keyframes fadeInAndCook {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
 .splash-titel{
   font-size:30px;
-  border-bottom:2px solid $detail-color;
+  font-family: "Cooper Black";
+  margin: 15px 0;
+/*  border-top:2px solid $tertiary-color;
+  border-bottom:2px solid $tertiary-color;*/
   color:white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInAndCook 2s ease-in-out;
+
+  text-shadow:
+    -1px -1px 0 grey,
+    1px -1px 0 grey,
+    -1px  1px 0 grey,
+    1px  1px 0 grey;
+}
+
+.splash-image {
+  max-width: 50%;
+  margin-left:10px;
+  height: auto;
+  animation: fadeInAndCook 2s ease-in-out;
+}
+
+.splash-image-turnedaround{
+  max-width: 50%;
+  left: 10px;
+  height: auto;
+  animation: fadeInAndCook 2s ease-in-out;
+
+
 }
 
 
@@ -85,10 +130,12 @@ $detail_2-color: #d51616;
 
 
 .intro-button {
+  margin-top:50px;
   width: 200px;
+  font-weight: bold;
   height: 50px;
-  background-color: white;
-  color: #292324;
+  background-color: $detail_2-color;
+  color: $tertiary-color;
   border: 1px transparent solid;
   font-size: 16px;
   cursor: pointer;
@@ -96,7 +143,13 @@ $detail_2-color: #d51616;
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
 }
+
+/*.intro-button:focus{
+  background-color: ;
+}*/
 
 
 
@@ -178,18 +231,47 @@ $detail_2-color: #d51616;
   margin: 100px auto; /* Zentriert das Formular auf der Seite */
 }
 
+.inputfeld {
+  width: 100%;
+  max-width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px auto;
+  font-weight: bold;
+  color:$detail_2-color
+}
 
-.inputfeld, .toggle-buttons-container {
+.inputfeld:focus{
+  outline: 2px solid black;
+
+}
+
+.neues-rezept{
+  margin-bottom:2rem;
+  color: $tertiary-color;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+
+/*.inputfeld, .toggle-buttons-container {
   width: 100%;
   max-width: 250px;
   padding: 10px;
   margin: 10px auto;
-}
+}*/
 
 .p-field {
   width: 100%;
   display: flex;
   justify-content: center;
+
+}
+
+.p-field:focus{
+  outline: 2px solid black;
+  outline-offset: 2px;
 }
 
 .p-button {
@@ -206,10 +288,12 @@ $detail_2-color: #d51616;
   right: 10px;
   background: white;
   color: $detail-color;
-  border: none;
-  border-radius: 5px;
+  border-radius: 50px;
+  border:1px solid $color-start;
   padding: 5px 10px;
   cursor: pointer;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: none;
 }
 
 .zurueck-button {
@@ -225,9 +309,9 @@ $detail_2-color: #d51616;
 }
 
 .close-button:hover, .close-button:active, .zurueck-button:hover, .zurueck-button:active  {
-  background-color: #cc2a2a;
+  background-color: $detail_2-color;
   color: white;
-  border:#cc2a2a;
+  border:$detail_2-color;
 }
 
 
@@ -246,6 +330,24 @@ $detail_2-color: #d51616;
   flex-grow: 1;
   padding: 5px;
   box-sizing: border-box;
+}
+
+.p-togglebutton.p-highlight {
+  background-color: black !important;
+  color: white !important; /* Falls du auch die Textfarbe ändern möchtest */
+  border-color: black
+}
+
+.p-togglebutton.p-button-active {
+  background-color: black !important;
+  color: white !important;
+  border-color: black !important; /* Ändert die Rahmenfarbe */
+}
+
+.p-togglebutton:focus {
+  outline: 2px solid black;
+  outline-offset: 2px;
+  border-color: black !important; /* Ändert die Rahmenfarbe im Fokuszustand */
 }
 
 // Dialog
@@ -273,8 +375,8 @@ p-dialog .p-dialog-header{
 
 .custom-left {
   background-color: white;
-  border: 2px solid red;
-  color: red;
+  border: 2px solid $detail_2-color;
+  color: $detail_2-color;
 }
 
 .custom-right {
@@ -322,7 +424,7 @@ p-dialog .p-dialog-header{
 }
 
 .markiertes-rezept {
-  background-color: red;
+  background-color: $detail_2-color;
 }
 
 .p-datatable .p-datatable-tbody > tr > td:hover {
@@ -348,7 +450,7 @@ p-dialog .p-dialog-header{
 }
 
 .rot {
-  color: #FF0000; /* Rot */
+  color: $detail_2-color; /* Rot */
 }
 
 .weiss{
@@ -358,6 +460,15 @@ p-dialog .p-dialog-header{
   justify-content: center;
 }
 
+
+.erstellung-kategorie{
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top:1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
 
 
 .tag-container{
@@ -465,6 +576,12 @@ p-tag + p-tag {
   justify-content:center;
 }
 
+h3.weiss {
+
+ margin-right: 20px;
+ text-align: left;
+}
+
 .p-field-checkbox {
   display:flex;
   align-items:center;
@@ -477,6 +594,7 @@ p-tag + p-tag {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+
 }
 
 .label-abstand {
@@ -490,19 +608,18 @@ p-tag + p-tag {
 }
 
 .mahlzeiten{
-  display:flex;
   width: 100%;
-  flex-direction: column;
-  outline: 3px solid red;
+  /*outline: 3px solid $detail_2-color;*/
   border-radius:5px;
   margin-bottom: 20px;
   padding:10px;
 }
 
 .kuechen{
-  outline: 3px solid white;
+ /* outline: 3px solid white;*/
   border-radius:5px;
   width: 100%;
+  text-align: left;
 }
 
 @media screen and (max-width: 750px) {
@@ -510,19 +627,56 @@ p-tag + p-tag {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     order: -1;
     width: 100%;
   }
 
+
+  .seiten-ueberschrift{
+    margin-left:1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: $tertiary-color;
+    font-family: "Cooper Black";
+/*    text-shadow:
+      -1px -1px 0 grey,
+      1px -1px 0 grey,
+      -1px  1px 0 grey,
+      1px  1px 0 grey;*/
+  }
+
+  .mahlzeiten,
+  .kuechen {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+
+  }
+
+  .linie-seite {
+    width: 5px;
+    height: 50px;
+    background: $tertiary-color;
+    border: none;
+    margin: 0 10px;
+  }
+
+  .weiss {
+    margin: 0;
+    text-align: left;
+  }
+
   .filter-anzeige {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     width: 100%;
-    margin-bottom: 20px;
   }
 
   .grid-container {
@@ -536,6 +690,12 @@ p-tag + p-tag {
   }
 
 
+  .p-checkbox-box.p-highlight .p-checkbox-icon {
+    color: white !important; /* Häkchen wird weiß für besseren Kontrast */
+    background-color: $detail_2-color !important;
+    border-color: $detail_2-color !important;
+  }
+
   .container-listeninhalt {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -544,11 +704,11 @@ p-tag + p-tag {
     width: 100%;
     gap:20px;
     align-items: start;
-    margin-top:2rem;
+    margin-top:1rem;
   }
 
   .p-card {
-    width: 150px;
+    width: 180px;
     height: 150px;
     display: flex;
     flex:  none;
@@ -596,17 +756,26 @@ p-tag + p-tag {
     flex-direction: column;
   }
 
-/*  .scroll-indicator {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px; !* Erhöhte Höhe des Schleiers *!
-    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%); !* Weicher Verlauf *!
+  .linie-unten {
+    border: 0;
+    height: 1px;
+    background: #ccc; /* Farbe der Linie */
+    margin-top: 20px; /* Abstand nach oben */
+    width: 100%; /* Volle Breite */
+  }
 
-    pointer-events: none;
-    z-index: 1000;
-  }*/
+
+    .scroll-indicator {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px; /* Erhöhte Höhe des Schleiers */
+      background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%); /* Weicher Verlauf */
+
+      pointer-events: none;
+      z-index: 1000;
+    }
 
 
   .router-outlet-desktop {
@@ -630,11 +799,11 @@ p-tag + p-tag {
 
 .floating-button {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 25px;
+  right: 25px;
   padding: 10px 20px;
   border-radius: 50px;
-  background-color: red;
+  background-color: $detail_2-color;
   color: white;
   border: none;
   cursor: pointer;
@@ -647,7 +816,7 @@ p-tag + p-tag {
 }
 
 .floating-button:hover {
-  background-color: darkred;
+  background-color: dark$detail_2-color;
 }
 
 /*Router-Outlet*/

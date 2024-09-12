@@ -1,7 +1,7 @@
 <div class="screen">
   <div class="zentriertes-formular">
     <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
-    <h1>Rezepterstellung</h1>
+    <div class="neues-rezept">Neues Rezept</div>
     <form (ngSubmit)="handleClick($event)">
       <div class="p-fluid">
         <div class="p-field">
@@ -11,7 +11,7 @@
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" pInputText>
         </div>
         <div>
-          <h3 class="weiss">Mahlzeit</h3>
+          <h3 class="erstellung-kategorie">Gang</h3>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
                             [(ngModel)]="tag.selected"
@@ -19,10 +19,11 @@
                             name="{{tag.label}}"
                             onLabel="{{tag.label}}"
                             offLabel="{{tag.label}}"
-                            [ngModelOptions]="{standalone: true}">
+                            [ngModelOptions]="{standalone: true}"
+                            label="Contrast" severity="contrast" >
             </p-toggleButton>
           </div>
-          <h3 class="weiss">Küche</h3>
+          <h3 class="erstellung-kategorie">Küche</h3>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getKuechenTags()"
                             [(ngModel)]="tag.selected"
@@ -34,7 +35,7 @@
             </p-toggleButton>
           </div>
         </div>
-        <button class="intro-button" type="submit" pButton>Neues Rezept hinzufügen</button>
+        <button class="intro-button" type="submit" pButton>Hinzufügen</button>
       </div>
     </form>
   </div>
