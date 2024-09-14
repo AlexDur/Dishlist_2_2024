@@ -15,7 +15,7 @@ h1{
 }
 
 a {
-  color: navy;
+  color: black;
   text-decoration: none;
 }
 
@@ -129,7 +129,7 @@ $detail_2-color: #221f1f;
 }
 
 
-.intro-button {
+.general-button {
   margin-top:50px;
   width: 200px;
   font-weight: bold;
@@ -147,17 +147,17 @@ $detail_2-color: #221f1f;
   outline-offset: 2px;
 }
 
-/*.intro-button:focus{
+/*.general-button:focus{
   background-color: ;
 }*/
 
 
 
-.intro-button:hover {
+.general-button:hover {
   background-color: #f0f0f0;
 }
 
-.intro-button:active {
+.general-button:active {
   background-color: #f0f0f0;
 }
 
@@ -177,24 +177,22 @@ $detail_2-color: #221f1f;
   margin-top: 3rem;
 }
 
-
-.registrierung-hinweis {
-  text-align: center;
-  margin-top: 20px;
-  color:white;
+.registrierung-hinweis{
+  color: $detail_2-color;
 }
 
-.registrierung-hinweis a:hover, .registrierung-hinweis a:focus {
-  color: navy;
-  text-decoration: underline;
-
+.registrierung-hinweis a {
+  color: $detail_2-color;
+  font-weight: bold;
 }
 
-.anmelde-button {
+
+/*.anmelde-button {
   width: 200px;
   height: 50px;
-  background-color: white;
-  color: #292324;
+  font-weight: bold;
+  background-color: $detail_2-color;
+  color: $tertiary-color;
   border: 1px transparent solid;
   font-size: 16px;
   cursor: pointer;
@@ -203,7 +201,9 @@ $detail_2-color: #221f1f;
   align-items: center;
   margin-top: 25px;
   transition: background-color 0.3s ease;
-}
+  outline: 2px solid $detail_2-color;
+}*/
+
 
 
 
@@ -230,6 +230,8 @@ $detail_2-color: #221f1f;
   max-width: 500px;
   margin: 100px auto; /* Zentriert das Formular auf der Seite */
 }
+
+
 
 .inputfeld {
   width: 100%;
@@ -298,14 +300,17 @@ $detail_2-color: #221f1f;
 
 .zurueck-button {
   position: absolute;
+  font-weight: bold;
   top: 10px;
   left: 10px;
   background: white;
   color: $detail-color;
-  border: none;
-  border-radius: 5px;
+  border-radius: 50px;
+  border:1px solid $color-start;
   padding: 5px 10px;
   cursor: pointer;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: none;
 }
 
 .close-button:hover, .close-button:active, .zurueck-button:hover, .zurueck-button:active  {
