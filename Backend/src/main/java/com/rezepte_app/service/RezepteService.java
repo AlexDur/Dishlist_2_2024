@@ -1,6 +1,9 @@
-package com.rezepte_app;
+package com.rezepte_app.service;
 
+import com.rezepte_app.repository.RezepteRepository;
+import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.model.Rezept;
+import com.rezepte_app.model.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
@@ -64,51 +67,52 @@ public class RezepteService {
 
     @Transactional
     public Rezept createRezept(@Valid Rezept rezept) {
-        Set<Tag> savedTags = new HashSet<>();
         if (rezept.getTags() != null) {
+            Set<Tag> savedTags = new HashSet<>();
             for (Tag tag : rezept.getTags()) {
-                // Findet das Tag, falls es bereits existiert, oder speichert es neu
-                Tag savedTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity())
+                Tag savedTag = tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
                         .orElseGet(() -> tagRepository.save(tag));
                 savedTags.add(savedTag);
             }
+            rezept.setTags(savedTags);
         }
-        rezept.setTags(savedTags);
         return rezepteRepository.save(rezept);
     }
 
-    private Set<Tag> verarbeiteUndSpeichereTags(Set<Tag> tags) {
-        Set<Tag> verarbeiteteTags = new HashSet<>();
-        for (Tag tag : tags) {
-            // Prüft, ob der Tag bereits existiert und verwende diesen, ansonsten wird ein neuer gespeichert.
-            Tag verarbeiteterTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity())
-                    .orElseGet(() -> tagRepository.save(tag));
-            verarbeiteteTags.add(verarbeiteterTag);
-        }
-        return verarbeiteteTags;
-    }
 
-
-    public Optional<Rezept> updateRezept(Rezept rezept) {
+    @Transactional
+    public Optional<Rezept> updateRezept(@Valid Rezept rezept) {
         Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(rezept.getId());
 
         if (existingRezeptOptional.isPresent()) {
             Rezept existingRezept = existingRezeptOptional.get();
 
-            // Setze die Felder von existingRezept basierend auf den Werten von rezept
+            // Setzen der Felder von existingRezept basierend auf den Werten von rezept
             existingRezept.setName(rezept.getName());
             existingRezept.setOnlineAdresse(rezept.getOnlineAdresse());
             existingRezept.setDatum(rezept.getDatum());
             existingRezept.setStatus(rezept.getStatus());
             existingRezept.setBewertung(rezept.getBewertung());
-            existingRezept.setIstGeaendert(rezept.isIstGeaendert());
 
-            Set<Tag> verarbeiteteTags = verarbeiteUndSpeichereTags(rezept.getTags());
-            existingRezept.setTags(verarbeiteteTags);
 
-            // Überprüfe, ob die Tags gültig sind
-            if (!verarbeiteteTags.isEmpty()) {
-                // Speichere das aktualisierte Rezept
+            // Verarbeiten und Speichern der Tags direkt hier
+            Set<Tag> savedTags = new HashSet<>();
+            if (rezept.getTags() != null) {
+                for (Tag tag : rezept.getTags()) {
+                    Tag savedTag = tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
+                            .orElseGet(() -> {
+                                logger.info("Tag nicht gefunden, neues Tag wird erstellt: {}", tag);
+                                return tagRepository.save(tag);
+                            });
+                    savedTags.add(savedTag);
+                }
+            }
+            existingRezept.setTags(savedTags);
+
+            // Speichere das aktualisierte Rezept, wenn Tags vorhanden sind
+            if (!savedTags.isEmpty()) {
+                Rezept updatedRezept = rezepteRepository.save(existingRezept);
+                logger.info("Rezept nach dem Update: {}", updatedRezept);
                 return Optional.of(rezepteRepository.save(existingRezept));
             } else {
                 logger.error("Ungültige Tags für das Rezept mit ID {}.", rezept.getId());
@@ -121,11 +125,11 @@ public class RezepteService {
         }
     }
 
-    public Tag updateTag(int tagId, String label, String severity) {
+
+    public Tag updateTag(int tagId, String label) {
         // Suchen des Tags, Update durchführen und zurückgeben des aktualisierten Tags
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Tag nicht gefunden"));
         tag.setLabel(label);
-        tag.setSeverity(severity);
         return tagRepository.save(tag);  // Speichert das aktualisierte Tag und gibt es zurück
     }
 
@@ -135,7 +139,6 @@ public class RezepteService {
             rezepteRepository.deleteById(id);
             return true;
         } catch (Exception e) {
-
             logger.error("Fehler beim Löschen des Rezepts mit ID {}: {}", id, e.getMessage());
             return false;
         }

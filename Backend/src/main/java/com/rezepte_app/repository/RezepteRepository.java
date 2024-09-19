@@ -3,7 +3,7 @@
 
 /*Zur Nutzung des Repositorys kann in Service-Klasse mittels DI eingebunden wurden*/
 
-package com.rezepte_app;
+package com.rezepte_app.repository;
 import com.rezepte_app.model.Rezept;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

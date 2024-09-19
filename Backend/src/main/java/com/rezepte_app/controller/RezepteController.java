@@ -3,6 +3,9 @@ package com.rezepte_app.controller;
 
 import com.rezepte_app.*;
 import com.rezepte_app.model.Rezept;
+import com.rezepte_app.model.Tag;
+import com.rezepte_app.service.TagService;
+import com.rezepte_app.service.RezepteService;
 import jakarta.validation.Valid;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +100,7 @@ public class RezepteController {
         }
     }
 
+
     /*Methode verarbeitet GET-Anfragen auf /api/rezepte/alleRezepte und holt über rezepteService alle Rezepte aus der Datenbank.*/
     @GetMapping("/alleRezepte")
     public List<Rezept> getAlleRezepte() {
@@ -108,7 +112,7 @@ public class RezepteController {
         try {
             logger.info("Empfangene Tags: {}", updatedTag);
 
-            Tag updated = rezepteService.updateTag(tagId, updatedTag.getLabel(), updatedTag.getSeverity());
+            Tag updated = rezepteService.updateTag(tagId, updatedTag.getLabel());
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

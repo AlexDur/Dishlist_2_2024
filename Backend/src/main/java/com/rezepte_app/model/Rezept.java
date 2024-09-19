@@ -1,17 +1,22 @@
 package com.rezepte_app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rezepte_app.Tag;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-/*Entität ist eine Klasse, die die Attribute und das Verhalten eines Objekts definiert.*/
-
 @Table(name = "rezepte")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Rezept {
 
     @Id
@@ -24,6 +29,7 @@ public class Rezept {
 
     @Column(name = "onlineAdresse")
     private String onlineAdresse;
+
     private java.sql.Date datum;
 
     @NotNull
@@ -36,81 +42,12 @@ public class Rezept {
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
-            name = "rezept_tags", // Name der Verknüpfungstabelle
-            joinColumns = @JoinColumn(name = "rezept_id"), // Spalte, die auf die Rezept-ID verweist
-            inverseJoinColumns = @JoinColumn(name = "tag_id") // Spalte, die auf die Tag-ID verweist
+            name = "rezept_tags",
+            joinColumns = @JoinColumn(name = "rezept_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
 
-    @Column(name = "istGeaendert")
-    private boolean istGeaendert;
-
-    public Rezept() {
-        // Standardkonstruktor
-    }
-
-    // Getter und Setter für id
-    public int getId() {
-        return id;
-    }
-
-    // Getter und Setter
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOnlineAdresse() {
-        return onlineAdresse;
-    }
-
-    public void setOnlineAdresse(String onlineAdresse) {
-        this.onlineAdresse = onlineAdresse;
-    }
-
-    public java.sql.Date getDatum() {
-        return datum;
-    }
-
-    public void setDatum(java.sql.Date datum) {
-        this.datum = datum;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    // Getter und Setter für bewertung
-    public int getBewertung() {
-        return bewertung;
-    }
-
-    public void setBewertung(int bewertung) {
-        this.bewertung = bewertung;
-    }
-
-    public boolean isIstGeaendert() {
-        return istGeaendert;
-    }
-
-    public void setIstGeaendert(boolean istGeaendert) {
-        this.istGeaendert = istGeaendert;
-    }
 
     @PrePersist
     @PreUpdate
@@ -119,9 +56,10 @@ public class Rezept {
             if (tag.getLabel() == null || tag.getLabel().isEmpty()) {
                 throw new IllegalArgumentException("AUS REZEPT.java: Ungültiges Tag-Label: " + tag.getLabel());
             }
-            if (tag.getSeverity() == null || tag.getSeverity().isEmpty()) {
-                throw new IllegalArgumentException("AUS REZEPT.java: Ungültiger Tag-Schweregrad: " + tag.getSeverity());
-            }
         }
+    }
+
+    public boolean getStatus() {
+        return false;
     }
 }
