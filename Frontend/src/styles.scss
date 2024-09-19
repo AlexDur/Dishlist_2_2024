@@ -28,6 +28,25 @@ $detail_2-color: #221f1f;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
+
+.general-button {
+  margin-top:50px;
+  width: 200px;
+  font-weight: bold;
+  height: 50px;
+  background-color: $detail_2-color;
+  color: $tertiary-color;
+  border: 1px transparent solid;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+}
+
 /*Intro*/
 
 .splash-screen{
@@ -129,23 +148,7 @@ $detail_2-color: #221f1f;
 }
 
 
-.general-button {
-  margin-top:50px;
-  width: 200px;
-  font-weight: bold;
-  height: 50px;
-  background-color: $detail_2-color;
-  color: $tertiary-color;
-  border: 1px transparent solid;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
-  outline-offset: 2px;
-}
+
 
 /*.general-button:focus{
   background-color: ;
@@ -689,7 +692,7 @@ h3.weiss {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding:1rem;
+    padding:.7rem;
     color:white;
 
   }
@@ -705,16 +708,15 @@ h3.weiss {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: minmax(0, auto);
-    padding: 10px;
     width: 100%;
-    gap:20px;
+    grid-gap: 10px;
     align-items: start;
-    margin-top:1rem;
+    margin-top:.5rem;
   }
 
   .p-card {
-    width: 180px;
-    height: 150px;
+    width: 100%;
+    height: 125px;
     display: flex;
     flex:  none;
     flex-direction: column;
