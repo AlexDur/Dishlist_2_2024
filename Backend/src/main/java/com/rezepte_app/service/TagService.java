@@ -1,11 +1,12 @@
-package com.rezepte_app;
+package com.rezepte_app.service;
+import com.rezepte_app.model.Tag;
+import com.rezepte_app.repository.TagRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class TagService {
     public Tag addTag(Tag tag) {
         try {
             // Überprüfe, ob ein Tag mit dem gleichen Namen bereits existiert
-            Optional<Tag> existingTag = tagRepository.findByLabelAndSeverity(tag.getLabel(), tag.getSeverity());
+            Optional<Tag> existingTag = tagRepository.findByLabelAndId(tag.getLabel(), tag.getId());
 
             if (existingTag.isPresent()) {
                 // Ein Tag mit dem gleichen Namen existiert bereits, gib es zurück
@@ -68,9 +69,9 @@ public class TagService {
 
 
     // Methode zum Suchen eines Tags nach Namen
-    public Optional<Tag> findTagByLabelAndSeverity(String label, String severity) {
+    public Optional<Tag> findTagByLabelAndSeverity(String label, int id) {
         try {
-            return tagRepository.findByLabelAndSeverity(label, severity);
+            return tagRepository.findByLabelAndId(label, id);
         } catch (RuntimeException e) {
             // Log the exception, handle it, or rethrow it
             throw new ServiceException("Error finding tag by label and severity", e);

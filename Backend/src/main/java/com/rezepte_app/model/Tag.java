@@ -1,8 +1,10 @@
-package com.rezepte_app;
+package com.rezepte_app.model;
 
-import com.rezepte_app.model.Rezept;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,7 +12,9 @@ import java.util.Set;
 
 @Entity
 @Table(name ="tags")
-public class Tag {
+@Data // Generiert Getter, Setter, toString, equals, hashCode
+@NoArgsConstructor //Generiert einen Standardkonstruktor
+public class Tag{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,32 +23,27 @@ public class Tag {
     @NotBlank(message="Label muss vorhanden sein")
     private String label;
 
-    @NotBlank(message = "Severity muss vorhanden sein")
-    private String severity;
+    @NotBlank(message="Typ muss vorhanden sein")
+    private String type;
 
-    @ManyToMany(mappedBy = "tags") // Referenziert die 'tags' Sammlung in der Rezept-Entität
+    @ManyToMany(mappedBy = "tags")
+      // Verhindert die Serialisierung dieser Seite der Beziehung
+    @JsonIgnore
     private Set<Rezept> rezepte = new HashSet<>();
 
-    public Tag() {
-        // Standardkonstruktor ohne Parameter ist für JPA erforderlich
+    @Transient // Markiert das Feld als nicht dauerhaft
+    private int count;
+
+    // Methode zum Setzen des count-Wertes
+    public void updateCount() {
+        this.count = rezepte != null ? rezepte.size() : 0;
     }
 
-    public String getLabel() {
-        return label;
+    // Optional: Getter für count, der den count-Wert immer aktualisiert
+    public int getCount() {
+        updateCount();
+        return count;
     }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
 
     /*Zur Vermeidung von doppelten Objekten*/
     @Override
@@ -60,4 +59,7 @@ public class Tag {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
+
 }
