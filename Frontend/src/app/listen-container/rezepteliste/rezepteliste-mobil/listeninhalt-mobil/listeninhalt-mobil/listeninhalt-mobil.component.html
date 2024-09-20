@@ -1,5 +1,5 @@
 <div class="container-listeninhalt">
-  <div *ngFor="let rezept of gefilterteRezepte" class="p-col-12 p-md-6 p-lg-4">
+  <div *ngFor="let rezept of gefilterteRezepte" >
     <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
       <div class="p-card-title">{{ rezept.name }}</div>
       <div class="trennungsstrich"></div>
