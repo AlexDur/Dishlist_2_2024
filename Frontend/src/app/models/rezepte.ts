@@ -10,7 +10,6 @@ export interface Rezept {
   status?: boolean;
   bewertung?: number;
   tags?: Tag[];
-  istGeaendert?: boolean;
   showDeleteButton?: boolean;
 }
 

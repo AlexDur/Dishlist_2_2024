@@ -26,7 +26,6 @@ export class ListeninhaltComponent implements OnChanges{
 
   newRecipe: any = {}
   selectedRow: any;
-  istGeaendert: boolean = false;
   istGespeichert: boolean = false;
   showSaveButton: boolean = false;
   showDeleteButton: boolean = false;
@@ -47,49 +46,6 @@ export class ListeninhaltComponent implements OnChanges{
     }
   }
 
-  onselectedTagChanged(selectedTag: Tag[]): void {
-    this.selectedTag = new Set(selectedTag);
-    console.log('Listeninhalt: selectedTag', selectedTag)
-  }
-
-/*  getSeverity(status: boolean | string): string {
-    if (typeof status === 'boolean') {
-      return status ? 'info' : 'warning'; // Wenn gekocht, dann 'info', sonst keine Farbe
-    } else if (typeof status === 'string') {
-      switch (status.toLowerCase()) {
-        case 'noch nicht gekocht':
-          return 'danger';
-
-        case 'schon gekocht':
-          return 'success';
-
-        default:
-          return 'null';
-      }
-    } else {
-      return 'null';
-    }
-  }*/
-
-  getTagValue(status: boolean, isTagToggled: boolean): string {
-    if (isTagToggled) {
-      return 'schon gekocht'; // Wenn das Tag getoggled ist
-    } else {
-      return status ? 'schon gekocht' : 'noch geplant';
-    }
-  }
-
-  toggleTag(rezept: any) {
-    this.tagToggleStates[rezept.id!] = !this.tagToggleStates[rezept.id!];
-
-    // Zusätzlich den `status` im `rezept`-Objekt aktualisieren
-    rezept.status = !rezept.status;
-    rezept.istGeaendert = true;
-  }
-
-  setGeaendert(rezept: Rezept) {
-    rezept.istGeaendert = true;
-  }
 
   /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
   addRow() {
@@ -167,7 +123,6 @@ export class ListeninhaltComponent implements OnChanges{
   }
 
   updateUIAfterSave() {
-    this.istGeaendert = false;
     this.showSaveButton = false;
     this.showDeleteButton = true;
     this.editMode = false;
@@ -181,7 +136,6 @@ export class ListeninhaltComponent implements OnChanges{
 
   onRatingChanged(newRating: number, rezept: any) {
     rezept.bewertung = newRating;
-    rezept.istGeaendert = true;
   }
 
   selectRow(rezept: any) {
