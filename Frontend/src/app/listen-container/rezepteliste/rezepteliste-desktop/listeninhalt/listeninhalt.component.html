@@ -78,12 +78,11 @@
     <ng-template pTemplate="body" let-rezept  >
       <tr [ngClass]="{'markiertes-rezept': selectedRow === rezept}" (click)="selectRow(rezept)">
         <td>
-          <input [(ngModel)]="rezept.name"  (ngModelChange)="setGeaendert(rezept)"  *ngIf="editMode && selectedRow === rezept"/>
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)">{{ rezept.name }}</span>
         </td>
 
         <td>
-          <input *ngIf="editMode && selectedRow === rezept" [(ngModel)]="rezept.onlineAdresse"  (ngModelChange)="setGeaendert(rezept)" />
+
           <span *ngIf="!editMode || (editMode && selectedRow !== rezept)" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.onlineAdresse }}</span>
         </td>
 
