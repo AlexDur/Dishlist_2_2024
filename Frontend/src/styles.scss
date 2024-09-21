@@ -198,7 +198,10 @@ $detail_2-color: #221f1f;
 
 .screen{
   height: 100vh;
-  width: 100vw;
+  width: 100%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
 }
 
 .zentriertes-formular {
@@ -207,8 +210,6 @@ $detail_2-color: #221f1f;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 500px;
-  margin: 100px auto;
 }
 
 
@@ -375,6 +376,16 @@ p-dialog .p-dialog-header{
 }
 
 @media screen and (max-width: 750px) {
+
+  .zentriertes-formular {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 100px auto;
+  }
 
   .p-table .p-tablewrapper table {
     display: flex;
