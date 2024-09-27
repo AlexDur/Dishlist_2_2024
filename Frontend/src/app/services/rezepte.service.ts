@@ -4,7 +4,6 @@ import { BehaviorSubject, catchError, tap, throwError, Observable, finalize } fr
 import { Rezept } from '../models/rezepte';
 import { environment } from '../../environments/environment';
 import { Tag } from '../models/tag';
-import { AuthService } from './auth.service';
 
 interface RezeptAntwort {
   id: number;
@@ -23,22 +22,24 @@ export class RezeptService {
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   private getJsonHeaders(): HttpHeaders {
-    const authToken = this.authService.getToken();
+    /*const authToken = this.authService.getToken();*/
 
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    if (authToken) {
+  /*  if (authToken) {
       headers = headers.set('Authorization', `Bearer ${authToken}`);
-    }
+    }*/
 
     return headers;
   }
 
   getAlleRezepte(): Observable<Rezept[]> {
-    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`).pipe(
+    const headers = this.getJsonHeaders().set('Accept', 'application/json');
+
+    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, { headers }).pipe(
       tap(rezepte => {
         const processedRezepte = rezepte.map(rezept => ({
           ...rezept,

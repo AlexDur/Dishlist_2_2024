@@ -1,8 +1,7 @@
-import {config} from "./config.prod";
 
 export const environment = {
   production: true,
-  apiUrl: config.apiUrl,
+  apiUrl: '',
   enableDebug: false,
   featureToggle: {
     enableNewFeature: true,
