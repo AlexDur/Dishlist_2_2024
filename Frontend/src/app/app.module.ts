@@ -16,8 +16,8 @@ import {RouterModule} from "@angular/router";
 import {SharedModule} from "./shared/shared.module";
 import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
-import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
-import { RegistrierungComponent } from './intro/registrierung/registrierung.component';
+/*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
+import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
 
 
@@ -27,8 +27,7 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     ListenContainerComponent,
     SplashScreenComponent,
     InfoScreenComponent,
-    NutzerAnmeldungComponent,
-    RegistrierungComponent,
+
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des

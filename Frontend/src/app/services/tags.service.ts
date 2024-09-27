@@ -34,7 +34,7 @@ export class TagService {
       console.error('Versuch, ein Tag ohne ID zu aktualisieren:', tag);
       return throwError(() => new Error('Tag hat keine ID'));
     }
-    return this.http.put<Tag>(`${this.backendUrl}/${tag.id}`, tag);
+    return this.http.put<Tag>(`/${tag.id}`, tag);
   }
 
   updateSelectedTags(selectedTags: Tag[]): void {
