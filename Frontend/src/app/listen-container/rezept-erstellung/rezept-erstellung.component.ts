@@ -39,7 +39,18 @@ export class RezeptErstellungComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initNewRecipe();
+    // Abonnieren des Observable für das aktuelle Rezept
+    this.rezepteService.currentRezept$.subscribe(rezept => {
+      if (rezept) {
+        // Wenn ein Rezept vorhanden ist, diesen Zustand wiederherstellen
+        this.newRecipe = { ...rezept }; // Zustand wiederherstellen
+        this.selectedTags= rezept.tags || []; // Tags wiederherstellen und sicherstellen, dass nicht undefined
+        console.log('Aktuelles Rezept:', this.newRecipe);
+      } else {
+        // Wenn kein Rezept vorhanden ist, eine neue Instanz initialisieren
+        this.initNewRecipe();
+      }
+    });
   }
 
   initNewRecipe() {
