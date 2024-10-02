@@ -10,6 +10,7 @@ export class DialogComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() message: string = '';
   @Input() visible: boolean = false;
+  isYesActive: boolean = false;
 
   showDialog() {
     this.visible = true;
@@ -25,11 +26,13 @@ export class DialogComponent {
   onConfirm() {
     this.confirm.emit(true);
     this.hideDialog();
+    this.isYesActive = false;
   }
 
   onDecline() {
     this.confirm.emit(false);
     this.hideDialog();
+    this.isYesActive = false;
   }
 
 }
