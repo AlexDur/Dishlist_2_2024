@@ -50,6 +50,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
+    this.rezepteService.setCurrentRezept(rezept);
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
   }
 
