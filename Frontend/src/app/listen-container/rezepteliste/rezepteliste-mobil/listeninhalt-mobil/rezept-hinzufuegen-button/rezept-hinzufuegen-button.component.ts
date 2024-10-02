@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {RezeptService} from "../../../../../services/rezepte.service";
 
 @Component({
   selector: 'app-rezept-hinzufuegen-button',
@@ -8,10 +9,12 @@ import {Router} from "@angular/router";
 })
 export class RezeptHinzufuegenButtonComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private rezepteService: RezeptService) {}
 
   navigateForm(event: MouseEvent) {
     event.preventDefault();
+
+    this.rezepteService.clearCurrentRezept();
     this.router.navigate(['/rezepterstellung']);
   }
 }
