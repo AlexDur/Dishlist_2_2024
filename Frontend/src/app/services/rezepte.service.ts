@@ -78,6 +78,11 @@ export class RezeptService {
     this.currentRezeptSubject.next(rezept);
   }
 
+  clearCurrentRezept() {
+    // Setzt das aktuelle Rezept auf `null` zurück
+    this.currentRezeptSubject.next(null);
+  }
+
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     console.log("Rezept vor dem Senden:", rezept);
     this.currentRezeptSubject.next(rezept);

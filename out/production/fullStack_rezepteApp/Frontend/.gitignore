@@ -1,5 +1,3 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
 # Compiled output
 /dist
 /tmp
@@ -40,3 +38,58 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# SonarLint specific files
+sonarlint/
+.sonarlint/
+sonar-report.json
+sonarlint/issuestore
+sonarlint/securityhotspotstore
+
+# Ignore all XML files
+*.xml
+
+# Ignore specific XML files
+path/to/your/file.xml
+
+# Ignore build outputs for Java projects
+/target/
+/build/
+
+# Eclipse specific files
+.csettings/
+
+# NetBeans specific files
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# IntelliJ IDEA specific files
+*.iml
+
+# Temporary files
+*.tmp
+*.temp
+
+# Log files
+*.log
+
+# Maven specific files
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle specific files
+.gradle/
+
+# Spring Boot specific files
+/logs/
+*.log
+application.yml
+application.properties

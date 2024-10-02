@@ -15,11 +15,11 @@ import {RegistrierungComponent} from "./intro/registrierung/registrierung.compon
 const routes: Routes = [
   { path: 'splash', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },
-  { path: 'listencontainer', component: ListenContainerComponent},
+  { path: '', component: ListenContainerComponent},
 /*  { path: 'anmeldung', component: NutzerAnmeldungComponent },
   { path: 'registrierung', component: RegistrierungComponent },*/
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-  { path: '**', redirectTo: 'listencontainer' } // Fallback für alle anderen ungültigen Routen
+  { path: '**', redirectTo: '' } // Fallback für alle anderen ungültigen Routen
 ];
 
 

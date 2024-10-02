@@ -22,6 +22,10 @@ export class RezeptService {
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
+  private currentRezeptSubject: BehaviorSubject<Rezept | null> = new BehaviorSubject<Rezept | null>(null);
+  public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
+
+
   constructor(private http: HttpClient) { }
 
   private getJsonHeaders(): HttpHeaders {
@@ -34,6 +38,22 @@ export class RezeptService {
     }*/
 
     return headers;
+  }
+
+  private updateKategorieZaehler(tags: Tag[] | undefined): void {
+    const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
+    const aktualisierteZaehler = { ...aktuelleZaehler };
+
+    if (tags) {
+      tags.forEach(tag => {
+        if (tag && tag.label) {
+          const kategorieName = tag.label;
+          aktualisierteZaehler[kategorieName] = (aktualisierteZaehler[kategorieName] || 0) + 1;
+        }
+      });
+    }
+
+    this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
 
   getAlleRezepte(): Observable<Rezept[]> {
@@ -54,9 +74,13 @@ export class RezeptService {
     );
   }
 
+  setCurrentRezept(rezept: Rezept) {
+    this.currentRezeptSubject.next(rezept);
+  }
+
   createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     console.log("Rezept vor dem Senden:", rezept);
-
+    this.currentRezeptSubject.next(rezept);
     this.loadingSubject.next(true);
     const headers = this.getJsonHeaders();
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
@@ -80,24 +104,11 @@ export class RezeptService {
     );
   }
 
-  private updateKategorieZaehler(tags: Tag[] | undefined): void {
-    const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
-    const aktualisierteZaehler = { ...aktuelleZaehler };
 
-    if (tags) {
-      tags.forEach(tag => {
-        if (tag && tag.label) {
-          const kategorieName = tag.label;
-          aktualisierteZaehler[kategorieName] = (aktualisierteZaehler[kategorieName] || 0) + 1;
-        }
-      });
-    }
-
-    this.kategorieZaehlerSubject.next(aktualisierteZaehler);
-  }
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
+    this.currentRezeptSubject.next(rezept)
     const rezeptMitFormatiertenTags = {
       ...rezept,
       tags: rezept.tags ?? []
