@@ -29,6 +29,7 @@ export class RezeptErstellungComponent implements OnInit {
   newRecipe: any = {};
   tags: Tag[] = [];
   selectedTags: Tag[] = [];
+  tagError: boolean = false;
 
   constructor(
     private rezepteService: RezeptService,
@@ -72,6 +73,13 @@ export class RezeptErstellungComponent implements OnInit {
     }));
     this.cdr.detectChanges();
   }
+
+  validateAndFormatURL(): void {
+    if (this.newRecipe.onlineAdresse && !this.newRecipe.onlineAdresse.startsWith('http')) {
+      this.newRecipe.onlineAdresse = 'https://' + this.newRecipe.onlineAdresse;
+    }
+  }
+
 
   toggleTagSelection(tag: Tag) {
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
@@ -134,6 +142,12 @@ export class RezeptErstellungComponent implements OnInit {
       return;
     }*/
 
+    if (this.selectedTags.length === 0) {
+      this.tagError = true; // Setzt die Error-Flag
+      return; // Beendet die Funktion, falls kein Tag ausgewählt ist
+    }
+
+    this.tagError = false;
     // Rezept speichern
     this.saveRecipe(this.newRecipe).subscribe(
       response => {
