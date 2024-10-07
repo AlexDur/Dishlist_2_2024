@@ -2,6 +2,7 @@
   <div *ngFor="let rezept of gefilterteRezepte" >
     <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
       <div class="p-card-title">{{ rezept.name }}</div>
+      <div>FOTO</div>
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
         <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-contrast p-button-text "></button>
@@ -13,4 +14,4 @@
   <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
 </div>
 
-<div class="scroll-indicator"></div>
+<!--<div class="scroll-indicator"></div>-->

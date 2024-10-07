@@ -91,10 +91,20 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
       return;
     }
+
+    // Entferne unnötige Leerzeichen
+    url = url.trim();
+
     // Füge "http://" hinzu, wenn die URL mit "www." beginnt und kein "http://" oder "https://" hat
     if (url.startsWith('www.')) {
       url = 'http://' + url;
     }
+
+    // Füge "http://" hinzu, wenn die URL weder mit "http://" noch mit "https://" beginnt
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'http://' + url;
+    }
+
     // Grundlegende Validierung, um sicherzustellen, dass die URL jetzt mit "http://" oder "https://" beginnt
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank');
@@ -102,4 +112,5 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       console.warn('Ungültige URL');
     }
   }
+
 }

@@ -1,37 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /*import {TagsComponent} from "./rezepteliste-desktop/tags/tags.component";*/
-import {ListeninhaltComponent} from "./rezepteliste-desktop/listeninhalt/listeninhalt.component";
+import {ListeninhaltComponent} from "./rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component";
 import {TableModule} from "primeng/table";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {TagModule} from "primeng/tag";
 import {RatingModule} from "primeng/rating";
 import {ButtonModule} from "primeng/button";
-import {ListeninhaltMobilComponent} from "./rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil/listeninhalt-mobil.component";
+import {ListeninhaltMobilComponent} from "./rezepteliste/rezepteliste-mobil/listeninhalt-mobil/listeninhalt-mobil/listeninhalt-mobil.component";
 import {CardModule} from "primeng/card";
 import {
   RezeptHinzufuegenButtonComponent
-} from "./rezepteliste-mobil/listeninhalt-mobil/rezept-hinzufuegen-button/rezept-hinzufuegen-button.component";
+} from "./rezepteliste/rezepteliste-mobil/listeninhalt-mobil/rezept-hinzufuegen-button/rezept-hinzufuegen-button.component";
 import {
   RezeptErstellungComponent
-} from "../rezept-erstellung/rezept-erstellung.component";
+} from "./rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
-import {SharedModule} from "../../shared/shared.module";
+import {SharedModule} from "../shared/shared.module";
+
 
 @NgModule({
   declarations: [
-  /*  TagsComponent,*/
     ListeninhaltComponent,
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
-    RezeptErstellungComponent,
+    RezeptErstellungComponent
   ],
   exports: [
     ListeninhaltComponent,
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
-    RezeptErstellungComponent,
+    RezeptErstellungComponent
   ],
     imports: [
         CommonModule,
@@ -44,6 +44,7 @@ import {SharedModule} from "../../shared/shared.module";
         CardModule,
         ToggleButtonModule,
         SharedModule
+
     ]
 })
-export class RezeptelisteModule { }
+export class RezepteModule { }
