@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="javaeeApplication" name="javaEEApplication2">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="application.xml" url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/fullStack_rezepteApp/Backend/META-INF/application.xml" />
-        </descriptors>
-      </configuration>
-    </facet>
     <facet type="javaeeApplication" name="javaEEApplication3">
       <configuration>
         <descriptors>
@@ -26,36 +19,8 @@
         </webroots>
       </configuration>
     </facet>
-    <facet type="web" name="Web5">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_Beetgott/web/web/WEB-INF/web.xml" />
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_Beetgott/web/WEB-INF/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_Beetgott/web" relative="/" />
-        </webroots>
-      </configuration>
-    </facet>
-    <facet type="javaeeApplication" name="javaEEApplication">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="application.xml" url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/fullStack_rezepteApp/out/production/fullStack_rezepteApp/Backend/META-INF/application.xml" />
-        </descriptors>
-      </configuration>
-    </facet>
-    <facet type="web" name="Web4">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/OpenSource/spring-framework/spring-webmvc/src/test/resources/org/springframework/web/context/WEB-INF/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/Softwareentwicklung/Webentwicklung/OpenSource/spring-framework/spring-webmvc/src/test/resources/org/springframework/web/context" relative="/" />
-        </webroots>
-      </configuration>
-    </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />

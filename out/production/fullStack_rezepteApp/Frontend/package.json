@@ -21,7 +21,7 @@
     "@capacitor/android": "^6.1.2",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/cli": "^6.0.0",
-    "@capacitor/core": "^6.0.0",
+    "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.0.0",
     "eslint-config-prettier": "^8.8.0",
     "primeflex": "^3.3.1",
