@@ -185,10 +185,16 @@ components:
         onlineAdresse:
           type: string
           description: Die URL des Rezepts
-        datum:
-          type: string
-          format: date
-          description: Das Datum, an dem das Rezept erstellt wurde
+        bild:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: Die eindeutige ID des Bildes
+            url:
+              type: string
+              description: Die URL des Bildes
         status:
           type: boolean
           description: Der Status des Rezepts
