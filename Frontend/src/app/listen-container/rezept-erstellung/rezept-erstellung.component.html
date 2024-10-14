@@ -11,7 +11,7 @@
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" (blur)="validateAndFormatURL()" pInputText>
         </div>
         <h3>FOTO</h3>
-         <!--<app-foto-upload></app-foto-upload>-->
+        <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
         <div>
           <h3 class="erstellung-kategorie">Gang</h3>
           <div class="p-field toggle-buttons-container">

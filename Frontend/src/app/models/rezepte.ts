@@ -7,7 +7,6 @@ export interface Rezept {
   onlineAdresse?: string;
   person?: string;
   status?: boolean;
-  bewertung?: number;
   tags?: Tag[];
   showDeleteButton?: boolean;
   bildUrl?: string;
