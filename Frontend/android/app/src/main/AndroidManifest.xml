@@ -11,7 +11,7 @@
     android:theme="@style/AppTheme">
 
     <activity
-      android:name="com.rezepte_app.MainActivity"
+      android:name="com.dishlist.app.MainActivity"
       android:label="@string/title_activity_main"
       android:theme="@style/AppTheme.NoActionBarLaunch"
       android:launchMode="singleTask"
