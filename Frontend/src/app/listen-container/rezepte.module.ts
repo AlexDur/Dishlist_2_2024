@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /*import {TagsComponent} from "./rezepteliste-desktop/tags/tags.component";*/
-import {ListeninhaltComponent} from "./rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component";
+/*import {ListeninhaltComponent} from "./rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component";*/
 import {TableModule} from "primeng/table";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
@@ -18,20 +18,24 @@ import {
 } from "./rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {SharedModule} from "../shared/shared.module";
+import {FotoUploadComponent} from "./rezept-erstellung/foto-upload/foto-upload.component";
+import { FileUploadModule } from 'primeng/fileupload';
 
 
 @NgModule({
   declarations: [
-    ListeninhaltComponent,
+  /*  ListeninhaltComponent,*/
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
-    RezeptErstellungComponent
+    RezeptErstellungComponent,
+    FotoUploadComponent
   ],
   exports: [
-    ListeninhaltComponent,
+ /*   ListeninhaltComponent,*/
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
-    RezeptErstellungComponent
+    RezeptErstellungComponent,
+    FotoUploadComponent
   ],
     imports: [
         CommonModule,
@@ -43,7 +47,8 @@ import {SharedModule} from "../shared/shared.module";
         ButtonModule,
         CardModule,
         ToggleButtonModule,
-        SharedModule
+        SharedModule,
+       FileUploadModule
 
     ]
 })
