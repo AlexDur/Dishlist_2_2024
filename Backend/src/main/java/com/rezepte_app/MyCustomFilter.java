@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app;
 
 import javax.servlet.Filter;
@@ -42,3 +43,4 @@ public class MyCustomFilter implements Filter {
         // Bereinigungslogik, falls erforderlich
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app;
 
 
@@ -79,3 +80,4 @@ public class JwtAuthenticationFilter extends MyCustomFilter {
         chain.doFilter(request, response);
     }
 }
+*/

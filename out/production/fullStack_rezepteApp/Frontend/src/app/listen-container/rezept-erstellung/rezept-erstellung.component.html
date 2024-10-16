@@ -1,0 +1,42 @@
+<div class="screen">
+  <div class="zentriertes-formular">
+    <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
+    <div class="neues-rezept">Neues Rezept</div>
+    <form (ngSubmit)="handleClick($event)">
+      <div class="p-fluid">
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText>
+        </div>
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" pInputText>
+        </div>
+        <div>
+          <h3 class="erstellung-kategorie">Gang</h3>
+          <div class="p-field toggle-buttons-container">
+            <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
+                            [(ngModel)]="tag.selected"
+                            (ngModelChange)="toggleTagSelection(tag)"
+                            name="{{tag.label}}"
+                            onLabel="{{tag.label}}"
+                            offLabel="{{tag.label}}"
+                            [ngModelOptions]="{standalone: true}"
+                            label="Contrast" severity="contrast" >
+            </p-toggleButton>
+          </div>
+          <h3 class="erstellung-kategorie">Küche</h3>
+          <div class="p-field toggle-buttons-container">
+            <p-toggleButton *ngFor="let tag of getKuechenTags()"
+                            [(ngModel)]="tag.selected"
+                            (ngModelChange)="toggleTagSelection(tag)"
+                            name="{{tag.label}}"
+                            onLabel="{{tag.label}}"
+                            offLabel="{{tag.label}}"
+                            [ngModelOptions]="{standalone: true}">
+            </p-toggleButton>
+          </div>
+        </div>
+        <button class="general-button" type="submit" pButton>Hinzufügen</button>
+      </div>
+    </form>
+  </div>
+</div>
