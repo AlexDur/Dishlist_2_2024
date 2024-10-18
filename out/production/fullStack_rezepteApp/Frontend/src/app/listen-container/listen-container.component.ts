@@ -23,7 +23,7 @@ export class ListenContainerComponent implements OnInit{
       console.log("Container: Geladene Rezepte:", rezepte);
       this.rezepte = rezepte.map(rezept => ({
         ...rezept,
-        datum: rezept.datum ? new Date(rezept.datum) : undefined
+   /*     datum: rezept.datum ? new Date(rezept.datum) : undefined*/
       }));
       this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
       this.gefilterteRezepte = [...this.rezepte]; // Initialisiere gefilterte Rezepte mit allen Rezepten

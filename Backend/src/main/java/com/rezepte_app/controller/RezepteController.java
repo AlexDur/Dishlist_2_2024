@@ -2,6 +2,7 @@
 package com.rezepte_app.controller;
 
 import com.rezepte_app.*;
+import com.rezepte_app.dto.RezeptDTO;
 import com.rezepte_app.model.Rezept;
 import com.rezepte_app.model.Tag;
 import com.rezepte_app.service.TagService;
@@ -10,10 +11,12 @@ import jakarta.validation.Valid;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -71,13 +74,14 @@ public class RezepteController {
     /*Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Sie nimmt ein Rezept-Objekt aus dem Request Body entgegen
     und verwendet rezepteService, um das Rezept in der Datenbank zu speichern. Bei Erfolg wird eine Antwort mit dem Status
     HttpStatus.CREATED und Details zum erstellten Rezept zurückgegeben*/
-    @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createRezept(@RequestBody @Valid Rezept rezept) {
-        logger.info("POST-Anfrage erhalten für Rezepterstellung: {}", rezept);
+    @PostMapping(value = "/create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Map<String, Object>> createRezept(
+            @RequestPart("rezeptDTO") RezeptDTO rezeptDTO,
+            @RequestPart("image") MultipartFile imageFile) {
 
         try {
             // Erstellt das Rezept direkt ohne manuelle Validierung der Tags
-            Rezept createdRezept = rezepteService.createRezept(rezept);
+            Rezept createdRezept = rezepteService.createRezept(rezeptDTO);
 
             // Erstellt ein JSON-Objekt für die Antwort
             Map<String, Object> response = new HashMap<>();

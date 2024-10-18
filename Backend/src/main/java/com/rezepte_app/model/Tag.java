@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class Tag{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank(message="Label muss vorhanden sein")
     private String label;
@@ -44,6 +45,24 @@ public class Tag{
         updateCount();
         return count;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public int getId() {
+        return Math.toIntExact((long) id);
+    }
+
+    public List<Tag> getTags() {
+        List<Tag> tags = List.of();
+        return tags;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
 
     /*Zur Vermeidung von doppelten Objekten*/
     @Override

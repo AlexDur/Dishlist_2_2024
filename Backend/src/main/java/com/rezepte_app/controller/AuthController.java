@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.controller;
 
 import io.jsonwebtoken.Jwts;
@@ -132,3 +133,4 @@ public class AuthController {
         }
     }
 }
+*/

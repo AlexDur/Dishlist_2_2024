@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +21,38 @@ public class Rezept {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    // Get ID method
+    public Integer getId() {
+        return Math.toIntExact((long) id);
+    }
+
+    public List<Tag> getTags() {
+        Object tags = null;
+        return (List<Tag>) tags;
+    }
+
+    public String getOnlineAdresse() {
+        String onlineAdresse = "";
+        return onlineAdresse;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOnlineAdresse(String onlineAdresse) {
+        this.onlineAdresse = onlineAdresse;
+    }
 
     @JsonProperty("name")
     @Column(name = "name")
@@ -30,15 +61,6 @@ public class Rezept {
     @Column(name = "onlineAdresse")
     private String onlineAdresse;
 
-    private java.sql.Date datum;
-
-    @NotNull
-    @Column(name = "status")
-    private boolean status;
-
-    @NotNull
-    @Column(name = "bewertung")
-    private int bewertung;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(

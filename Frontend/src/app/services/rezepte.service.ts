@@ -68,7 +68,6 @@ export class RezeptService {
       tap(rezepte => {
         const processedRezepte = rezepte.map(rezept => ({
           ...rezept,
-   /*       datum: rezept.datum ? new Date(rezept.datum) : undefined*/
         }));
         this.rezepteSubject.next(processedRezepte);
       }),

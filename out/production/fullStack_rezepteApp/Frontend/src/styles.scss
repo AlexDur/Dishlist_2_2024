@@ -502,26 +502,28 @@ p-tag + p-tag {
   border-bottom: 1px solid #ccc;
 }
 
-.p-card .p-card-body{
+/*.p-card .p-card-body{
   padding-bottom:0;
   margin:0;
-}
+}*/
 
-.p-card-body{
+/*.p-card-body{
   padding-bottom:0;
   flex: 1;
   display: flex;
   flex-direction: column;
-}
+}*/
 
-.p-card {
+/*.p-card-body{
   display: flex;
-  flex: 0 1 calc(33.333% - 20px);
+  justify-content: center;
+  padding:10px;
   flex-direction: column;
-  padding-bottom:0;
-  justify-content: space-between;   min-height: 100px;
-  max-height: 150px;
-}
+}*/
+
+
+
+
 
 
 .p-card-content{
@@ -599,18 +601,18 @@ h3.weiss {
   flex:  none;
   flex-direction: column;
   text-align: center;
-
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+
 
 .container-listeninhalt {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(0, auto);
   width: 100%;
-  justify-content: center;
-
-  align-items: start;
+/*  justify-content: center;
+  align-items: start;*/
   margin-top:2rem;
 }
 
@@ -630,10 +632,7 @@ h3.weiss {
   justify-content: center;
 }
 
-.p-card-body{
-  display: flex;
-  justify-content: center;
-}
+
 
 .p-card-title {
   display: -webkit-box;
@@ -646,11 +645,6 @@ h3.weiss {
   word-break: break-word;
 }
 
-.p-card-body{
-  padding:10px;
-  display: flex;
-  flex-direction: column;
-}
 
 .linie-unten {
   border: 0;
@@ -720,9 +714,9 @@ h3.weiss {
   .container-listeninhalt {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(0, auto);
-    width: 100%;
-    grid-gap: 15px;
+   /* grid-auto-rows: minmax(0, auto);*/
+    /*width: 100%;*/
+    grid-gap: 17px;
     align-items: start;
     margin-top:.5rem;
   }
@@ -783,8 +777,8 @@ h3.weiss {
 
 .floating-button {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
+  bottom: 50px;
+  right: 475px;
   padding: 10px 20px;
   border-radius: 50px;
   background-color: $detail_2-color;
@@ -803,6 +797,12 @@ h3.weiss {
   background-color: dark$detail_2-color;
 }
 
+@media screen and (max-width: 750px) {
+.floating-button {
+  right: 25px;
+  bottom: 35px;
+}
+}
 /*Router-Outlet*/
 
 /* Standard-Layout */
