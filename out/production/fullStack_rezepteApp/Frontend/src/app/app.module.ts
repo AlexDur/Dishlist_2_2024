@@ -6,7 +6,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ContextMenuModule} from "primeng/contextmenu";
 import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
-import {RezeptelisteModule} from "./listen-container/rezepteliste/rezepteliste.module";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
 import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
@@ -16,6 +15,7 @@ import {RouterModule} from "@angular/router";
 import {SharedModule} from "./shared/shared.module";
 import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
+import {RezepteModule} from "./listen-container/rezepte.module";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
@@ -38,7 +38,7 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     BrowserAnimationsModule,
     ContextMenuModule,
     SeitenleisteModule,
-    RezeptelisteModule,
+    RezepteModule,
     CheckboxModule,
     FormsModule,
     ButtonModule,

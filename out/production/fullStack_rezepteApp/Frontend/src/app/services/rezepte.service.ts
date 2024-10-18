@@ -63,7 +63,6 @@ export class RezeptService {
       tap(rezepte => {
         const processedRezepte = rezepte.map(rezept => ({
           ...rezept,
-          datum: rezept.datum ? new Date(rezept.datum) : undefined
         }));
         this.rezepteSubject.next(processedRezepte);
       }),
@@ -83,22 +82,112 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
-  createRezept(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
-    console.log("Rezept vor dem Senden:", rezept);
-    this.currentRezeptSubject.next(rezept);
+
+  // Validierungsfunktion für das Rezept
+// Validierungsfunktion für das Rezept
+  private validateRezept(rezept: Rezept): boolean {
+    // Überprüfen, ob die erforderlichen Felder vorhanden sind und gültige Werte haben
+    if (!rezept.name || typeof rezept.name !== 'string' || rezept.name.trim() === '') {
+      console.error(`Invalid value for name: ${rezept.name}`);
+      return false;
+    }
+
+    if (!rezept.onlineAdresse || typeof rezept.onlineAdresse !== 'string' || rezept.onlineAdresse.trim() === '') {
+      console.error(`Invalid value for onlineAdresse: ${rezept.onlineAdresse}`);
+      return false;
+    }
+
+    // Überprüfen der Tags
+    if (rezept.tags && Array.isArray(rezept.tags)) {
+      for (const tag of rezept.tags) {
+        if (!tag.label || typeof tag.label !== 'string' || tag.label.trim() === '') {
+          console.error(`Invalid value for tag label: ${tag.label}`);
+          return false;
+        }
+
+        if (!tag.type || typeof tag.type !== 'string' || tag.type.trim() === '') {
+          console.error(`Invalid value for tag type: ${tag.type}`);
+          return false;
+        }
+      }
+    } else {
+      console.error(`Invalid or missing tags: ${rezept.tags}`);
+      return false; // Tags sind entweder nicht vorhanden oder nicht in der richtigen Form
+    }
+
+    console.log("Validation passed");
+    return true;
+  }
+
+
+
+
+  /*Sendet POST-Anfrage an Server (rezept + headers). In tap wird Serverantwort verarbeitet.
+  currentRezeptSubject speichert als Behaviousubject den aktuellen Zustand des Rezepts im Service.
+  next setzt Wert des BS auf übergebenes rezept und leitet es damit an alle weiter, die currentRezept-Observable abonniert haben */
+  createRezept(rezept: Rezept, formData: FormData): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
-    const headers = this.getJsonHeaders();
-    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, rezept, { headers, observe: 'response' }).pipe(
+
+
+    if (!this.validateRezept(rezept)) {
+      console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
+      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      return throwError(() => new Error('Rezept ist ungültig.'));
+    }
+
+    const imageFile = formData.get('image') as File;
+    rezept.image = imageFile ? imageFile : null;
+
+    console.log('FormData Inhalt vor dem Senden:', {
+      name: formData.get('name'),
+      onlineAdresse: formData.get('onlineAdresse'),
+      tags: formData.get('tags'),
+      image: formData.get('file') ? (formData.get('file') as File).name : 'Kein Bild',
+      rezept: formData.get('rezept')
+    });
+
+    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
+      observe: 'response'
+    }).pipe(
       tap(response => {
         console.log('Server Response:', response);
         if (response.body) {
           console.log('Response Body:', response.body);
-          const updatedRezepte = [...this.rezepteSubject.getValue(), { ...rezept, id: response.body.id }];
+          const rezeptId = response.body.id;
+
+          const tags = JSON.parse(formData.get('tags') as string);
+          if (!Array.isArray(tags) || tags.some(tag => !tag.label)) {
+            console.error("Tags sind nicht korrekt formatiert:", tags);
+          } else {
+            console.log("Tags sind korrekt formatiert");
+          }
+
+          // Rezept wird jetzt direkt von den FormData-Daten abgeleitet
+          const updatedRezept: Rezept = {
+            name: rezept.name, // Typumwandlung zu string
+            onlineAdresse: rezept.onlineAdresse, // Typumwandlung zu string
+            tags: JSON.parse(formData.get('tags') as string), // Tags aus JSON
+            image: imageFile, // Bild kann null sein
+            id: rezeptId // ID vom Server hinzufügen
+          };
+
+          // Aktualisierte Rezepte verwalten
+          const updatedRezepte = [...this.rezepteSubject.getValue(), updatedRezept];
           this.rezepteSubject.next(updatedRezepte);
-          this.updateKategorieZaehler(rezept.tags);
+          this.updateKategorieZaehler(updatedRezept.tags);
           this.onRezeptUpdated.emit();
-        } else {
-          console.error('Received null response body');
+
+          // Hochladen des Bildes, wenn vorhanden
+          if (imageFile) {
+            this.uploadImage(rezeptId, imageFile).subscribe({
+              next: (uploadResponse) => {
+                console.log('Bild erfolgreich hochgeladen:', uploadResponse);
+              },
+              error: (uploadError) => {
+                console.error('Fehler beim Hochladen des Bildes:', uploadError);
+              }
+            });
+          }
         }
       }),
       catchError(error => {
@@ -109,6 +198,24 @@ export class RezeptService {
     );
   }
 
+
+
+  /*Asynchron als Observable, weil Bildupload dauern kann.*/
+  uploadImage(rezeptId: number, file: File): Observable<any>{
+    const formData = new FormData();
+    formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
+
+    /*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*/
+
+    // POST an Server, um die Datei hochzuladen
+    return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
+      tap(response => console.log('Upload erfolgreich:', response)),
+      catchError(error => {
+        console.error('Fehler beim Hochladen des Bildes', error);
+        return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
+      })
+    );
+  }
 
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {

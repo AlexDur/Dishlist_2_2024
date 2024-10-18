@@ -1,5 +1,7 @@
 package com.rezepte_app.service;
 
+import com.rezepte_app.dto.RezeptDTO;
+import com.rezepte_app.model.mapper.RezeptMapper;
 import com.rezepte_app.repository.RezepteRepository;
 import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.model.Rezept;
@@ -16,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RezepteService {
@@ -26,10 +29,17 @@ public class RezepteService {
     private TagService tagService;
 
     @Autowired
+    private final RezeptMapper rezeptMapper;
+
+    @Autowired
     private TagRepository tagRepository;
 
     @Autowired
     private RezepteRepository rezepteRepository;
+
+    public RezepteService(RezeptMapper rezeptMapper) {
+        this.rezeptMapper = rezeptMapper;
+    }
 
     // Im RezepteService
     public List<Rezept> fetchAlleRezepte() {
@@ -66,18 +76,21 @@ public class RezepteService {
 
 
     @Transactional
-    public Rezept createRezept(@Valid Rezept rezept) {
-        if (rezept.getTags() != null) {
-            Set<Tag> savedTags = new HashSet<>();
-            for (Tag tag : rezept.getTags()) {
-                Tag savedTag = tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
-                        .orElseGet(() -> tagRepository.save(tag));
-                savedTags.add(savedTag);
-            }
-            rezept.setTags(savedTags);
+    public Rezept createRezept(@Valid RezeptDTO rezeptDTO) {
+        // RezeptDTO zu Rezept konvertieren
+        Rezept rezept = rezeptMapper.rezeptDTOToRezept(rezeptDTO);
+
+        if (rezept.getTags() != null && !rezept.getTags().isEmpty()) {
+            rezept.setTags(rezept.getTags().stream()
+                    .map(tag -> tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
+                            .orElseGet(() -> tagRepository.save(tag)))
+                    .collect(Collectors.toSet()));
         }
+
+        // Rezept speichern
         return rezepteRepository.save(rezept);
     }
+
 
 
     @Transactional
@@ -90,10 +103,6 @@ public class RezepteService {
             // Setzen der Felder von existingRezept basierend auf den Werten von rezept
             existingRezept.setName(rezept.getName());
             existingRezept.setOnlineAdresse(rezept.getOnlineAdresse());
-            existingRezept.setDatum(rezept.getDatum());
-            existingRezept.setStatus(rezept.getStatus());
-            existingRezept.setBewertung(rezept.getBewertung());
-
 
             // Verarbeiten und Speichern der Tags direkt hier
             Set<Tag> savedTags = new HashSet<>();

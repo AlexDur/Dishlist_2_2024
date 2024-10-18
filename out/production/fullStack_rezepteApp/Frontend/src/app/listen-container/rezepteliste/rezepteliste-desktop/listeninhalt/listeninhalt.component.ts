@@ -1,3 +1,4 @@
+/*
 import {
   Component,
   ElementRef,
@@ -10,7 +11,7 @@ import {Rezept} from "../../../../models/rezepte";
 import {RezeptService} from "../../../../services/rezepte.service";
 import {TagService} from "../../../../services/tags.service";
 
-/*import {Dish, TagsComponent} from "../tags/tags.component"*/
+/!*import {Dish, TagsComponent} from "../tags/tags.component"*!/
 import {Tag} from "../../../../models/tag";
 
 @Component({
@@ -19,7 +20,7 @@ import {Tag} from "../../../../models/tag";
   styleUrls: ['./listeninhalt.component.scss']
 })
 export class ListeninhaltComponent implements OnChanges{
-/*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;*/
+/!*  @ViewChild(TagsComponent) tagsComponent!: TagsComponent;*!/
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
@@ -47,7 +48,7 @@ export class ListeninhaltComponent implements OnChanges{
   }
 
 
-  /*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*/
+  /!*id kann weglassen werden, da die DB die ID automatisch generiert (AUTO INCREMENT)*!/
   addRow() {
     console.log('selectedRow in addRow:', this.selectedRow);
     const currentDate = new Date();
@@ -171,3 +172,4 @@ export class ListeninhaltComponent implements OnChanges{
   }
 
 }
+*/

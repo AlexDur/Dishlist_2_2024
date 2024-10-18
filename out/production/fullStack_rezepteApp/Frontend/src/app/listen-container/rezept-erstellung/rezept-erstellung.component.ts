@@ -29,6 +29,7 @@ export class RezeptErstellungComponent implements OnInit {
   newRecipe: any = {};
   tags: Tag[] = [];
   selectedTags: Tag[] = [];
+  tagError: boolean = false;
 
   constructor(
     private rezepteService: RezeptService,
@@ -57,11 +58,11 @@ export class RezeptErstellungComponent implements OnInit {
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
-      tags: []
+      tags: [],
+      image: null
     };
     this.resetTags();
     this.selectedTags = [];
-    console.log('Initial Tags:', this.tags);
   }
 
   resetTags() {
@@ -73,6 +74,13 @@ export class RezeptErstellungComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  validateAndFormatURL(): void {
+    if (this.newRecipe.onlineAdresse && !this.newRecipe.onlineAdresse.startsWith('http')) {
+      this.newRecipe.onlineAdresse = 'https://' + this.newRecipe.onlineAdresse;
+    }
+  }
+
+
   toggleTagSelection(tag: Tag) {
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
     if (tag.selected) {
@@ -80,7 +88,6 @@ export class RezeptErstellungComponent implements OnInit {
     } else {
       this.selectedTags = this.selectedTags.filter(t => t.label !== tag.label);
     }
-    console.log('Selected Tags:', this.selectedTags);
     this.cdr.detectChanges();
   }
 
@@ -96,12 +103,50 @@ export class RezeptErstellungComponent implements OnInit {
     });
   }
 
-  saveRecipe(newRecipe: any): Observable<any> {
+  saveRecipe(rezept: Rezept, newRecipe: Rezept): Observable<any> {
     console.log('Selected Tags before saving:', this.selectedTags);
     this.newRecipe.tags = this.selectedTags;
+
     if (this.newRecipe.tags.length > 0) {
       console.log('Rezept vor dem Senden:', this.newRecipe);
-      return this.rezepteService.createRezept(this.newRecipe).pipe(
+
+      const formData = new FormData();
+     /* const tagsArray = this.selectedTags.map(tag => tag.label);*/
+
+      if (this.newRecipe.image) {
+        console.log('Bilddaten vor dem Speichern:', this.newRecipe.image);
+        formData.append('image', this.newRecipe.image);
+      }
+
+      // Übergeben der Tags als Array von IDs
+      formData.append('name', this.newRecipe.name);
+      formData.append('onlineAdresse', this.newRecipe.onlineAdresse);
+
+      // Tags als Array von Objekten vorbereiten
+      const tagsArray = this.selectedTags.map(tag => ({
+        label: tag.label,
+        count: 0, // Beispielwert, kann je nach Logik angepasst werden
+        selected: true, // Beispielwert, kann je nach Logik angepasst werden
+        type: 'Gerichtart' // Beispielwert, kann je nach Logik angepasst werden
+      }));
+
+      // Tags zum FormData hinzufügen
+      formData.append('tags', JSON.stringify(tagsArray));
+
+      // Rezept-Objekt hinzufügen
+      const rezeptObj = {
+        name: this.newRecipe.name,
+        onlineAdresse: this.newRecipe.onlineAdresse,
+        tags: tagsArray, // Die Tags als Array von Objekten
+        image: this.newRecipe.image ? null : undefined // Bilddaten optional lassen
+      };
+
+
+      /*TODO: Blob nochmal nachlesen*/
+      formData.append('rezept', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));// Rezept-Objekt als JSON-String hinzufügen
+
+      // Senden der Anfrage
+      return this.rezepteService.createRezept(newRecipe, formData).pipe(
         tap(response => {
           console.log('Rezept erfolgreich gespeichert:', response);
           this.newRecipeCreated.emit(this.newRecipe);
@@ -119,6 +164,7 @@ export class RezeptErstellungComponent implements OnInit {
     }
   }
 
+
   navigateContainer(event: Event) {
     event.preventDefault();
     this.router.navigate(['/listencontainer']);
@@ -134,8 +180,23 @@ export class RezeptErstellungComponent implements OnInit {
       return;
     }*/
 
+    if (this.selectedTags.length === 0) {
+      this.tagError = true; // Setzt die Error-Flag
+      return; // Beendet die Funktion, falls kein Tag ausgewählt ist
+    }
+
+    this.tagError = false;
     // Rezept speichern
-    this.saveRecipe(this.newRecipe).subscribe(
+
+/*
+    // Erstellen von FormData
+    const formData = new FormData();
+    formData.append('file', this.selectedFile); // Die ausgewählte Datei hinzufügen
+    formData.append('rezept', JSON.stringify(this.newRecipe)); // Rezeptinhalt als JSON hinzufügen
+
+*/
+
+    this.saveRecipe(this.rezepte[0],this.newRecipe).subscribe(
       response => {
         console.log('Rezept erfolgreich gespeichert:', response);
         this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
@@ -147,6 +208,10 @@ export class RezeptErstellungComponent implements OnInit {
     );
   }
 
+  onImageUploaded(image: File): void {
+    this.newRecipe.image = image; // Bild im Rezept speichern
+    console.log('Hochgeladenes Bild:', this.newRecipe.image);
+  }
 
   getGerichtartenTags(): Tag[] {
     return this.tagService.getGerichtartenTags();
