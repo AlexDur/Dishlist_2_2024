@@ -111,3 +111,25 @@ sonarlint/securityhotspotstore
 # Ignoriere alle generierten Styles mit Hash im Dateinamen
 /styles.*.css
 /styles.*.js
+
+# Android specific files
+/.idea/
+app/build/
+
+# Android Studio generated files
+/captures/
+/outputs/
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+
+.idea/misc.xml
+.idea/vcs.xml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+
+# VSCode specific
+.vscode/
