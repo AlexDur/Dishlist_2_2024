@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Dishlist: Lass deine kulinarischen Wünsche wahr werden
 
 Mit dieser Fullstack-Anwendung kannst du:
@@ -29,3 +30,7 @@ Technologien:
     Datenbank MySQL
 
     DevOps: Docker, AWS
+=======
+# Dishlist_2_2024
+Rezepteapp für Verwaltung von Onlinerezepten
+>>>>>>> 6cedcacfe5ae7ca174b7c5ef3ee36b5524292552
