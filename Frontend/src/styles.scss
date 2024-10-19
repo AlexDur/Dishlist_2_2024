@@ -31,13 +31,13 @@ $detail_2-color: #221f1f;
 
 
 .general-button {
-  margin-top:50px;
+  margin-top:75px !important;
   width: 200px;
   font-weight: bold;
   height: 50px;
-  background-color: $detail_2-color;
-  color: $tertiary-color;
-  border: 1px transparent solid;
+  background-color: $detail_2-color !important;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -250,12 +250,11 @@ $detail_2-color: #221f1f;
   outline-offset: 2px;
 }
 
-.p-button {
-  padding: 5px 10px;
-}
+
 
 .p-button .p-button-label {
   padding: 5px;
+  font-family: Calibri;
 }
 
 .close-button {
@@ -293,9 +292,15 @@ $detail_2-color: #221f1f;
   border:$detail_2-color;
 }
 
+.p-togglebutton.p-button {
+  padding: 5px 10px;
+  border-radius: 100px !important;
+
+}
+
 
 .toggle-buttons-container {
-  width: 80%;
+  width: 70%;
   max-width: 250px;
   display: flex;
   flex-direction: row;
@@ -312,7 +317,7 @@ $detail_2-color: #221f1f;
 }
 
 .p-togglebutton.p-highlight {
-  background-color: black !important;
+  background-color: #d11010 !important;
   color: white !important;
   border-color: black
 }
