@@ -1,0 +1,27 @@
+**/.env
+**/.env.local
+**/.env.prod
+
+
+# Ignoriere Node.js-Module
+node_modules
+npm-debug.log
+
+# Ignoriere Maven- und Java-Build-Dateien
+target
+pom.xml
+
+# Ignoriere Logs und temporäre Dateien
+*.log
+*.tmp
+
+# Ignoriere das Git-Verzeichnis
+.git
+.gitignore
+
+# Ignoriere IDE-Verzeichnisse
+.idea
+.vscode
+
+# Weitere Dateien und Verzeichnisse, die nicht in das Docker-Image aufgenommen werden sollen
+out
