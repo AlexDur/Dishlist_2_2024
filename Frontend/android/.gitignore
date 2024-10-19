@@ -107,3 +107,7 @@ sonarlint/securityhotspotstore
 
 # Ignore .idea directory
 .idea/
+
+# Ignoriere alle generierten Styles mit Hash im Dateinamen
+/styles.*.css
+/styles.*.js
