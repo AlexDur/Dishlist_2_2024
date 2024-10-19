@@ -1,4 +1,4 @@
-package com.dishlist.app;
+package Frontend.android.app.src.main.java.com.dishlist.app;
 
 import com.getcapacitor.BridgeActivity;
 
