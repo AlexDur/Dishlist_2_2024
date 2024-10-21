@@ -13,6 +13,9 @@ import { RezeptService } from "../../services/rezepte.service";
 import { Router } from "@angular/router";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { TagService} from "../../services/tags.service";
+import { HttpResponse } from '@angular/common/http';
+import {RezeptAntwort} from "../../models/rezeptAntwort";
+
 
 
 @Component({
@@ -103,50 +106,92 @@ export class RezeptErstellungComponent implements OnInit {
     });
   }
 
-  saveRecipe(rezept: Rezept, newRecipe: Rezept): Observable<any> {
+
+
+  private prepareTags(tags: Tag[]): string {
+    return JSON.stringify(tags.map(tag => ({
+      label: tag.label,
+      count: 0, // Beispielwert
+      selected: true, // Beispielwert
+      type: 'Gerichtart' // Beispielwert
+    })));
+  }
+
+  private createRezeptObj(rezept: Rezept): any {
+    return {
+      name: rezept.name,
+      onlineAdresse: rezept.onlineAdresse,
+      tags: this.prepareTags(this.selectedTags),
+      image: rezept.image ? null : undefined // Bilddaten optional lassen
+    };
+  }
+
+  // Füttere also preformdata (vom Typ FormData) mit den Daten aus rezept
+/*  private prepareFormData(rezept: Rezept): FormData {
+    const preformData = new FormData();
+
+    if (rezept.image) {
+      console.log('In prepareFormData: Bild vor dem Hinzufügen zur FormData vor den anderen Attributen:', rezept.image);
+      preformData.append('image', rezept.image);
+    } else {
+      console.warn('Kein Bild gefunden in prepareFormData. FormData wird ohne Bild sein.');
+    }
+    preformData.append('name', rezept.name || '');
+    preformData.append('onlineAdresse', rezept.onlineAdresse || '');
+
+    preformData.append('tags', this.prepareTags(this.selectedTags));
+    preformData.append('rezept', new Blob([JSON.stringify(this.createRezeptObj(rezept))], { type: 'application/json' }));
+
+    console.log('newRecipe vor prepareFormData:', this.newRecipe);
+    console.log('Bild in newRecipe:', this.newRecipe.image);
+
+
+    if (this.newRecipe.image instanceof File || this.newRecipe.image instanceof Blob) {
+      preformData.append('image', this.newRecipe.image);
+      console.log('blob/file?',  this.newRecipe.image)
+    } else if (typeof this.newRecipe.image === 'string' && this.newRecipe.image.startsWith('data:image/')) {
+      // Bild ist in Base64, konvertiere zu Blob
+      const blob = this.base64ToBlob(this.newRecipe.image);
+      preformData.append('image', blob);
+      console.log('blob?', blob)
+    }
+
+
+
+    if (this.newRecipe.image instanceof File || this.newRecipe.image instanceof Blob) {
+      console.log('Bild ist ein gültiges File oder Blob.');
+    } else {
+      console.warn('Bild ist kein gültiges File oder Blob:', this.newRecipe.image);
+    }
+    return preformData;
+  }*/
+
+  saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     console.log('Selected Tags before saving:', this.selectedTags);
     this.newRecipe.tags = this.selectedTags;
 
     if (this.newRecipe.tags.length > 0) {
-      console.log('Rezept vor dem Senden:', this.newRecipe);
+      // Direktes Erstellen von FormData
+      const preformData = new FormData();
 
-      const formData = new FormData();
-     /* const tagsArray = this.selectedTags.map(tag => tag.label);*/
-
-      if (this.newRecipe.image) {
-        console.log('Bilddaten vor dem Speichern:', this.newRecipe.image);
-        formData.append('image', this.newRecipe.image);
+      // Bild anhängen (wenn vorhanden)
+      if (this.newRecipe.image instanceof Blob || this.newRecipe.image instanceof File) {
+        preformData.append('image', this.newRecipe.image);
+      } else {
+        console.warn('Bild ist kein gültiges File oder Blob:', this.newRecipe.image);
       }
 
-      // Übergeben der Tags als Array von IDs
-      formData.append('name', this.newRecipe.name);
-      formData.append('onlineAdresse', this.newRecipe.onlineAdresse);
+      // Rezeptdaten anhängen
+      preformData.append('rezept', new Blob([JSON.stringify({
+        name: this.newRecipe.name || '',
+        onlineAdresse: this.newRecipe.onlineAdresse || ''
+      })], { type: 'application/json' }));
 
-      // Tags als Array von Objekten vorbereiten
-      const tagsArray = this.selectedTags.map(tag => ({
-        label: tag.label,
-        count: 0, // Beispielwert, kann je nach Logik angepasst werden
-        selected: true, // Beispielwert, kann je nach Logik angepasst werden
-        type: 'Gerichtart' // Beispielwert, kann je nach Logik angepasst werden
-      }));
-
-      // Tags zum FormData hinzufügen
-      formData.append('tags', JSON.stringify(tagsArray));
-
-      // Rezept-Objekt hinzufügen
-      const rezeptObj = {
-        name: this.newRecipe.name,
-        onlineAdresse: this.newRecipe.onlineAdresse,
-        tags: tagsArray, // Die Tags als Array von Objekten
-        image: this.newRecipe.image ? null : undefined // Bilddaten optional lassen
-      };
-
-
-      /*TODO: Blob nochmal nachlesen*/
-      formData.append('rezept', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));// Rezept-Objekt als JSON-String hinzufügen
+      // Tags anhängen
+      preformData.append('tags', new Blob([JSON.stringify(this.selectedTags)], { type: 'application/json' }));
 
       // Senden der Anfrage
-      return this.rezepteService.createRezept(newRecipe, formData).pipe(
+      return this.rezepteService.createRezept(rezept, preformData).pipe(
         tap(response => {
           console.log('Rezept erfolgreich gespeichert:', response);
           this.newRecipeCreated.emit(this.newRecipe);
@@ -165,44 +210,31 @@ export class RezeptErstellungComponent implements OnInit {
   }
 
 
-  navigateContainer(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/listencontainer']);
-  }
 
   handleClick(event: Event) {
     event.preventDefault();
-
-/*    // Authentifizierungsüberprüfung
-    if (!this.authService.isAuthenticated()) {
-      console.log("Zu Login, weil User nicht eingeloggt")
-      this.router.navigate(['/login']);  // Weiterleitung zur Login-Seite, wenn nicht eingeloggt
-      return;
-    }*/
 
     if (this.selectedTags.length === 0) {
       this.tagError = true; // Setzt die Error-Flag
       return; // Beendet die Funktion, falls kein Tag ausgewählt ist
     }
 
+    if (!this.newRecipe.image) {
+      console.error('Kein Bild ausgewählt.'); // Fehlerausgabe
+      return; // Beendet die Funktion, falls kein Bild ausgewählt ist
+    }
+
     this.tagError = false;
     // Rezept speichern
+    const rezeptToSave = this.newRecipe;
 
-/*
-    // Erstellen von FormData
-    const formData = new FormData();
-    formData.append('file', this.selectedFile); // Die ausgewählte Datei hinzufügen
-    formData.append('rezept', JSON.stringify(this.newRecipe)); // Rezeptinhalt als JSON hinzufügen
-
-*/
-
-    this.saveRecipe(this.rezepte[0],this.newRecipe).subscribe(
+    this.saveRecipe(rezeptToSave).subscribe(
       response => {
         console.log('Rezept erfolgreich gespeichert:', response);
         this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
       },
       error => {
-        console.error('Fehler beim Speichern des Rezepts:', error);
+        console.error('Fehler in handleClick:', error);
         // Hier kann zusätzliche Fehlerbehandlung hinzugefügt werden
       }
     );
@@ -213,6 +245,12 @@ export class RezeptErstellungComponent implements OnInit {
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
 
+
+  navigateContainer(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/listencontainer']);
+  }
+
   getGerichtartenTags(): Tag[] {
     return this.tagService.getGerichtartenTags();
   }
@@ -220,4 +258,19 @@ export class RezeptErstellungComponent implements OnInit {
   getKuechenTags(): Tag[] {
     return this.tagService.getKuechenTags();
   }
+
+  base64ToBlob(base64Image: string): Blob {
+    const byteString = atob(base64Image.split(',')[1]);
+    const mimeString = base64Image.split(',')[0].split(':')[1].split(';')[0];
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
+  }
+
+
 }
