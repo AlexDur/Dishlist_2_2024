@@ -1,5 +1,7 @@
 @import '~primeng/resources/primeng.min.css';
 @import '~primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+
 
 $color-start: #f6a257;
 $color-end: #b34f09;
@@ -194,6 +196,13 @@ $detail_2-color: #221f1f;
   flex-direction: column;
   align-items: center;
   width: 100%;
+}
+
+.optional{
+  font-size: 12px;
+  color:white;
+  margin-top: 1.5rem;
+
 }
 
 .required {
@@ -471,11 +480,11 @@ p-dialog .p-dialog-header{
 
 
 .erstellung-kategorie{
+  font-size: 18px;
+  font-weight: bold;
   color: white;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  margin-top:1rem;
+  margin-top:2rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
