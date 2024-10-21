@@ -131,44 +131,7 @@ export class RezeptErstellungComponent implements OnInit {
   }
 
   // Füttere also preformdata (vom Typ FormData) mit den Daten aus rezept
-/*  private prepareFormData(rezept: Rezept): FormData {
-    const preformData = new FormData();
 
-    if (rezept.image) {
-      console.log('In prepareFormData: Bild vor dem Hinzufügen zur FormData vor den anderen Attributen:', rezept.image);
-      preformData.append('image', rezept.image);
-    } else {
-      console.warn('Kein Bild gefunden in prepareFormData. FormData wird ohne Bild sein.');
-    }
-    preformData.append('name', rezept.name || '');
-    preformData.append('onlineAdresse', rezept.onlineAdresse || '');
-
-    preformData.append('tags', this.prepareTags(this.selectedTags));
-    preformData.append('rezept', new Blob([JSON.stringify(this.createRezeptObj(rezept))], { type: 'application/json' }));
-
-    console.log('newRecipe vor prepareFormData:', this.newRecipe);
-    console.log('Bild in newRecipe:', this.newRecipe.image);
-
-
-    if (this.newRecipe.image instanceof File || this.newRecipe.image instanceof Blob) {
-      preformData.append('image', this.newRecipe.image);
-      console.log('blob/file?',  this.newRecipe.image)
-    } else if (typeof this.newRecipe.image === 'string' && this.newRecipe.image.startsWith('data:image/')) {
-      // Bild ist in Base64, konvertiere zu Blob
-      const blob = this.base64ToBlob(this.newRecipe.image);
-      preformData.append('image', blob);
-      console.log('blob?', blob)
-    }
-
-
-
-    if (this.newRecipe.image instanceof File || this.newRecipe.image instanceof Blob) {
-      console.log('Bild ist ein gültiges File oder Blob.');
-    } else {
-      console.warn('Bild ist kein gültiges File oder Blob:', this.newRecipe.image);
-    }
-    return preformData;
-  }*/
 
   saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     console.log('Selected Tags before saving:', this.selectedTags);

@@ -21,12 +21,13 @@
           <div *ngIf="!isFieldValid('onlineAdresse')" class="error-message"></div>
 
         </div>
-        <div class="flex">
-          <h3 class="erstellung-kategorie">Foto</h3><p>optional</p>
+        <div class="flex flex-row mb-2">
+           <div class="erstellung-kategorie">Foto</div>
+           <div class="optional">(optional)</div>
         </div>
         <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
         <div>
-          <h3 class="erstellung-kategorie">Gang</h3>
+          <div class="erstellung-kategorie">Gang</div>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
                             [(ngModel)]="tag.selected"
@@ -38,7 +39,7 @@
                             label="Contrast" severity="contrast" >
             </p-toggleButton>
           </div>
-          <h3 class="erstellung-kategorie">Küche</h3>
+          <div class="erstellung-kategorie">Küche</div>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getKuechenTags()"
                             [(ngModel)]="tag.selected"
