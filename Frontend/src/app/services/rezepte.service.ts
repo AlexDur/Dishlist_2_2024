@@ -4,11 +4,8 @@ import { BehaviorSubject, catchError, tap, throwError, Observable, finalize } fr
 import { Rezept } from '../models/rezepte';
 import { environment } from '../../environments/environment';
 import { Tag } from '../models/tag';
+import { RezeptAntwort} from "../models/rezeptAntwort";
 
-interface RezeptAntwort {
-  id: number;
-  message: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +16,7 @@ export class RezeptService {
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
 
-  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+    private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -28,17 +25,13 @@ export class RezeptService {
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, ) { }
+
+
+
 
   private getJsonHeaders(): HttpHeaders {
-    /*const authToken = this.authService.getToken();*/
-
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  /*  if (authToken) {
-      headers = headers.set('Authorization', `Bearer ${authToken}`);
-    }*/
-
     return headers;
   }
 
@@ -57,8 +50,6 @@ export class RezeptService {
 
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
-
-
 
 
   getAlleRezepte(): Observable<Rezept[]> {
@@ -133,21 +124,21 @@ export class RezeptService {
   createRezept(rezept: Rezept, formData: FormData): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
 
-
     if (!this.validateRezept(rezept)) {
       console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
       this.loadingSubject.next(false); // Ladezustand zurücksetzen
       return throwError(() => new Error('Rezept ist ungültig.'));
     }
 
+    // Bild aus FormData extrahieren
     const imageFile = formData.get('image') as File;
     rezept.image = imageFile ? imageFile : null;
 
-    console.log('FormData Inhalt vor dem Senden:', {
+    console.log('In createRezept: FormData vor dem Senden:', {
       name: formData.get('name'),
       onlineAdresse: formData.get('onlineAdresse'),
       tags: formData.get('tags'),
-      image: formData.get('file') ? (formData.get('file') as File).name : 'Kein Bild',
+      image: imageFile ? imageFile.name : 'Kein Bild in rezept-service.ts/create',
       rezept: formData.get('rezept')
     });
 
@@ -160,6 +151,7 @@ export class RezeptService {
           console.log('Response Body:', response.body);
           const rezeptId = response.body.id;
 
+          // Tags aus FormData extrahieren und sicherstellen, dass sie korrekt sind
           const tags = JSON.parse(formData.get('tags') as string);
           if (!Array.isArray(tags) || tags.some(tag => !tag.label)) {
             console.error("Tags sind nicht korrekt formatiert:", tags);
@@ -167,11 +159,11 @@ export class RezeptService {
             console.log("Tags sind korrekt formatiert");
           }
 
-          // Rezept wird jetzt direkt von den FormData-Daten abgeleitet
+          // Rezept wird direkt von den FormData-Daten abgeleitet
           const updatedRezept: Rezept = {
             name: rezept.name, // Typumwandlung zu string
             onlineAdresse: rezept.onlineAdresse, // Typumwandlung zu string
-            tags: JSON.parse(formData.get('tags') as string), // Tags aus JSON
+            tags: tags, // Tags aus JSON
             image: imageFile, // Bild kann null sein
             id: rezeptId // ID vom Server hinzufügen
           };
@@ -184,11 +176,11 @@ export class RezeptService {
 
           // Hochladen des Bildes, wenn vorhanden
           if (imageFile) {
-            this.uploadImage(rezeptId, imageFile).subscribe({
-              next: (uploadResponse) => {
+            this.uploadImage(rezeptId.toString(), imageFile).subscribe({
+              next: (uploadResponse: any) => {
                 console.log('Bild erfolgreich hochgeladen:', uploadResponse);
               },
-              error: (uploadError) => {
+              error: (uploadError: any) => {
                 console.error('Fehler beim Hochladen des Bildes:', uploadError);
               }
             });
@@ -205,12 +197,30 @@ export class RezeptService {
 
 
 
+  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
+    const formData = new FormData();
+    formData.append('file', file); // Datei in FormData hinzufügen
+
+    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
+      observe: 'response'
+    }).pipe(
+      tap(response => {
+        console.log('Upload Response:', response);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Bild-Upload:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+
   /*Asynchron als Observable, weil Bildupload dauern kann.*/
-  uploadImage(rezeptId: number, file: File): Observable<any>{
+/*  uploadImage(rezeptId: number, file: File): Observable<any>{
     const formData = new FormData();
     formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
 
-    /*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*/
+    /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
 
     // POST an Server, um die Datei hochzuladen
     return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
@@ -220,7 +230,7 @@ export class RezeptService {
         return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
       })
     );
-  }
+  }*/
 
 
   updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
