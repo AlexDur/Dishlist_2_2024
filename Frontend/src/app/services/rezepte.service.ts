@@ -82,36 +82,38 @@ export class RezeptService {
   // Validierungsfunktion für das Rezept
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
-    // Überprüfen, ob die erforderlichen Felder vorhanden sind und gültige Werte haben
+    // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)
+    // Aber Achtung: bei der Eingabe von Leerzeichen, wäre durch diese Bedingung die Eingabe gültig.
+    // Daher --> trim
     if (!rezept.name || typeof rezept.name !== 'string' || rezept.name.trim() === '') {
-      console.error(`Invalid value for name: ${rezept.name}`);
+      console.error(`Ungültiger Wert für name: ${rezept.name}`);
       return false;
     }
 
     if (!rezept.onlineAdresse || typeof rezept.onlineAdresse !== 'string' || rezept.onlineAdresse.trim() === '') {
-      console.error(`Invalid value for onlineAdresse: ${rezept.onlineAdresse}`);
+      console.error(`Ungültiger Wert für onlineAdresse: ${rezept.onlineAdresse}`);
       return false;
     }
 
-    // Überprüfen der Tags
     if (rezept.tags && Array.isArray(rezept.tags)) {
       for (const tag of rezept.tags) {
         if (!tag.label || typeof tag.label !== 'string' || tag.label.trim() === '') {
-          console.error(`Invalid value for tag label: ${tag.label}`);
+          console.error(`Ungültiger Wert für tag label: ${tag.label}`);
           return false;
         }
 
         if (!tag.type || typeof tag.type !== 'string' || tag.type.trim() === '') {
-          console.error(`Invalid value for tag type: ${tag.type}`);
+          console.error(`Ungültiger Wert für tag type: ${tag.type}`);
           return false;
         }
       }
     } else {
-      console.error(`Invalid or missing tags: ${rezept.tags}`);
-      return false; // Tags sind entweder nicht vorhanden oder nicht in der richtigen Form
+      console.error(`Ungültige oder fehlende tags: ${rezept.tags}`);
+      return false;
     }
 
-    console.log("Validation passed");
+
+    console.log("Validierung erfolgreich");
     return true;
   }
 

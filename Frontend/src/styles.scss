@@ -196,6 +196,29 @@ $detail_2-color: #221f1f;
   width: 100%;
 }
 
+.required {
+  color: white;
+  margin-left: 5px;
+}
+
+.error-message {
+  color: white;
+  font-size: 0.9em;
+}
+
+.inputfeld::placeholder {
+  color: gray;
+}
+
+.inputfeld.invalid::placeholder {
+  color: red;
+}
+
+.inputfeld.invalid {
+  border-color: red;
+}
+
+
 .screen{
   height: 100vh;
   width: 100%;

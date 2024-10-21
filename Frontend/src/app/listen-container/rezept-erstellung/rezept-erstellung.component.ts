@@ -33,6 +33,10 @@ export class RezeptErstellungComponent implements OnInit {
   tags: Tag[] = [];
   selectedTags: Tag[] = [];
   tagError: boolean = false;
+  showNameError: boolean = false;
+  showOnlineAddressError: boolean = false;
+  nametouched:boolean = false;
+  on_adtouched: boolean = false;
 
   constructor(
     private rezepteService: RezeptService,
@@ -181,7 +185,7 @@ export class RezeptErstellungComponent implements OnInit {
         console.warn('Bild ist kein gültiges File oder Blob:', this.newRecipe.image);
       }
 
-      // Rezeptdaten anhängen
+      // Rezept-Inputdaten anhängen
       preformData.append('rezept', new Blob([JSON.stringify({
         name: this.newRecipe.name || '',
         onlineAdresse: this.newRecipe.onlineAdresse || ''
@@ -209,6 +213,44 @@ export class RezeptErstellungComponent implements OnInit {
     }
   }
 
+  isFieldValid(fieldName: keyof Rezept): boolean {
+    const fieldValue = this.newRecipe[fieldName];
+    return typeof fieldValue === 'string' && fieldValue.trim() !== '';
+  }
+
+  getInputClass(fieldName: keyof Rezept): string {
+    // Nur rot anzeigen, wenn das Feld berührt wurde und ungültig ist
+    if (fieldName === 'name' && this.nametouched) {
+      return this.isFieldValid(fieldName) ? '' : 'invalid';
+    } else if (fieldName === 'onlineAdresse' && this.on_adtouched) {
+      return this.isFieldValid(fieldName) ? '' : 'invalid';
+    }
+    return ''; // Standardfarbe, wenn das Feld nicht berührt wurde
+  }
+
+  private showError(fieldName: keyof Rezept, show: boolean): void {
+    if (fieldName === 'name') {
+      this.showNameError = show;
+    } else if (fieldName === 'onlineAdresse') {
+      this.showOnlineAddressError = show;
+    }
+  }
+
+  onFieldBlur(fieldName: keyof Rezept): void {
+    if (fieldName === 'name') {
+      this.nametouched = true; // Markiere das Feld als berührt
+    } else if (fieldName === 'onlineAdresse') {
+      this.on_adtouched = true; // Markiere das Feld als berührt
+    }
+
+    if (!this.isFieldValid(fieldName)) {
+      this.showError(fieldName, true);
+    } else {
+      this.showError(fieldName, false);
+    }
+  }
+
+
 
 
   handleClick(event: Event) {
@@ -216,12 +258,7 @@ export class RezeptErstellungComponent implements OnInit {
 
     if (this.selectedTags.length === 0) {
       this.tagError = true; // Setzt die Error-Flag
-      return; // Beendet die Funktion, falls kein Tag ausgewählt ist
-    }
-
-    if (!this.newRecipe.image) {
-      console.error('Kein Bild ausgewählt.'); // Fehlerausgabe
-      return; // Beendet die Funktion, falls kein Bild ausgewählt ist
+      return;
     }
 
     this.tagError = false;
