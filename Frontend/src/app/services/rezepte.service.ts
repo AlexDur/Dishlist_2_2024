@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, tap, throwError, Observable, finalize } from 'rxjs';
-import { Rezept } from '../models/rezepte';
-import { environment } from '../../environments/environment';
-import { Tag } from '../models/tag';
-import { RezeptAntwort} from "../models/rezeptAntwort";
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {EventEmitter, Injectable} from '@angular/core';
+import {BehaviorSubject, catchError, finalize, Observable, tap, throwError} from 'rxjs';
+import {Rezept} from '../models/rezepte';
+import {environment} from '../../environments/environment';
+import {Tag} from '../models/tag';
+import {RezeptAntwort} from "../models/rezeptAntwort";
 
 
 @Injectable({
@@ -16,23 +16,24 @@ export class RezeptService {
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
 
-    private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+
+  //Observable rezepte$ wird durch currentRezeptSubject.asObservable() erstellt.
+  //Das ist das abbonnierbar für Interessenten
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   private currentRezeptSubject: BehaviorSubject<Rezept | null> = new BehaviorSubject<Rezept | null>(null);
+
+  //Observable currentRezept$ wird durch currentRezeptSubject.asObservable() erstellt.
+  //Damit können andere Teile der Anwendung, die an Änderungen des aktuellen Rezepts interessiert sind, sich darauf abonnieren.
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
 
-
-  constructor(private http: HttpClient, ) { }
-
-
-
+  constructor(private http: HttpClient) { }
 
   private getJsonHeaders(): HttpHeaders {
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return headers;
+    return new HttpHeaders({'Content-Type': 'application/json'});
   }
 
   private updateKategorieZaehler(tags: Tag[] | undefined): void {
@@ -78,31 +79,29 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
-
-  // Validierungsfunktion für das Rezept
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
     // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)
     // Aber Achtung: bei der Eingabe von Leerzeichen, wäre durch diese Bedingung die Eingabe gültig.
     // Daher --> trim
-    if (!rezept.name || typeof rezept.name !== 'string' || rezept.name.trim() === '') {
+    if (!rezept.name || rezept.name.trim() === '') {
       console.error(`Ungültiger Wert für name: ${rezept.name}`);
       return false;
     }
 
-    if (!rezept.onlineAdresse || typeof rezept.onlineAdresse !== 'string' || rezept.onlineAdresse.trim() === '') {
+    if (!rezept.onlineAdresse || rezept.onlineAdresse.trim() === '') {
       console.error(`Ungültiger Wert für onlineAdresse: ${rezept.onlineAdresse}`);
       return false;
     }
 
     if (rezept.tags && Array.isArray(rezept.tags)) {
       for (const tag of rezept.tags) {
-        if (!tag.label || typeof tag.label !== 'string' || tag.label.trim() === '') {
+        if (!tag.label || tag.label.trim() === '') {
           console.error(`Ungültiger Wert für tag label: ${tag.label}`);
           return false;
         }
 
-        if (!tag.type || typeof tag.type !== 'string' || tag.type.trim() === '') {
+        if (!tag.type || tag.type.trim() === '') {
           console.error(`Ungültiger Wert für tag type: ${tag.type}`);
           return false;
         }
@@ -112,24 +111,40 @@ export class RezeptService {
       return false;
     }
 
-
     console.log("Validierung erfolgreich");
     return true;
   }
 
 
-
-
   /*Sendet POST-Anfrage an Server (rezept + headers). In tap wird Serverantwort verarbeitet.
   currentRezeptSubject speichert als Behaviousubject den aktuellen Zustand des Rezepts im Service.
-  next setzt Wert des BS auf übergebenes rezept und leitet es damit an alle weiter, die currentRezept-Observable abonniert haben */
+  next setzt Wert des BS auf übergebenes rezept und leitet es damit an alle weiter, die currentRezept-Observable abonniert haben
+  rezept als Objekt mit den Rezeptdaten, Bilddatei wird separat, aber gemeinsame mit rezept in formData im multipart-Format gesendet
+  HttpResponse enthält gesamte HTTP-Antwort vom Server (nicht nur den Antwort-Körper), sondern auch Statuscode, Header-Infos...
+  Observable um asynchronen Natur von Http-Anfrage zu handhaben
+  Observable gibt e. Wert des Typs T zurück, hier: HttpResponse<RezeptAntwort>, also hier: Empfang der Server-Antwort
+   */
   createRezept(rezept: Rezept, formData: FormData): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
+
+    console.log('FormData-Inhalte vor dem Senden:');
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    console.log('Daten in createRezept angekommen:', rezept, formData);
 
     if (!this.validateRezept(rezept)) {
       console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
       this.loadingSubject.next(false); // Ladezustand zurücksetzen
       return throwError(() => new Error('Rezept ist ungültig.'));
+    }
+
+    // Prüfen, ob formData bereits befüllt wurde
+    if (!formData.has('image')) {
+      console.error('Kein Bild im FormData vorhanden.');
+      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      return throwError(() => new Error('Bild ist erforderlich.'));
     }
 
     // Bild aus FormData extrahieren
@@ -144,6 +159,8 @@ export class RezeptService {
       rezept: formData.get('rezept')
     });
 
+    //Hier Versand der Anfrage
+    // formData enthält Daten, die an Server geschickt werden sollen (Payload)
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
       observe: 'response'
     }).pipe(
@@ -263,6 +280,7 @@ export class RezeptService {
     );
   }
 
+  // in Card über das Symbol
   deleteRezept(id: number): Observable<any> {
     const apiUrl = `${this.backendUrl}/api/rezepte/delete/${id}`;
     return this.http.delete(apiUrl, { responseType: 'text' }).pipe(
