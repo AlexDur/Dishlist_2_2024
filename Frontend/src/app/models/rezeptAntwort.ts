@@ -1,4 +1,5 @@
-// src/app/models/rezeptAntwort.model.ts
+//Als Repräsentation des erstellten Rezepts
+
 import {Tag} from "./tag";
 
 export interface RezeptAntwort {
