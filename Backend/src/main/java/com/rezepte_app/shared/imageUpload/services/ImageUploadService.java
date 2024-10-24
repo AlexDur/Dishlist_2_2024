@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -71,6 +72,14 @@ public class ImageUploadService {
         return path.toString();
     }
 
+    public String saveImage(MultipartFile file) throws IOException {
+        // Standardwerte für Breite und Höhe festlegen oder von außen übergeben lassen
+        int defaultWidth = 800;  // Beispiel für Standardbreite
+        int defaultHeight = 600; // Beispiel für Standardhöhe
+
+        // Aufruf der `uploadImage` Methode mit den Standardwerten
+        return uploadImage(file, defaultWidth, defaultHeight);
+    }
 
 }
 
