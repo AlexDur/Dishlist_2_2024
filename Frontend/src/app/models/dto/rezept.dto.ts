@@ -1,12 +1,9 @@
-import {Tag} from "./tag";
+import {Tag} from "../tag";
 
-export interface Rezept {
-
-  id: number;
+export interface RezeptDTO {
   name: string;
   onlineAdresse: string;
-  tags?: Tag[];
+  tags: Tag[];
   image?: File | null;
   bildUrl?: string;
 }
-

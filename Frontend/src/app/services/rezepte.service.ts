@@ -79,6 +79,35 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
+/*  // Mapping-Funktion für Rezept zu RezeptDTO
+  /!*TODO: Prüfe*!/
+  private mapRecipeToDTO(rezept: Rezept): {
+    onlineAdresse: string;
+    name: string;
+    id: number | undefined;
+    tags: Tag[] | undefined
+  } {
+    return {
+      id: rezept.id,
+      name: rezept.name,
+      onlineAdresse: rezept.onlineAdresse,
+      tags: rezept.tags,
+
+    };
+  }
+
+  // Mapping-Funktion für Tag zu TagDTO
+  /!*TODO: Prüfe*!/
+  private mapTagToDTO(tag: Tag): TagDTO {
+    return {
+      id: tag.id,
+      label: tag.label,
+      type: tag.type
+    };
+  }*/
+
+
+
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
     // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)

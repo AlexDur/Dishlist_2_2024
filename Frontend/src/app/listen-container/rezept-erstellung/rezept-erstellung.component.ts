@@ -15,6 +15,7 @@ import { catchError, Observable, tap, throwError } from "rxjs";
 import { TagService} from "../../services/tags.service";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
+import {RezeptDTO} from "../../models/dto/rezept.dto";
 
 
 
@@ -64,7 +65,7 @@ export class RezeptErstellungComponent implements OnInit {
     });
   }
 
-  //Neues Rezept mit Standardwerten befüllt
+  //Neues leeres Rezept mit Standardwerten initialisiert
   initNewRecipe() {
     this.newRecipe = {
       name: '',
@@ -72,25 +73,13 @@ export class RezeptErstellungComponent implements OnInit {
       tags: [],
       image: null
     };
-/*    this.resetTags();*/
-    /*this.selectedTags = [];*/
   }
-
-/*  resetTags() {
-    // Initialisiert Tags neu und setzt `selected` auf false
-    this.tags = this.tagService.getTags().map(tag => ({
-      ...tag,
-      selected: false
-    }));
-    this.cdr.detectChanges();
-  }*/
 
   validateAndFormatURL(): void {
     if (this.newRecipe.onlineAdresse && !this.newRecipe.onlineAdresse.startsWith('http')) {
       this.newRecipe.onlineAdresse = 'https://' + this.newRecipe.onlineAdresse;
     }
   }
-
 
   toggleTagSelection(tag: Tag) {
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
@@ -119,21 +108,11 @@ export class RezeptErstellungComponent implements OnInit {
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
 
-
-
-  /*  private prepareTags(tags: Tag[]): string {
-      return JSON.stringify(tags.map(tag => ({
-        label: tag.label,
-        count: 0,
-        selected: true,
-        type: 'Gerichtart' || 'Kueche'
-      })));
-    }*/
-
+  // Extrahiere Werte aus newRecipe
   private createRezeptObj(rezept: Rezept): any {
-    const rezeptObj = {
-      name: rezept.name,
-      onlineAdresse: rezept.onlineAdresse,
+    const rezeptObj:RezeptDTO  = {
+      name: this.newRecipe.name,
+      onlineAdresse: this.newRecipe.onlineAdresse,
       tags: this.selectedTags,
       image: this.newRecipe.image ? this.newRecipe.image : null
     };
@@ -144,7 +123,6 @@ export class RezeptErstellungComponent implements OnInit {
 
   //Observable für die Anfragen im return
   saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
-    /*console.log('Selected Tags before saving:', this.selectedTags);*/
 
     const rezeptObj = this.createRezeptObj(this.newRecipe);
     console.log('rezeptObj:', rezeptObj)
@@ -172,25 +150,8 @@ export class RezeptErstellungComponent implements OnInit {
     formData.append('name', rezeptObj.name);
     formData.append('onlineAdresse', rezeptObj.onlineAdresse);
 
-
-
-    // Rezept-Inputdaten anhängen, mit Überprüfung
-  /*  const rezeptBlob = new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' });
-    if (!formData.has('rezept')) {
-      formData.append('rezept', rezeptBlob);
-    } else {
-      console.warn('Rezept ist bereits in FormData vorhanden:', rezeptObj);
-    }*/
-
-/*    console.log('Rezept-Objekt mit Tags vor dem Blob:', rezeptObj);
-
-    console.log('FormData-Inhalte vor dem Senden_1:');
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });*/
     console.log('FormData-Inhalte vor dem Senden_2:', Array.from((formData as any).entries()));
     console.log('Tags im Rezept-Objekt:', rezeptObj.tags);
-
 
     // this.rezepteService.... wird aufgerufen, um ein neues Rezept zu erstellen.
       // neue Anfrage mit Rezeptdaten und Bilddaten wird an Server gesendet (via Aufruf von create.Rezept)
