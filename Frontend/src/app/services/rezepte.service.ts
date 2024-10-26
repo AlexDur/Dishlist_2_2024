@@ -5,6 +5,8 @@ import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
+import { EMPTY } from 'rxjs';
+
 
 
 @Injectable({
@@ -161,87 +163,60 @@ export class RezeptService {
       console.log(key, value);
     });
 
-    console.log('Daten in createRezept angekommen:', rezept, formData);
+    // Rezeptdaten aus dem Blob extrahieren
+    const rezeptBlob = formData.get('rezeptDTO') as Blob;
+    const reader = new FileReader();
 
-    if (!this.validateRezept(rezept)) {
-      console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
-      return throwError(() => new Error('Rezept ist ungültig.'));
-    }
+    return new Observable<HttpResponse<RezeptAntwort>>(observer => {
 
-    // Prüfen, ob formData bereits befüllt wurde
-    if (!formData.has('image')) {
-      console.error('Kein Bild im FormData vorhanden.');
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
-      return throwError(() => new Error('Bild ist erforderlich.'));
-    }
+      reader.onload = () => {
+        const rezept: Rezept = JSON.parse(reader.result as string);
+        console.log('Rezept aus Blob extrahiert:', rezept);
 
-    // Bild aus FormData extrahieren
-    const imageFile = formData.get('image') as File;
-    rezept.image = imageFile ? imageFile : null;
-
-    console.log('In createRezept: FormData vor dem Senden:', {
-      name: formData.get('name'),
-      onlineAdresse: formData.get('onlineAdresse'),
-      tags: formData.get('tags'),
-      image: imageFile ? imageFile.name : 'Kein Bild in rezept-service.ts/create',
-      rezept: formData.get('rezept')
-    });
-
-    //Hier Versand der Anfrage
-    // formData enthält Daten, die an Server geschickt werden sollen (Payload)
-    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-      observe: 'response'
-    }).pipe(
-      tap(response => {
-        console.log('Server Response:', response);
-        if (response.body) {
-          console.log('Response Body:', response.body);
-          const rezeptId = response.body.id;
-
-          // Tags aus FormData extrahieren und sicherstellen, dass sie korrekt sind
-          const tags = JSON.parse(formData.get('tags') as string);
-          if (!Array.isArray(tags) || tags.some(tag => !tag.label)) {
-            console.error("Tags sind nicht korrekt formatiert:", tags);
-          } else {
-            console.log("Tags sind korrekt formatiert");
-          }
-
-          // Rezept wird direkt von den FormData-Daten abgeleitet
-          const updatedRezept: Rezept = {
-            name: rezept.name, // Typumwandlung zu string
-            onlineAdresse: rezept.onlineAdresse, // Typumwandlung zu string
-            tags: tags, // Tags aus JSON
-            image: imageFile, // Bild kann null sein
-            id: rezeptId // ID vom Server hinzufügen
-          };
-
-          // Aktualisierte Rezepte verwalten
-          const updatedRezepte = [...this.rezepteSubject.getValue(), updatedRezept];
-          this.rezepteSubject.next(updatedRezepte);
-          this.updateKategorieZaehler(updatedRezept.tags);
-          this.onRezeptUpdated.emit();
-
-          // Hochladen des Bildes, wenn vorhanden
-          if (imageFile) {
-            this.uploadImage(rezeptId.toString(), imageFile).subscribe({
-              next: (uploadResponse: any) => {
-                console.log('Bild erfolgreich hochgeladen:', uploadResponse);
-              },
-              error: (uploadError: any) => {
-                console.error('Fehler beim Hochladen des Bildes:', uploadError);
-              }
-            });
-          }
+        // Validierung des Rezeptes
+        if (!this.validateRezept(rezept)) {
+          console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
+          this.loadingSubject.next(false); // Ladezustand zurücksetzen
+          observer.error(new Error('Rezept ist ungültig.'));
+          return; // Rückkehr, um die Ausführung zu beenden
         }
-      }),
-      catchError(error => {
-        console.error('Unerwartete Antwort vom Server:', error);
-        return throwError(() => error);
-      }),
-      finalize(() => this.loadingSubject.next(false))  // Ladezustand zurücksetzen
-    );
+
+        // Prüfen, ob formData bereits befüllt wurde
+        if (!formData.has('image')) {
+          console.error('Kein Bild im FormData vorhanden.');
+          this.loadingSubject.next(false); // Ladezustand zurücksetzen
+          observer.error(new Error('Bild ist erforderlich.'));
+          return; // Rückkehr, um die Ausführung zu beenden
+        }
+
+        // Hier Versand der Anfrage
+        this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
+          observe: 'response'
+        }).pipe(
+          tap(response => {
+            console.log('Server Response:', response);
+            observer.next(response);  // Sende die Antwort zurück
+            observer.complete();       // Beende das Observable
+          }),
+          catchError(error => {
+            console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
+            observer.error(error);     // Fehler zurückgeben
+            return EMPTY;             // Leeres Observable zurückgeben
+          })
+        ).subscribe(); // Sicherstellen, dass die HTTP-Anfrage ausgeführt wird
+      };
+
+      reader.onerror = () => {
+        console.error('Fehler beim Lesen des Rezept-Blogs.');
+        this.loadingSubject.next(false); // Ladezustand zurücksetzen
+        observer.error(new Error('Fehler beim Lesen des Rezept-Blogs.'));
+      };
+
+      // Starte den Lesevorgang
+      reader.readAsText(rezeptBlob);
+    });
   }
+
 
 
 
