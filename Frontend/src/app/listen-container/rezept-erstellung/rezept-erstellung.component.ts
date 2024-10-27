@@ -105,7 +105,7 @@ export class RezeptErstellungComponent implements OnInit {
   }
 
   onImageUploaded(image: File): void {
-    this.newRecipe.image = image; // Bild im Rezept speichern
+    this.newRecipe.image = image;
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
 
@@ -151,6 +151,8 @@ export class RezeptErstellungComponent implements OnInit {
     formData.append('name', rezeptObj.name);
     formData.append('onlineAdresse', rezeptObj.onlineAdresse);*/
 
+    //Knackpunkt gegen den PSOT-Fehler
+
     formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));
 
 
@@ -179,18 +181,13 @@ export class RezeptErstellungComponent implements OnInit {
   handleClick(event: Event) {
     event.preventDefault();
 
-  /*  if (this.selectedTags.length === 0) {
-      this.tagError = true; // Setzt die Error-Flag
-      return;
-    }
-
-    this.tagError = false;*/
+    this.tagError = false;
     // Rezept speichern
     const rezeptToSave = this.newRecipe;
 
-    this.saveRecipe(rezeptToSave).subscribe(
-      response => {
-        console.log('Rezept erfolgreich gespeichert:', response);
+    //saveRecipe enthält ja createRezept (s.o.)
+    this.saveRecipe(rezeptToSave).subscribe(      response => {
+
         this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
       },
       error => {
