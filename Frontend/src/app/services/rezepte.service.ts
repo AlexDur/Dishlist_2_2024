@@ -55,15 +55,13 @@ export class RezeptService {
   }
 
 
-  getAlleRezepte(): Observable<Rezept[]> {
+  getAlleRezepte(): Observable<RezeptAntwort[]> {
     const headers = this.getJsonHeaders().set('Accept', 'application/json');
 
-    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, { headers }).pipe(
+    return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, {headers}).pipe(
       tap(rezepte => {
-        const processedRezepte = rezepte.map(rezept => ({
-          ...rezept,
-        }));
-        this.rezepteSubject.next(processedRezepte);
+        console.log('Rezepte vom Server:', rezepte);
+        this.rezepteSubject.next(rezepte);
       }),
       catchError(error => {
         console.error("Fehler beim Laden der Rezepte", error);
@@ -72,7 +70,7 @@ export class RezeptService {
     );
   }
 
-  setCurrentRezept(rezept: Rezept) {
+    setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
   }
 
@@ -80,35 +78,6 @@ export class RezeptService {
     // Setzt das aktuelle Rezept auf `null` zurück
     this.currentRezeptSubject.next(null);
   }
-
-/*  // Mapping-Funktion für Rezept zu RezeptDTO
-  /!*TODO: Prüfe*!/
-  private mapRecipeToDTO(rezept: Rezept): {
-    onlineAdresse: string;
-    name: string;
-    id: number | undefined;
-    tags: Tag[] | undefined
-  } {
-    return {
-      id: rezept.id,
-      name: rezept.name,
-      onlineAdresse: rezept.onlineAdresse,
-      tags: rezept.tags,
-
-    };
-  }
-
-  // Mapping-Funktion für Tag zu TagDTO
-  /!*TODO: Prüfe*!/
-  private mapTagToDTO(tag: Tag): TagDTO {
-    return {
-      id: tag.id,
-      label: tag.label,
-      type: tag.type
-    };
-  }*/
-
-
 
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
@@ -219,7 +188,7 @@ export class RezeptService {
 
 
 
-
+/*
   uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
     const formData = new FormData();
     formData.append('file', file); // Datei in FormData hinzufügen
@@ -236,7 +205,7 @@ export class RezeptService {
       })
     );
   }
-
+*/
 
   /*Asynchron als Observable, weil Bildupload dauern kann.*/
 /*  uploadImage(rezeptId: number, file: File): Observable<any>{
