@@ -54,18 +54,11 @@ coverage/
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt/
 
-# Bower dependency directory (https://bower.io/)
-bower_components/
-
 # node-waf configuration
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-
-# Dependency directories
-node_modules/
-jspm_packages/
 
 # TypeScript v1 declaration files
 typings/
@@ -96,7 +89,6 @@ bazel-out/
 .history/
 
 # JetBrains
-.idea/
 *.sublime-workspace
 
 # Eclipse
@@ -112,7 +104,6 @@ bazel-out/
 nbproject/private/
 build/
 nbbuild/
-dist/
 nbdist/
 .nb-gradle/
 
@@ -120,13 +111,10 @@ nbdist/
 Procfile
 
 # Temporary files
-*.tmp
 *.temp
 *.tmp.*
-*.swp
 
 # OS files
-.DS_Store
 Thumbs.db
 
 # Java
@@ -138,7 +126,6 @@ Thumbs.db
 # Spring Boot specific
 /logs/
 /tmp/
-*.log
 
 # Maven specific files
 .mvn/
@@ -150,10 +137,11 @@ release.properties
 
 # Gradle specific files
 .gradle/
-build/
 
 # Lombok generated files
 lombok.config
 
-# Log files
-*.log
+
+# Ignoriere alle generierten Styles mit Hash im Dateinamen
+/styles.*.css
+/styles.*.js
