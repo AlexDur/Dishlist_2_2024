@@ -10,10 +10,7 @@ import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {TagService} from "../../../../../services/tags.service";
 import { Subscription } from 'rxjs';
-/*import {Dish, TagsComponent} from "../../../rezepteliste-desktop/tags/tags.component";*/
-import {Tag} from "../../../../../models/tag";
 import {Router} from "@angular/router";
-import {RezeptErstellungComponent} from "../../../../rezept-erstellung/rezept-erstellung.component";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 
 @Component({

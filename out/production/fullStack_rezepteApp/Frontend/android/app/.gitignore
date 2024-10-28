@@ -1,2 +1,37 @@
 /build/*
 !/build/.npmkeep
+
+# Ignoriere alle generierten Styles mit Hash im Dateinamen
+/styles.*.css
+/styles.*.js
+
+# Android specific files
+.gradle/
+local.properties
+/.idea/
+*.iml
+build/
+app/build/
+
+# Android Studio generated files
+/captures/
+/outputs/
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/misc.xml
+.idea/vcs.xml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.apk
+*.aab
+
+# VSCode specific
+.vscode/
