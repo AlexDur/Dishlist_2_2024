@@ -114,7 +114,12 @@ export class RezeptErstellungComponent implements OnInit {
     const rezeptObj:RezeptDTO  = {
       name: rezept.name,
       onlineAdresse: rezept.onlineAdresse,
-      tags: this.selectedTags,
+      tags: this.selectedTags.map(tag => ({
+        type: tag.type,
+        label: tag.label,
+        selected: tag.selected,
+        count: tag.count,
+      })),
       image: rezept.image ? rezept.image : null
     };
 
@@ -124,57 +129,47 @@ export class RezeptErstellungComponent implements OnInit {
 
   //Observable für die Anfragen im return
   saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+    const rezeptDTO = {
+      name: rezept.name,
+      onlineAdresse: rezept.onlineAdresse,
+      tags: Array.isArray(rezept.tags) ? rezept.tags.map((tag) => ({
+        type: tag.type ?? 'defaultType',
+        selected: tag.selected,
+        count: tag.count,
+      })) : []  // Fallback auf leeres Array
+    };
 
-    const rezeptObj = this.createRezeptObj(rezept);
-    console.log('rezeptObj:', rezeptObj)
+    console.log('Erstelltes RezeptDTO:', rezeptDTO);
+
     const formData = new FormData();
+    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], { type: 'application/json' }));
 
-    // Bild anhängen (wenn vorhanden und nicht bereits angehängt)
-    if (rezeptObj.image instanceof Blob || rezept.image instanceof File) {
-      // Überprüfen, ob das Bild bereits in formData vorhanden ist
-      if (!formData.has('image')) {
-        formData.append('image', rezeptObj.image);
-      } else {
-        console.warn('Bild ist bereits in FormData vorhanden:', rezept.image);
+    // @ts-ignore
+    if (rezept.image && (rezept.image instanceof File || rezept.image instanceof Blob)) {
+      if ((rezept.image as File).size > 10 * 1024 * 1024) { // Typ Assertion hier verwenden
+        console.error('Bilddatei überschreitet die maximale Größe von 10 MB.');
+        return throwError(() => new Error('Bild ist zu groß.'));
       }
+      formData.append('image', rezept.image);
     } else {
-      console.warn('Bild ist kein gültiges File oder Blob:', rezept.image);
+      console.warn('Kein gültiges Bild vorhanden:', rezept.image);
     }
 
-
-/*    // Tags anhängen
-    if (rezeptObj.tags && rezeptObj.tags.length > 0) {
-      formData.append('tags', JSON.stringify(rezeptObj.tags));
-    }
-
-// Rezeptdaten anhängen
-    formData.append('name', rezeptObj.name);
-    formData.append('onlineAdresse', rezeptObj.onlineAdresse);*/
-
-    //Knackpunkt gegen den PSOT-Fehler
-
-    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));
+    return this.rezepteService.createRezept(rezept, formData).pipe(
+      tap(response => {
+        console.log('Rezept erfolgreich gespeichert:', response);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Speichern des Rezepts:', error);
+        return throwError(() => new Error('Fehler beim Speichern des Rezepts.'));
+      })
+    );
+  }
 
 
-    console.log('FormData-Inhalte vor dem Senden_2:', Array.from((formData as any).entries()));
-    console.log('Tags im Rezept-Objekt:', rezeptObj.tags);
 
-    // this.rezepteService.... wird aufgerufen, um ein neues Rezept zu erstellen.
-      // neue Anfrage mit Rezeptdaten und Bilddaten wird an Server gesendet (via Aufruf von create.Rezept)
-      // pipe um Operatoren auf das Observable anzuwenden
-      // tap um Nebenffekte zu erzeugen ohne die Daten selbst zu verändern
-      return this.rezepteService.createRezept(rezeptObj,formData).pipe(
-        tap(response => {
-          console.log('Rezept erfolgreich gespeichert:', response);
-          this.newRecipeCreated.emit(this.newRecipe);
-          this.updateTagCount();
-        }),
-        catchError(error => {
-          console.error('Fehler beim Speichern des Rezepts:', error);
-          return throwError(() => new Error('Fehler beim Speichern des Rezepts'));
-        })
-      );
-    }
+
+
 
 
 
