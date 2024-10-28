@@ -5,15 +5,29 @@
     <form (ngSubmit)="handleClick($event)">
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText>
+          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
+                 [ngClass]="getInputClass('name')"
+                 (blur)="onFieldBlur('name')" >
+          <label for="rezeptname"><span class="required"></span></label>
+          <div *ngIf="showNameError" class="error-message"></div>
         </div>
+
         <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse" (blur)="validateAndFormatURL()" pInputText>
+          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
+                 [ngClass]="getInputClass('onlineAdresse')"
+                 (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()"  pInputText>
+
+          <label for="onlineadresse"><span class="required"></span></label>
+          <div *ngIf="!isFieldValid('onlineAdresse')" class="error-message"></div>
+
         </div>
-        <h3>FOTO</h3>
+        <div class="flex flex-row mb-2">
+           <div class="erstellung-kategorie">Foto</div>
+           <div class="optional">(optional)</div>
+        </div>
         <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
         <div>
-          <h3 class="erstellung-kategorie">Gang</h3>
+          <div class="erstellung-kategorie">Gang</div>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
                             [(ngModel)]="tag.selected"
@@ -25,7 +39,7 @@
                             label="Contrast" severity="contrast" >
             </p-toggleButton>
           </div>
-          <h3 class="erstellung-kategorie">Küche</h3>
+          <div class="erstellung-kategorie">Küche</div>
           <div class="p-field toggle-buttons-container">
             <p-toggleButton *ngFor="let tag of getKuechenTags()"
                             [(ngModel)]="tag.selected"
@@ -37,7 +51,7 @@
             </p-toggleButton>
           </div>
         </div>
-        <div *ngIf="tagError" class="error-message">Bitte wählen Sie mindestens einen Tag aus.</div>
+        <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
         <button class="general-button" type="submit" pButton>Hinzufügen</button>
       </div>
     </form>
