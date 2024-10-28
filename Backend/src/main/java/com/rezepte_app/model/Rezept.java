@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,22 +24,54 @@ public class Rezept {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Get ID method
+    @JsonProperty("name")
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "onlineAdresse")
+    private String onlineAdresse;
+
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "rezept_tags",
+            joinColumns = @JoinColumn(name = "rezept_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags = new ArrayList<>();
+
+
+
+    @Column(name = "bildUrl")
+    private String bildUrl;
+
+
+    @PrePersist
+    @PreUpdate
+    private void validateTags() {
+        for (Tag tag : tags) {
+            if (tag.getLabel() == null || tag.getLabel().isEmpty()) {
+                throw new IllegalArgumentException("AUS REZEPT.java: Ungültiges Tag-Label: " + tag.getLabel());
+            }
+        }
+    }
+
+
+    // Getter und Setter
+
     public Integer getId() {
         return Math.toIntExact((long) id);
     }
 
     public List<Tag> getTags() {
-        Object tags = null;
-        return (List<Tag>) tags;
+        return new ArrayList<>(tags); // Rückgabe der Tags als Liste
     }
 
     public String getOnlineAdresse() {
-        String onlineAdresse = "";
         return onlineAdresse;
     }
 
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
@@ -54,34 +87,13 @@ public class Rezept {
         this.onlineAdresse = onlineAdresse;
     }
 
-    @JsonProperty("name")
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "onlineAdresse")
-    private String onlineAdresse;
-
-
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "rezept_tags",
-            joinColumns = @JoinColumn(name = "rezept_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
-
-
-    @PrePersist
-    @PreUpdate
-    private void validateTags() {
-        for (Tag tag : tags) {
-            if (tag.getLabel() == null || tag.getLabel().isEmpty()) {
-                throw new IllegalArgumentException("AUS REZEPT.java: Ungültiges Tag-Label: " + tag.getLabel());
-            }
-        }
+    // Getter und Setter für bildUrl
+    public String getBildUrl() {
+        return bildUrl;
     }
 
-    public boolean getStatus() {
-        return false;
+    public void setBildUrl(String bildUrl) {
+        this.bildUrl = bildUrl;
     }
+
 }

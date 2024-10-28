@@ -6,6 +6,7 @@ import com.rezepte_app.repository.RezepteRepository;
 import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.model.Rezept;
 import com.rezepte_app.model.Tag;
+import com.rezepte_app.shared.imageUpload.services.ImageUploadService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +39,10 @@ public class RezepteService {
 
     @Autowired
     private RezepteRepository rezepteRepository;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
+
 
     public RezepteService(RezeptMapper rezeptMapper) {
         this.rezeptMapper = rezeptMapper;
@@ -74,28 +81,51 @@ public class RezepteService {
         rezepteRepository.save(rezept);  // Speichern außerhalb der Schleife für Effizienz
     }
 
-
+    //Hier Konvertierung des RezeptDTO zu Rezept
     @Transactional
-    public Rezept createRezept(@Valid RezeptDTO rezeptDTO) {
+    public Rezept createRezept(@Valid RezeptDTO rezeptDTO, MultipartFile image) throws IOException {
         // RezeptDTO zu Rezept konvertieren
         Rezept rezept = rezeptMapper.rezeptDTOToRezept(rezeptDTO);
+        logger.info("Nach Mapping - Name: {}, OnlineAdresse: {}", rezept.getName(), rezept.getOnlineAdresse());
+        logger.info("Empfangenes Rezept: {}", rezeptDTO);
 
-        if (rezept.getTags() != null && !rezept.getTags().isEmpty()) {
-            rezept.setTags(rezept.getTags().stream()
-                    .map(tag -> tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
-                            .orElseGet(() -> tagRepository.save(tag)))
-                    .collect(Collectors.toSet()));
+        // Bildverarbeitung und -speicherung
+        if (image != null && !image.isEmpty()) {
+            String bildUrl = imageUploadService.uploadImage(image, 800, 600);
+            rezept.setBildUrl(bildUrl);
         }
+
+        // Tags verarbeiten
+        if (rezept.getTags() != null && !rezept.getTags().isEmpty()) {
+            Set<Tag> updatedTags = rezept.getTags().stream()
+                    .map(tag -> {
+                        if (tag.getId() != null) {
+                            // Tag mit der ID suchen
+                            return tagRepository.findById(tag.getId())
+                                    .orElseGet(() -> {
+                                        // Tag ist nicht vorhanden, neu speichern
+                                        return tagRepository.save(tag);
+                                    });
+                        } else {
+                            // Tag-ID ist null, also direkt neu speichern
+                            return tagRepository.save(tag);
+                        }
+                    })
+                    .collect(Collectors.toSet());
+            rezept.setTags((List<Tag>) updatedTags);
+        }
+
+        System.out.println("R_Name: " + rezept.getName() + ", R_OnlineAdresse: " + rezept.getOnlineAdresse());
+        System.out.println("R_Tags: " + rezept.getTags());
 
         // Rezept speichern
         return rezepteRepository.save(rezept);
     }
 
 
-
     @Transactional
     public Optional<Rezept> updateRezept(@Valid Rezept rezept) {
-        Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(rezept.getId());
+        Optional<Rezept> existingRezeptOptional = rezepteRepository.findById(Math.toIntExact(rezept.getId()));
 
         if (existingRezeptOptional.isPresent()) {
             Rezept existingRezept = existingRezeptOptional.get();
@@ -116,7 +146,7 @@ public class RezepteService {
                     savedTags.add(savedTag);
                 }
             }
-            existingRezept.setTags(savedTags);
+            existingRezept.setTags((List<Tag>) savedTags);
 
             // Speichere das aktualisierte Rezept, wenn Tags vorhanden sind
             if (!savedTags.isEmpty()) {
@@ -137,7 +167,7 @@ public class RezepteService {
 
     public Tag updateTag(int tagId, String label) {
         // Suchen des Tags, Update durchführen und zurückgeben des aktualisierten Tags
-        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("Tag nicht gefunden"));
+        Tag tag = tagRepository.findById((long) tagId).orElseThrow(() -> new IllegalArgumentException("Tag nicht gefunden"));
         tag.setLabel(label);
         return tagRepository.save(tag);  // Speichert das aktualisierte Tag und gibt es zurück
     }

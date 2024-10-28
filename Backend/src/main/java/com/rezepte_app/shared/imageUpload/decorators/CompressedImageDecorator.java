@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.shared.imageUpload.decorators;
 
 import com.rezepte_app.shared.imageUpload.model_basisklasse.Image;
@@ -15,7 +16,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class CompressedImageDecorator extends ImageDecorator {
+public class CompressedImageDecorator extends */
+/**//*
+ImageDecorator {
     private final MultipartFile file;
 
     @Value("${LOCAL_DIR}")
@@ -88,3 +91,4 @@ public class CompressedImageDecorator extends ImageDecorator {
 
 }
 
+*/

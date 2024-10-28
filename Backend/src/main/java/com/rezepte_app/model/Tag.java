@@ -35,6 +35,9 @@ public class Tag{
     @Transient // Markiert das Feld als nicht dauerhaft
     private int count;
 
+    @Transient
+    private boolean selected;
+
     // Methode zum Setzen des count-Wertes
     public void updateCount() {
         this.count = rezepte != null ? rezepte.size() : 0;
@@ -50,9 +53,10 @@ public class Tag{
         return label;
     }
 
-    public int getId() {
-        return Math.toIntExact((long) id);
+    public Long getId() {
+        return id;
     }
+
 
     public List<Tag> getTags() {
         List<Tag> tags = List.of();

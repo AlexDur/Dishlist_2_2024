@@ -1,3 +1,7 @@
+/*
+//Servlet-Klasse wird automatisch von der Servlet-Engine (Tomcat,..) aufgerufen.
+//Geschieht durch @WebServlet
+
 package com.rezepte_app.controller;
 
 import com.rezepte_app.shared.imageUpload.fileupload.PartMultipartFile;
@@ -31,11 +35,11 @@ public class UploadServlet extends HttpServlet {
         Part filePart = request.getPart("file"); // "file" ist der Name des Upload-Felds im HTML-Formular
 
         if (filePart != null && filePart.getSize() > 0) {
-            MultipartFile multipartFile = new PartMultipartFile(filePart); // Umwandlung in MultipartFile
+            MultipartFile multipartFile = new PartMultipartFile(filePart);
 
             // Breite und Höhe können aus den Request-Parametern gelesen oder hartcodiert werden
-            int width = 800;  // Beispielwert für Breite
-            int height = 600; // Beispielwert für Höhe
+            int width = 400;
+            int height = 300;
 
             // Methode `uploadImage` aufrufen, statt `saveImage`
             String imagePath = imageUploadService.uploadImage(multipartFile, width, height);
@@ -47,7 +51,4 @@ public class UploadServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Keine Datei hochgeladen.");
         }
     }
-
-
-
-}
+}*/

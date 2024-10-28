@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,17 +72,22 @@ public class RezepteController {
     }
 
 
-    /*Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Sie nimmt ein Rezept-Objekt aus dem Request Body entgegen
-    und verwendet rezepteService, um das Rezept in der Datenbank zu speichern. Bei Erfolg wird eine Antwort mit dem Status
-    HttpStatus.CREATED und Details zum erstellten Rezept zurückgegeben*/
+    /*Controller generell, hier: Controller-Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Ist für den Empfang und das Parsing
+     der Daten aus dem Frontent zuständig. Übergibt die empfangenen Daten an den Serivce (wo eig.
+     Geschäftslogik sitzt). Zudem wird die HTTP-Antwort erstellt und an FE gesendet (Das passiert hier im try-catch*/
     @PostMapping(value = "/create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Map<String, Object>> createRezept(
+            //Parameter Json in RezeptDTO-Objekt konvertiert
             @RequestPart("rezeptDTO") RezeptDTO rezeptDTO,
-            @RequestPart("image") MultipartFile imageFile) {
+            @RequestPart("image") MultipartFile image, BindingResult result) {
+
 
         try {
-            // Erstellt das Rezept direkt ohne manuelle Validierung der Tags
-            Rezept createdRezept = rezepteService.createRezept(rezeptDTO);
+            System.out.println("Empfangenes Rezept: " + rezeptDTO);
+            System.out.println("Empfangenes Bild: " + image.getOriginalFilename());
+
+            // createRezept des Services aufgerufen:
+            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, image);
 
             // Erstellt ein JSON-Objekt für die Antwort
             Map<String, Object> response = new HashMap<>();
