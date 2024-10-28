@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.shared.imageUpload.decorators;
 
 import com.rezepte_app.shared.imageUpload.model_basisklasse.Image;
@@ -12,7 +13,9 @@ public class ResizedImageDecorator extends ImageDecorator {
     private int width;
     private int height;
 
-    /*super(image) ruft Konstruktor der Oberklasse auf, um image zu übergeben*/
+    */
+/*super(image) ruft Konstruktor der Oberklasse auf, um image zu übergeben*//*
+
     public ResizedImageDecorator(Image image, int width, int height) {
         super(image);
         this.width = width;
@@ -45,3 +48,4 @@ public class ResizedImageDecorator extends ImageDecorator {
 }
 
 
+*/

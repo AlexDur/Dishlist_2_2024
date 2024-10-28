@@ -1,9 +1,7 @@
 package com.rezepte_app.shared.imageUpload.services;
 
-import com.rezepte_app.shared.imageUpload.decorators.CompressedImageDecorator;
-import com.rezepte_app.shared.imageUpload.decorators.ResizedImageDecorator;
 import com.rezepte_app.shared.imageUpload.model_basisklasse.Image;
-
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,77 +10,113 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
 @Getter
-@Service // Annotation, um die Klasse als Spring-Service zu kennzeichnen
+@Service
 public class ImageUploadService {
-
 
     private static final Logger log = LoggerFactory.getLogger(ImageUploadService.class);
 
     @Value("${LOCAL_DIR}")
     private String localDir;
 
-    @Autowired
-    // Konstruktor mit @Value zur Injizierung der Umgebungsvariablen
-    public ImageUploadService(@Value("${LOCAL_DIR}") String localDir) {
-        this.localDir = localDir; // Setze die lokale Verzeichniskonstante
-        log.info("Lokales Verzeichnis: {}", this.localDir);
-        // Sicherstellen, dass das lokale Verzeichnis existiert
+   //Sorgt dafür, dass init()-Methode nach der Konstruktion der Bean aufgerufen wird
+    @PostConstruct
+    public void init() {
+        // Überprüfung, ob das Verzeichnis existiert
+        // File repräsentiert in Java Dateien oder Verzeichnisse
         File directory = new File(localDir);
         if (!directory.exists()) {
-            System.out.println("Verzeichnis nicht gefunden: " + localDir);
-            directory.mkdirs(); // Verzeichnis erstellen, falls nicht vorhanden
+            // Fehlermeldung ausgeben oder eine Ausnahme werfen
+            throw new IllegalStateException("Das Verzeichnis " + localDir + " existiert nicht.");
+        }
+    }
+
+    @Autowired
+    public ImageUploadService(@Value("${LOCAL_DIR}") String localDir) {
+        this.localDir = localDir;
+        log.info("Lokales Verzeichnis: {}", this.localDir);
+        File directory = new File(localDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
         }
     }
 
     public String uploadImage(MultipartFile file, int width, int height) throws IOException {
-        // Eindeutiger Dateiname für das Bild
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path path = Paths.get(localDir, fileName);
 
-        String uploadDir = localDir;
+        // ...
+        BufferedImage originalImage = ImageIO.read(file.getInputStream());
 
-        Path path = Paths.get(uploadDir, fileName);
-
-        // Erstelle ein Image-Objekt, um es den Decorators zu übergeben
-        Image image = new Image(file.getOriginalFilename()); // Beispiel: Erstellen eines Image-Objekts
-
-        // AKtivierung des Dekorator zur Größenänderung
-        ResizedImageDecorator resizedImageDecorator = new ResizedImageDecorator(image, width, height);
-
-        // upload in Decorator eig. kein treffender Name mehr, weil die Methode etwas anderes tut
-        resizedImageDecorator.upload();
-
-        // Aktivierung des Decorators zur Komprimierung des Bildes
-        CompressedImageDecorator compressedImageDecorator = new CompressedImageDecorator(image, file);
-
-        // Auch hier beschreibt upload() das Geschechen nur teilweise. Allerdings erfolgt der finale Upload dann doch hier.
-        compressedImageDecorator.upload(); // Hier sollte die Logik zur Komprimierung und zum Upload enthalten sein
-
-
-        System.out.println("Erstellter Dateiname: " + fileName);
+        // Bild im ursprünglichen Format speichern
+        saveImageToFolder(originalImage, fileName);
 
         return path.toString();
     }
 
-    public String saveImage(MultipartFile file) throws IOException {
-        // Standardwerte für Breite und Höhe festlegen oder von außen übergeben lassen
-        int defaultWidth = 800;  // Beispiel für Standardbreite
-        int defaultHeight = 600; // Beispiel für Standardhöhe
 
-        // Aufruf der `uploadImage` Methode mit den Standardwerten
-        return uploadImage(file, defaultWidth, defaultHeight);
+    /*private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
     }
 
+    private byte[] compressImage(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+        ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
+        writer.setOutput(ios);
+
+        ImageWriteParam param = writer.getDefaultWriteParam();
+        if (param.canWriteCompressed()) {
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(0.7f); // Beispiel: 70% Qualität
+        }
+
+        writer.write(null, new IIOImage(image, null, null), param);
+        writer.dispose();
+
+        return baos.toByteArray();
+    }*/
+
+    private String getFormatName(String fileName) {
+        if (fileName != null) {
+            int dotIndex = fileName.lastIndexOf('.');
+            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+                return fileName.substring(dotIndex + 1).toLowerCase();
+            }
+        }
+        // Standardformat zurückgeben, falls kein Format gefunden wurde
+        return "jpg";
+    }
+
+    private void saveImageToFolder(BufferedImage image, String fileName) throws IOException {
+        File outputFile = new File(localDir, fileName);
+        String formatName = getFormatName(fileName);
+        ImageIO.write(image, formatName, outputFile);
+        log.info("Bild erfolgreich gespeichert: {}", outputFile.getAbsolutePath());
+    }
+
+
+
+/*    public String saveImage(MultipartFile file) throws IOException {
+        return uploadImage(file, 800, 600); // Standardwerte
+    }*/
 }
-
-
-
-

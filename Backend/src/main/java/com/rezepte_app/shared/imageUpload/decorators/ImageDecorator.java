@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.shared.imageUpload.decorators;
 
 import com.rezepte_app.shared.imageUpload.model_basisklasse.Image;
@@ -16,3 +17,4 @@ public abstract class ImageDecorator extends Image{
     @Override
     public abstract void upload() throws IOException;
 }
+*/

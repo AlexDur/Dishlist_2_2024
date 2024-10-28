@@ -56,7 +56,7 @@ public class TagService {
     @Transactional
     public void removeTag(Long tagId) {
         try {
-            tagRepository.deleteById(Math.toIntExact(tagId));
+            tagRepository.deleteById((long) Math.toIntExact(tagId));
         } catch (IllegalArgumentException e) {
             // Handle invalid ID exception
             throw new ServiceException("Invalid tag ID", e);
@@ -69,7 +69,7 @@ public class TagService {
 
 
     // Methode zum Suchen eines Tags nach Namen
-    public Optional<Tag> findTagByLabelAndSeverity(String label, int id) {
+    public Optional<Tag> findTagByLabelAndSeverity(String label, Long id) {
         try {
             return tagRepository.findByLabelAndId(label, id);
         } catch (RuntimeException e) {
