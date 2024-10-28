@@ -13,6 +13,10 @@ import { RezeptService } from "../../services/rezepte.service";
 import { Router } from "@angular/router";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { TagService} from "../../services/tags.service";
+import { HttpResponse } from '@angular/common/http';
+import {RezeptAntwort} from "../../models/rezeptAntwort";
+import {RezeptDTO} from "../../models/dto/rezept.dto";
+
 
 
 @Component({
@@ -30,6 +34,10 @@ export class RezeptErstellungComponent implements OnInit {
   tags: Tag[] = [];
   selectedTags: Tag[] = [];
   tagError: boolean = false;
+  showNameError: boolean = false;
+  showOnlineAddressError: boolean = false;
+  nametouched:boolean = false;
+  on_adtouched: boolean = false;
 
   constructor(
     private rezepteService: RezeptService,
@@ -40,20 +48,25 @@ export class RezeptErstellungComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Abonnieren des Observable für das aktuelle Rezept
+    // Abonnieren des Observables aus rezepteService für das aktuelle Rezept
+    // Wenn e. Rezept exisitiert, dann wird es in newRecipe gespeichert und tags werden selectedTags zugewiesen
     this.rezepteService.currentRezept$.subscribe(rezept => {
       if (rezept) {
-        // Wenn ein Rezept vorhanden ist, diesen Zustand wiederherstellen
-        this.newRecipe = { ...rezept }; // Zustand wiederherstellen
-        this.selectedTags= rezept.tags || []; // Tags wiederherstellen und sicherstellen, dass nicht undefined
+        // Flache Kopie von Rezept (es werden nur die Referenzen kopiert nicht die Inhalte) d.h. newRecipe ist unabhängig von rezept
+        this.newRecipe = { ...rezept };
+        // Tags gesondert abgerufen, für spätere Verarbeitung in Zähler-Darstellungen
+        this.selectedTags= rezept.tags || [];
         console.log('Aktuelles Rezept:', this.newRecipe);
-      } else {
-        // Wenn kein Rezept vorhanden ist, eine neue Instanz initialisieren
+      }
+      // Wenn kein Rezept vorhanden ist, eine neue Instanz initialisieren
+      else {
         this.initNewRecipe();
       }
     });
   }
 
+  //Neues leeres Rezept mit Standardwerten initialisiert
+  //newRecipe dient als temporärer Speicher
   initNewRecipe() {
     this.newRecipe = {
       name: '',
@@ -61,17 +74,6 @@ export class RezeptErstellungComponent implements OnInit {
       tags: [],
       image: null
     };
-    this.resetTags();
-    this.selectedTags = [];
-  }
-
-  resetTags() {
-    // Initialisiert Tags neu und setzt `selected` auf false
-    this.tags = this.tagService.getTags().map(tag => ({
-      ...tag,
-      selected: false
-    }));
-    this.cdr.detectChanges();
   }
 
   validateAndFormatURL(): void {
@@ -79,7 +81,6 @@ export class RezeptErstellungComponent implements OnInit {
       this.newRecipe.onlineAdresse = 'https://' + this.newRecipe.onlineAdresse;
     }
   }
-
 
   toggleTagSelection(tag: Tag) {
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
@@ -103,114 +104,104 @@ export class RezeptErstellungComponent implements OnInit {
     });
   }
 
-  saveRecipe(rezept: Rezept, newRecipe: Rezept): Observable<any> {
-    console.log('Selected Tags before saving:', this.selectedTags);
-    this.newRecipe.tags = this.selectedTags;
+  onImageUploaded(image: File): void {
+    this.newRecipe.image = image;
+    console.log('Hochgeladenes Bild:', this.newRecipe.image);
+  }
 
-    if (this.newRecipe.tags.length > 0) {
-      console.log('Rezept vor dem Senden:', this.newRecipe);
+  // Extrahiere Werte aus newRecipe
+  private createRezeptObj(rezept: Rezept): any {
+    const rezeptObj:RezeptDTO  = {
+      name: rezept.name,
+      onlineAdresse: rezept.onlineAdresse,
+      tags: this.selectedTags,
+      image: rezept.image ? rezept.image : null
+    };
 
-      const formData = new FormData();
-     /* const tagsArray = this.selectedTags.map(tag => tag.label);*/
+    console.log('createRezeptObj', rezeptObj)
+    return rezeptObj
+  }
 
-      if (this.newRecipe.image) {
-        console.log('Bilddaten vor dem Speichern:', this.newRecipe.image);
-        formData.append('image', this.newRecipe.image);
+  //Observable für die Anfragen im return
+  saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+
+    const rezeptObj = this.createRezeptObj(rezept);
+    console.log('rezeptObj:', rezeptObj)
+    const formData = new FormData();
+
+    // Bild anhängen (wenn vorhanden und nicht bereits angehängt)
+    if (rezeptObj.image instanceof Blob || rezept.image instanceof File) {
+      // Überprüfen, ob das Bild bereits in formData vorhanden ist
+      if (!formData.has('image')) {
+        formData.append('image', rezeptObj.image);
+      } else {
+        console.warn('Bild ist bereits in FormData vorhanden:', rezept.image);
       }
-
-      // Übergeben der Tags als Array von IDs
-      formData.append('name', this.newRecipe.name);
-      formData.append('onlineAdresse', this.newRecipe.onlineAdresse);
-
-      // Tags als Array von Objekten vorbereiten
-      const tagsArray = this.selectedTags.map(tag => ({
-        label: tag.label,
-        count: 0, // Beispielwert, kann je nach Logik angepasst werden
-        selected: true, // Beispielwert, kann je nach Logik angepasst werden
-        type: 'Gerichtart' // Beispielwert, kann je nach Logik angepasst werden
-      }));
-
-      // Tags zum FormData hinzufügen
-      formData.append('tags', JSON.stringify(tagsArray));
-
-      // Rezept-Objekt hinzufügen
-      const rezeptObj = {
-        name: this.newRecipe.name,
-        onlineAdresse: this.newRecipe.onlineAdresse,
-        tags: tagsArray, // Die Tags als Array von Objekten
-        image: this.newRecipe.image ? null : undefined // Bilddaten optional lassen
-      };
+    } else {
+      console.warn('Bild ist kein gültiges File oder Blob:', rezept.image);
+    }
 
 
-      /*TODO: Blob nochmal nachlesen*/
-      formData.append('rezept', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));// Rezept-Objekt als JSON-String hinzufügen
+/*    // Tags anhängen
+    if (rezeptObj.tags && rezeptObj.tags.length > 0) {
+      formData.append('tags', JSON.stringify(rezeptObj.tags));
+    }
 
-      // Senden der Anfrage
-      return this.rezepteService.createRezept(newRecipe, formData).pipe(
+// Rezeptdaten anhängen
+    formData.append('name', rezeptObj.name);
+    formData.append('onlineAdresse', rezeptObj.onlineAdresse);*/
+
+    //Knackpunkt gegen den PSOT-Fehler
+
+    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptObj)], { type: 'application/json' }));
+
+
+    console.log('FormData-Inhalte vor dem Senden_2:', Array.from((formData as any).entries()));
+    console.log('Tags im Rezept-Objekt:', rezeptObj.tags);
+
+    // this.rezepteService.... wird aufgerufen, um ein neues Rezept zu erstellen.
+      // neue Anfrage mit Rezeptdaten und Bilddaten wird an Server gesendet (via Aufruf von create.Rezept)
+      // pipe um Operatoren auf das Observable anzuwenden
+      // tap um Nebenffekte zu erzeugen ohne die Daten selbst zu verändern
+      return this.rezepteService.createRezept(rezeptObj,formData).pipe(
         tap(response => {
           console.log('Rezept erfolgreich gespeichert:', response);
           this.newRecipeCreated.emit(this.newRecipe);
           this.updateTagCount();
-          this.router.navigate(['/listencontainer']);
         }),
         catchError(error => {
           console.error('Fehler beim Speichern des Rezepts:', error);
           return throwError(() => new Error('Fehler beim Speichern des Rezepts'));
         })
       );
-    } else {
-      console.error('Bitte wählen Sie mindestens einen Tag aus.');
-      return throwError(() => new Error('Bitte wählen Sie mindestens einen Tag aus.'));
     }
+
+
+
+  handleClick(event: Event) {
+    event.preventDefault();
+
+    this.tagError = false;
+    // Rezept speichern
+    const rezeptToSave = this.newRecipe;
+
+    //saveRecipe enthält ja createRezept (s.o.)
+    this.saveRecipe(rezeptToSave).subscribe(      response => {
+
+        this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
+      },
+      error => {
+        console.error('Fehler in handleClick:', error);
+
+      }
+    );
   }
+
 
 
   navigateContainer(event: Event) {
     event.preventDefault();
     this.router.navigate(['/listencontainer']);
-  }
-
-  handleClick(event: Event) {
-    event.preventDefault();
-
-/*    // Authentifizierungsüberprüfung
-    if (!this.authService.isAuthenticated()) {
-      console.log("Zu Login, weil User nicht eingeloggt")
-      this.router.navigate(['/login']);  // Weiterleitung zur Login-Seite, wenn nicht eingeloggt
-      return;
-    }*/
-
-    if (this.selectedTags.length === 0) {
-      this.tagError = true; // Setzt die Error-Flag
-      return; // Beendet die Funktion, falls kein Tag ausgewählt ist
-    }
-
-    this.tagError = false;
-    // Rezept speichern
-
-/*
-    // Erstellen von FormData
-    const formData = new FormData();
-    formData.append('file', this.selectedFile); // Die ausgewählte Datei hinzufügen
-    formData.append('rezept', JSON.stringify(this.newRecipe)); // Rezeptinhalt als JSON hinzufügen
-
-*/
-
-    this.saveRecipe(this.rezepte[0],this.newRecipe).subscribe(
-      response => {
-        console.log('Rezept erfolgreich gespeichert:', response);
-        this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
-      },
-      error => {
-        console.error('Fehler beim Speichern des Rezepts:', error);
-        // Hier kann zusätzliche Fehlerbehandlung hinzugefügt werden
-      }
-    );
-  }
-
-  onImageUploaded(image: File): void {
-    this.newRecipe.image = image; // Bild im Rezept speichern
-    console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
 
   getGerichtartenTags(): Tag[] {
@@ -220,4 +211,46 @@ export class RezeptErstellungComponent implements OnInit {
   getKuechenTags(): Tag[] {
     return this.tagService.getKuechenTags();
   }
+
+
+  isFieldValid(fieldName: keyof Rezept): boolean {
+    const fieldValue = this.newRecipe[fieldName];
+    return typeof fieldValue === 'string' && fieldValue.trim() !== '';
+  }
+
+
+  //Validierung der Eingabedaten ab hier
+
+  getInputClass(fieldName: keyof Rezept): string {
+    // Nur rot anzeigen, wenn das Feld berührt wurde und ungültig ist
+    if (fieldName === 'name' && this.nametouched) {
+      return this.isFieldValid(fieldName) ? '' : 'invalid';
+    } else if (fieldName === 'onlineAdresse' && this.on_adtouched) {
+      return this.isFieldValid(fieldName) ? '' : 'invalid';
+    }
+    return ''; // Standardfarbe, wenn das Feld nicht berührt wurde
+  }
+
+  private showError(fieldName: keyof Rezept, show: boolean): void {
+    if (fieldName === 'name') {
+      this.showNameError = show;
+    } else if (fieldName === 'onlineAdresse') {
+      this.showOnlineAddressError = show;
+    }
+  }
+
+  onFieldBlur(fieldName: keyof Rezept): void {
+    if (fieldName === 'name') {
+      this.nametouched = true; // Markiere das Feld als berührt
+    } else if (fieldName === 'onlineAdresse') {
+      this.on_adtouched = true; // Markiere das Feld als berührt
+    }
+
+    if (!this.isFieldValid(fieldName)) {
+      this.showError(fieldName, true);
+    } else {
+      this.showError(fieldName, false);
+    }
+  }
+
 }

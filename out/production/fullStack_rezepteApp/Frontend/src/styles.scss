@@ -1,5 +1,7 @@
 @import '~primeng/resources/primeng.min.css';
 @import '~primeicons/primeicons.css';
+@import 'primeflex/primeflex.css';
+
 
 $color-start: #f6a257;
 $color-end: #b34f09;
@@ -31,13 +33,13 @@ $detail_2-color: #221f1f;
 
 
 .general-button {
-  margin-top:50px;
+  margin-top:75px !important;
   width: 200px;
   font-weight: bold;
   height: 50px;
-  background-color: $detail_2-color;
-  color: $tertiary-color;
-  border: 1px transparent solid;
+  background-color: $detail_2-color !important;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -196,6 +198,36 @@ $detail_2-color: #221f1f;
   width: 100%;
 }
 
+.optional{
+  font-size: 12px;
+  color:white;
+  margin-top: 1.5rem;
+
+}
+
+.required {
+  color: white;
+  margin-left: 5px;
+}
+
+.error-message {
+  color: white;
+  font-size: 0.9em;
+}
+
+.inputfeld::placeholder {
+  color: gray;
+}
+
+.inputfeld.invalid::placeholder {
+  color: red;
+}
+
+.inputfeld.invalid {
+  border-color: red;
+}
+
+
 .screen{
   height: 100vh;
   width: 100%;
@@ -250,12 +282,11 @@ $detail_2-color: #221f1f;
   outline-offset: 2px;
 }
 
-.p-button {
-  padding: 5px 10px;
-}
+
 
 .p-button .p-button-label {
   padding: 5px;
+  font-family: Calibri;
 }
 
 .close-button {
@@ -293,9 +324,15 @@ $detail_2-color: #221f1f;
   border:$detail_2-color;
 }
 
+.p-togglebutton.p-button {
+  padding: 5px 10px;
+  border-radius: 100px !important;
+
+}
+
 
 .toggle-buttons-container {
-  width: 80%;
+  width: 70%;
   max-width: 250px;
   display: flex;
   flex-direction: row;
@@ -443,11 +480,11 @@ p-dialog .p-dialog-header{
 
 
 .erstellung-kategorie{
+  font-size: 18px;
+  font-weight: bold;
   color: white;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  margin-top:1rem;
+  margin-top:2rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
