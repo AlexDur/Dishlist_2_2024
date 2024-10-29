@@ -15,12 +15,12 @@ export class ListenContainerComponent implements OnInit{
   rezepte: Rezept[] = [];
   rezepteVerfuegbar = false
   gefilterteRezepte: Rezept[] = [];
+  bildUrls: { [key: number]: string } = {};
 
   constructor(private rezepteService: RezeptService) {}
 
   ngOnInit(): void {
     this.rezepteService.getAlleRezepte().subscribe(rezepte => {
-      console.log("Container: Geladene Rezepte:", rezepte);
       this.rezepte = rezepte.map(rezept => ({
         ...rezept,
    /*     datum: rezept.datum ? new Date(rezept.datum) : undefined*/
@@ -29,6 +29,31 @@ export class ListenContainerComponent implements OnInit{
       this.gefilterteRezepte = [...this.rezepte]; // Initialisiere gefilterte Rezepte mit allen Rezepten
       this.rezepteVerfuegbar = true;
       console.log('rezepteVerfügbar', this.rezepteVerfuegbar);
+
+      // Bilder für jedes Rezept abrufen
+      this.gefilterteRezepte.forEach(rezept => {
+        if (rezept.bildUrl) {
+          // Bildname extrahieren (z.B. nur den letzten Teil der URL)
+          const bildname = rezept.bildUrl.split('/').pop(); // Beispiel für Windows-Pfad
+          console.log('bildname', bildname)
+          if (bildname) {
+            this.rezepteService.getBild(bildname).subscribe(response => {
+              if (response.body) {
+                const blob = new Blob([response.body], { type: 'image/png' });
+                const imageUrl = URL.createObjectURL(blob);
+                this.bildUrls[rezept.id] = imageUrl;
+                console.log(' Bild-URL speichern')
+              } else {
+                console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
+              }
+            }, error => {
+              console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
+            });
+          } else {
+            console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
+          }
+        }
+      });
     });
   }
 

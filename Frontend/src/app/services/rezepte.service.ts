@@ -79,6 +79,16 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
+  getBild(bildname: string): Observable<HttpResponse<Blob>> {
+
+    return this.http.get<Blob>(`${this.backendUrl}/api/rezepte/bilder/${bildname}`, {
+      observe: 'response',
+      responseType: 'blob' as 'json' // Casten auf 'json' erlaubt die Verwendung von 'blob' als responseType
+    });
+  }
+
+
+
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
     // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)

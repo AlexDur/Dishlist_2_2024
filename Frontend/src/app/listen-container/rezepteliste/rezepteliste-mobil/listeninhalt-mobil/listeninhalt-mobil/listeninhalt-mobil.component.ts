@@ -18,7 +18,7 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
   templateUrl: './listeninhalt-mobil.component.html',
   styleUrls: ['./listeninhalt-mobil.component.scss']
 })
-export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
+export class ListeninhaltMobilComponent {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
@@ -28,15 +28,43 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
   private subscription: Subscription | undefined;
+  bildUrls: { [key: number]: string } = {};
 
   constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {}
 
-  ngOnInit(){
-     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
+/*  ngOnInit() {
+    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.gefilterteRezepte = rezepte;
       console.log('Aktualisierte Rezepte:', rezepte);
+
+      // Bilder für jedes Rezept abrufen
+      this.gefilterteRezepte.forEach(rezept => {
+        if (rezept.bildUrl) {
+          console.log('Bildurl im FE', rezept.bildUrl)
+          // Bildname extrahieren (z.B. nur den letzten Teil der URL)
+          const bildname = rezept.bildUrl.split('\\').pop(); // Beispiel für Windows-Pfad
+
+          if (bildname) {
+            this.rezepteService.getBild(bildname).subscribe(response => {
+              if (response.body) {
+                const blob = new Blob([response.body], { type: 'image/png' });
+                const imageUrl = URL.createObjectURL(blob);
+                this.bildUrls[rezept.id] = imageUrl; // Bild-URL speichern
+              } else {
+                console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
+              }
+            }, error => {
+              console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
+            });
+          } else {
+            console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
+          }
+        }
+      });
     });
-  }
+  }*/
+
+
 
   ngOnDestroy() {
     if (this.subscription) {
