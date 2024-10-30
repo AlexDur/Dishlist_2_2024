@@ -2,7 +2,7 @@
   <div *ngFor="let rezept of gefilterteRezepte" >
     <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
       <div class="rezept-darstellung">
-      <img [src]="rezept.bildUrl" alt="Foto des Gerichts" class="rezept-image" />
+      <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl"  class="rezept-image" />
       <div class="p-card-title">{{ rezept.name }}</div>
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
