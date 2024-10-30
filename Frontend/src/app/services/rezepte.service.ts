@@ -149,12 +149,7 @@ export class RezeptService {
       return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
     }
 
-    // Prüfen, ob formData bereits befüllt wurde
-    if (!formData.has('image')) {
-      console.error('Kein Bild im FormData vorhanden.');
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
-      return throwError(() => new Error('Bild ist erforderlich.')); // Fehler zurückgeben
-    }
+    //Bild optional
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
