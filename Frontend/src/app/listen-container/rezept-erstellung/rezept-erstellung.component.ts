@@ -56,7 +56,6 @@ export class RezeptErstellungComponent implements OnInit {
         this.newRecipe = { ...rezept };
         // Tags gesondert abgerufen, für spätere Verarbeitung in Zähler-Darstellungen
         this.selectedTags= rezept.tags || [];
-        console.log('Aktuelles Rezept:', this.newRecipe);
       }
       // Wenn kein Rezept vorhanden ist, eine neue Instanz initialisieren
       else {
@@ -146,18 +145,19 @@ export class RezeptErstellungComponent implements OnInit {
 
     // @ts-ignore
     if (rezept.image && (rezept.image instanceof File || rezept.image instanceof Blob)) {
-      if ((rezept.image as File).size > 10 * 1024 * 1024) { // Typ Assertion hier verwenden
+      if ((rezept.image as File).size > 10 * 1024 * 1024) {
         console.error('Bilddatei überschreitet die maximale Größe von 10 MB.');
         return throwError(() => new Error('Bild ist zu groß.'));
       }
       formData.append('image', rezept.image);
     } else {
-      console.warn('Kein gültiges Bild vorhanden:', rezept.image);
+      console.warn('Kein optionales Bild vorhanden:', rezept.image);
     }
 
     return this.rezepteService.createRezept(rezept, formData).pipe(
       tap(response => {
         console.log('Rezept erfolgreich gespeichert:', response);
+        this.updateTagCount()
       }),
       catchError(error => {
         console.error('Fehler beim Speichern des Rezepts:', error);
