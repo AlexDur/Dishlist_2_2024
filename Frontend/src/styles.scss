@@ -818,6 +818,18 @@ h3.weiss {
   background-color: dark$detail_2-color;
 }
 
+.rezept-darstellung{
+  background-color: grey;
+/*  opacity: 60%;*/
+}
+
+.rezept-image {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+}
+
+
 @media screen and (max-width: 750px) {
 .floating-button {
   right: 25px;
