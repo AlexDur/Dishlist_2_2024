@@ -66,11 +66,11 @@ export class ListeninhaltMobilComponent {
 
 
 
-  ngOnDestroy() {
+/*  ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
+  }*/
 
 
   navigateForm(rezept: Rezept, event: MouseEvent) {

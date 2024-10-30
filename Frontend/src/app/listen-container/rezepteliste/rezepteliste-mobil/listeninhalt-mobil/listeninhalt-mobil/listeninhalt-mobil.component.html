@@ -1,12 +1,14 @@
 <div class="container-listeninhalt">
   <div *ngFor="let rezept of gefilterteRezepte" >
     <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
-      <img [src]="rezept.bildUrl" alt="Foto des Gerichts" />
+      <div class="rezept-darstellung">
+      <img [src]="rezept.bildUrl" alt="Foto des Gerichts" class="rezept-image" />
       <div class="p-card-title">{{ rezept.name }}</div>
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
         <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-contrast p-button-text "></button>
         <button pButton type="button" icon="pi pi-trash" (click)="showDeleteDialog(rezept.id); $event.stopPropagation()" class="p-button-warning p-button-text"></button>
+      </div>
       </div>
     </p-card>
   </div>
