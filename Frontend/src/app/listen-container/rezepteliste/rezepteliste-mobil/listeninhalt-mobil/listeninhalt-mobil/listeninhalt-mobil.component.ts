@@ -27,51 +27,9 @@ export class ListeninhaltMobilComponent {
   @Input() visible: boolean = false;
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
-  private subscription: Subscription | undefined;
-  bildUrls: { [key: number]: string } = {};
-
-  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {}
-
-/*  ngOnInit() {
-    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.gefilterteRezepte = rezepte;
-      console.log('Aktualisierte Rezepte:', rezepte);
-
-      // Bilder für jedes Rezept abrufen
-      this.gefilterteRezepte.forEach(rezept => {
-        if (rezept.bildUrl) {
-          console.log('Bildurl im FE', rezept.bildUrl)
-          // Bildname extrahieren (z.B. nur den letzten Teil der URL)
-          const bildname = rezept.bildUrl.split('\\').pop(); // Beispiel für Windows-Pfad
-
-          if (bildname) {
-            this.rezepteService.getBild(bildname).subscribe(response => {
-              if (response.body) {
-                const blob = new Blob([response.body], { type: 'image/png' });
-                const imageUrl = URL.createObjectURL(blob);
-                this.bildUrls[rezept.id] = imageUrl; // Bild-URL speichern
-              } else {
-                console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
-              }
-            }, error => {
-              console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
-            });
-          } else {
-            console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
-          }
-        }
-      });
-    });
-  }*/
 
 
-
-/*  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }*/
-
+  constructor( private rezepteService: RezeptService,  private router:Router) {}
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
