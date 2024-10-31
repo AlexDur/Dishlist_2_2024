@@ -72,15 +72,26 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   filterRezepte(): void {
+    // Wenn keine Tags ausgewählt sind, alle Rezepte zurückgeben
     if (this.selectedTags.length === 0) {
       this.gefilterteRezepte.emit(this.originalRezepte);
-    } else {
-      const gefilterteRezepte = this.originalRezepte.filter(rezept =>
-        rezept.tags?.some(tag => this.selectedTags.includes(tag.label))
-      );
-      this.gefilterteRezepte.emit(gefilterteRezepte);
+      return;
     }
+
+    // Beginne mit den originalen Rezepten als Ausgangspunkt
+    let gefilterteRezepte = [...this.originalRezepte];
+
+    // Filtere basierend auf jedem ausgewählten Tag
+    this.selectedTags.forEach(selectedTag => {
+      gefilterteRezepte = gefilterteRezepte.filter(rezept =>
+        rezept.tags?.some(tag => tag.label === selectedTag)
+      );
+    });
+
+    // Gebe die gefilterten Rezepte aus
+    this.gefilterteRezepte.emit(gefilterteRezepte);
   }
+
 
   private updateTagCounts(): void {
     const zaehler: { [key: string]: number } = {};
