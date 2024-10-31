@@ -88,8 +88,12 @@ export class RezeptErstellungComponent implements OnInit {
     } else {
       this.selectedTags = this.selectedTags.filter(t => t.label !== tag.label);
     }
+    //TODO: Fehlerursache
+    this.newRecipe.tags = [...this.selectedTags];
     this.cdr.detectChanges();
   }
+
+
 
   updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);
@@ -107,6 +111,33 @@ export class RezeptErstellungComponent implements OnInit {
     this.newRecipe.image = image;
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
+
+  /*validateTags(tags: Array<{ type: string; label: string; selected: boolean; count: number }> | undefined): boolean {
+
+    if (!tags) {
+      console.error('Tags sind nicht definiert.');
+      return false; // oder true, je nach gewünschtem Verhalten
+    }
+
+    for (const tag of tags) {
+      if (!tag.type || typeof tag.type !== 'string') {
+        console.error(`Ungültiger Tag: type ist erforderlich und muss ein String sein.`);
+        return false;
+      }
+      if (typeof tag.selected !== 'boolean') {
+        console.error(`Ungültiger Tag: selected muss ein boolean sein.`);
+        return false;
+      }
+      if (typeof tag.count !== 'number' || tag.count < 0) {
+        console.error(`Ungültiger Tag: count muss eine nicht-negative Zahl sein.`);
+        return false;
+      }
+    }
+    return true;
+  }*/
+
+
+
 
   // Extrahiere Werte aus newRecipe
   private createRezeptObj(rezept: Rezept): any {
@@ -133,10 +164,18 @@ export class RezeptErstellungComponent implements OnInit {
       onlineAdresse: rezept.onlineAdresse,
       tags: Array.isArray(rezept.tags) ? rezept.tags.map((tag) => ({
         type: tag.type ?? 'defaultType',
+        label: tag.label,
         selected: tag.selected,
         count: tag.count,
       })) : []  // Fallback auf leeres Array
     };
+
+/*    if (!this.validateTags(rezept.tags)) {
+      console.error('Tags sind ungültig. Rezept kann nicht gespeichert werden.');
+      return throwError(() => new Error('Tags sind ungültig. Rezept kann nicht gespeichert werden.'));
+    }else{
+      console.log('Tags gültig')
+    }*/
 
     console.log('Erstelltes RezeptDTO:', rezeptDTO);
 
@@ -165,13 +204,6 @@ export class RezeptErstellungComponent implements OnInit {
       })
     );
   }
-
-
-
-
-
-
-
 
   handleClick(event: Event) {
     event.preventDefault();

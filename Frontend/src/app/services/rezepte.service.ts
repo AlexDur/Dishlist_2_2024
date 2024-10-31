@@ -149,7 +149,7 @@ export class RezeptService {
       return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
     }
 
-    //Bild optional
+    console.log('Formdata in service.ts', formData)
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
