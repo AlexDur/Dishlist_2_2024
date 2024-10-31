@@ -1,9 +1,14 @@
 <div class="container-listeninhalt">
   <div *ngFor="let rezept of gefilterteRezepte" >
-    <p-card class="clickable-card" (click)="openUrl(rezept.onlineAdresse)">
+    <p-card class="clickable-card" >
       <div class="rezept-darstellung">
-      <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl"  class="rezept-image" />
-      <div class="p-card-title">{{ rezept.name }}</div>
+      <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl"  class="rezept-image" (click)="openImageModal(rezept.bildUrl)"/>
+
+        <div *ngIf="selectedImageUrl" class="modal-overlay" (click)="closeImageModal()">
+          <img [src]="selectedImageUrl" class="rezept-image-full" (click)="$event.stopPropagation()" />
+        </div>
+
+      <div class="p-card-title" (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
       <div class="trennungsstrich"></div>
       <div class="p-card-footer" (click)="$event.stopPropagation()">
         <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event); $event.stopPropagation()" class="p-button-contrast p-button-text "></button>

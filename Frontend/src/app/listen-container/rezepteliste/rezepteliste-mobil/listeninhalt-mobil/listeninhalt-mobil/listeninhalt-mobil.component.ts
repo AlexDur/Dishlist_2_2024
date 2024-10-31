@@ -27,6 +27,7 @@ export class ListeninhaltMobilComponent {
   @Input() visible: boolean = false;
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
+  selectedImageUrl: string | null = null;
 
 
   constructor( private rezepteService: RezeptService,  private router:Router) {}
@@ -69,6 +70,14 @@ export class ListeninhaltMobilComponent {
     }
   }
 
+  openImageModal(imageUrl: string): void {
+    this.selectedImageUrl = imageUrl;
+  }
+
+  closeImageModal(): void {
+    this.selectedImageUrl = null;
+  }
+
   openUrl(url: string | undefined): void {
     if (!url) {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
@@ -95,5 +104,6 @@ export class ListeninhaltMobilComponent {
       console.warn('Ungültige URL');
     }
   }
+
 
 }
