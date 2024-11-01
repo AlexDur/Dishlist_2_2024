@@ -571,8 +571,6 @@ p-tag + p-tag {
   background-color:#575e65;
 }
 
-.p-field-checkbox {
-}
 
 .label-abstand {
   display: flex;
@@ -684,6 +682,40 @@ h3.weiss {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.filter-button-container {
+  position: relative; /* Für das Dropdown */
+}
+
+.filter-button {
+  background: linear-gradient(135deg, #dc6c40, #b14848); /* Farbverlauf */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex; /* Flexbox für zentriertes Icon */
+  align-items: center; /* Vertikale Ausrichtung */
+}
+
+.filter-button i {
+  margin-right: 8px; /* Abstand zwischen Icon und Text */
+}
+
+.filter-button:hover {
+  background: linear-gradient(135deg, #252424, #373535);
+  transform: translateY(-2px);
+}
+
+.filter-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
 
 .dropdown {
   position: relative;
@@ -729,9 +761,10 @@ h3.weiss {
   align-items: center;
   cursor: pointer;
   height: 100%;
-  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   gap:1rem;
+  flex: 0 1 auto;
 }
 
 .p-card-footer {
@@ -844,14 +877,6 @@ h3.weiss {
   }
 
 
-
-  /*.filter-anzeige {
-    height: auto;
-    overflow-y: auto;
-    background: white;
-  }*/
-
-
   .grid-container {
     display: flex;
     flex-direction: column;
@@ -864,8 +889,7 @@ h3.weiss {
   .container-listeninhalt {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-   /* grid-auto-rows: minmax(0, auto);*/
-    /*width: 100%;*/
+    width: 100%;
     grid-gap: 17px;
     align-items: start;
     margin-top:.5rem;
@@ -954,6 +978,7 @@ h3.weiss {
   justify-content: center;
   align-items: center;
   height: 100%;
+
   background-color: white;
 
 }
