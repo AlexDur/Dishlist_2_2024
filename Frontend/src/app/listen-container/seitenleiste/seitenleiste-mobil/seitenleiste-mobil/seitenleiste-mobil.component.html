@@ -1,74 +1,38 @@
 <div class="seitenleiste">
   <div class="seiten-ueberschrift">Dishes</div>
 
-  <!-- Kategorien-Buttons -->
-  <div class="kategorien-buttons">
-    <button (click)="toggleDropdown('gänge')">Gänge</button>
-    <button (click)="toggleDropdown('küche')">Küche</button>
-    <button (click)="toggleDropdown('nährwert')">Nährwert</button>
+  <!-- Filter-Button -->
+  <div class="filter-button-container">
+    <button (click)="toggleDropdown($event)">Filter</button>
   </div>
 
-  <!-- Dropdown für Gänge -->
-  <div class="dropdown" *ngIf="isDropdownOpen === 'gänge'">
+  <!-- Dropdown-Menü mit drei Spalten für Gänge, Küche und Nährwert -->
+  <div class="dropdown" *ngIf="isDropdownOpen">
     <div class="dropdown-content">
-      <div class="filter-anzeige">
-        <div class="filter-format">
-          <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
-            <p-checkbox
-              [(ngModel)]="art.selected"
-              [binary]="true"
-              (ngModelChange)="toggleTag(art)"
-              inputId="type_{{art.label}}">
-            </p-checkbox>
-            <label for="type_{{art.label}}" class="label-abstand">
-              <span>{{ art.label }}</span><br>
-              <span class="count">({{ art.count }})</span>
-            </label>
-          </div>
+      <!-- Spalte für Gänge -->
+      <div class="filter-column">
+        <h3>Gänge</h3>
+        <div *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
+          <p-checkbox [(ngModel)]="art.selected" [binary]="true" (ngModelChange)="toggleTag(art);" inputId="type_{{art.label}}"></p-checkbox>
+          <label for="type_{{art.label}}">{{ art.label }} ({{ art.count }})</label>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Dropdown für Küche -->
-  <div class="dropdown" *ngIf="isDropdownOpen === 'küche'">
-    <div class="dropdown-content">
-      <div class="filter-anzeige">
-        <div class="filter-format">
-          <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
-            <p-checkbox
-              [(ngModel)]="type.selected"
-              [binary]="true"
-              (ngModelChange)="toggleTag(type)"
-              inputId="type_{{i}}">
-            </p-checkbox>
-            <label for="type_{{i}}" class="label-abstand">
-              <span>{{ type.label }}</span><br>
-              <span class="count">({{ type.count }})</span>
-            </label>
-          </div>
+      <!-- Spalte für Küche -->
+      <div class="filter-column">
+        <h3>Küche</h3>
+        <div *ngFor="let type of getKuechenTags(); let i = index">
+          <p-checkbox [(ngModel)]="type.selected" [binary]="true" (ngModelChange)="toggleTag(type);" inputId="type_{{i}}"></p-checkbox>
+          <label for="type_{{i}}">{{ type.label }} ({{ type.count }})</label>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Dropdown für Nährwert -->
-  <div class="dropdown" *ngIf="isDropdownOpen === 'nährwert'">
-    <div class="dropdown-content">
-      <div class="filter-anzeige">
-        <div class="filter-format">
-          <div class="p-field-checkbox" *ngFor="let type of getNaehrwertTags(); let i = index">
-            <p-checkbox
-              [(ngModel)]="type.selected"
-              [binary]="true"
-              (ngModelChange)="toggleTag(type)"
-              inputId="type_{{i}}">
-            </p-checkbox>
-            <label for="type_{{i}}" class="label-abstand">
-              <span>{{ type.label }}</span><br>
-              <span class="count">({{ type.count }})</span>
-            </label>
-          </div>
+      <!-- Spalte für Nährwert -->
+      <div class="filter-column">
+        <h3>Nährwert</h3>
+        <div *ngFor="let type of getNaehrwertTags(); let i = index">
+          <p-checkbox [(ngModel)]="type.selected" [binary]="true" (ngModelChange)="toggleTag(type);" inputId="type_{{i}}"></p-checkbox>
+          <label for="type_{{i}}">{{ type.label }} ({{ type.count }})</label>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, HostListener, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
@@ -18,7 +18,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   originalRezepte: Rezept[] = [];
   private subscription: Subscription;
   tags: Tag[] = [...DEFAULT_TAGS];
-  isDropdownOpen: string | null = null;
+  isDropdownOpen: boolean = false;
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
@@ -27,8 +27,20 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleDropdown(category: string) {
-    this.isDropdownOpen = this.isDropdownOpen === category ? null : category;
+  toggleDropdown(event: MouseEvent): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    event.stopPropagation(); // Verhindert das Schließen beim Klicken auf den Button
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    // Überprüfen, ob der Klick außerhalb des Dropdowns erfolgt ist
+    if (this.isDropdownOpen && dropdownContent && !dropdownContent.contains(target)) {
+      this.isDropdownOpen = false;
+    }
   }
 
   ngOnInit(): void {
@@ -61,8 +73,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   toggleTag(tag: Tag): void {
+
     this.updateSelectedTags();
     this.filterRezepte();
+
   }
 
   updateSelectedTags(): void {

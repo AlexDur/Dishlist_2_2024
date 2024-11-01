@@ -550,6 +550,7 @@ p-dialog .p-dialog-header{
   padding: 0;
 }
 
+
 .tag-container{
   display:flex;
   flex-wrap:wrap;
@@ -571,7 +572,6 @@ p-tag + p-tag {
 }
 
 .p-field-checkbox {
-  margin-bottom: 0.3rem;
 }
 
 .label-abstand {
@@ -581,7 +581,7 @@ p-tag + p-tag {
   justify-content: center;
   width: 100%;
   text-align: center;
-  margin-right:14px;
+
 }
 
 .linie-seite{
@@ -650,8 +650,8 @@ h3.weiss {
 }
 
 .filter-format {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 
 }
@@ -663,12 +663,14 @@ h3.weiss {
 }
 
 .seiten-ueberschrift{
-  margin-left:1rem;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
   font-size: 2rem;
   color: $tertiary-color;
   font-family: "Cooper Black";
+  align-items: center;
 }
 
 .p-card {
@@ -683,13 +685,42 @@ h3.weiss {
 }
 
 
+.dropdown {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+.dropdown-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: black;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  z-index: 1000;
+  max-height: none;
+  overflow-y: auto;
+}
+
+.filter-column {
+  width: 60%;
+}
+
+.filter-column h3 {
+  margin-bottom: 10px;
+  text-align: left;
+}
 
 .container-listeninhalt {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(0, auto);
   width: 100%;
-  margin-top:2rem;
+  padding-top: 20px;
 }
 
 .clickable-card {
@@ -700,7 +731,7 @@ h3.weiss {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 5rem;
+  gap:1rem;
 }
 
 .p-card-footer {
@@ -708,8 +739,6 @@ h3.weiss {
   display: flex;
   justify-content: center;
 }
-
-
 
 .p-card-title {
   display: -webkit-box;
@@ -736,6 +765,14 @@ h3.weiss {
   background-color: $detail_2-color !important;
   border-color: $detail_2-color !important;
 }
+
+.p-checkbox .p-checkbox-box.p-highlight{
+  border-color: $detail_2-color;
+  background: $detail_2-color;
+  box-shadow: $detail_2-color;
+}
+
+.p-checbkbox
 
 .rezept-image {
   cursor: pointer;
@@ -766,17 +803,20 @@ h3.weiss {
   object-fit: contain;
 }
 
+.seitenleiste {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  order: -1;
+  width: 100%;
+  align-items: center;
+}
+
 
 @media screen and (max-width: 750px) {
-  .seitenleiste {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: center;
-    order: -1;
-    width: 100%;
-  }
+
 
   .linie-seite {
     width: 5px;
@@ -803,45 +843,13 @@ h3.weiss {
     text-align: left;
   }
 
-  .kategorien-buttons {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
-  }
-
-  .kategorien-buttons button {
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  .dropdown {
-    position: relative;
-    width: 100%;
-    margin-top: 10px;
-  }
 
 
-  .dropdown-content {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    color: black;
-    background-color: white;
-   /* opacity: 0.75;*/
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    z-index: 1000;
-    max-height: 200px;
+  /*.filter-anzeige {
+    height: auto;
     overflow-y: auto;
-  }
-
-
-  .filter-anzeige {
-    max-height: 200px;
-    overflow-y: auto;
-  }
+    background: white;
+  }*/
 
 
   .grid-container {
@@ -851,7 +859,6 @@ h3.weiss {
     width: 100%;
     padding:.7rem;
     color:white;
-
   }
 
   .container-listeninhalt {
@@ -948,6 +955,7 @@ h3.weiss {
   align-items: center;
   height: 100%;
   background-color: white;
+
 }
 
 .rezept-image {
