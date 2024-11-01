@@ -1,67 +1,76 @@
-<!-- seitenleiste-mobil.component.html -->
 <div class="seitenleiste">
-<div class="seiten-ueberschrift">Dishes</div>
-  <div class="mahlzeiten">
-    <hr class="linie-seite">
-  <h3 class="weiss">Gänge</h3>
-  <div class="filter-anzeige">
-    <div class="filter-format">
-    <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
-      <p-checkbox
-        [(ngModel)]="art.selected"
-        [binary]="true"
-        (ngModelChange)="toggleTag(art)"
-        inputId="type_{{art.label}}">
-      </p-checkbox>
-      <label for="type_{{art.label}}" class="label-abstand">
-        <span>{{ art.label }}</span><br>
-        <span class="count">({{ art.count }})</span>
-      </label>
-    </div>
-    </div>
-  </div>
+  <div class="seiten-ueberschrift">Dishes</div>
+
+  <!-- Kategorien-Buttons -->
+  <div class="kategorien-buttons">
+    <button (click)="toggleDropdown('gänge')">Gänge</button>
+    <button (click)="toggleDropdown('küche')">Küche</button>
+    <button (click)="toggleDropdown('nährwert')">Nährwert</button>
   </div>
 
-  <!--Verwende Interpolation für Zähler zur Generation eindeutiger IDs-->
-  <div class="kuechen">
-    <hr class="linie-seite">
-    <h3 class="weiss">Küche</h3>
-    <div class="filter-anzeige">
-      <div class="filter-format">
-        <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
-          <p-checkbox
-            [(ngModel)]="type.selected"
-            [binary]="true"
-            (ngModelChange)="toggleTag(type)"
-            inputId="type_{{i}}">
-          </p-checkbox>
-          <label for="type_{{i}}" class="label-abstand">
-            <span>{{ type.label }}</span><br>
-            <span class="count">({{ type.count }})</span>
-          </label>
+  <!-- Dropdown für Gänge -->
+  <div class="dropdown" *ngIf="isDropdownOpen === 'gänge'">
+    <div class="dropdown-content">
+      <div class="filter-anzeige">
+        <div class="filter-format">
+          <div class="p-field-checkbox" *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
+            <p-checkbox
+              [(ngModel)]="art.selected"
+              [binary]="true"
+              (ngModelChange)="toggleTag(art)"
+              inputId="type_{{art.label}}">
+            </p-checkbox>
+            <label for="type_{{art.label}}" class="label-abstand">
+              <span>{{ art.label }}</span><br>
+              <span class="count">({{ art.count }})</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="naehrwert">
-    <hr class="linie-seite">
-    <h3 class="weiss">Nährwert</h3>
-    <div class="filter-anzeige">
-      <div class="filter-format">
-        <div class="p-field-checkbox" *ngFor="let type of getNaehrwertTags(); let i = index">
-          <p-checkbox
-            [(ngModel)]="type.selected"
-            [binary]="true"
-            (ngModelChange)="toggleTag(type)"
-            inputId="type_{{i}}">
-          </p-checkbox>
-          <label for="type_{{i}}" class="label-abstand">
-            <span>{{ type.label }}</span><br>
-            <span class="count">({{ type.count }})</span>
-          </label>
+  <!-- Dropdown für Küche -->
+  <div class="dropdown" *ngIf="isDropdownOpen === 'küche'">
+    <div class="dropdown-content">
+      <div class="filter-anzeige">
+        <div class="filter-format">
+          <div class="p-field-checkbox" *ngFor="let type of getKuechenTags(); let i = index">
+            <p-checkbox
+              [(ngModel)]="type.selected"
+              [binary]="true"
+              (ngModelChange)="toggleTag(type)"
+              inputId="type_{{i}}">
+            </p-checkbox>
+            <label for="type_{{i}}" class="label-abstand">
+              <span>{{ type.label }}</span><br>
+              <span class="count">({{ type.count }})</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Dropdown für Nährwert -->
+  <div class="dropdown" *ngIf="isDropdownOpen === 'nährwert'">
+    <div class="dropdown-content">
+      <div class="filter-anzeige">
+        <div class="filter-format">
+          <div class="p-field-checkbox" *ngFor="let type of getNaehrwertTags(); let i = index">
+            <p-checkbox
+              [(ngModel)]="type.selected"
+              [binary]="true"
+              (ngModelChange)="toggleTag(type)"
+              inputId="type_{{i}}">
+            </p-checkbox>
+            <label for="type_{{i}}" class="label-abstand">
+              <span>{{ type.label }}</span><br>
+              <span class="count">({{ type.count }})</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
