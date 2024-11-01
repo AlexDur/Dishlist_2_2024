@@ -1,5 +1,19 @@
 {
   "rules": {
+    "jsdoc/require-jsdoc": [
+      "warn", // oder "error", um einen Fehler auszugeben
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true,
+          "FunctionExpression": true
+        }
+      }
+    ],
+    // Optional: Stelle sicher, dass JSDoc-Formatierung überprüft wird
+    "jsdoc/check-syntax": "warn",
     "indent": [
       "error",
       4
