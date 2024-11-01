@@ -24,7 +24,7 @@ a {
 
 $primary-color: #b61919;
 $secondary-color: #d8620f;
-$tertiary-color: #f8f6f6;
+$tertiary-color: #e6e5e5;
 
 $detail-color: #000000; ;
 $detail_2-color: #221f1f;
@@ -49,6 +49,7 @@ $detail_2-color: #221f1f;
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
 }
+
 
 @media screen and (max-width: 750px) {
   body {
@@ -228,6 +229,7 @@ $detail_2-color: #221f1f;
 }
 
 
+
 .screen{
   height: 100vh;
   width: 100%;
@@ -259,6 +261,58 @@ $detail_2-color: #221f1f;
 .inputfeld:focus{
   outline: 2px solid black;
 
+}
+
+.upload-button {
+  margin-top: 15px;
+  width: 100px;
+  font-weight: bold;
+  height: 40px;
+  background-color: $secondary-color !important;
+  color: $tertiary-color !important;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $tertiary-color;
+  outline-offset: 2px;
+}
+
+.upload-button .p-button-icon {
+  color: white !important;
+  background-color: transparent;
+}
+
+.upload-button .p-button {
+  background-color: transparent !important;
+  border: none;
+  color: white;
+}
+
+.upload-button-label{
+  margin-top:20px;
+  display: inline-block;
+  padding: 10px 40px;
+  cursor: pointer;
+  background-color: $secondary-color ;
+  color: white; /* Beispiel für Schriftfarbe */
+  border-radius: 50px; /* Abgerundete Ecken */
+  text-align: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $tertiary-color;
+  outline-offset: 2px;
+}
+
+.upload-button-label input {
+  display: none;
+}
+
+.bild-selected {
+  background-color: black; /* Farbe, wenn ein Bild ausgewählt wurde */
 }
 
 .neues-rezept{
@@ -852,9 +906,10 @@ h3.weiss {
 .rezept-darstellung {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Zentriert die Inhalte vertikal */
-  align-items: center; /* Zentriert die Inhalte horizontal */
-  height: 100%; /* Sicherstellen, dass die Höhe 100% der Card beträgt */
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: white;
 }
 
 .rezept-image {

@@ -9,15 +9,21 @@ import { Rezept } from "../../../models/rezepte";
 export class FotoUploadComponent {
 
   @Output() imageUploaded = new EventEmitter<File>(); // Emitter für das hochgeladene Bild
-  @Input() rezepte: Rezept[] = []; // Liste der Rezepte
+  @Input() rezepte: Rezept[] = [];
+  isBildSelected: boolean = false;
+  selectedFile: File | null = null;
 
 
 
-  onFileSelected(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      this.imageUploaded.emit(file); // Emit das ausgewählte Bild
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0]; // Speichert die ausgewählte Datei
+      this.isBildSelected = true; // Bild wurde ausgewählt
+      this.imageUploaded.emit(this.selectedFile);
+    } else {
+      this.selectedFile = null;
+      this.isBildSelected = false;
     }
   }
 }
