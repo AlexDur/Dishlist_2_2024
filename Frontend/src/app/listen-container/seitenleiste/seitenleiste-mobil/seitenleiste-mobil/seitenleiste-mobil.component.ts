@@ -3,6 +3,7 @@ import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
 import { Subscription } from 'rxjs';
+import {DEFAULT_TAGS} from "../../../../models/default_tag.ts";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
@@ -16,15 +17,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
   private subscription: Subscription;
-
-  tags: Tag[] = [
-    { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
-  ];
+  tags: Tag[] = [...DEFAULT_TAGS];
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
@@ -115,6 +108,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
 
   getKuechenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Küche');
+  }
+
+  getNaehrwertTags(): Tag[] {
+    return this.tags.filter(tag => tag.type == "Nährwert")
   }
 
   updateTagCount(): void {

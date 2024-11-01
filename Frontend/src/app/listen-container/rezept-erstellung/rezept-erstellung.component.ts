@@ -16,6 +16,7 @@ import { TagService} from "../../services/tags.service";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
 import {RezeptDTO} from "../../models/dto/rezept.dto";
+import {DEFAULT_TAGS} from "../../models/default_tag.ts";
 
 
 
@@ -31,7 +32,7 @@ export class RezeptErstellungComponent implements OnInit {
   @Input() gefilterteRezepte: Rezept[] = [];
 
   newRecipe: any = {};
-  tags: Tag[] = [];
+  tags: Tag[] = [...DEFAULT_TAGS];
   selectedTags: Tag[] = [];
   tagError: boolean = false;
   showNameError: boolean = false;
@@ -186,6 +187,10 @@ export class RezeptErstellungComponent implements OnInit {
 
   getKuechenTags(): Tag[] {
     return this.tagService.getKuechenTags();
+  }
+
+  getNaehrwertTags(): Tag[] {
+    return this.tagService.getNaehrwertTags();
   }
 
 

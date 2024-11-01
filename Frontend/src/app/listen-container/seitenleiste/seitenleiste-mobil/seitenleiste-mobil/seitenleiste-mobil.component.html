@@ -43,4 +43,25 @@
       </div>
     </div>
   </div>
+
+  <div class="naehrwert">
+    <hr class="linie-seite">
+    <h3 class="weiss">Nährwert</h3>
+    <div class="filter-anzeige">
+      <div class="filter-format">
+        <div class="p-field-checkbox" *ngFor="let type of getNaehrwertTags(); let i = index">
+          <p-checkbox
+            [(ngModel)]="type.selected"
+            [binary]="true"
+            (ngModelChange)="toggleTag(type)"
+            inputId="type_{{i}}">
+          </p-checkbox>
+          <label for="type_{{i}}" class="label-abstand">
+            <span>{{ type.label }}</span><br>
+            <span class="count">({{ type.count }})</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
