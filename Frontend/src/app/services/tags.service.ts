@@ -4,6 +4,7 @@ import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
 import {RezeptService} from "./rezepte.service";
 import {environment} from "../../environments/environment";
+import {DEFAULT_TAGS} from "../models/default_tag.ts";
 
 
 @Injectable({
@@ -13,15 +14,7 @@ export class TagService {
   private tagsSubject = new BehaviorSubject<Tag[]>([]);
   public tags$ = this.tagsSubject.asObservable();
   private backendUrl = environment.apiUrl;
-
-  public tags: Tag[] = [
-    { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
-  ];
+  tags: Tag[] = DEFAULT_TAGS
 
   constructor(private http: HttpClient, private rezepteService: RezeptService) {}
 
@@ -77,5 +70,9 @@ export class TagService {
 
   getKuechenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Küche');
+  }
+
+  getNaehrwertTags(): Tag[] {
+    return this.tags.filter(tag => tag.type === 'Nährwert');
   }
 }

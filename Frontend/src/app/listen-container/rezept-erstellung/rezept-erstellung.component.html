@@ -50,7 +50,22 @@
                             [ngModelOptions]="{standalone: true}">
             </p-toggleButton>
           </div>
+
+          <div class="erstellung-kategorie">Nährwert</div>
+          <div class="p-field toggle-buttons-container">
+            <p-toggleButton *ngFor="let tag of getNaehrwertTags()"
+                            [(ngModel)]="tag.selected"
+                            (ngModelChange)="toggleTagSelection(tag)"
+                            name="{{tag.label}}"
+                            onLabel="{{tag.label}}"
+                            offLabel="{{tag.label}}"
+                            [ngModelOptions]="{standalone: true}">
+            </p-toggleButton>
+          </div>
         </div>
+
+
+
         <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
         <button class="general-button" type="submit" pButton>Hinzufügen</button>
       </div>
