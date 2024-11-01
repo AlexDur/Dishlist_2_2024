@@ -590,7 +590,7 @@ p-tag + p-tag {
 }
 
 .label-abstand span {
-  color: $tertiary-color !important;
+  color: $detail_2-color !important;
 }
 
 .mobile-row {
@@ -803,11 +803,46 @@ h3.weiss {
     text-align: left;
   }
 
-  .filter-anzeige {
+  .kategorien-buttons {
     display: flex;
-    justify-content: flex-end;
-    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 10px;
   }
+
+  .kategorien-buttons button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .dropdown {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+
+  .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    color: black;
+    background-color: white;
+   /* opacity: 0.75;*/
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+
+  .filter-anzeige {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
 
   .grid-container {
     display: flex;

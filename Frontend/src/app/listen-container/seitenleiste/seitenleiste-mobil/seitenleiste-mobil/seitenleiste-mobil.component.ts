@@ -18,12 +18,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   originalRezepte: Rezept[] = [];
   private subscription: Subscription;
   tags: Tag[] = [...DEFAULT_TAGS];
+  isDropdownOpen: string | null = null;
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts();
     });
+  }
+
+  toggleDropdown(category: string) {
+    this.isDropdownOpen = this.isDropdownOpen === category ? null : category;
   }
 
   ngOnInit(): void {
