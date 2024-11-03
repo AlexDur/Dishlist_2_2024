@@ -41,7 +41,12 @@ export class RezeptErstellungComponent implements OnInit {
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
 
-  categories = ['Gänge', 'Küche', 'Nährwert'];
+  categories = [
+    { name: 'Gänge', selected: false },
+    { name: 'Küche', selected: false },
+    { name: 'Nährwert', selected: false }
+  ];
+
 
   constructor(
     private rezepteService: RezeptService,
@@ -85,32 +90,49 @@ export class RezeptErstellungComponent implements OnInit {
     }
   }
 
-  setCategory(category: string) {
-    // Die ausgewählte Kategorie umschalten oder abwählen
-    this.selectedCategory = this.selectedCategory === category ? null : category;
+  setCategory(category: { name: string; selected: boolean }) {
+    // Die ausgewählte Kategorie umschalten
+    if (this.selectedCategory === category.name) {
+      category.selected = false;
+      this.selectedCategory = null;
+    } else {
+      // Setze die ausgewählte Kategorie und setze alle anderen auf nicht ausgewählt
+      this.categories.forEach(cat => cat.selected = false);
+      category.selected = true;
+      this.selectedCategory = category.name;
+    }
   }
+
 
   getVisibleTags() {
     // Tags nach `selectedCategory` filtern
     return this.tags.filter(tag => tag.type === this.selectedCategory);
   }
 
-  onTagClick(tag: any) {
-    // Logik für das Tag-Klick-Event
-    console.log(`${tag.label} wurde geklickt`);
+  isAnyTagSelected(category: string): boolean {
+    const categoryTags = this.tags.filter(tag => tag.type === category);
+    console.log(`Tags for category ${category}:`, categoryTags);
+    const anySelected = categoryTags.some(tag => tag.selected);
+    console.log(`Any tag selected for category ${category}:`, anySelected);
+    return anySelected;
   }
 
+
   toggleTagSelection(tag: Tag) {
-    tag.selected = !tag.selected
+    tag.selected = !tag.selected;
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
+
     if (tag.selected) {
       this.selectedTags.push(tag);
     } else {
       this.selectedTags = this.selectedTags.filter(t => t.label !== tag.label);
     }
+
     this.newRecipe.tags = [...this.selectedTags];
+    console.log('Aktuelle ausgewählte Tags:', this.selectedTags); // Log der ausgewählten Tags
     this.cdr.detectChanges();
   }
+
 
 
 
