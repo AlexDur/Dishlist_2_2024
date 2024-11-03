@@ -535,6 +535,7 @@ p-dialog .p-dialog-header{
 
 .erstellung-kategorie{
   font-size: 18px;
+  width: 40%;
   font-weight: bold;
   color: white;
   text-align: center;
@@ -570,6 +571,68 @@ p-tag + p-tag {
   font-size: 0.25rem;
   background-color:#575e65;
 }
+
+.category-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.category-button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.category-button:focus {
+  outline: none;
+}
+
+.tag-panel {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tag {
+  display: inline-block;
+  text-align: center;
+  padding: 5px 10px;
+  margin: 4px;
+  background-color: #d1d1d1;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.tag:hover {
+  background-color: #b0b0b0;
+}
+
+.tag.selected {
+  background-color: $detail_2-color;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 
 
 .label-abstand {

@@ -2,7 +2,7 @@
   <div class="zentriertes-formular">
     <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
     <div class="neues-rezept">Neues Rezept</div>
-    <form (ngSubmit)="handleClick($event)">
+    <form>
       <div class="p-fluid">
         <div class="p-field">
           <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
@@ -27,47 +27,31 @@
         </div>
         <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
         <div>
-          <div class="erstellung-kategorie">Gang</div>
-          <div class="p-field toggle-buttons-container">
-            <p-toggleButton *ngFor="let tag of getGerichtartenTags()"
-                            [(ngModel)]="tag.selected"
-                            (ngModelChange)="toggleTagSelection(tag)"
-                            name="{{tag.label}}"
-                            onLabel="{{tag.label}}"
-                            offLabel="{{tag.label}}"
-                            [ngModelOptions]="{standalone: true}"
-                            label="Contrast" severity="contrast" >
-            </p-toggleButton>
-          </div>
-          <div class="erstellung-kategorie">Küche</div>
-          <div class="p-field toggle-buttons-container">
-            <p-toggleButton *ngFor="let tag of getKuechenTags()"
-                            [(ngModel)]="tag.selected"
-                            (ngModelChange)="toggleTagSelection(tag)"
-                            name="{{tag.label}}"
-                            onLabel="{{tag.label}}"
-                            offLabel="{{tag.label}}"
-                            [ngModelOptions]="{standalone: true}">
-            </p-toggleButton>
+
+
+          <div class="category-container">
+            <ng-container *ngFor="let category of categories">
+              <button (click)="setCategory(category)" class="category-button">
+                {{ category }}
+              </button>
+
+              <div *ngIf="selectedCategory === category" class="tag-panel">
+                <span
+                  *ngFor="let tag of getVisibleTags()"
+                  (click)="toggleTagSelection(tag)"
+                  class="tag"
+                  [class.selected]="tag.selected">
+                  {{ tag.label }}
+                </span>
+              </div>
+            </ng-container>
           </div>
 
-          <div class="erstellung-kategorie">Nährwert</div>
-          <div class="p-field toggle-buttons-container">
-            <p-toggleButton *ngFor="let tag of getNaehrwertTags()"
-                            [(ngModel)]="tag.selected"
-                            (ngModelChange)="toggleTagSelection(tag)"
-                            name="{{tag.label}}"
-                            onLabel="{{tag.label}}"
-                            offLabel="{{tag.label}}"
-                            [ngModelOptions]="{standalone: true}">
-            </p-toggleButton>
-          </div>
-        </div>
 
 
-
-        <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
-        <button class="general-button" type="submit" pButton>Hinzufügen</button>
+          <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
+        <button (click)="handleClick($event)" class="general-button" type="submit" pButton>Hinzufügen</button>
+      </div>
       </div>
     </form>
   </div>

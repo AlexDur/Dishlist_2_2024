@@ -122,7 +122,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gerichtart');
+    return this.tags.filter(tag => tag.type === 'Gänge');
   }
 
   getKuechenTags(): Tag[] {
