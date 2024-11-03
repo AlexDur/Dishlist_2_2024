@@ -295,7 +295,7 @@ $detail_2-color: #221f1f;
 .upload-button-label{
   margin-top:20px;
   display: inline-block;
-  padding: 10px 40px;
+  padding: 9px 40px;
   cursor: pointer;
   background-color: $secondary-color ;
   color: white; /* Beispiel für Schriftfarbe */
@@ -535,11 +535,12 @@ p-dialog .p-dialog-header{
 
 .erstellung-kategorie{
   font-size: 18px;
-  width: 40%;
+  width: 100%;
   font-weight: bold;
   color: white;
   text-align: center;
   margin-top:2rem;
+  margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -583,16 +584,23 @@ p-tag + p-tag {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
+  height: 40px;
   padding: 10px;
-  background-color: #f0f0f0;
-  border: none;
+  background-color: $secondary-color !important;
+  color: $tertiary-color !important;
   cursor: pointer;
   font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  outline: 2px solid $tertiary-color;
 }
 
-.category-button:focus {
-  outline: none;
+
+.category-button.focus,
+.category-button.active  {
+  background-color: $detail_2-color;
+  color: $tertiary-color
 }
 
 .tag-panel {
@@ -600,7 +608,7 @@ p-tag + p-tag {
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  margin-top: 4px;
+  margin-bottom: 16px;
   padding: 8px;
   background-color: #e0e0e0;
   border-radius: 5px;
