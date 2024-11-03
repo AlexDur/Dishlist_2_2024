@@ -11,7 +11,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
-  margin:50px 600px;
+  margin:5% 30%;
 }
 h1{
   color: white;
@@ -293,7 +293,6 @@ $detail_2-color: #221f1f;
 }
 
 .upload-button-label{
-  margin-top:20px;
   display: inline-block;
   padding: 9px 40px;
   cursor: pointer;
@@ -758,26 +757,27 @@ h3.weiss {
 }
 
 .filter-button {
-  background: linear-gradient(135deg, #dc6c40, #b14848); /* Farbverlauf */
+  background: linear-gradient(135deg, #dc6c40, #e65727); /* Farbverlauf */
   color: white;
   padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
+  border: 2px solid #e65727;
+  border-radius: 50px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex; /* Flexbox für zentriertes Icon */
-  align-items: center; /* Vertikale Ausrichtung */
+  display: flex;
+  align-items: center;
 }
 
 .filter-button i {
-  margin-right: 8px; /* Abstand zwischen Icon und Text */
+  margin-right: 8px;
 }
 
 .filter-button:hover {
-  background: linear-gradient(135deg, #252424, #373535);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #252424, #373535) !important;
+  transform: translateY(-2px)!important;
+  border: 2px solid $detail_2-color!important;
 }
 
 .filter-button:active {
@@ -921,6 +921,13 @@ h3.weiss {
 
 @media screen and (max-width: 750px) {
 
+  .filter-button {
+
+    &:active {
+      background: linear-gradient(135deg, #373535, #252424);
+      transform: translateY(1px);
+    }
+  }
 
   .linie-seite {
     width: 5px;
@@ -968,11 +975,12 @@ h3.weiss {
 
   .p-card {
     width: 100%;
-    margin: 0;
-    height: 200px;
+     margin:0;
+    height: 220px;
     display: flex;
     flex:  none;
     flex-direction: column;
+    align-items: center;
     text-align: center;
     justify-content: space-between;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -1049,7 +1057,7 @@ h3.weiss {
   justify-content: center;
   align-items: center;
   height: 100%;
-
+  width: 100%;
   background-color: white;
 
 }
