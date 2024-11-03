@@ -39,6 +39,9 @@ export class RezeptErstellungComponent implements OnInit {
   showOnlineAddressError: boolean = false;
   nametouched:boolean = false;
   on_adtouched: boolean = false;
+  selectedCategory: string | null = null;
+
+  categories = ['Gänge', 'Küche', 'Nährwert'];
 
   constructor(
     private rezepteService: RezeptService,
@@ -82,7 +85,23 @@ export class RezeptErstellungComponent implements OnInit {
     }
   }
 
+  setCategory(category: string) {
+    // Die ausgewählte Kategorie umschalten oder abwählen
+    this.selectedCategory = this.selectedCategory === category ? null : category;
+  }
+
+  getVisibleTags() {
+    // Tags nach `selectedCategory` filtern
+    return this.tags.filter(tag => tag.type === this.selectedCategory);
+  }
+
+  onTagClick(tag: any) {
+    // Logik für das Tag-Klick-Event
+    console.log(`${tag.label} wurde geklickt`);
+  }
+
   toggleTagSelection(tag: Tag) {
+    tag.selected = !tag.selected
     console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
     if (tag.selected) {
       this.selectedTags.push(tag);

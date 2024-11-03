@@ -2,9 +2,9 @@ import {Tag} from "./tag";
 //TODO: Möglichkeit dem Nutzer geben, eigene Küchen hinzuzufügen
 
 export const DEFAULT_TAGS: Tag[] = [
-  { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
-  { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
-  { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
+  { label: 'Vorspeise', count: 0, selected: false, type: 'Gänge' },
+  { label: 'Hauptgang', count: 0, selected: false, type: 'Gänge' },
+  { label: 'Nachtisch', count: 0, selected: false, type: 'Gänge' },
   { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
   { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
   { label: 'Indisch', count: 0, selected: false, type: 'Küche' },
