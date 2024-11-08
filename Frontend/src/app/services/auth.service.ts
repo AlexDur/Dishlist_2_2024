@@ -1,67 +1,87 @@
 /*
-import { throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { CognitoUser, CognitoUserPool, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import * as AWS from 'aws-sdk';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class CognitoService {
+  private userPool: CognitoUserPool;
+  private identityPoolId = 'dein-identity-pool-id'; // Ersetze mit deinem Identity Pool ID
+  private userPoolId = 'dein-user-pool-id'; // Ersetze mit deinem User Pool ID
+  private clientId = 'dein-client-id'; // Ersetze mit deinem App Client ID
 
-  private registerUrl = 'http://localhost:8080/api/auth/registrierung';
-  private loginUrl = 'http://localhost:8080/api/auth/login';
-  private authTokenKey = 'authToken';  // Schlüssel für das Token im localStorage
-
-  constructor(private http: HttpClient) { }
-
-  // Methode zum Abrufen des Tokens
-  getToken(): string | null {
-    return localStorage.getItem(this.authTokenKey);
+  constructor() {
+    const poolData = {
+      UserPoolId: this.userPoolId,
+      ClientId: this.clientId
+    };
+    this.userPool = new CognitoUserPool(poolData);
   }
 
-  register(username: string, password: string): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.registerUrl, { username, password }, { headers});
+  register(username: string, password: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.userPool.signUp(username, password, [], null, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 
-  // Methode zur Überprüfung, ob der Benutzer eingeloggt ist
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    console.log("Abgerufener Token in isAuthenticated:", token);
-    return !!token;
-  }
-
-  // Beispiel für eine Methode, die eine Anfrage mit Token absendet
-  saveRecipe(newRecipe: any): Observable<any> {
-    const token = this.getToken();
-    if (!token) {
-      console.error('Kein Token gefunden. Benutzer ist nicht authentifiziert.');
-      return throwError(() => new Error('Benutzer ist nicht authentifiziert.'));
-    }
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`  // Token im Header anhängen
+  login(username: string, password: string): Promise<any> {
+    const authenticationDetails = new AuthenticationDetails({
+      Username: username,
+      Password: password
     });
 
-    return this.http.post<any>('http://localhost:8080/api/rezepte/create', newRecipe, { headers });
+    const userData = {
+      Username: username,
+      Pool: this.userPool
+    };
+
+    const cognitoUser = new CognitoUser(userData);
+
+    return new Promise((resolve, reject) => {
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          // Temporäre Anmeldeinformationen abrufen
+          AWS.config.region = 'deine-region'; // Ersetze mit deiner Region
+          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: this.identityPoolId,
+            Logins: {
+              [`cognito-idp.deine-region.amazonaws.com/${this.userPoolId}`]: result.getIdToken().getJwtToken()
+            }
+          });
+          resolve(result);
+        },
+        onFailure: (err) => {
+          reject(err);
+        }
+      });
+    });
   }
 
-  // Beispiel für eine Methode, um das Token beim Login zu speichern
-  login(username: string, password: string): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>('http://localhost:8080/api/auth/login', { username, password }, { headers})
-      .pipe(
-        tap(response => {
-          if (response && response.token) {
-            console.log('Saving Token:', response.token);
-            localStorage.setItem(this.authTokenKey, response.token);
-          }
-        })
-      );
+  uploadFile(file: File): Promise<any> {
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: 'dein-bucket-name', // Ersetze mit deinem Bucket-Namen
+      Key: file.name,
+      Body: file
+    };
+
+    return new Promise((resolve, reject) => {
+      s3.upload(params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
   }
 }
-
 */
