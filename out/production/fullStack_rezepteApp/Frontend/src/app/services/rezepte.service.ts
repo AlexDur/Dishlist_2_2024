@@ -79,6 +79,16 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
+  getBild(bildname: string): Observable<HttpResponse<Blob>> {
+
+    return this.http.get<Blob>(`${this.backendUrl}/api/rezepte/bilder/${bildname}`, {
+      observe: 'response',
+      responseType: 'blob' as 'json' // Casten auf 'json' erlaubt die Verwendung von 'blob' als responseType
+    });
+  }
+
+
+
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
     // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)
@@ -132,59 +142,31 @@ export class RezeptService {
       console.log(key, value);
     });
 
-    // Rezeptdaten aus dem Blob extrahieren
-    const rezeptBlob = formData.get('rezeptDTO') as Blob;
-    const reader = new FileReader();
+    // Validierung des Rezeptes
+    if (!this.validateRezept(rezept)) {
+      console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
+      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
+    }
 
-    return new Observable<HttpResponse<RezeptAntwort>>(observer => {
+    console.log('Formdata in service.ts', formData)
 
-      reader.onload = () => {
-        const rezept: Rezept = JSON.parse(reader.result as string);
-        console.log('Rezept aus Blob extrahiert:', rezept);
-
-        // Validierung des Rezeptes
-        if (!this.validateRezept(rezept)) {
-          console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
-          this.loadingSubject.next(false); // Ladezustand zurücksetzen
-          observer.error(new Error('Rezept ist ungültig.'));
-          return; // Rückkehr, um die Ausführung zu beenden
-        }
-
-        // Prüfen, ob formData bereits befüllt wurde
-        if (!formData.has('image')) {
-          console.error('Kein Bild im FormData vorhanden.');
-          this.loadingSubject.next(false); // Ladezustand zurücksetzen
-          observer.error(new Error('Bild ist erforderlich.'));
-          return; // Rückkehr, um die Ausführung zu beenden
-        }
-
-        // Hier Versand der Anfrage
-        this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-          observe: 'response'
-        }).pipe(
-          tap(response => {
-            console.log('Server Response:', response);
-            observer.next(response);  // Sende die Antwort zurück
-            observer.complete();       // Beende das Observable
-          }),
-          catchError(error => {
-            console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
-            observer.error(error);     // Fehler zurückgeben
-            return EMPTY;             // Leeres Observable zurückgeben
-          })
-        ).subscribe(); // Sicherstellen, dass die HTTP-Anfrage ausgeführt wird
-      };
-
-      reader.onerror = () => {
-        console.error('Fehler beim Lesen des Rezept-Blogs.');
+    // Versand der Anfrage
+    return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
+      observe: 'response'
+    }).pipe(
+      tap(response => {
+        console.log('Server Response:', response);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
-        observer.error(new Error('Fehler beim Lesen des Rezept-Blogs.'));
-      };
-
-      // Starte den Lesevorgang
-      reader.readAsText(rezeptBlob);
-    });
+      }),
+      catchError(error => {
+        console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
+        this.loadingSubject.next(false); // Ladezustand zurücksetzen
+        return throwError(() => new Error('Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
+      })
+    );
   }
+
 
 
 

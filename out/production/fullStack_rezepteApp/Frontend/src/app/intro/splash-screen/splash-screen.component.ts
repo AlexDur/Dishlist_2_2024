@@ -3,8 +3,7 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-splash-screen',
-  templateUrl: './splash-screen.component.html',
-  styleUrls: ['./splash-screen.component.scss']
+  templateUrl: './splash-screen.component.html'
 })
 export class SplashScreenComponent {
 
