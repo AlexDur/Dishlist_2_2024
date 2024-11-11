@@ -15,10 +15,9 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 
 @Component({
   selector: 'app-listeninhaltmobil',
-  templateUrl: './listeninhalt-mobil.component.html',
-  styleUrls: ['./listeninhalt-mobil.component.scss']
+  templateUrl: './listeninhalt-mobil.component.html'
 })
-export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
+export class ListeninhaltMobilComponent {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
@@ -27,23 +26,10 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
-  private subscription: Subscription | undefined;
+  selectedImageUrl: string | null = null;
 
-  constructor( private rezepteService: RezeptService,  private tagService: TagService, private router:Router) {}
 
-  ngOnInit(){
-     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.gefilterteRezepte = rezepte;
-      console.log('Aktualisierte Rezepte:', rezepte);
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
+  constructor( private rezepteService: RezeptService,  private router:Router) {}
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
@@ -83,6 +69,14 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     }
   }
 
+  openImageModal(imageUrl: string): void {
+    this.selectedImageUrl = imageUrl;
+  }
+
+  closeImageModal(): void {
+    this.selectedImageUrl = null;
+  }
+
   openUrl(url: string | undefined): void {
     if (!url) {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
@@ -109,5 +103,6 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       console.warn('Ungültige URL');
     }
   }
+
 
 }

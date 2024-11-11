@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, HostListener, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
 import { Subscription } from 'rxjs';
+import {DEFAULT_TAGS} from "../../../../models/default_tag.ts";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
-  templateUrl: './seitenleiste-mobil.component.html',
-  styleUrls: ['./seitenleiste-mobil.component.scss']
+  templateUrl: './seitenleiste-mobil.component.html'
 })
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
@@ -16,21 +16,30 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
   private subscription: Subscription;
-
-  tags: Tag[] = [
-    { label: 'Vorspeise', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Hauptgang', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Nachtisch', count: 0, selected: false, type: 'Gerichtart' },
-    { label: 'Deutsch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Chinesisch', count: 0, selected: false, type: 'Küche' },
-    { label: 'Italienisch', count: 0, selected: false, type: 'Küche' },
-  ];
+  tags: Tag[] = [...DEFAULT_TAGS];
+  isDropdownOpen: boolean = false;
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts();
     });
+  }
+
+  toggleDropdown(event: MouseEvent): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    event.stopPropagation(); // Verhindert das Schließen beim Klicken auf den Button
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    // Überprüfen, ob der Klick außerhalb des Dropdowns erfolgt ist
+    if (this.isDropdownOpen && dropdownContent && !dropdownContent.contains(target)) {
+      this.isDropdownOpen = false;
+    }
   }
 
   ngOnInit(): void {
@@ -63,8 +72,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   toggleTag(tag: Tag): void {
+
     this.updateSelectedTags();
     this.filterRezepte();
+
   }
 
   updateSelectedTags(): void {
@@ -72,15 +83,26 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   filterRezepte(): void {
+    // Wenn keine Tags ausgewählt sind, alle Rezepte zurückgeben
     if (this.selectedTags.length === 0) {
       this.gefilterteRezepte.emit(this.originalRezepte);
-    } else {
-      const gefilterteRezepte = this.originalRezepte.filter(rezept =>
-        rezept.tags?.some(tag => this.selectedTags.includes(tag.label))
-      );
-      this.gefilterteRezepte.emit(gefilterteRezepte);
+      return;
     }
+
+    // Beginne mit den originalen Rezepten als Ausgangspunkt
+    let gefilterteRezepte = [...this.originalRezepte];
+
+    // Filtere basierend auf jedem ausgewählten Tag
+    this.selectedTags.forEach(selectedTag => {
+      gefilterteRezepte = gefilterteRezepte.filter(rezept =>
+        rezept.tags?.some(tag => tag.label === selectedTag)
+      );
+    });
+
+    // Gebe die gefilterten Rezepte aus
+    this.gefilterteRezepte.emit(gefilterteRezepte);
   }
+
 
   private updateTagCounts(): void {
     const zaehler: { [key: string]: number } = {};
@@ -99,11 +121,15 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gerichtart');
+    return this.tags.filter(tag => tag.type === 'Gänge');
   }
 
   getKuechenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Küche');
+  }
+
+  getNaehrwertTags(): Tag[] {
+    return this.tags.filter(tag => tag.type == "Nährwert")
   }
 
   updateTagCount(): void {

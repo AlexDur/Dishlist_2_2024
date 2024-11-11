@@ -13,11 +13,11 @@ import {ListenContainerComponent} from "./listen-container/listen-container.comp
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";*/
 
 const routes: Routes = [
-  { path: 'splash', component: SplashScreenComponent },
-  { path: 'intro', component: InfoScreenComponent },
+ /* { path: 'splash', component: SplashScreenComponent },
+  { path: 'intro', component: InfoScreenComponent },*/
   { path: '', component: ListenContainerComponent},
-/*  { path: 'anmeldung', component: NutzerAnmeldungComponent },
-  { path: 'registrierung', component: RegistrierungComponent },*/
+/*{ path: 'anmeldung', loadChildren: () => import('./anmeldung/anmeldung.module').then(m => m.AnmeldungModule) },
+  { path: 'registrierung', loadChildren: () => import('./registrierung/registrierung.module').then(m => m.RegistrierungModule) },*/
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
   { path: '**', redirectTo: '' } // Fallback für alle anderen ungültigen Routen
 ];

@@ -6,6 +6,13 @@
 $color-start: #f6a257;
 $color-end: #b34f09;
 
+$primary-color: #b61919;
+$secondary-color: #d8620f;
+$tertiary-color: #e6e5e5;
+
+$detail-color: #000000; ;
+$detail_2-color: #221f1f;
+
 body {
   background: linear-gradient(to bottom,$color-start, $color-end);
   background-attachment: fixed;
@@ -22,12 +29,7 @@ a {
   text-decoration: none;
 }
 
-$primary-color: #b61919;
-$secondary-color: #d8620f;
-$tertiary-color: #e6e5e5;
 
-$detail-color: #000000; ;
-$detail_2-color: #221f1f;
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
@@ -551,7 +553,6 @@ p-dialog .p-dialog-header{
   padding: 0;
 }
 
-
 .tag-container{
   display:flex;
   flex-wrap:wrap;
@@ -784,8 +785,6 @@ h3.weiss {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
-
 
 
 .dropdown {

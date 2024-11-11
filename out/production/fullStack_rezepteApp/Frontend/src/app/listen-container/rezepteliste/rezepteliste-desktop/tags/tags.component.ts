@@ -17,8 +17,7 @@ export type Dish = 'Vorspeise' | 'Hauptgang' | 'Nachtisch';
 
 @Component({
   selector: 'app-tags',
-  templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.scss']
+  templateUrl: './tags.component.html'
 })
 
 export class TagsComponent implements OnInit, OnDestroy, OnChanges{

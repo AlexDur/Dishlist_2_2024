@@ -4,8 +4,7 @@ import {RezeptService} from "../../../../../services/rezepte.service";
 
 @Component({
   selector: 'app-rezept-hinzufuegen-button',
-  templateUrl: './rezept-hinzufuegen-button.component.html',
-  styleUrls: ['./rezept-hinzufuegen-button.component.scss']
+  templateUrl: './rezept-hinzufuegen-button.component.html'
 })
 export class RezeptHinzufuegenButtonComponent {
 
