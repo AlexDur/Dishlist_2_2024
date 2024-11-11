@@ -5,8 +5,7 @@ import {RezeptService} from "../services/rezepte.service";
 
 @Component({
   selector: 'app-listen-container',
-  templateUrl: './listen-container.component.html',
-  styleUrls: ['./listen-container.component.scss']
+  templateUrl: './listen-container.component.html'
 })
 
 export class ListenContainerComponent implements OnInit{

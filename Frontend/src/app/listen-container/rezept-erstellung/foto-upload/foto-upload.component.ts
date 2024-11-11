@@ -3,8 +3,7 @@ import { Rezept } from "../../../models/rezepte";
 
 @Component({
   selector: 'app-foto-upload',
-  templateUrl: './foto-upload.component.html',
-  styleUrls: ['./foto-upload.component.scss']
+  templateUrl: './foto-upload.component.html'
 })
 export class FotoUploadComponent {
 

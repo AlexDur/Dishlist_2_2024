@@ -23,7 +23,6 @@ import {DEFAULT_TAGS} from "../../models/default_tag.ts";
 @Component({
   selector: 'app-rezept-erstellung',
   templateUrl: './rezept-erstellung.component.html',
-  styleUrls: ['./rezept-erstellung.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RezeptErstellungComponent implements OnInit {
