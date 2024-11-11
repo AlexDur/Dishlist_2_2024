@@ -7,8 +7,7 @@ import {DEFAULT_TAGS} from "../../../../models/default_tag.ts";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
-  templateUrl: './seitenleiste-mobil.component.html',
-  styleUrls: ['./seitenleiste-mobil.component.scss']
+  templateUrl: './seitenleiste-mobil.component.html'
 })
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();

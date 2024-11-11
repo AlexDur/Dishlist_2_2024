@@ -3,8 +3,7 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-info-screen',
-  templateUrl: './info-screen.component.html',
-  styleUrls: ['./info-screen.component.scss']
+  templateUrl: './info-screen.component.html'
 })
 export class InfoScreenComponent {
 

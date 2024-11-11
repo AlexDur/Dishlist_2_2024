@@ -15,8 +15,7 @@ import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 
 @Component({
   selector: 'app-listeninhaltmobil',
-  templateUrl: './listeninhalt-mobil.component.html',
-  styleUrls: ['./listeninhalt-mobil.component.scss']
+  templateUrl: './listeninhalt-mobil.component.html'
 })
 export class ListeninhaltMobilComponent {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
