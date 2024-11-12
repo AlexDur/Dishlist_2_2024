@@ -20,7 +20,10 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {SharedModule} from "../shared/shared.module";
 import {FotoUploadComponent} from "./rezept-erstellung/foto-upload/foto-upload.component";
 import { FileUploadModule } from 'primeng/fileupload';
-
+import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
+import {
+  SeitenleisteMobilComponent
+} from "./seitenleiste/seitenleiste-mobil/seitenleiste-mobil/seitenleiste-mobil.component";
 
 @NgModule({
   declarations: [
@@ -38,17 +41,19 @@ import { FileUploadModule } from 'primeng/fileupload';
     FotoUploadComponent
   ],
     imports: [
-        CommonModule,
-        TableModule,
-        HttpClientModule,
-        FormsModule,
-        TagModule,
-        RatingModule,
-        ButtonModule,
-        CardModule,
-        ToggleButtonModule,
-        SharedModule,
-       FileUploadModule
+    CommonModule,
+    TableModule,
+    HttpClientModule,
+    FormsModule,
+    TagModule,
+    SeitenleisteModule,
+    RatingModule,
+    ButtonModule,
+    CardModule,
+    ToggleButtonModule,
+    SharedModule,
+    FileUploadModule
+
 
     ]
 })

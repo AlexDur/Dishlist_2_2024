@@ -1,4 +1,5 @@
-import { Component, HostListener, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, HostListener, EventEmitter, Input, ViewChild, OnInit, Output, OnDestroy } from '@angular/core';
+import { OverlayPanel } from 'primeng/overlaypanel';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
@@ -12,6 +13,7 @@ import {DEFAULT_TAGS} from "../../../../models/default_tag.ts";
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
+  @ViewChild('op') op!: OverlayPanel;
   selectedTags: string[] = [];
   rezeptGeladen: boolean = false;
   originalRezepte: Rezept[] = [];
@@ -26,21 +28,27 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleDropdown(event: MouseEvent): void {
-    this.isDropdownOpen = !this.isDropdownOpen;
-    event.stopPropagation(); // Verhindert das Schließen beim Klicken auf den Button
-  }
-
   @HostListener('document:click', ['$event'])
   closeDropdown(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     const dropdownContent = document.querySelector('.dropdown-content');
+    const filterButton = document.querySelector('.filter-button-container');
 
-    // Überprüfen, ob der Klick außerhalb des Dropdowns erfolgt ist
-    if (this.isDropdownOpen && dropdownContent && !dropdownContent.contains(target)) {
+    const isInsideDropdown = dropdownContent?.contains(target);
+    const isInsideFilterButton = filterButton?.contains(target);
+
+    // Überprüfen, ob der Klick innerhalb des Overlay-Containers ist
+    const isInsideOverlay = this.op?.el.nativeElement.contains(target);
+
+    if (this.isDropdownOpen && !isInsideDropdown && !isInsideFilterButton && !isInsideOverlay) {
+      this.op.hide(); // Schließt das Overlay direkt
       this.isDropdownOpen = false;
     }
   }
+
+
+
+
 
   ngOnInit(): void {
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte  => {
@@ -63,6 +71,22 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
   }
 
+  closeOverlay(): void {
+    this.op.hide(); // Schließt das Overlay
+    this.isDropdownOpen = false; // Setzt den Status auf "geschlossen"
+  }
+
+  // Methode zum Umschalten des Dropdowns
+  toggleDropdown(event: MouseEvent): void {
+    if (this.isDropdownOpen) {
+      this.op.hide(); // Schließt das Overlay
+    } else {
+      this.op.show(event); // Öffnet das Overlay
+    }
+    this.isDropdownOpen = !this.isDropdownOpen;
+    event.stopPropagation(); // Verhindert das Schließen beim Klick
+  }
+
   trackById(index: number, item: Tag): any {
     return item.id || index;
   }
@@ -72,7 +96,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   toggleTag(tag: Tag): void {
-
     this.updateSelectedTags();
     this.filterRezepte();
 

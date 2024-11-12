@@ -42,7 +42,7 @@ a {
   background-color: $detail_2-color !important;
   color: $tertiary-color !important;
   border: 1px transparent solid !important;
-  font-size: 16px;
+  font-size: 24px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -318,10 +318,10 @@ a {
 
 .neues-rezept{
   margin-bottom:2rem;
-  color: $tertiary-color;
-  font-size: 2rem;
+  color: $tertiary-color$tertiary-color;
+  font-size: 2.3rem;
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+ /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
 }
 
 
@@ -563,15 +563,15 @@ p-tag + p-tag {
   padding:0;
 }
 
-.p-checkbox .p-checkbox-box {
-  width: 1rem;
-  height: 1rem;
+/*.p-checkbox .p-checkbox-box {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .p-checkbox .p-checkbox-icon {
-  font-size: 0.25rem;
+  font-size: 0.5rem;
   background-color:#575e65;
-}
+}*/
 
 .category-container {
   display: flex;
@@ -611,8 +611,9 @@ p-tag + p-tag {
   margin-bottom: 16px;
   padding: 8px;
   background-color: #e0e0e0;
-  border-radius: 5px;
+  border-radius: 25px;
   animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .tag {
@@ -620,8 +621,8 @@ p-tag + p-tag {
   text-align: center;
   padding: 5px 10px;
   margin: 4px;
-  background-color: #d1d1d1;
-  border-radius: 3px;
+  background-color: #c3c3c3;
+  border-radius: 15px;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s;
@@ -676,25 +677,40 @@ p-tag + p-tag {
   font-size: 8px;
 }
 
-.p-card-title{
-  display: flex;
-  justify-content:center;
-  font-size: 14px !important;
+.p-card-title {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  color: #f3f2f2;
+  font-size: 1rem;
   font-weight: bold;
-
-  color:$detail_2-color;
-  background-color: white;
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
-.p-card-footer{
-  background-color: white;
+.p-card-footer {
+  position: absolute;
+  top: 1px;
+  right: 10px;
   display: flex;
-  justify-content:center;
-  padding-top:0;
+  gap: 5px;
 }
 
-.p-card .p-card-footer{
-  padding-top: 0 !important;
+.p-card-footer button {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.p-card-footer button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
 }
 
 
@@ -742,23 +758,14 @@ h3.weiss {
   align-items: center;
 }
 
-.p-card {
-  width: 80%;
-  margin: 15px 0;
-  height: 220px;
-  display: flex;
-  flex:  none;
-  flex-direction: column;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+
 
 .filter-button-container {
-  position: relative; /* Für das Dropdown */
+  position: relative;
 }
 
 .filter-button {
-  background: linear-gradient(135deg, #dc6c40, #e65727); /* Farbverlauf */
+  background: linear-gradient(135deg, #dc6c40, #e65727);
   color: white;
   padding: 12px 20px;
   border: 2px solid #e65727;
@@ -781,35 +788,70 @@ h3.weiss {
   border: 2px solid $detail_2-color!important;
 }
 
+.p-overlaypanel {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important; /* Entferne Offsets */
+}
+
 .filter-button:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.fullscreen-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1002 !important;
+}
 
-.dropdown {
-  position: relative;
-  width: 100%;
-  margin-top: 10px;
+.dropdown-content-title{
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.checkbox-label-container{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 
-.dropdown-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  color: black;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  z-index: 1000;
-  max-height: none;
-  overflow-y: auto;
+.filter-column .p-checkbox .p-checkbox-box{
+  box-sizing: border-box;
+  width: 30px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label-dropdown{
+  font-size: 22px;
+  padding-left: 8px;
+}
+
+.p-checkbox-box.p-highlight .p-checkbox-icon {
+  color: white !important;
+  background-color: $detail_2-color !important;
+  border-color: $detail_2-color !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight{
+  border-color: $detail_2-color;
+  background: $detail_2-color;
+  box-shadow: $detail_2-color;
 }
 
 .filter-column {
-  width: 60%;
+  width: 80%;
+  margin-bottom: 1rem;
 }
 
 .filter-column h3 {
@@ -825,9 +867,14 @@ h3.weiss {
   padding-top: 20px;
 }
 
-.clickable-card {
+.p-card {
+  position: relative;
+  width: 80%;
+  margin: 15px 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
   cursor: pointer;
   height: 100%;
@@ -835,7 +882,9 @@ h3.weiss {
   box-sizing: border-box;
   gap:1rem;
   flex: 0 1 auto;
+  background-color: orange;
 }
+
 
 .p-card-footer {
   margin-top: auto;
@@ -844,6 +893,7 @@ h3.weiss {
 }
 
 .p-card-title {
+  font-size: 12px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -852,6 +902,7 @@ h3.weiss {
   line-height: 1.5em;
   max-height: 4.5em;
   word-break: break-word;
+  margin: 5px;
 }
 
 
@@ -862,20 +913,6 @@ h3.weiss {
   margin-top: 20px;
   width: 100%;
 }
-
-.p-checkbox-box.p-highlight .p-checkbox-icon {
-  color: white !important;
-  background-color: $detail_2-color !important;
-  border-color: $detail_2-color !important;
-}
-
-.p-checkbox .p-checkbox-box.p-highlight{
-  border-color: $detail_2-color;
-  background: $detail_2-color;
-  box-shadow: $detail_2-color;
-}
-
-.p-checbkbox
 
 .rezept-image {
   cursor: pointer;
@@ -906,17 +943,25 @@ h3.weiss {
   object-fit: contain;
 }
 
-.seitenleiste {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-
+.seitenleiste .p-overlaypanel {
+  position: fixed !important; /* Übergeordnete Flexbox ignorieren */
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1050 !important;
+  display: flex !important;
   justify-content: center;
-  order: -1;
-  width: 100%;
   align-items: center;
+  overflow: auto;
 }
 
+.seitenleiste {
+  position: relative; /* Verhindert Überschreibung durch Flexbox-Kinder */
+  flex-wrap: nowrap; /* Testweise ausschalten, um Kinder nicht zu umbrechen */
+  align-items: stretch; /* Maximale Breite der Kinder erlauben */
+  justify-content: flex-start; /* Normalen Fluss sicherstellen */
+}
 
 @media screen and (max-width: 750px) {
 
@@ -974,7 +1019,7 @@ h3.weiss {
 
   .p-card {
     width: 100%;
-     margin:0;
+    margin:0;
     height: 220px;
     display: flex;
     flex:  none;
@@ -983,9 +1028,11 @@ h3.weiss {
     text-align: center;
     justify-content: space-between;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    box-sizing: border-box;
   }
 
-  .clickable-card {
+/*  .clickable-card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -993,7 +1040,7 @@ h3.weiss {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-  }
+  }*/
 
     .scroll-indicator {
       position: fixed;
@@ -1026,6 +1073,12 @@ h3.weiss {
   background-color: white;
 }
 
+.dropdown-trennungsstrich {
+  border-bottom: 1px solid #ccc;
+  margin: 1.5rem 0;
+  background-color: white;
+}
+
 /*Rezept-Hinzufügen-Button*/
 
 .floating-button {
@@ -1051,21 +1104,21 @@ h3.weiss {
 }
 
 .rezept-darstellung {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  position: relative;
   width: 100%;
-  background-color: white;
-
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
 }
+
+
 
 .rezept-image {
+  object-fit: cover;
   width: 100%;
-  height: auto;
-  max-width: 200px;
+  height: 100%;
 }
+
 
 
 @media screen and (max-width: 750px) {

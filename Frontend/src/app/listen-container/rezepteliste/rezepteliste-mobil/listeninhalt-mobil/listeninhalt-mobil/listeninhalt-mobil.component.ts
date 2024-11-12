@@ -69,9 +69,14 @@ export class ListeninhaltMobilComponent {
     }
   }
 
-  openImageModal(imageUrl: string): void {
-    this.selectedImageUrl = imageUrl;
+  openImageModal(imageUrl: string | undefined): void {
+    if (imageUrl) {
+      this.selectedImageUrl = imageUrl;
+    } else {
+      console.warn('Kein Bild verfügbar, Modal wird nicht geöffnet.');
+    }
   }
+
 
   closeImageModal(): void {
     this.selectedImageUrl = null;
@@ -103,6 +108,5 @@ export class ListeninhaltMobilComponent {
       console.warn('Ungültige URL');
     }
   }
-
 
 }
