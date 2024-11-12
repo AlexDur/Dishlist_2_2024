@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ContextMenuModule} from "primeng/contextmenu";
-import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
+
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
@@ -16,9 +16,9 @@ import {SharedModule} from "./shared/shared.module";
 import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {RezepteModule} from "./listen-container/rezepte.module";
+import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
-
 
 
 @NgModule({
@@ -34,11 +34,11 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
   // RezeptelistenModuls in seinen eigenen Komponenten oder in anderen Modulen, die es importiert, verwenden.
   imports: [
     BrowserModule,
+    RezepteModule,
+    SeitenleisteModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ContextMenuModule,
-    SeitenleisteModule,
-    RezepteModule,
     CheckboxModule,
     FormsModule,
     ButtonModule,
