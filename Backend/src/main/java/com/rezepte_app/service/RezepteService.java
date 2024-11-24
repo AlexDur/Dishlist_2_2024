@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,7 +88,7 @@ public class RezepteService {
 
         // Bildverarbeitung und -speicherung
         if (image != null && !image.isEmpty()) {
-            String bildUrl = imageUploadService.uploadImage(image, 800, 600);
+            String bildUrl = imageUploadService.uploadImage(image, 200, 400);
             rezept.setBildUrl(bildUrl);
         }
 
@@ -112,11 +109,9 @@ public class RezepteService {
                         }
                     })
                     .collect(Collectors.toSet());
-            rezept.setTags((List<Tag>) updatedTags);
-        }
+            rezept.setTags(new ArrayList<>(updatedTags));
 
-        System.out.println("R_Name: " + rezept.getName() + ", R_OnlineAdresse: " + rezept.getOnlineAdresse());
-        System.out.println("R_Tags: " + rezept.getTags());
+        }
 
         // Rezept speichern
         return rezepteRepository.save(rezept);

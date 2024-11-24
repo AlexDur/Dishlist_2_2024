@@ -57,29 +57,28 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
+
+    // Notwendig für Cross-Origin-Anfragen an dein Backend.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().configurationSource(request -> {
+                .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
-                    config.setAllowCredentials(true);
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    source.registerCorsConfiguration("/**", config);
+                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Erlaubte Ursprünge
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Erlaubte Methoden
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "*")); // Erlaubte Header (oder '*' für alle)
+                    config.setAllowCredentials(true); // Erlaube Cookies und Authentifizierung
                     return config;
-                })
-                .and()
-                .csrf().disable()  // CSRF deaktivieren
+                }))
+                .csrf().disable()  // CSRF-Schutz deaktivieren
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()  // Alle Anfragen zulassen
                 )
-                .httpBasic().disable()  // HTTP Basic deaktivieren
+                .httpBasic().disable()  // HTTP Basic-Authentifizierung deaktivieren
                 .formLogin().disable()  // Formular-Login deaktivieren
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Keine Sessions
 
         return http.build();
-
     }
+
 }
