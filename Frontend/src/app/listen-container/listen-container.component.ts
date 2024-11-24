@@ -38,17 +38,20 @@ export class ListenContainerComponent implements OnInit{
           if (bildname) {
             this.rezepteService.getBild(bildname).subscribe(response => {
               if (response.body) {
-                const blob = new Blob([response.body], { type: 'image/png' });
-                const imageUrl = URL.createObjectURL(blob);
+              /*  const blob = new Blob([response.body], { type: 'image/png' });*/
+                const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
                 this.bildUrls[rezept.id] = imageUrl;
                 console.log(' Bild-URL speichern')
               } else {
+                //Anfrage zum Bildabruf erfolgreich, aber kein gültiges Bild zurückgegeben
                 console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
               }
             }, error => {
+              //Fehler, wenn während der Kommunikation mit dem Server/S3 eine Fehler auftritt
               console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
             });
           } else {
+            //Extraktion des Bildnamens aus einem Rezept-Objekt schlägt fehl
             console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
           }
         }
