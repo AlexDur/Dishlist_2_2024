@@ -1,4 +1,4 @@
-import {config} from "../../../../../../../Frontend/src/environments/config";
+import {config} from "./config";
 
 export const environment = {
   production: false,
