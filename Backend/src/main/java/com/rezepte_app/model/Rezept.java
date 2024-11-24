@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class Rezept {
     private String onlineAdresse;
 
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "rezept_tags",
             joinColumns = @JoinColumn(name = "rezept_id"),
@@ -41,8 +42,8 @@ public class Rezept {
     private List<Tag> tags = new ArrayList<>();
 
 
-
     @Column(name = "bildUrl")
+    @Nullable
     private String bildUrl;
 
 
@@ -95,5 +96,6 @@ public class Rezept {
     public void setBildUrl(String bildUrl) {
         this.bildUrl = bildUrl;
     }
+
 
 }

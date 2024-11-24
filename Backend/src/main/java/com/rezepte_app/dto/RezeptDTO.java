@@ -41,6 +41,16 @@ public class RezeptDTO {
         this.onlineAdresse = onlineAdresse;
     }
 
+    // Setter für bildUrl
+    public void setBildUrl(String bildUrl) {
+        this.bildUrl = bildUrl;
+    }
+
+    // Getter für bildUrl
+    public String getBildUrl() {
+        return bildUrl;
+    }
+
     @Override
     public String toString() {
         return "RezeptDTO{" +

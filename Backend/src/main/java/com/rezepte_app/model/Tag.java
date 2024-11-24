@@ -68,6 +68,7 @@ public class Tag{
     }
 
 
+
     /*Zur Vermeidung von doppelten Objekten*/
     @Override
     public boolean equals(Object o) {
@@ -84,5 +85,20 @@ public class Tag{
     }
 
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
+
