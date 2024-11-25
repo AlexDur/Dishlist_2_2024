@@ -6,7 +6,6 @@ import com.rezepte_app.repository.RezepteRepository;
 import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.model.Rezept;
 import com.rezepte_app.model.Tag;
-import com.rezepte_app.shared.imageUpload.services.ImageUploadService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;

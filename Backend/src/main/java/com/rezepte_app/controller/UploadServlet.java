@@ -5,7 +5,7 @@
 package com.rezepte_app.controller;
 
 import com.rezepte_app.shared.imageUpload.fileupload.PartMultipartFile;
-import com.rezepte_app.shared.imageUpload.services.ImageUploadService;
+import com.rezepte_app.service.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 

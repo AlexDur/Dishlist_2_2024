@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.model;
 
 import jakarta.persistence.*;
@@ -70,3 +71,4 @@ public class VerificationToken {
         return LocalDateTime.now().isAfter(this.expiryDate);
     }
 }
+*/
