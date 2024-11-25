@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app.service;
 
 import com.rezepte_app.model.User;
@@ -29,3 +30,4 @@ public class VerificationTokenService {
         return verificationTokenRepository.findByToken(token).orElse(null);
     }
 }
+*/
