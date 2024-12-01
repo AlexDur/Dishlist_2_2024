@@ -1,0 +1,8 @@
+{
+  "backend": {
+    "image": "654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_5",
+    "ports": {
+      "8080": "HTTP"
+    }
+  }
+}

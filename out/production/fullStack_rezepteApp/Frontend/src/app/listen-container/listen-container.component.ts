@@ -19,8 +19,6 @@ export class ListenContainerComponent implements OnInit{
   constructor(private rezepteService: RezeptService) {}
 
   ngOnInit(): void {
-    const abgerufeneBilder = new Set();
-
     this.rezepteService.getAlleRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({
         ...rezept,
@@ -37,9 +35,7 @@ export class ListenContainerComponent implements OnInit{
           // Bildname extrahieren (z.B. nur den letzten Teil der URL)
           const bildname = rezept.bildUrl.split('/').pop(); // Beispiel für Windows-Pfad
           console.log('bildname', bildname)
-          if (bildname && !abgerufeneBilder.has(bildname)) {
-            abgerufeneBilder.add(bildname);
-
+          if (bildname) {
             this.rezepteService.getBild(bildname).subscribe(response => {
               if (response.body) {
               /*  const blob = new Blob([response.body], { type: 'image/png' });*/
