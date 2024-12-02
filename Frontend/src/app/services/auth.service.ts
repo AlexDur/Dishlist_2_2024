@@ -1,87 +1,36 @@
-/*
 import { Injectable } from '@angular/core';
-import { CognitoUser, CognitoUserPool, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import * as AWS from 'aws-sdk';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CognitoService {
-  private userPool: CognitoUserPool;
-  private identityPoolId = 'dein-identity-pool-id'; // Ersetze mit deinem Identity Pool ID
-  private userPoolId = 'dein-user-pool-id'; // Ersetze mit deinem User Pool ID
-  private clientId = 'dein-client-id'; // Ersetze mit deinem App Client ID
+export class AuthService {
 
-  constructor() {
-    const poolData = {
-      UserPoolId: this.userPoolId,
-      ClientId: this.clientId
-    };
-    this.userPool = new CognitoUserPool(poolData);
+  private baseUrl = 'http://localhost:8080/api/auth';
+
+  constructor(private http: HttpClient) {}
+
+  login(username: string, password: string): Observable<any> {
+    return this.http.post('/api/login', { username, password });
   }
 
-  register(username: string, password: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.userPool.signUp(username, password, [], null, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+  logout(): Observable<any> {
+    return this.http.post('/api/logout', {});
   }
 
-  login(username: string, password: string): Promise<any> {
-    const authenticationDetails = new AuthenticationDetails({
-      Username: username,
-      Password: password
-    });
-
-    const userData = {
-      Username: username,
-      Pool: this.userPool
+  /**
+   * Sendet Registrierungsdaten an das Backend
+   * @param username Der Benutzername des neuen Nutzers
+   * @param password Das Passwort des neuen Nutzers
+   * @returns Ein Observable mit der Antwort des Servers
+   */
+  register(username: string, password: string): Observable<any> {
+    const body = {
+      username: username,
+      password: password
     };
 
-    const cognitoUser = new CognitoUser(userData);
-
-    return new Promise((resolve, reject) => {
-      cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (result) => {
-          // Temporäre Anmeldeinformationen abrufen
-          AWS.config.region = 'deine-region'; // Ersetze mit deiner Region
-          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: this.identityPoolId,
-            Logins: {
-              [`cognito-idp.deine-region.amazonaws.com/${this.userPoolId}`]: result.getIdToken().getJwtToken()
-            }
-          });
-          resolve(result);
-        },
-        onFailure: (err) => {
-          reject(err);
-        }
-      });
-    });
-  }
-
-  uploadFile(file: File): Promise<any> {
-    const s3 = new AWS.S3();
-    const params = {
-      Bucket: 'dein-bucket-name', // Ersetze mit deinem Bucket-Namen
-      Key: file.name,
-      Body: file
-    };
-
-    return new Promise((resolve, reject) => {
-      s3.upload(params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+    return this.http.post(`${this.baseUrl}/register`, body);
   }
 }
-*/

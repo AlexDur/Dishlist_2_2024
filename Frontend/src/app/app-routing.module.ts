@@ -9,15 +9,19 @@ import {
 import {InfoScreenComponent} from "./intro/info-screen/info-screen.component";
 import {SplashScreenComponent} from "./intro/splash-screen/splash-screen.component";
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
-/*import {NutzerAnmeldungComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
-import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";*/
+/*import {LogoutComponent} from "./intro/logout/logout.component";*/
+import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
+import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
+/*import {NutzerAnmeldungComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";*/
+
 
 const routes: Routes = [
  /* { path: 'splash', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },*/
   { path: '', component: ListenContainerComponent},
-/*{ path: 'anmeldung', loadChildren: () => import('./anmeldung/anmeldung.module').then(m => m.AnmeldungModule) },
-  { path: 'registrierung', loadChildren: () => import('./registrierung/registrierung.module').then(m => m.RegistrierungModule) },*/
+  { path: 'anmeldung',component: LoginComponent},
+  { path: 'logout', component: LoginComponent },
+  { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
   { path: '**', redirectTo: '' } // Fallback für alle anderen ungültigen Routen
 ];

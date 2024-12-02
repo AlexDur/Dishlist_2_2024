@@ -17,6 +17,8 @@ import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/re
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {RezepteModule} from "./listen-container/rezepte.module";
 import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
+import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
+import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
@@ -27,7 +29,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     ListenContainerComponent,
     SplashScreenComponent,
     InfoScreenComponent,
-
+    LoginComponent,
+    RegistrierungComponent
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
