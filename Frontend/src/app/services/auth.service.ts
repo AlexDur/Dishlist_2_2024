@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError  } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -26,14 +29,17 @@ export class AuthService {
    * @param password
    * @returns Ein Observable mit der Antwort des Servers
    */
-  register(email:string, password: string): Observable<any> {
-    const body = {
-      email: email,
-      password: password
-    };
+  register(email: string, password: string): Observable<any> {
+    const body = { email, password };
 
-    return this.http.post(`${this.baseUrl}/register`, body);
+    return this.http.post(`${this.baseUrl}/register`, body).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Fehler im HTTP-Aufruf:', error);
+        return throwError(() => new Error('Registrierungsfehler: ' + error.message)); // Hier wird der Fehler weitergegeben
+      })
+    );
   }
+
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
