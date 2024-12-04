@@ -17,7 +17,7 @@ export class RegistrierungComponent {
   onRegister() {
     this.authService.register(this.email, this.password).subscribe(
       response => {
-        console.log('Verfizierung nötig', response);
+        console.log('Weiterleitung Verfizierung', response);
         this.router.navigate(['/verifikation']);
       },
       error => {
@@ -25,7 +25,7 @@ export class RegistrierungComponent {
         console.error('Grund für: Registrierung fehlgeschlagen', error.status);
 
 
-        if (error.status === 400) { // Statuscode für "Conflict"
+        if (error.status === 409) { // Statuscode für "Conflict"
           // Hinweis ausgeben, dass der Nutzer bereits registriert ist
           this.errorMessage = 'Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.';
         } else if (error.error instanceof ErrorEvent) {
