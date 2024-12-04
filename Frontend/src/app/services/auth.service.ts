@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError  } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import {environment} from "../../environments/environment";
 
 
 @Injectable({
@@ -10,7 +11,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private baseUrl = 'http://localhost:8080/api/auth';
+  private backendUrl = environment.apiUrl;
   private tokenKey = 'cognitoToken';
 
   constructor(private http: HttpClient) {}
@@ -32,10 +33,10 @@ export class AuthService {
   register(email: string, password: string): Observable<any> {
     const body = { email, password };
 
-    return this.http.post(`${this.baseUrl}/register`, body).pipe(
+    return this.http.post(`${this.backendUrl}/api/auth/register`, body, { responseType: 'text'}).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Fehler im HTTP-Aufruf:', error);
-        return throwError(() => new Error('Registrierungsfehler: ' + error.message)); // Hier wird der Fehler weitergegeben
+        return throwError(() => new Error('Registrierungsfehler: ' + error.message));
       })
     );
   }
@@ -52,7 +53,7 @@ export class AuthService {
 
   verifyCodeBackend(verificationCode: string): Observable<any> {
     console.log('verifyCodebackend', verificationCode)
-    return this.http.post<any>(`${this.baseUrl}/verify-code`, { verificationCode });
+    return this.http.post<any>(`${this.backendUrl}/verify-code`, { verificationCode });
   }
 
 }
