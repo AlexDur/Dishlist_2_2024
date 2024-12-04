@@ -180,7 +180,7 @@ a {
 
 .error-message {
   color: #ffffff;
-  margin-top: 3rem;
+  margin-bottom: 2rem;
 }
 
 .registrierung-hinweis{
@@ -190,6 +190,50 @@ a {
 .registrierung-hinweis a {
   color: $detail_2-color;
   font-weight: bold;
+}
+
+//Verfikation
+.inputfeld-verifikation {
+  width: 100%;
+  font-size: 14px;
+  text-align: center;
+  max-width: 150px;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  color:$detail_2-color
+}
+
+.general-button-verfikation{
+  width: 160px;
+  font-weight: bold;
+  height: 42px;
+  background-color: $detail_2-color !important;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+}
+
+.buttons-container-verifikation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap:2rem;
+}
+
+@media screen and (max-width: 750px) {
+  .buttons-container-verifikation {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /*Rezepterstellung*/

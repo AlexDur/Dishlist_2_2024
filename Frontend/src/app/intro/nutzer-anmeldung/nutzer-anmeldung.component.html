@@ -6,7 +6,7 @@
     <form *ngIf="!isAuthenticated" (ngSubmit)="onLogin()">
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Nutzername" type="text" [(ngModel)]="username" required name="username" pInputText>
+          <input class="inputfeld" placeholder="E-Mailadresse" type="text" [(ngModel)]="email" required name="email" pInputText>
         </div>
         <div class="p-field">
           <input class="inputfeld" placeholder="Passwort" type="password" [(ngModel)]="password" required name="password" pInputText>

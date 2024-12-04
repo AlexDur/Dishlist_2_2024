@@ -8,12 +8,14 @@
           <input class="inputfeld" placeholder="E-Mail" type="text" [(ngModel)]="email" required name="email" pInputText>
         </div>
         <div class="p-field">
-          <input class="inputfeld" placeholder="Nutzername" type="text" [(ngModel)]="username" required name="username" pInputText>
-        </div>
-        <div class="p-field">
           <input class="inputfeld" placeholder="Passwort" type="password" [(ngModel)]="password" required name="password" pInputText>
         </div>
+        <br>
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
         <button class="general-button" type="submit" pButton>Registrieren</button>
+
       </div>
     </form>
   </div>
