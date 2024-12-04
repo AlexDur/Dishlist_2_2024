@@ -16,8 +16,6 @@ Beispiel: Wenn der Nutzer die Filter "Hauptgericht", "Japanisch" und "proteinrei
 
 Das Ergebnis könnte dann lauten:
 
-Teriyaki-Lachs
-Chicken Katsu
-Tonkatsu
+1. Teriyaki-Lachs |  2. Chicken Katsu | 3. Tonkatsu
 
 Guten Appetit!
