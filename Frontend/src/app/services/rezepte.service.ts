@@ -6,6 +6,7 @@ import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import { EMPTY } from 'rxjs';
+import {AuthService} from "./auth.service";
 
 
 
@@ -32,7 +33,7 @@ export class RezeptService {
   //Damit können andere Teile der Anwendung, die an Änderungen des aktuellen Rezepts interessiert sind, sich darauf abonnieren.
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getJsonHeaders(): HttpHeaders {
     return new HttpHeaders({'Content-Type': 'application/json'});
@@ -56,7 +57,10 @@ export class RezeptService {
 
 
   getAlleRezepte(): Observable<RezeptAntwort[]> {
-    const headers = this.getJsonHeaders().set('Accept', 'application/json');
+    const token = this.authService.getToken();
+
+    const headers = this.getJsonHeaders().set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, {headers}).pipe(
       tap(rezepte => {

@@ -19,6 +19,7 @@ import {RezepteModule} from "./listen-container/rezepte.module";
 import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
 import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
+import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
@@ -30,7 +31,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     SplashScreenComponent,
     InfoScreenComponent,
     LoginComponent,
-    RegistrierungComponent
+    RegistrierungComponent,
+    VerifikationComponent,
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
@@ -46,7 +48,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     FormsModule,
     ButtonModule,
     SharedModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+
   ],
   providers: [],
   exports: [

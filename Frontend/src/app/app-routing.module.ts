@@ -12,18 +12,20 @@ import {ListenContainerComponent} from "./listen-container/listen-container.comp
 /*import {LogoutComponent} from "./intro/logout/logout.component";*/
 import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
+import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 /*import {NutzerAnmeldungComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";*/
 
 
 const routes: Routes = [
  /* { path: 'splash', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },*/
-  { path: '', component: ListenContainerComponent},
+  { path: 'listen-container', component: ListenContainerComponent},
   { path: 'anmeldung',component: LoginComponent},
   { path: 'logout', component: LoginComponent },
+  { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-  { path: '**', redirectTo: '' } // Fallback für alle anderen ungültigen Routen
+  { path: '**', redirectTo: 'anmeldung' }
 ];
 
 

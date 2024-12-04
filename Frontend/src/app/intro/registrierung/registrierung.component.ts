@@ -9,22 +9,32 @@ import {AuthService} from "../../services/auth.service";
 export class RegistrierungComponent {
 
   email:string = "";
-  username: string = '';
   password: string = '';
+  errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   onRegister() {
-    this.authService.register(this.username, this.password).subscribe(
+    this.authService.register(this.email, this.password).subscribe(
       response => {
-        console.log('Registrierung erfolgreich');
-        this.router.navigate(['/login']);  // Nach der Registrierung zum Login weiterleiten
+        console.log('Verfizierung nötig', response);
+        this.router.navigate(['/verifikation']);
       },
       error => {
         console.error('Registrierung fehlgeschlagen', error);
+        console.error('Grund für: Registrierung fehlgeschlagen', error.status);
+
+
+        if (error.status === 400) { // Statuscode für "Conflict"
+          // Hinweis ausgeben, dass der Nutzer bereits registriert ist
+          this.errorMessage = 'Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.';
+        } else if (error.error instanceof ErrorEvent) {
+          console.error('Client-side error:', error.error.message);
+        } else {
+          console.error(`Server-side error: ${error.status} ${error.error}`);
+        }
       }
     );
-    this.navigateListe(event);
   }
 
   navigateAnmeldung(event: Event) {
@@ -32,12 +42,14 @@ export class RegistrierungComponent {
     this.router.navigate(['/anmeldung']);
   }
 
-  navigateListe(event: Event | undefined) {
+  navigateVerfikation(event: Event | undefined) {
     if(event){
       event.preventDefault();
     }
-    this.router.navigate(['/listencontainer']);
+    this.router.navigate(['/verfikation']);
   }
+
+  protected readonly event = event;
 }
 
 

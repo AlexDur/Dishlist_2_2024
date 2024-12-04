@@ -8,11 +8,12 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   private baseUrl = 'http://localhost:8080/api/auth';
+  private tokenKey = 'cognitoToken';
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post('/api/login', { username, password });
+  login(email: string,  password: string): Observable<any> {
+    return this.http.post('/api/login', { email, password });
   }
 
   logout(): Observable<any> {
@@ -20,17 +21,32 @@ export class AuthService {
   }
 
   /**
-   * Sendet Registrierungsdaten an das Backend
-   * @param username Der Benutzername des neuen Nutzers
-   * @param password Das Passwort des neuen Nutzers
+   * Sendet Registrierungsdaten des Nutzers an das Backend
+   * @param email
+   * @param password
    * @returns Ein Observable mit der Antwort des Servers
    */
-  register(username: string, password: string): Observable<any> {
+  register(email:string, password: string): Observable<any> {
     const body = {
-      username: username,
+      email: email,
       password: password
     };
 
     return this.http.post(`${this.baseUrl}/register`, body);
   }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  // Token speichern (z. B. nach Anmeldung)
+  setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  verifyCodeBackend(verificationCode: string): Observable<any> {
+    console.log('verifyCodebackend', verificationCode)
+    return this.http.post<any>(`${this.baseUrl}/verify-code`, { verificationCode });
+  }
+
 }

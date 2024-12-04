@@ -7,7 +7,7 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './nutzer-anmeldung.component.html',
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
   loginSuccess: boolean = false;
   loginError: boolean = false;
@@ -19,12 +19,12 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.authService.login(this.username, this.password).subscribe(
+    this.authService.login(this.email, this.password).subscribe(
       (response) => {
         this.loginSuccess = true;
         this.loginError = false;
         this.isAuthenticated = true;
-        this.userName = response.username;
+        this.email = response.email
         this.oidcProperties = JSON.stringify(response.oidcProperties);  // Beispiel für OIDC-Daten
       },
       (error) => {
@@ -38,7 +38,7 @@ export class LoginComponent {
   onLogout() {
     this.authService.logout().subscribe(() => {
       this.isAuthenticated = false;
-      this.userName = '';
+      this.email = '';
       this.oidcProperties = '';
     });
   }
