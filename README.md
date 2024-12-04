@@ -1,4 +1,4 @@
-# Dishlist_2024
+# Dishlist_2024 (verfügbar unter www.dish-list.de und demnächst im Google Play Store)
 Eine Rezepte-App zur Organisation von Online-Rezepten mit integriertem Empfehlungssystem.
 
 Der Nutzer kann Online-Rezepte manuell in der App speichern. Dabei können neben einer Fotoaufnahme auch weitere Details zum Gericht hinzugefügt werden. Die Rezepte können mit Tags versehen werden, die in den folgenden Kategorien unterteilt sind:
