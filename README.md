@@ -3,9 +3,9 @@ Eine Rezepte-App zur Organisation von Online-Rezepten mit integriertem Empfehlun
 
 Der Nutzer kann Online-Rezepte manuell in der App speichern. Dabei können neben einer Fotoaufnahme auch weitere Details zum Gericht hinzugefügt werden. Die Rezepte können mit Tags versehen werden, die in den folgenden Kategorien unterteilt sind:
 
-Mahlzeit (Vorspeise, Hauptgericht, Nachspeise),
-Küche (Deutsch, Italienisch, Japanisch, etc.),
-Nährwert (proteinreich, kalorienarm, etc.).
+- Mahlzeit (Vorspeise, Hauptgericht, Nachspeise)  
+- Küche (Deutsch, Italienisch, Japanisch, etc.)  
+- Nährwert (proteinreich, kalorienarm, etc.).
 
 Dank dieser Tags ist eine genauere Beschreibung des Rezepts möglich, welche das Filtern der bereits angelegten Rezepts erlaubt.
 Gespeicherte Rezepte können in einer Übersicht angezeigt und mithilfe der gesetzten Tags gefiltert werden.
