@@ -18,7 +18,7 @@ export class RegistrierungComponent {
     this.authService.register(this.email, this.password).subscribe(
       response => {
         console.log('Weiterleitung Verfizierung', response);
-        this.router.navigate(['/verifikation']);
+        this.router.navigate(['/verifikation'], { queryParams: { email: this.email } });
       },
       error => {
         console.error('Registrierung fehlgeschlagen', error);
