@@ -39,12 +39,17 @@ export class VerifikationComponent implements OnInit{
 
       .pipe(
         catchError(err => {
-          // Fehler abfangen und eine entsprechende Fehlermeldung setzen
-          this.errorMessage = 'Fehler bei der Verifizierung. Bitte versuchen Sie es später erneut.';
-          return of(null);  // Fehler abfangen und null zurückgeben
+          if (err.error && err.error.message) {
+            this.errorMessage = err.error.message; // Backend-Fehlermeldung anzeigen
+          } else {
+            this.errorMessage = 'Fehler bei der Verifizierung. Bitte versuchen Sie es später erneut.';
+          }
+          return of(null);
         })
       )
+
       .subscribe(response => {
+        console.log('response:', response)
         if (response && response.success) {
           // Wenn die Verifizierung erfolgreich ist, weiterleiten
           this.successMessage = 'Code erfolgreich verifiziert!';
