@@ -52,9 +52,9 @@ export class AuthService {
   }
 
 
-  verifyCodeBackend(verificationCode: string, email: string): Observable<any> {
-    console.log('verifyCodebackend', verificationCode, email)
-    return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verificationCode, email });
+  verifyCodeBackend(verifikationCode: string, email: string): Observable<any> {
+    console.log('verifyCodebackend', verifikationCode, email)
+    return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verifikationCode, email });
   }
 
 }
