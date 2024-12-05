@@ -14,7 +14,7 @@ Beim Setzen eines oder mehrerer Filter aus den drei Kategorien kann der Nutzer k
 
 Beispiel: Wenn der Nutzer die Filter "Hauptgericht", "Japanisch" und "proteinreich" auswählt, wird die Empfehlungslogik drei Rezepte vorschlagen, die diese drei Attribute enthalten. Die übereinstimmenden Rezepte werden dann dem Nutzer präsentiert. Bei einer größeren Anzahl an passenden Rezepten wird stets eine zufällige Auswahl von drei Rezepten getroffen.
 
-Es könnten dann etwa diese Rezepte empfohlen werden:
+Es würden dann etwa diese Rezepte empfohlen werden:
 
 1. Teriyaki-Lachs mit scharfen Jade-Nudeln | 2. Tonkatsu mit gerösteten Wasabi-Kartoffeln | 3. Chicken Katsu im süß-sauren Schlachtfeld 
 
