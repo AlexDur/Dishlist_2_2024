@@ -19,3 +19,15 @@ Es könnten dann etwa diese Rezepte empfohlen werden:
 1. Teriyaki-Lachs mit scharfen Jade-Nudeln | 2. Tonkatsu mit gerösteten Wasabi-Kartoffeln | 3. Chicken Katsu im süß-sauren Schlachtfeld 
 
 Guten Appetit!
+
+
+____
+
+
+**Verwendete Technologien**
+
+- Angular
+- Spring Boot
+- MySQL
+- AWS: Lightsail, S3, RDS, Cognito, Weitere
+  
