@@ -16,6 +16,6 @@ Beispiel: Wenn der Nutzer die Filter "Hauptgericht", "Japanisch" und "proteinrei
 
 Es könnten dann etwa diese Rezepte empfohlen werden:
 
-1. Teriyaki-Lachs |  2. Chicken Katsu | 3. Tonkatsu
+1. Teriyaki-Lachs mit feurigen Jade-Nudeln |  2. Chicken Katsu im süß-sauren Schlachtfeld | 3. Tonkatsu mit gerösteten Samurai-Kartoffeln
 
 Guten Appetit!
