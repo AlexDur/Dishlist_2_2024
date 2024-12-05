@@ -51,9 +51,10 @@ export class AuthService {
     localStorage.setItem(this.tokenKey, token);
   }
 
-  verifyCodeBackend(verificationCode: string): Observable<any> {
-    console.log('verifyCodebackend', verificationCode)
-    return this.http.post<any>(`${this.backendUrl}/verify-code`, { verificationCode });
+
+  verifyCodeBackend(verificationCode: string, email: string): Observable<any> {
+    console.log('verifyCodebackend', verificationCode, email)
+    return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verificationCode, email });
   }
 
 }

@@ -1,20 +1,29 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit} from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import {Router} from "@angular/router";
 import { of } from 'rxjs';
 import {AuthService} from "../../services/auth.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-verifikation',
   templateUrl: './verifikation.component.html'
 })
-export class VerifikationComponent {
+export class VerifikationComponent implements OnInit{
   verifikationCode: string = '';  // Variable für den eingegebenen Code
+  email: string = '';  // Variable für den eingegebenen Code
   errorMessage: string = '';  // Fehlernachricht, die angezeigt wird
   successMessage: string = '';  // Erfolgsnachricht nach erfolgreicher Verifikation
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) {}
+
+
+  ngOnInit() {
+    // E-Mail aus den Query-Parametern holen
+    this.route.queryParams.subscribe(params => {
+      this.email = params['email'];
+    });
+  }
 
   // Methode zum Verifizieren des Codes
   verifyCode(event:Event) {
@@ -26,7 +35,7 @@ export class VerifikationComponent {
     }
 
     // Anfrage an das Backend senden, um den Code zu verifizieren
-    this.authService.verifyCodeBackend(this.verifikationCode)
+    this.authService.verifyCodeBackend(this.verifikationCode, this.email)
 
       .pipe(
         catchError(err => {
