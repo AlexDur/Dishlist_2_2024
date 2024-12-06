@@ -4,6 +4,7 @@ import { Observable, throwError  } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
+import { of } from 'rxjs';
 
 
 @Injectable({
@@ -29,9 +30,19 @@ export class AuthService {
 
 
   logout(): Observable<any> {
-    localStorage.removeItem('authToken')
-    return this.http.post(`${this.backendUrl}/api/auth/logout`, {});
+    const authToken = localStorage.getItem('authToken');
+
+    if (authToken && /^[A-Za-z0-9-_=.]+$/.test(authToken)) {
+      localStorage.removeItem('authToken');
+      return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+    } else {
+      console.error('Ungültiger Token oder Token fehlt');
+      return of(null); // Oder eine andere Fehlerbehandlung
+    }
   }
+
 
   /**
    * Sendet Registrierungsdaten des Nutzers an das Backend

@@ -14,7 +14,6 @@ export class LoginComponent {
   loginSuccess: boolean = false;
   loginError: boolean = false;
   isAuthenticated: boolean = false;
-  userName: string = '';
   oidcProperties: string = '';
 
   constructor(private authService: AuthService, private router: Router) {
