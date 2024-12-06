@@ -9,6 +9,7 @@
         </div>
         <div class="p-field">
           <input class="inputfeld" placeholder="Passwort" type="password" [(ngModel)]="password" required name="password" pInputText>
+          <i class="pi" [ngClass]="{'pi-eye': !showPassword, 'pi-eye-slash': showPassword}" (click)="togglePasswordVisibility()"></i>
         </div>
         <br>
         <div *ngIf="errorMessage" class="error-message">

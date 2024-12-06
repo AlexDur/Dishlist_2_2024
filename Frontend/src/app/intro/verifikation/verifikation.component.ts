@@ -55,7 +55,7 @@ export class VerifikationComponent implements OnInit{
           this.successMessage = 'Code erfolgreich verifiziert!';
           this.errorMessage = ''; // Fehlernachricht zurücksetzen
 
-          this.navigateListe();
+          this.navigateAnmeldung();
         } else {
           // Wenn der Code ungültig ist, Fehlermeldung anzeigen
           this.errorMessage = 'Ungültiger Code. Bitte versuchen Sie es erneut.';
@@ -69,7 +69,7 @@ export class VerifikationComponent implements OnInit{
     this.router.navigate(['/registrierung']);
   }
 
-  navigateListe() {
-    this.router.navigate(['/listen-container']);
+  navigateAnmeldung() {
+    this.router.navigate(['/anmeldung']);
   }
 }
