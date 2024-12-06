@@ -13,15 +13,24 @@ export class AuthService {
 
   private backendUrl = environment.apiUrl;
   private tokenKey = 'cognitoToken';
+  private body: { email: string; password: string; } | undefined;
 
   constructor(private http: HttpClient) {}
 
   login(email: string,  password: string): Observable<any> {
-    return this.http.post('/api/login', { email, password });
+    this.body = { email, password };
+    return this.http.post(`${this.backendUrl}/api/auth/login`, this.body, { responseType: 'text'}).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Fehler im HTTP-Aufruf:', error);
+        return throwError(() => new Error('Anmeldefehler: ' + error.message));
+      })
+    );
   }
 
+
   logout(): Observable<any> {
-    return this.http.post('/api/logout', {});
+    localStorage.removeItem('authToken')
+    return this.http.post(`${this.backendUrl}/api/auth/logout`, {});
   }
 
   /**
@@ -31,9 +40,9 @@ export class AuthService {
    * @returns Ein Observable mit der Antwort des Servers
    */
   register(email: string, password: string): Observable<any> {
-    const body = { email, password };
+    this.body = { email, password };
 
-    return this.http.post(`${this.backendUrl}/api/auth/register`, body, { responseType: 'text'}).pipe(
+    return this.http.post(`${this.backendUrl}/api/auth/register`, this.body, { responseType: 'text'}).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Fehler im HTTP-Aufruf:', error);
         return throwError(() => new Error('Registrierungsfehler: ' + error.message));

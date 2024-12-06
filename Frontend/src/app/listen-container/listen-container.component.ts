@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
-
+import { Router } from "@angular/router";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-listen-container',
@@ -16,7 +17,7 @@ export class ListenContainerComponent implements OnInit{
   gefilterteRezepte: Rezept[] = [];
   bildUrls: { [key: number]: string } = {};
 
-  constructor(private rezepteService: RezeptService) {}
+  constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     const abgerufeneBilder = new Set();
@@ -69,7 +70,24 @@ export class ListenContainerComponent implements OnInit{
     // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
 
+  logoutUser(event: Event){
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Erfolgreich ausgeloggt');
+        this.router.navigate(['/anmeldung']); // Weiterleitung zur Login-Seite
+      },
+      error: (err) => {
+        console.error('Fehler beim Logout', err);
+      }
+    });
 
+
+  }
+
+/*  navigateAnmeldung(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/anmeldung']);
+  }*/
 }
 
 

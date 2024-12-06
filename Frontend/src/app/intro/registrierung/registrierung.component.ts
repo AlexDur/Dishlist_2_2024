@@ -11,6 +11,8 @@ export class RegistrierungComponent {
   email:string = "";
   password: string = '';
   errorMessage: string = '';
+  showPassword = false;
+  inputType = 'password';
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -42,11 +44,9 @@ export class RegistrierungComponent {
     this.router.navigate(['/anmeldung']);
   }
 
-  navigateVerfikation(event: Event | undefined) {
-    if(event){
-      event.preventDefault();
-    }
-    this.router.navigate(['/verfikation']);
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+    this.inputType = this.showPassword ? 'text' : 'password';
   }
 
   protected readonly event = event;

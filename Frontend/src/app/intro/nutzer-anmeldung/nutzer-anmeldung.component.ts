@@ -9,6 +9,8 @@ import {AuthService} from "../../services/auth.service";
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  showPassword = false;
+  inputType = 'password';
   loginSuccess: boolean = false;
   loginError: boolean = false;
   isAuthenticated: boolean = false;
@@ -43,8 +45,13 @@ export class LoginComponent {
     });
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+    this.inputType = this.showPassword ? 'text' : 'password';
+  }
+
   navigateListe(event: MouseEvent) {
     event.preventDefault();
-    this.router.navigate(['/listencontainer']);
+    this.router.navigate(['/listen-container']);
   }
 }
