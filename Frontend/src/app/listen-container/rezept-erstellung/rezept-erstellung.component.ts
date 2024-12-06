@@ -205,7 +205,7 @@ export class RezeptErstellungComponent implements OnInit {
     //saveRecipe enthält ja createRezept (s.o.)
     this.saveRecipe(rezeptToSave).subscribe(      response => {
 
-        this.router.navigate(['/listencontainer']);  // Weiterleitung nach dem Speichern
+        this.router.navigate(['/listen-container']);  // Weiterleitung nach dem Speichern
       },
       error => {
         console.error('Fehler in handleClick:', error);
