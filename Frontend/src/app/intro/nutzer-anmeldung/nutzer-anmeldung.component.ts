@@ -27,7 +27,8 @@ export class LoginComponent {
         this.loginError = false;
         this.isAuthenticated = true;
         this.email = response.email
-        this.oidcProperties = JSON.stringify(response.oidcProperties);  // Beispiel für OIDC-Daten
+        this.oidcProperties = JSON.stringify(response.oidcProperties);
+        this.router.navigate(['/listen-container']);
       },
       (error) => {
         this.loginSuccess = false;
