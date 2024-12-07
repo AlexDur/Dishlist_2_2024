@@ -22,7 +22,7 @@ export class ListenContainerComponent implements OnInit{
   ngOnInit(): void {
     const abgerufeneBilder = new Set();
 
-    this.rezepteService.getAlleRezepte().subscribe(rezepte => {
+    this.rezepteService.getUserRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({
         ...rezept,
    /*     datum: rezept.datum ? new Date(rezept.datum) : undefined*/
