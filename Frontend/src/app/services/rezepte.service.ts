@@ -55,9 +55,42 @@ export class RezeptService {
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
 
+/*  getUserRezepte(): Observable<Rezept[]> {
+    const token = localStorage.getItem('jwt_token');
 
-  getAlleRezepte(): Observable<RezeptAntwort[]> {
-    const token = this.authService.getToken();
+    const headers = this.getJsonHeaders().set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
+    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/userRezepte`);
+  }*/
+
+  getUserRezepte(): Observable<RezeptAntwort[]> {
+    const token = localStorage.getItem('jwt_token');
+    console.log('JWT-Token aus localStorage:', token);  // Überprüfe den abgerufenen Token
+
+    if (!token) {
+      console.error('Kein JWT-Token gefunden!');
+      return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
+    }
+
+    const headers = this.getJsonHeaders().set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
+      tap(rezepte => {
+        console.log('Rezepte vom Server:', rezepte);
+        this.rezepteSubject.next(rezepte);
+      }),
+      catchError(error => {
+        console.error("Fehler beim Laden der Rezepte", error);
+        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
+      })
+    );
+  }
+
+
+
+  /*getAlleRezepte(): Observable<RezeptAntwort[]> {
+    const token = localStorage.getItem('jwt_token');
 
     const headers = this.getJsonHeaders().set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`);
@@ -72,7 +105,7 @@ export class RezeptService {
         return throwError(() => new Error("Fehler beim Laden der Rezepte"));
       })
     );
-  }
+  }*/
 
     setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
@@ -153,11 +186,22 @@ export class RezeptService {
       return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
     }
 
+    const token = localStorage.getItem('jwt_token'); // Hier holen wir das Token aus dem localStorage
+
+    if (!token) {
+      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
+      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      return throwError(() => new Error('Token fehlt.'));
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
     console.log('Formdata in service.ts', formData)
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-      observe: 'response'
+      observe: 'response',
+      headers: headers
     }).pipe(
       tap(response => {
         console.log('Server Response:', response);
