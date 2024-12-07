@@ -116,6 +116,7 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
+  //TODO: Funktion nur relevant, wenn Bilder lokal gespeichert werden sollen
   getBild(bildname: string): Observable<HttpResponse<Blob>> {
 
     return this.http.get<Blob>(`${this.backendUrl}/api/rezepte/bilder/${bildname}`, {
