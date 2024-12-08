@@ -29,10 +29,10 @@
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
-      <excludeFolder url="file://$MODULE_DIR$/Frontend/dist" />
       <excludeFolder url="file://$MODULE_DIR$/Frontend/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
       <excludeFolder url="file://$MODULE_DIR$/Frontend/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/src/main/resources/static/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
