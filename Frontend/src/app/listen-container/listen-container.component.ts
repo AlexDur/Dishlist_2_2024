@@ -23,41 +23,20 @@ export class ListenContainerComponent implements OnInit{
     const abgerufeneBilder = new Set();
 
     this.rezepteService.getUserRezepte().subscribe(rezepte => {
-      this.rezepte = rezepte.map(rezept => ({
-        ...rezept,
-   /*     datum: rezept.datum ? new Date(rezept.datum) : undefined*/
-      }));
-      this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
-      this.gefilterteRezepte = [...this.rezepte]; // Initialisiere gefilterte Rezepte mit allen Rezepten
+      this.rezepte = rezepte.map(rezept => ({ ...rezept }));
+      this.rezepteGeladen.emit(this.rezepte);
+      this.gefilterteRezepte = [...this.rezepte];
       this.rezepteVerfuegbar = true;
-      console.log('rezepteVerfügbar', this.rezepteVerfuegbar);
 
-      // Bilder für jedes Rezept abrufen
       this.gefilterteRezepte.forEach(rezept => {
-        if (rezept.bildUrl) {
-          // Bildname extrahieren (z.B. nur den letzten Teil der URL)
-          const bildname = rezept.bildUrl.split('/').pop(); // Beispiel für Windows-Pfad
-          console.log('bildname', bildname)
+        if (rezept && rezept.bildUrl){
+          const bildname = rezept.bildUrl.split('/').pop();
           if (bildname && !abgerufeneBilder.has(bildname)) {
             abgerufeneBilder.add(bildname);
 
-            this.rezepteService.getBild(bildname).subscribe(response => {
-              if (response.body) {
-              /*  const blob = new Blob([response.body], { type: 'image/png' });*/
-                const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
-                this.bildUrls[rezept.id] = imageUrl;
-                console.log(' Bild-URL speichern')
-              } else {
-                //Anfrage zum Bildabruf erfolgreich, aber kein gültiges Bild zurückgegeben
-                console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
-              }
-            }, error => {
-              //Fehler, wenn während der Kommunikation mit dem Server/S3 eine Fehler auftritt
-              console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
-            });
-          } else {
-            //Extraktion des Bildnamens aus einem Rezept-Objekt schlägt fehl
-            console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
+            // Direkte S3-URL verwenden
+            const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
+            this.bildUrls[rezept.id] = imageUrl;
           }
         }
       });
@@ -67,7 +46,6 @@ export class ListenContainerComponent implements OnInit{
   onRezepteFiltered(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
     this.gefilterteRezepte = rezepte;
-    // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
 
   logoutUser(event: Event){
@@ -84,10 +62,6 @@ export class ListenContainerComponent implements OnInit{
 
   }
 
-/*  navigateAnmeldung(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/anmeldung']);
-  }*/
 }
 
 

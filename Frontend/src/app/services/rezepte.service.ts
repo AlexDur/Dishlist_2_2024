@@ -36,7 +36,9 @@ export class RezeptService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getJsonHeaders(): HttpHeaders {
-    return new HttpHeaders({'Content-Type': 'application/json'});
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return headers;
   }
 
   private updateKategorieZaehler(tags: Tag[] | undefined): void {
@@ -55,14 +57,6 @@ export class RezeptService {
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
   }
 
-/*  getUserRezepte(): Observable<Rezept[]> {
-    const token = localStorage.getItem('jwt_token');
-
-    const headers = this.getJsonHeaders().set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`);
-    return this.http.get<Rezept[]>(`${this.backendUrl}/api/rezepte/userRezepte`);
-  }*/
-
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = localStorage.getItem('jwt_token');
     console.log('JWT-Token aus localStorage:', token);  // Überprüfe den abgerufenen Token
@@ -77,15 +71,33 @@ export class RezeptService {
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => {
-        console.log('Rezepte vom Server:', rezepte);
-        this.rezepteSubject.next(rezepte);
+        // Überprüfe den Inhalt der Antwort
+        if (!rezepte || !Array.isArray(rezepte)) {
+          console.error('API antwortet mit ungültigem Inhalt:', rezepte);
+          this.rezepteSubject.next([]);
+        } else if (rezepte.length === 0) {
+          console.warn('Keine Rezepte zurückgegeben.');
+          this.rezepteSubject.next([]);
+        } else {
+          console.log('Rezepte vom Server:', rezepte);
+          this.rezepteSubject.next(rezepte);
+        }
       }),
       catchError(error => {
-        console.error("Fehler beim Laden der Rezepte", error);
+        console.error('Fehler beim Laden der Rezepte', error);
+        if (error.status === 400) {
+          console.error('Fehler 400: Ungültiges Token oder leeres Token.');
+        } else if (error.status === 401) {
+          console.error('Fehler 401: Ungültiger Token.');
+        } else {
+          console.error('Unbekannter Fehler:', error);
+        }
         return throwError(() => new Error("Fehler beim Laden der Rezepte"));
       })
     );
   }
+
+
 
 
 
