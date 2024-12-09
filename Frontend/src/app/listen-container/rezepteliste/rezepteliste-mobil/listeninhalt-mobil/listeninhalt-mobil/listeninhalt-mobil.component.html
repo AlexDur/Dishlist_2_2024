@@ -1,14 +1,16 @@
 <div class="container-listeninhalt">
   <div *ngFor="let rezept of gefilterteRezepte">
     <p-card>
-      <div [ngStyle]="{ 'background-image': rezept.bildUrl ? 'url(' + rezept.bildUrl + ')' : '', 'background-color': rezept.bildUrl ? '' : '#ddd' }">
-        <!-- Bild -->
+      <div
+        [ngStyle]="{
+          'background-image': rezept.bildUrl ? 'url(' + rezept.bildUrl + ')' : 'none',
+          'background-color': rezept.bildUrl ? 'transparent' : '#f5f5dc'
+        }">
+
         <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl" class="rezept-image" (click)="openUrl(rezept.onlineAdresse)" />
 
-        <!-- Name -->
         <div class="p-card-title">{{ rezept.name }}</div>
 
-        <!-- Buttons -->
         <div class="p-card-footer">
           <button pButton type="button" icon="pi pi-pencil" (click)="navigateForm(rezept, $event)" class="edit-button"></button>
           <button pButton type="button" icon="pi pi-trash" (click)="showDeleteDialog(rezept.id)" class="delete-button"></button>

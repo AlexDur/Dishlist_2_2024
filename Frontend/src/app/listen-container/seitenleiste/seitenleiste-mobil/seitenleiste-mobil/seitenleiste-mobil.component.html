@@ -2,17 +2,15 @@
   <div class="seiten-ueberschrift">Dishes</div>
 
   <!-- Filter-Button -->
-  <div class="filter-button-container">
-    <div class="flex justify-content-between">
-      <div class="flex justify-content-around">
+  <div>
+    <div class="button-row">
         <button class="filter-button" (click)="toggleDropdown($event)">
-          <i class="pi pi-filter"></i> Filter
+          <i class="pi pi-filter"></i>
           <!--TODO: Button solange ausgegraut bis mindestens ein Filterkriterium gesetzt ist-->
         </button>
         <button class="filter-button">
           <i class="pi pi-android"></i> WishADish
         </button>
-      </div>
     </div>
     <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="false" [styleClass]="'fullscreen-overlay'" (click)="closeDropdown($event)">
     <ng-template pTemplate>
