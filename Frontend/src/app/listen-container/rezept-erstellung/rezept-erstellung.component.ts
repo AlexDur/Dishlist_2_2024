@@ -218,7 +218,7 @@ export class RezeptErstellungComponent implements OnInit {
 
   navigateContainer(event: Event) {
     event.preventDefault();
-    this.router.navigate(['/listencontainer']);
+    this.router.navigate(['/listen-container']);
   }
 
   getGerichtartenTags(): Tag[] {
