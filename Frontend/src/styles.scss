@@ -789,21 +789,24 @@ h3.weiss {
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-top: .5rem;
+  margin-bottom: 3rem;
   font-size: 2rem;
   color: $tertiary-color;
   font-family: "Cooper Black";
   align-items: center;
 }
 
-.filter-button-container {
-  position: relative;
+.button-row{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .filter-button {
   background: linear-gradient(135deg, #dc6c40, #e65727);
   color: white;
-  padding: 12px 20px;
+  padding: 12px 15px;
   border: 2px solid #e65727;
   border-radius: 50px;
   font-size: 16px;
@@ -948,6 +951,15 @@ h3.weiss {
   margin: 5px;
 }
 
+.platzhalter-rezeptbild {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 8px;
+  min-height: 250px;
+  padding: 15px;
+}
+
 
 .linie-unten {
   border: 0;
@@ -995,11 +1007,40 @@ h3.weiss {
 }
 
 .seitenleiste {
-  position: relative; /* Verhindert Überschreibung durch Flexbox-Kinder */
-  flex-wrap: nowrap; /* Testweise ausschalten, um Kinder nicht zu umbrechen */
-  align-items: stretch; /* Maximale Breite der Kinder erlauben */
-  justify-content: flex-start; /* Normalen Fluss sicherstellen */
+  position: relative;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
 }
+
+.logout-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #e8e6e6;
+  color: $detail_2-color;
+  border: none;
+  padding: 10px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 15px;
+  transition: background-color 0.3s, transform 0.2s ease;
+
+  &:hover {
+    background-color: $detail_2-color; /* Dunkleres Rot beim Hover */
+    transform: scale(1.05); /* Leichtes Vergrößern beim Hover */
+  }
+
+  &:focus {
+    outline: none; /* Entfernt die Standard-Fokusmarkierung */
+  }
+}
+
+.logout-button i {
+  color: $detail_2-color;
+}
+
 
 @media screen and (max-width: 750px) {
 
@@ -1009,6 +1050,11 @@ h3.weiss {
       background: linear-gradient(135deg, #373535, #252424);
       transform: translateY(1px);
     }
+  }
+
+  .button-row {
+    gap:10rem;
+    width: 100%;
   }
 
   .linie-seite {
@@ -1059,15 +1105,6 @@ h3.weiss {
 
   }
 
-/*  .clickable-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-  }*/
 
     .scroll-indicator {
       position: fixed;
