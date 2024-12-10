@@ -5,7 +5,6 @@ import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
-import { EMPTY } from 'rxjs';
 import {AuthService} from "./auth.service";
 
 
@@ -36,12 +35,14 @@ export class RezeptService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getJsonHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    console.log('token im headers', token)
     let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${token}`);
     return headers;
   }
 
-  private updateKategorieZaehler(tags: Tag[] | undefined): void {
+/*  private updateKategorieZaehler(tags: Tag[] | undefined): void {
     const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
     const aktualisierteZaehler = { ...aktuelleZaehler };
 
@@ -55,7 +56,7 @@ export class RezeptService {
     }
 
     this.kategorieZaehlerSubject.next(aktualisierteZaehler);
-  }
+  }*/
 
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = localStorage.getItem('jwt_token');
@@ -66,8 +67,10 @@ export class RezeptService {
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
     }
 
-    const headers = this.getJsonHeaders().set('Accept', 'application/json')
+    /*TODO: headers zwei mal abgerufunen in datei, also auslagern*/
+    const headers = this.getJsonHeaders().set('Accept', 'application/json', )
       .set('Authorization', `Bearer ${token}`);
+    console.log('Token in getUserRezepte:', token);
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => {
@@ -97,29 +100,7 @@ export class RezeptService {
     );
   }
 
-
-
-
-
-  /*getAlleRezepte(): Observable<RezeptAntwort[]> {
-    const token = localStorage.getItem('jwt_token');
-
-    const headers = this.getJsonHeaders().set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, {headers}).pipe(
-      tap(rezepte => {
-        console.log('Rezepte vom Server:', rezepte);
-        this.rezepteSubject.next(rezepte);
-      }),
-      catchError(error => {
-        console.error("Fehler beim Laden der Rezepte", error);
-        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
-      })
-    );
-  }*/
-
-    setCurrentRezept(rezept: Rezept) {
+  setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
   }
 
@@ -223,75 +204,45 @@ export class RezeptService {
       catchError(error => {
         console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
-        return throwError(() => new Error('Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
+        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
       })
     );
   }
 
 
+  updateRezept(rezeptId: number, rezeptToSave: Rezept, formData: FormData): Observable<any> {
+    const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
+    this.currentRezeptSubject.next(rezeptToSave);
 
+    const token = localStorage.getItem('jwt_token');
+  /*  console.log('Token in updateRezept:', token);*/
 
-/*
-  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
-    const formData = new FormData();
-    formData.append('file', file); // Datei in FormData hinzufügen
+/*    if (rezeptToSave.id) {
+      console.log('Die ID des Rezepts ist vorhanden:', rezeptToSave);
+    }else{
+      console.error('Die ID des Rezepts ist FEHLT:', rezeptToSave);
+    }*/
 
-    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.put(apiUrl, formData, {
+      headers: headers,
       observe: 'response'
     }).pipe(
-      tap(response => {
-        console.log('Upload Response:', response);
-      }),
-      catchError(error => {
-        console.error('Fehler beim Bild-Upload:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-*/
-
-  /*Asynchron als Observable, weil Bildupload dauern kann.*/
-/*  uploadImage(rezeptId: number, file: File): Observable<any>{
-    const formData = new FormData();
-    formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
-
-    /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
-
-    // POST an Server, um die Datei hochzuladen
-    return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
-      tap(response => console.log('Upload erfolgreich:', response)),
-      catchError(error => {
-        console.error('Fehler beim Hochladen des Bildes', error);
-        return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
-      })
-    );
-  }*/
-
-
-  updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
-    const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
-    this.currentRezeptSubject.next(rezept)
-    const rezeptMitFormatiertenTags = {
-      ...rezept,
-      tags: rezept.tags ?? []
-    };
-
-    return this.http.put(apiUrl, rezeptMitFormatiertenTags, { headers: this.getJsonHeaders(), observe: 'response', responseType: 'json' }).pipe(
       tap(() => {
         const existingRezepte = this.rezepteSubject.getValue();
         const index = existingRezepte.findIndex(r => r.id === rezeptId);
         if (index !== -1) {
           const updatedRezepte = [
             ...existingRezepte.slice(0, index),
-            { ...existingRezepte[index], ...rezept },
+            { ...existingRezepte[index], ...rezeptToSave },
             ...existingRezepte.slice(index + 1)
           ];
           this.rezepteSubject.next(updatedRezepte);
         }
       }),
       catchError((error) => {
-        console.error('Fehler beim Aktualisieren des Rezepts', error);
-        return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts'));
+        return throwError(() => new Error('rservice_Fehler beim Aktualisieren des Rezepts'));
       })
     );
   }
@@ -327,4 +278,40 @@ export class RezeptService {
       this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
     }
   }
+
+  /*
+  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
+    const formData = new FormData();
+    formData.append('file', file); // Datei in FormData hinzufügen
+
+    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
+      observe: 'response'
+    }).pipe(
+      tap(response => {
+        console.log('Upload Response:', response);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Bild-Upload:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+*/
+
+  /*Asynchron als Observable, weil Bildupload dauern kann.*/
+  /*  uploadImage(rezeptId: number, file: File): Observable<any>{
+      const formData = new FormData();
+      formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
+
+      /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
+
+      // POST an Server, um die Datei hochzuladen
+      return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
+        tap(response => console.log('Upload erfolgreich:', response)),
+        catchError(error => {
+          console.error('Fehler beim Hochladen des Bildes', error);
+          return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
+        })
+      );
+    }*/
 }
