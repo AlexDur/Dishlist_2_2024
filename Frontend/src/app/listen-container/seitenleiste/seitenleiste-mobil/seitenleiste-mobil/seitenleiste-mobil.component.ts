@@ -4,7 +4,7 @@ import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
 import { Subscription } from 'rxjs';
-import {DEFAULT_TAGS} from "../../../../models/default_tag.ts";
+import {DEFAULT_TAGS} from "../../../../models/default_tag";
 
 @Component({
   selector: 'app-seitenleiste-mobil',

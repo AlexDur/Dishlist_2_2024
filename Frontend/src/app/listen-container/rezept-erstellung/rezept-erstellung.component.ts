@@ -14,8 +14,7 @@ import { Router } from "@angular/router";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
-import {DEFAULT_TAGS} from "../../models/default_tag.ts";
-
+import {DEFAULT_TAGS} from "../../models/default_tag";
 
 
 @Component({
@@ -142,7 +141,7 @@ export class RezeptErstellungComponent implements OnInit {
     }
 
     this.newRecipe.tags = [...this.selectedTags];
-    console.log('Aktuelle ausgewählte Tags:', this.selectedTags); // Log der ausgewählten Tags
+    console.log('Aktuelle ausgewählte Tags:', this.selectedTags);
     this.cdr.detectChanges();
   }
 
