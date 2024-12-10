@@ -49,7 +49,7 @@
           </ng-container>
 
           <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
-        <button (click)="handleClick($event)" class="general-button" type="submit" pButton>Hinzufügen</button>
+        <button (click)="handleClick($event)"  class="general-button" type="submit" pButton> {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}</button>
       </div>
       </div>
     </form>

@@ -12,10 +12,8 @@ import { Tag } from "../../models/tag";
 import { RezeptService } from "../../services/rezepte.service";
 import { Router } from "@angular/router";
 import { catchError, Observable, tap, throwError } from "rxjs";
-import { TagService} from "../../services/tags.service";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
-import {RezeptDTO} from "../../models/dto/rezept.dto";
 import {DEFAULT_TAGS} from "../../models/default_tag.ts";
 
 
@@ -39,6 +37,8 @@ export class RezeptErstellungComponent implements OnInit {
   nametouched:boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
+  isUpdateMode: boolean = false;
+  rezeptToSave?: Rezept;
 
   categories = [
     { name: 'Gänge', selected: false },
@@ -49,13 +49,13 @@ export class RezeptErstellungComponent implements OnInit {
 
   constructor(
     private rezepteService: RezeptService,
-  /*  private authService: AuthService,*/
-    private tagService: TagService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+
+
     // Abonnieren des Observables aus rezepteService für das aktuelle Rezept
     // Wenn e. Rezept exisitiert, dann wird es in newRecipe gespeichert und tags werden selectedTags zugewiesen
     this.rezepteService.currentRezept$.subscribe(rezept => {
@@ -70,6 +70,20 @@ export class RezeptErstellungComponent implements OnInit {
         this.initNewRecipe();
       }
     });
+
+    this.rezepteService.currentRezept$.subscribe(rezept => {
+      if (rezept) {
+      this.isUpdateMode = true;
+    }
+  })
+  }
+
+  private showError(fieldName: keyof Rezept, show: boolean): void {
+    if (fieldName === 'name') {
+      this.showNameError = show;
+    } else if (fieldName === 'onlineAdresse') {
+      this.showOnlineAddressError = show;
+    }
   }
 
   //Neues leeres Rezept mit Standardwerten initialisiert
@@ -155,82 +169,119 @@ export class RezeptErstellungComponent implements OnInit {
 
 
   //Observable für die Anfragen im return
-  saveRecipe(rezept: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+  saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const rezeptDTO = {
-      name: rezept.name,
-      onlineAdresse: rezept.onlineAdresse,
-      tags: Array.isArray(rezept.tags) ? rezept.tags.map((tag) => ({
+      id: rezeptToSave.id,
+      name: rezeptToSave.name,
+      onlineAdresse: rezeptToSave.onlineAdresse,
+      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map((tag) => ({
+        id: tag.id,
         type: tag.type ?? 'defaultType',
         label: tag.label,
         selected: tag.selected,
         count: tag.count,
-      })) : []  // Fallback auf leeres Array
+      })) : []
     };
 
     console.log('Erstelltes RezeptDTO:', rezeptDTO);
 
     const formData = new FormData();
-    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], { type: 'application/json' }));
+    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], {type: 'application/json'}));
 
-    // @ts-ignore
-    if (rezept.image && (rezept.image instanceof File || rezept.image instanceof Blob)) {
-      if ((rezept.image as File).size > 10 * 1024 * 1024) {
+    if (rezeptToSave.image instanceof File) {
+      if (rezeptToSave.image.size > 10 * 1024 * 1024) {
         console.error('Bilddatei überschreitet die maximale Größe von 10 MB.');
         return throwError(() => new Error('Bild ist zu groß.'));
       }
-      formData.append('image', rezept.image);
+      formData.append('image', rezeptToSave.image);
     } else {
-      console.warn('Kein optionales Bild vorhanden:', rezept.image);
+      console.warn('Kein optionales Bild vorhanden:', rezeptToSave.image);
     }
 
-    return this.rezepteService.createRezept(rezept, formData).pipe(
-      tap(response => {
-        console.log('Rezept erfolgreich gespeichert:', response);
-        this.updateTagCount()
-      }),
-      catchError(error => {
-        console.error('Fehler beim Speichern des Rezepts:', error);
-        return throwError(() => new Error('Fehler beim Speichern des Rezepts.'));
-      })
-    );
+    // Wenn eine ID vorhanden ist, rufe die Update-Methode auf
+    if (rezeptToSave.id) {
+      console.log('rezept vor updateRezept in saveRecipe', rezeptToSave);
+      return this.rezepteService.updateRezept(rezeptToSave.id, rezeptToSave, formData).pipe(
+        tap(response => {
+          console.log('Serverantwort:', response);
+          this.updateTagCount();
+        }),
+        catchError(error => {
+          return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts.'));
+        })
+      );
+    } else {
+      // Wenn keine ID vorhanden ist, rufe die Create-Methode auf
+      return this.rezepteService.createRezept(rezeptToSave, formData).pipe(
+        tap(response => {
+          console.log('Rezept erfolgreich gespeichert:', response);
+          this.updateTagCount();
+        }),
+        catchError(error => {
+          return throwError(() => new Error('Fehler beim Speichern des Rezepts.'));
+        })
+      );
+    }
   }
+
 
   handleClick(event: Event) {
     event.preventDefault();
 
     this.tagError = false;
-    // Rezept speichern
     const rezeptToSave = this.newRecipe;
 
-    //saveRecipe enthält ja createRezept (s.o.)
-    this.saveRecipe(rezeptToSave).subscribe(      response => {
+    const formData = new FormData();
+    const rezeptDTO = {
+      id: rezeptToSave.id,
+      name: rezeptToSave.name,
+      onlineAdresse: rezeptToSave.onlineAdresse,
+      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map((tag: {id:number, type: any; label: any; selected: any; count: any; }) => ({
+        id: tag.id,
+        type: tag.type ?? 'defaultType',
+        label: tag.label,
+        selected: tag.selected,
+        count: tag.count,
+      })) : []
+    };
 
-        this.router.navigate(['/listen-container']);  // Weiterleitung nach dem Speichern
-      },
-      error => {
-        console.error('Fehler in handleClick:', error);
+    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], {type: 'application/json'}));
 
-      }
-    );
+    if (rezeptToSave.image instanceof File) {
+      formData.append('image', rezeptToSave.image);
+    }
+
+
+    if (this.isUpdateMode) {
+      console.log('rezeptToSave bei isUpdateMode', rezeptToSave)
+      this.rezepteService.updateRezept(rezeptToSave.id, rezeptDTO, formData).pipe(
+        tap(response => {
+          console.log('Rezept erfolgreich aktualisiert:', response);
+          this.isUpdateMode = false;
+          console.log('isUpdateMode nach Update', this.isUpdateMode)
+          this.router.navigate(['/listen-container']);
+        }),
+        catchError(error => {
+          return throwError(() => new Error('erstellung2_Fehler beim Aktualisieren des Rezepts.'));
+        })
+      ).subscribe();
+    } else {
+      this.saveRecipe(rezeptToSave).pipe(
+        tap(response => {
+          console.log('Rezept erfolgreich gespeichert:', response);
+          this.router.navigate(['/listen-container']);
+        }),
+        catchError(error => {
+          return throwError(() => new Error('2_Fehler beim Speichern des Rezepts.'));
+        })
+      ).subscribe();
+    }
   }
-
 
 
   navigateContainer(event: Event) {
     event.preventDefault();
     this.router.navigate(['/listen-container']);
-  }
-
-  getGerichtartenTags(): Tag[] {
-    return this.tagService.getGerichtartenTags();
-  }
-
-  getKuechenTags(): Tag[] {
-    return this.tagService.getKuechenTags();
-  }
-
-  getNaehrwertTags(): Tag[] {
-    return this.tagService.getNaehrwertTags();
   }
 
 
@@ -252,13 +303,7 @@ export class RezeptErstellungComponent implements OnInit {
     return ''; // Standardfarbe, wenn das Feld nicht berührt wurde
   }
 
-  private showError(fieldName: keyof Rezept, show: boolean): void {
-    if (fieldName === 'name') {
-      this.showNameError = show;
-    } else if (fieldName === 'onlineAdresse') {
-      this.showOnlineAddressError = show;
-    }
-  }
+
 
   onFieldBlur(fieldName: keyof Rezept): void {
     if (fieldName === 'name') {
