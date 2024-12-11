@@ -572,8 +572,6 @@ p-dialog .p-dialog-header{
 
 /*Seitenleiste*/
 
-
-
 .weiss{
   color: white;
   text-align: center;
@@ -581,6 +579,15 @@ p-dialog .p-dialog-header{
   justify-content: center;
 }
 
+.dropdown-close-button {
+  display: none;
+
+}
+
+
+.dropdown-close-button:hover {
+  background-color: dark$detail_2-color;
+}
 
 .erstellung-kategorie{
   font-size: 18px;
@@ -818,15 +825,21 @@ h3.weiss {
   margin-bottom: 1.5rem;
 }
 
-.filter-button i {
-  margin-right: 8px;
-}
-
 .filter-button:hover {
   background: linear-gradient(135deg, #252424, #373535) !important;
   transform: translateY(-2px)!important;
   border: 2px solid $detail_2-color!important;
 }
+
+.filter-button:active {
+  background: $detail_2-color;
+}
+
+.filter-button i {
+  margin-right: 8px;
+}
+
+
 
 .p-overlaypanel {
   position: fixed !important;
@@ -836,23 +849,26 @@ h3.weiss {
 }
 
 .filter-button:active {
+  background-color: black;
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .fullscreen-overlay {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1002 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .dropdown-content-title{
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 5px;
+}
+
+.p-overlaypanel .p-overlaypanel-content{
+  height: 100vh;
 }
 
 .checkbox-label-container{
@@ -862,6 +878,28 @@ h3.weiss {
   margin-bottom: 6px;
 }
 
+.filter-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 20px;
+}
+
+.filter-column {
+  width: 100%; /* Optionale Breite für eine klare Darstellung */
+  text-align: left; /* Text linksbündig */
+  background-color: #f9f9f9; /* Optionaler Hintergrund */
+  padding: 15px; /* Innenabstand für eine bessere Lesbarkeit */
+  border-radius: 10px; /* Runde Ecken für ein modernes Design */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schatten für Tiefe */
+}
+
+.filter-column h3 {
+  margin-bottom: 10px;
+  text-align: left;
+}
 
 .filter-column .p-checkbox .p-checkbox-box{
   box-sizing: border-box;
@@ -889,15 +927,7 @@ h3.weiss {
   box-shadow: $detail_2-color;
 }
 
-.filter-column {
-  width: 80%;
-  margin-bottom: 1rem;
-}
 
-.filter-column h3 {
-  margin-bottom: 10px;
-  text-align: left;
-}
 
 .container-listeninhalt {
   display: grid;
@@ -1082,6 +1112,75 @@ h3.weiss {
     text-align: left;
   }
 
+  .dropdown-close-button {
+    position: fixed;
+    bottom: 50px;
+    right: 600px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background-color: $detail_2-color;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    outline: none;
+    transition: background-color 0.3s;
+  }
+
+  .filter-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+  }
+
+  .filter-column {
+    width: 100%;
+    text-align: left;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .filter-column h3 {
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .filter-column .p-checkbox .p-checkbox-box{
+    box-sizing: border-box;
+    width: 30px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .fullscreen-overlay {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1002 !important;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Wenn das Overlay geöffnet wird, wird es nach links verschoben */
+  .fullscreen-overlay.open {
+    transform: translateX(0);
+  }
+
+  /* Optional: Schließen des Overlays, wenn das mobile Element außerhalb des Overlay-Bereichs gedrückt wird */
+  .fullscreen-overlay.close {
+    transform: translateX(100%);
+  }
 
   .grid-container {
     display: flex;
@@ -1100,9 +1199,7 @@ h3.weiss {
   }
 
   .p-card {
-
     height: 225px;
-
   }
 
 
@@ -1146,9 +1243,10 @@ h3.weiss {
 /*Rezept-Hinzufügen-Button*/
 
 .floating-button {
+
   position: fixed;
   bottom: 50px;
-  right: 475px;
+  right: 420px;
   padding: 10px 20px;
   border-radius: 50px;
   background-color: $detail_2-color;
@@ -1163,7 +1261,10 @@ h3.weiss {
   transition: background-color 0.3s;
 }
 
+
+
 .floating-button:hover {
+  transform: translateY(1px);
   background-color: dark$detail_2-color;
 }
 
