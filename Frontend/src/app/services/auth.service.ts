@@ -25,11 +25,10 @@ export class AuthService {
 
     return this.http.post(`${this.backendUrl}/api/auth/login`, this.body, { responseType: 'json' }).pipe(
       map((response: any) => {
-        console.log('Antwort vom Backend:', response);  // Protokolliere die Antwort, um sicherzustellen, dass das Token vorhanden ist
         const token = response.token;
         if (token) {
           localStorage.setItem('jwt_token', token);
-          console.log('Token im localStorage gespeichert:', token);
+
         } else {
           console.error('Kein Token in der Antwort vorhanden');
         }

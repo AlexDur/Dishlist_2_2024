@@ -36,41 +36,21 @@ export class RezeptService {
 
   private getJsonHeaders(): HttpHeaders {
     const token = this.authService.getToken();
-    console.log('token im headers', token)
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
     return headers;
   }
 
-/*  private updateKategorieZaehler(tags: Tag[] | undefined): void {
-    const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
-    const aktualisierteZaehler = { ...aktuelleZaehler };
-
-    if (tags) {
-      tags.forEach(tag => {
-        if (tag && tag.label) {
-          const kategorieName = tag.label;
-          aktualisierteZaehler[kategorieName] = (aktualisierteZaehler[kategorieName] || 0) + 1;
-        }
-      });
-    }
-
-    this.kategorieZaehlerSubject.next(aktualisierteZaehler);
-  }*/
-
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = localStorage.getItem('jwt_token');
-    console.log('JWT-Token aus localStorage:', token);  // Überprüfe den abgerufenen Token
 
     if (!token) {
-      console.error('Kein JWT-Token gefunden!');
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
     }
 
     /*TODO: headers zwei mal abgerufunen in datei, also auslagern*/
     const headers = this.getJsonHeaders().set('Accept', 'application/json', )
       .set('Authorization', `Bearer ${token}`);
-    console.log('Token in getUserRezepte:', token);
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => {

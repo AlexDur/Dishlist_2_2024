@@ -851,19 +851,52 @@ h3.weiss {
   margin-right: 8px;
 }
 
-
-
 .p-overlaypanel {
-  position: fixed !important;
-  top: 0 !important;
+  position: absolute ;
+  top: 0 ;
   left: 0 !important;
-  transform: none !important; /* Entferne Offsets */
+  transform: none !important;
 }
 
 .filter-button:active {
   background-color: black;
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ki-button {
+  background-color: #8f8d8c;
+  color: white;
+  padding: 12px 15px;
+  border: 2px solid #c3bfbe;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative; /* Damit der Tooltip relativ zum Button platziert werden kann */
+}
+
+.tooltip-text {
+  display: none;
+  position: absolute;
+  top: -33px;
+  left: 50%;
+  background-color: #f1f1f1;
+  color: #0b0b0b;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none; /* Verhindert, dass der Tooltip interaktiv wird */
+}
+
+.ki-button:hover .tooltip-text {
+  display: block;
 }
 
 .fullscreen-overlay {
@@ -900,12 +933,12 @@ h3.weiss {
 }
 
 .filter-column {
-  width: 100%; /* Optionale Breite für eine klare Darstellung */
-  text-align: left; /* Text linksbündig */
-  background-color: #f9f9f9; /* Optionaler Hintergrund */
-  padding: 15px; /* Innenabstand für eine bessere Lesbarkeit */
-  border-radius: 10px; /* Runde Ecken für ein modernes Design */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schatten für Tiefe */
+  width: 100%;
+  text-align: left;
+  background-color: #d5d5d5;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filter-column h3 {
@@ -1179,17 +1212,18 @@ h3.weiss {
     left: 0;
     width: 100vw;
     height: 100vh;
+    background-color: #efefef;
     z-index: 1002 !important;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
   }
 
-  /* Wenn das Overlay geöffnet wird, wird es nach links verschoben */
+
   .fullscreen-overlay.open {
     transform: translateX(0);
   }
 
-  /* Optional: Schließen des Overlays, wenn das mobile Element außerhalb des Overlay-Bereichs gedrückt wird */
+
   .fullscreen-overlay.close {
     transform: translateX(100%);
   }

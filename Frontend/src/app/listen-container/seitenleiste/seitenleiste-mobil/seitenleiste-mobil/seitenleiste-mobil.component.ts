@@ -72,6 +72,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(event: MouseEvent): void {
+    console.log('Dropdown toggled:', this.isDropdownOpen);
     if (this.isDropdownOpen) {
       this.op.hide(); // Schließt das Overlay
       this.isDropdownOpen = false;
