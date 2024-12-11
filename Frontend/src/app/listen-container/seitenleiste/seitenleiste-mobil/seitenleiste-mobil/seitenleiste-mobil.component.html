@@ -4,7 +4,7 @@
   <!-- Filter-Button -->
   <div>
     <div class="button-row">
-        <button class="filter-button" (click)="toggleDropdown($event)">
+        <button class="filter-button" (click)="toggleDropdown($event)" [ngClass]="{'active': isDropdownOpen, 'hover': true}" >
           <i class="pi pi-filter"></i>
           <!--TODO: Button solange ausgegraut bis mindestens ein Filterkriterium gesetzt ist-->
         </button>
@@ -15,6 +15,7 @@
     <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="false" [styleClass]="'fullscreen-overlay'" (click)="closeDropdown($event)">
     <ng-template pTemplate>
         <div class="dropdown-content">
+          <div class="filter-grid">
           <!-- Spalte für Gänge -->
           <div class="filter-column">
             <div class="dropdown-content-title">Gänge</div>
@@ -25,7 +26,6 @@
                 <label class="label-dropdown" for="type_{{art.label}}">{{ art.label }} ({{ art.count }})</label>
               </div>
             </div>
-            <div class="dropdown-trennungsstrich"></div>
           </div>
 
           <!-- Spalte für Küche -->
@@ -37,7 +37,6 @@
                 <label class="label-dropdown" for="type_{{i}}">{{ type.label }} ({{ type.count }})</label>
               </div>
             </div>
-            <div class="dropdown-trennungsstrich"></div>
           </div>
 
           <!-- Spalte für Nährwert -->
@@ -51,9 +50,10 @@
             </div>
           </div>
         </div>
+        </div>
       </ng-template>
       <div class="flex justify-content-end">
-        <button class="floating-button" (click)="closeOverlay()">Schließen</button>
+        <button class="dropdown-close-button" (click)="closeOverlay()">Schließen</button>
       </div>
     </p-overlayPanel>
   </div>
