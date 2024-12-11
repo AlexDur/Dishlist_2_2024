@@ -8,9 +8,13 @@
         <div class="p-field">
           <input class="inputfeld" placeholder="E-Mailadresse" type="text" [(ngModel)]="email" required name="email" pInputText>
         </div>
-        <div class="p-field">
+        <div class="p-field password-container">
           <input class="inputfeld" [type]="inputType" placeholder="Passwort" [(ngModel)]="password" required name="password" pInputText>
-          <i class="pi" [ngClass]="{'pi-eye': !showPassword, 'pi-eye-slash': showPassword}" (click)="togglePasswordVisibility()"></i>
+          <i
+            class="pi toggle-password-icon"
+            [ngClass]="{'pi-eye': !showPassword, 'pi-eye-slash': showPassword}"
+            (click)="togglePasswordVisibility()">
+          </i>
         </div>
         <button class="general-button" type="submit" pButton>Anmelden</button>
         <p class="registrierung-hinweis">
