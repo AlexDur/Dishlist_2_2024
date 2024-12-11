@@ -1069,7 +1069,7 @@ h3.weiss {
 }
 
 .seitenleiste .p-overlaypanel {
-  position: fixed !important; /* Übergeordnete Flexbox ignorieren */
+  position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   width: 100vw !important;
@@ -1092,7 +1092,7 @@ h3.weiss {
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: #e8e6e6;
+  background-color: #f1f1f1;
   color: $detail_2-color;
   border: none;
   padding: 10px 10px;
