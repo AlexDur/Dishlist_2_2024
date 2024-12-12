@@ -20,6 +20,10 @@ import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.m
 import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
+import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
+import {
+  FilterComponent
+} from "./listen-container/rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filter/filter.component";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
@@ -32,7 +36,7 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     InfoScreenComponent,
     LoginComponent,
     RegistrierungComponent,
-    VerifikationComponent,
+    VerifikationComponent
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
@@ -49,6 +53,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
+    TableisteComponent,
+    FilterComponent
 
   ],
   providers: [],

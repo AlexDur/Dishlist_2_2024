@@ -822,6 +822,7 @@ h3.weiss {
   width: 100%;
 }
 
+
 .filter-button {
   background: linear-gradient(135deg, #dc6c40, #e65727);
   color: white;
@@ -849,6 +850,11 @@ h3.weiss {
 
 .filter-button i {
   margin-right: 8px;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
 }
 
 .p-overlaypanel {
@@ -1088,30 +1094,6 @@ h3.weiss {
   justify-content: flex-start;
 }
 
-.logout-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: #f1f1f1;
-  color: $detail_2-color;
-  border: none;
-  padding: 10px 10px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 15px;
-  transition: background-color 0.3s, transform 0.2s ease;
-
-  &:hover {
-    background-color: $detail_2-color; /* Dunkleres Rot beim Hover */
-    transform: scale(1.05); /* Leichtes Vergrößern beim Hover */
-  }
-
-  &:focus {
-    outline: none; /* Entfernt die Standard-Fokusmarkierung */
-  }
-}
-
 .logout-button i {
   color: $detail_2-color;
 }
@@ -1150,6 +1132,11 @@ h3.weiss {
     border-radius: 5px;
     margin-bottom: 20px;
     padding: 10px;
+  }
+
+  .seiten-ueberschrift{
+    display: flex;
+    justify-content: left;
   }
 
   .weiss {
@@ -1231,10 +1218,11 @@ h3.weiss {
   .grid-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+
     width: 100%;
     padding:.7rem;
     color:white;
+    box-sizing: border-box;
   }
 
   .container-listeninhalt {
@@ -1269,8 +1257,6 @@ h3.weiss {
     .router-outlet-mobile {
       display: block;
     }
-
-
   }
 
 
@@ -1341,14 +1327,64 @@ h3.weiss {
 }
 /*Router-Outlet*/
 
-/* Standard-Layout */
+
 .router-outlet-desktop {
   display: block;
 }
 
-/* Mobile Layout */
+
 .router-outlet-mobile {
   display: none;
 }
+
+/*Tableiste*/
+
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background-color: #f8f9fa;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  flex: 1;
+  color: #333;
+  text-align: center;
+}
+
+.tab:hover {
+  color: #007bff;
+}
+
+button.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button.tab .pi {
+  margin-bottom: 5px;
+}
+
+
+.logout-button {
+  margin-left: 0;
+}
+
+.app-rezept-hinzufuegen-button {
+  flex: 1;
+}
+
 
 

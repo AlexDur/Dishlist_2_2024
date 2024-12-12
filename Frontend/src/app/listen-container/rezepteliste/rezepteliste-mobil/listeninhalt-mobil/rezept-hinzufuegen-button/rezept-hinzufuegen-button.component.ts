@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {Router} from "@angular/router";
 import {RezeptService} from "../../../../../services/rezepte.service";
 
@@ -7,6 +7,7 @@ import {RezeptService} from "../../../../../services/rezepte.service";
   templateUrl: './rezept-hinzufuegen-button.component.html'
 })
 export class RezeptHinzufuegenButtonComponent {
+  @Input() isMobile?: boolean;
 
   constructor(private router: Router, private rezepteService: RezeptService) {}
 
