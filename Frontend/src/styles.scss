@@ -824,15 +824,17 @@ h3.weiss {
 
 
 .filter-button {
-  background: linear-gradient(135deg, #dc6c40, #e65727);
+  background-color: transparent;
+  /*background: linear-gradient(135deg, #dc6c40, #e65727);*/
   color: white;
   padding: 12px 15px;
-  border: 2px solid #e65727;
+  border:none;
+/*  border: 2px solid #e65727;*/
   border-radius: 50px;
-  font-size: 16px;
+  font-size:26px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
   display: flex;
   align-items: center;
   margin-bottom: 1.5rem;
@@ -848,9 +850,9 @@ h3.weiss {
   background: $detail_2-color;
 }
 
-.filter-button i {
+/*.filter-button i {
   margin-right: 8px;
-}
+}*/
 
 .header{
   display: flex;
@@ -1387,4 +1389,10 @@ button.tab .pi {
 }
 
 
+/*Header*/
+
+.header{
+  display: flex;
+  justify-content: space-between;
+}
 

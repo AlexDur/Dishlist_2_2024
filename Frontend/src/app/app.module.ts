@@ -24,6 +24,7 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
 import {
   FilterComponent
 } from "./listen-container/rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filter/filter.component";
+import {HeaderComponent} from "./listen-container/header/header.component";
 /*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
 import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
 
@@ -54,8 +55,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     SharedModule,
     ToggleButtonModule,
     TableisteComponent,
-    FilterComponent
-
+    FilterComponent,
+    HeaderComponent
   ],
   providers: [],
   exports: [

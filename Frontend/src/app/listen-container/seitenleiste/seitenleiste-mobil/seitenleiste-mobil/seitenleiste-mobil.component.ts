@@ -13,7 +13,6 @@ import {DEFAULT_TAGS} from "../../../../models/default_tag";
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   @Input() rezepte: Rezept[] = [];
-  @Input() isMobile?: boolean;
   @ViewChild('op') op!: OverlayPanel;
   selectedTags: string[] = [];
   rezeptGeladen: boolean = false;
