@@ -1299,7 +1299,7 @@ h3.weiss {
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
   text-transform: uppercase;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1334,6 +1334,7 @@ h3.weiss {
 
 @media screen and (max-width: 750px) {
 .floating-button {
+  font-size: 16px;
   right: 25px;
   bottom: 35px;
 }
