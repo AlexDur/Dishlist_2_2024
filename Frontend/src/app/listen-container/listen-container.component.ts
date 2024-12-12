@@ -48,20 +48,6 @@ export class ListenContainerComponent implements OnInit{
     this.gefilterteRezepte = rezepte;
   }
 
-  logoutUser(event: Event){
-    this.authService.logout().subscribe({
-      next: () => {
-        console.log('Erfolgreich ausgeloggt');
-        this.router.navigate(['/anmeldung']); // Weiterleitung zur Login-Seite
-      },
-      error: (err) => {
-        console.error('Fehler beim Logout', err);
-      }
-    });
-
-
-  }
-
 }
 
 
