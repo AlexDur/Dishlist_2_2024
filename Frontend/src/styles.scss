@@ -20,8 +20,9 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
-  margin:5% 30%;
+  margin:2% 30%;
 }
+
 h1{
   color: white;
 }
@@ -381,7 +382,7 @@ a {
   color: $tertiary-color$tertiary-color;
   font-size: 2.3rem;
   font-weight: bold;
- /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
 }
 
 
@@ -779,8 +780,8 @@ p-tag + p-tag {
 
 h3.weiss {
 
- margin-right: 20px;
- text-align: left;
+  margin-right: 20px;
+  text-align: left;
 }
 
 .p-field-checkbox {
@@ -808,7 +809,6 @@ h3.weiss {
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin-top: .5rem;
   margin-bottom: 3rem;
   font-size: 2rem;
   color: $tertiary-color;
@@ -824,33 +824,25 @@ h3.weiss {
 
 
 .filter-button {
-  background: linear-gradient(135deg, #dc6c40, #e65727);
+  background-color: transparent;
   color: white;
-  padding: 12px 15px;
-  border: 2px solid #e65727;
-  border-radius: 50px;
-  font-size: 16px;
+  border:none;
+  font-size:26px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.filter-button:hover {
-  background: linear-gradient(135deg, #252424, #373535) !important;
-  transform: translateY(-2px)!important;
-  border: 2px solid $detail_2-color!important;
+.filter-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  padding: 0;
 }
 
-.filter-button:active {
-  background: $detail_2-color;
-}
-
-.filter-button i {
-  margin-right: 8px;
-}
+/*Header*/
 
 .header{
   display: flex;
@@ -943,7 +935,7 @@ h3.weiss {
   text-align: left;
   background-color: #d5d5d5;
   padding: 15px;
-  border-radius: 10px;
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1002,19 +994,20 @@ h3.weiss {
   box-sizing: border-box;
   flex: 0 1 auto;
   background-color: orange;
-
+  border-radius: 15px;
 }
 
 .rezept-image {
   cursor: pointer;
   width: 100%;
   height: auto;
-  border-radius: 25px;
 }
 
 
 .p-card-footer {
   margin-top: auto;
+  padding-top: 10px;
+  padding-right: 0;
   display: flex;
   justify-content: center;
 }
@@ -1237,27 +1230,27 @@ h3.weiss {
   }
 
 
-    .scroll-indicator {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%);
+  .scroll-indicator {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%);
 
-      pointer-events: none;
-      z-index: 1000;
-    }
+    pointer-events: none;
+    z-index: 1000;
+  }
 
 
   .router-outlet-desktop {
-      display: none;
-    }
-
-    .router-outlet-mobile {
-      display: block;
-    }
+    display: none;
   }
+
+  .router-outlet-mobile {
+    display: block;
+  }
+}
 
 
 .trennungsstrich {
@@ -1319,11 +1312,11 @@ h3.weiss {
 
 
 @media screen and (max-width: 750px) {
-.floating-button {
-  font-size: 16px;
-  right: 25px;
-  bottom: 35px;
-}
+  .floating-button {
+    font-size: 16px;
+    right: 25px;
+    bottom: 35px;
+  }
 }
 /*Router-Outlet*/
 
@@ -1339,14 +1332,16 @@ h3.weiss {
 
 /*Tableiste*/
 
+
 .tab-bar {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 40%;
   display: flex;
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
+  border-radius: 5px;
 }
 
 .tab {
@@ -1363,28 +1358,64 @@ h3.weiss {
   text-align: center;
 }
 
-.tab:hover {
-  color: #007bff;
+
+@media screen and (max-width: 750px) {
+
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background-color: #f8f9fa;
+    justify-content: center;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    margin-right:300px
+  }
+
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;
+    color: #333;
+    text-align: center;
+  }
+
+  .tab:hover {
+    color: #007bff;
+  }
+
+  button.tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  button.tab .pi {
+    margin-bottom: 5px;
+  }
+
+
+  .logout-button {
+    margin-left: 0;
+  }
+
+  .app-rezept-hinzufuegen-button {
+    flex: 1;
+  }
+
 }
 
-button.tab {
+/*Header*/
+
+.header{
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
 }
-
-button.tab .pi {
-  margin-bottom: 5px;
-}
-
-
-.logout-button {
-  margin-left: 0;
-}
-
-.app-rezept-hinzufuegen-button {
-  flex: 1;
-}
-
-
 

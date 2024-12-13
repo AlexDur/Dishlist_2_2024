@@ -21,11 +21,7 @@ import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.componen
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
-import {
-  FilterComponent
-} from "./listen-container/rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filter/filter.component";
-/*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
-import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
+
 
 
 @NgModule({
@@ -54,8 +50,6 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     SharedModule,
     ToggleButtonModule,
     TableisteComponent,
-    FilterComponent
-
   ],
   providers: [],
   exports: [
