@@ -1,19 +1,14 @@
 <div class="seitenleiste">
-  <div class="seiten-ueberschrift">Dishes</div>
 
   <!-- Filter-Button -->
   <div>
-    <div class="button-row">
-      <div *ngIf="!isMobile">
-      <!--  <button class="ki-button">
-          <i class="pi pi-android"></i>&nbsp;WishADish
-          <span class="tooltip-text">Demnächst verfügbar</span>
-        </button>-->
-      </div>
+    <div class="header">
+      <div class="seiten-ueberschrift">Dishes</div>
+
         <button class="filter-button" (click)="toggleDropdown($event)" [ngClass]="{'active': isDropdownOpen, 'hover': true}" >
-          <i class="pi pi-filter"></i>
-          <!--TODO: Button solange ausgegraut bis mindestens ein Filterkriterium gesetzt ist-->
+          <img src="assets/filter.png" alt="Filter" class="filter-icon">
         </button>
+    </div>
     </div>
     <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="false" [styleClass]="'fullscreen-overlay'" (click)="closeDropdown($event)">
     <ng-template pTemplate>
@@ -59,5 +54,4 @@
         <button class="dropdown-close-button" (click)="closeOverlay()">Schließen</button>
       </div>
     </p-overlayPanel>
-  </div>
   </div>
