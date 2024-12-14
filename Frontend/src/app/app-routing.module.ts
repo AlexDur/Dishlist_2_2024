@@ -18,7 +18,7 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 
 
 const routes: Routes = [
-  { path: 'splash', component: SplashScreenComponent },
+  { path: '', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },
   { path: 'listen-container', component: ListenContainerComponent},
   { path: 'anmeldung',component: LoginComponent},

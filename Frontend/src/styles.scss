@@ -23,6 +23,7 @@ body {
   margin:2% 30%;
 }
 
+
 h1{
   color: white;
 }
@@ -36,6 +37,9 @@ a {
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
+.router-outlet-wrapper{
+  background: black;
+}
 
 .general-button {
   margin-top:75px !important;
@@ -70,7 +74,15 @@ a {
   justify-content:center;
   align-items: center;
   height: 100vh;
+  background-color: #ffffff;
+  transition: opacity 3s ease-in-out;
 }
+
+.splash-screen.fade-out {
+  opacity: 0;
+
+}
+
 
 @keyframes fadeInAndCook {
   0% {
@@ -179,12 +191,14 @@ a {
 
 .password-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   position: relative;
 }
 
 .toggle-password-icon {
   position: absolute;
+  top: 1rem;
   right: 0.5rem;
   cursor: pointer;
   font-size: 1.2rem;
@@ -197,8 +211,10 @@ a {
 }
 
 .error-message {
-  color: #ffffff;
-  margin-bottom: 2rem;
+  max-width: 250px;
+  margin-top: 0.5rem;
+  color: $tertiary-color;
+  text-align:center;
 }
 
 .registrierung-hinweis{
@@ -1084,13 +1100,7 @@ h3.weiss {
 
 @media screen and (max-width: 750px) {
 
-  .filter-button {
 
-    &:active {
-      background: linear-gradient(135deg, #373535, #252424);
-      transform: translateY(1px);
-    }
-  }
 
   .button-row {
     gap:10rem;
@@ -1330,6 +1340,36 @@ h3.weiss {
   flex: 1;
   color: #333;
   text-align: center;
+  position: relative;
+}
+
+.tab:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+.tab::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 10;
+}
+
+
+.tab.active::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 
@@ -1344,7 +1384,6 @@ h3.weiss {
     justify-content: center;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
-    margin-right:300px
   }
 
   .tab {
@@ -1361,9 +1400,11 @@ h3.weiss {
     text-align: center;
   }
 
-  .tab:hover {
-    color: #007bff;
+  .tab::after {
+    font-size: 10px;
+    padding: 4px 8px;
   }
+}
 
   button.tab {
     display: flex;
@@ -1372,7 +1413,6 @@ h3.weiss {
   }
 
   button.tab .pi {
-    margin-bottom: 5px;
     margin-bottom: 5px;
   }
 
@@ -1384,8 +1424,6 @@ h3.weiss {
   .app-rezept-hinzufuegen-button {
     flex: 1;
   }
-
-}
 
 /*Header*/
 
