@@ -10,6 +10,8 @@ export class RegistrierungComponent {
 
   email:string = "";
   password: string = '';
+  passwordInvalid = true;
+  passwordTouched = false;
   errorMessage: string = '';
   showPassword = false;
   inputType = 'password';
@@ -37,6 +39,15 @@ export class RegistrierungComponent {
         }
       }
     );
+  }
+
+  onPasswordFocus() {
+    this.passwordTouched = true;
+  }
+
+  onPasswordChange() {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    this.passwordInvalid = !regex.test(this.password);
   }
 
   navigateAnmeldung(event: Event) {

@@ -32,7 +32,9 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
     InfoScreenComponent,
     LoginComponent,
     RegistrierungComponent,
-    VerifikationComponent
+    VerifikationComponent,
+    TableisteComponent
+
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
@@ -49,7 +51,7 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
-    TableisteComponent,
+
   ],
   providers: [],
   exports: [

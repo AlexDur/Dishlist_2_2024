@@ -10,6 +10,11 @@ export class AppComponent implements OnInit{
 
   constructor() {
     this.checkScreenSize();
+    const isFirstLaunch = localStorage.getItem('isFirstLaunch');
+    if (!isFirstLaunch) {
+      console.log('Erster Start');
+      localStorage.setItem('isFirstLaunch', 'false');
+    }
   }
 
   ngOnInit() {

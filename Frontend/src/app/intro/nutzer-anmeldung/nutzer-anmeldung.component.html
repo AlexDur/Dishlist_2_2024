@@ -9,12 +9,13 @@
           <input class="inputfeld" placeholder="E-Mailadresse" type="text" [(ngModel)]="email" required name="email" pInputText>
         </div>
         <div class="p-field password-container">
-          <input class="inputfeld" [type]="inputType" placeholder="Passwort" [(ngModel)]="password" required name="password" pInputText>
+          <input class="inputfeld" [type]="inputType" placeholder="Passwort" [(ngModel)]="password" required name="password" pInputText (focus)="onPasswordFocus()" (input)="onPasswordChange()">
           <i
             class="pi toggle-password-icon"
             [ngClass]="{'pi-eye': !showPassword, 'pi-eye-slash': showPassword}"
             (click)="togglePasswordVisibility()">
           </i>
+          <small *ngIf="passwordInvalid && passwordTouched" class="error-message">Das Passwort besteht aus mindestens 8 Stellen, einer Zahl und einem Sonderzeichen.</small>
         </div>
         <button class="general-button" type="submit" pButton>Anmelden</button>
         <p class="registrierung-hinweis">
@@ -26,7 +27,7 @@
           Login erfolgreich!
         </div>
         <div *ngIf="loginError" class="error-message">
-          Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.
+          Login fehlgeschlagen. Bitte überprüfen Deine Anmeldeinformationen.
         </div>
       </div>
     </form>

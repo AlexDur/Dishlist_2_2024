@@ -9,12 +9,19 @@ import {AuthService} from "../../services/auth.service";
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  passwordInvalid = false;
+  passwordTouched = false;
   showPassword = false;
   inputType = 'password';
   loginSuccess: boolean = false;
   loginError: boolean = false;
   isAuthenticated: boolean = false;
   oidcProperties: string = '';
+
+
+
+
+
 
   constructor(private authService: AuthService, private router: Router) {
   }
@@ -44,6 +51,16 @@ export class LoginComponent {
       this.oidcProperties = '';
     });
   }
+
+  onPasswordFocus() {
+    this.passwordTouched = true;
+  }
+
+  onPasswordChange() {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    this.passwordInvalid = !regex.test(this.password);
+  }
+
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
