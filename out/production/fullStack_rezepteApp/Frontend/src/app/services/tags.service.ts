@@ -4,7 +4,7 @@ import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
 import {RezeptService} from "./rezepte.service";
 import {environment} from "../../environments/environment";
-import {DEFAULT_TAGS} from "../models/default_tag.ts";
+import {DEFAULT_TAGS} from "../models/default_tag";
 
 
 @Injectable({

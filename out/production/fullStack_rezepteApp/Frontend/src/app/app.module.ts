@@ -17,8 +17,11 @@ import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/re
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {RezepteModule} from "./listen-container/rezepte.module";
 import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
-/*import { NutzerAnmeldungComponent } from './intro/nutzer-anmeldung/nutzer-anmeldung.component';
-import { RegistrierungComponent } from './intro/registrierung/registrierung.component';*/
+import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
+import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
+import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
+import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
+
 
 
 @NgModule({
@@ -27,7 +30,9 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     ListenContainerComponent,
     SplashScreenComponent,
     InfoScreenComponent,
-
+    LoginComponent,
+    RegistrierungComponent,
+    VerifikationComponent
    ],
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
@@ -43,7 +48,8 @@ import { RegistrierungComponent } from './intro/registrierung/registrierung.comp
     FormsModule,
     ButtonModule,
     SharedModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    TableisteComponent,
   ],
   providers: [],
   exports: [

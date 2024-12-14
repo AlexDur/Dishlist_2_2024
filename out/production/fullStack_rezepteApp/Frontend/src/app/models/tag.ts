@@ -1,5 +1,5 @@
 export interface Tag {
-  id?:number;
+  id:number;
   selected: boolean;
   label: string;
   type: string;

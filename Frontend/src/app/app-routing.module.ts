@@ -13,18 +13,20 @@ import {ListenContainerComponent} from "./listen-container/listen-container.comp
 import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
+import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 /*import {NutzerAnmeldungComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.component";*/
 
 
 const routes: Routes = [
- /* { path: 'splash', component: SplashScreenComponent },
-  { path: 'intro', component: InfoScreenComponent },*/
+  { path: 'splash', component: SplashScreenComponent },
+  { path: 'intro', component: InfoScreenComponent },
   { path: 'listen-container', component: ListenContainerComponent},
   { path: 'anmeldung',component: LoginComponent},
   { path: 'logout', component: LoginComponent },
   { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
+  { path: 'datenschutzerklaerung', component: DatenschutzComponent },
   { path: '**', redirectTo: 'anmeldung' }
 ];
 

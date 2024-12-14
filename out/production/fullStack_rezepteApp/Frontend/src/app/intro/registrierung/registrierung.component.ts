@@ -1,4 +1,3 @@
-/*
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
@@ -10,22 +9,34 @@ import {AuthService} from "../../services/auth.service";
 export class RegistrierungComponent {
 
   email:string = "";
-  username: string = '';
   password: string = '';
+  errorMessage: string = '';
+  showPassword = false;
+  inputType = 'password';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   onRegister() {
-    this.authService.register(this.username, this.password).subscribe(
+    this.authService.register(this.email, this.password).subscribe(
       response => {
-        console.log('Registrierung erfolgreich');
-        this.router.navigate(['/login']);  // Nach der Registrierung zum Login weiterleiten
+        console.log('Weiterleitung Verfizierung', response);
+        this.router.navigate(['/verifikation'], { queryParams: { email: this.email } });
       },
       error => {
         console.error('Registrierung fehlgeschlagen', error);
+        console.error('Grund für: Registrierung fehlgeschlagen', error.status);
+
+
+        if (error.status === 409) { // Statuscode für "Conflict"
+          // Hinweis ausgeben, dass der Nutzer bereits registriert ist
+          this.errorMessage = 'Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.';
+        } else if (error.error instanceof ErrorEvent) {
+          console.error('Client-side error:', error.error.message);
+        } else {
+          console.error(`Server-side error: ${error.status} ${error.error}`);
+        }
       }
     );
-    this.navigateListe(event);
   }
 
   navigateAnmeldung(event: Event) {
@@ -33,13 +44,12 @@ export class RegistrierungComponent {
     this.router.navigate(['/anmeldung']);
   }
 
-  navigateListe(event: Event | undefined) {
-    if(event){
-      event.preventDefault();
-    }
-    this.router.navigate(['/listencontainer']);
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+    this.inputType = this.showPassword ? 'text' : 'password';
   }
+
+  protected readonly event = event;
 }
 
 
-*/

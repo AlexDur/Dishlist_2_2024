@@ -34,7 +34,6 @@ import {
     FotoUploadComponent
   ],
   exports: [
- /*   ListeninhaltComponent,*/
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,

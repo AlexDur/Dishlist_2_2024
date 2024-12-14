@@ -1,9 +1,10 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.rezepte_app',
+  appId: 'de.dishlist.app',
   appName: 'DishList',
-  webDir: 'dist',
+  webDir: 'dist/fullStack_rezepteApp',
+  bundledWebRuntime: false,
   server: {
     url: 'https://www.dish-list.de',
     cleartext: true
