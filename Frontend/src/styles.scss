@@ -823,23 +823,16 @@ h3.weiss {
 }
 
 
-.filter-button {
-  background-color: transparent;
-  color: white;
-  border:none;
-  font-size:26px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
 .filter-icon {
   width: 30px;
   height: 30px;
   object-fit: contain;
   padding: 0;
+  cursor: pointer;
+
+  &:hover{
+    background: white;
+  }
 }
 
 /*Header*/
@@ -856,11 +849,6 @@ h3.weiss {
   transform: none !important;
 }
 
-.filter-button:active {
-  background-color: black;
-  transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
 
 .ki-button {
   background-color: #8f8d8c;
@@ -904,6 +892,11 @@ h3.weiss {
   align-items: center;
 }
 
+.dropdown-content{
+  display: flex;
+  justify-content: start;
+}
+
 .dropdown-content-title{
   font-size: 30px;
   font-weight: bold;
@@ -924,19 +917,17 @@ h3.weiss {
 .filter-grid {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: 100%;
-  gap: 20px;
+  gap: 15px;
 }
 
 .filter-column {
   width: 100%;
   text-align: left;
-  background-color: #d5d5d5;
-  padding: 15px;
 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
 }
 
 .filter-column h3 {
@@ -970,16 +961,13 @@ h3.weiss {
   box-shadow: $detail_2-color;
 }
 
-
-
 .container-listeninhalt {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: minmax(0, auto);
   grid-gap: 1rem;
   width: 100%;
 }
-
 
 
 .p-card {
@@ -989,10 +977,9 @@ h3.weiss {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
   cursor: pointer;
-  height: 345px;
-  width: 100%;
+  height: 300px;
+  aspect-ratio: 9 / 16;
   box-sizing: border-box;
-  flex: 0 1 auto;
   background-color: orange;
   border-radius: 15px;
 }
@@ -1000,7 +987,9 @@ h3.weiss {
 .rezept-image {
   cursor: pointer;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
 }
 
 
@@ -1169,7 +1158,6 @@ h3.weiss {
     text-align: left;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .filter-column h3 {
@@ -1222,24 +1210,8 @@ h3.weiss {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
-    align-items: start;
-  }
-
-  .p-card {
-    height: 225px;
-  }
-
-
-  .scroll-indicator {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.7) 100%);
-
-    pointer-events: none;
-    z-index: 1000;
+    justify-content: center;
+    align-items: center;
   }
 
 
@@ -1338,6 +1310,7 @@ h3.weiss {
   bottom: 0;
   width: 40%;
   display: flex;
+
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
@@ -1398,6 +1371,7 @@ h3.weiss {
   }
 
   button.tab .pi {
+    margin-bottom: 5px;
     margin-bottom: 5px;
   }
 
