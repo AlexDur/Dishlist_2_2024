@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
-
+import { Router } from "@angular/router";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-listen-container',
@@ -16,43 +17,26 @@ export class ListenContainerComponent implements OnInit{
   gefilterteRezepte: Rezept[] = [];
   bildUrls: { [key: number]: string } = {};
 
-  constructor(private rezepteService: RezeptService) {}
+  constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.rezepteService.getAlleRezepte().subscribe(rezepte => {
-      this.rezepte = rezepte.map(rezept => ({
-        ...rezept,
-   /*     datum: rezept.datum ? new Date(rezept.datum) : undefined*/
-      }));
-      this.rezepteGeladen.emit(this.rezepte); // Sendet die geladenen Rezepte an Kinderkomponenten
-      this.gefilterteRezepte = [...this.rezepte]; // Initialisiere gefilterte Rezepte mit allen Rezepten
-      this.rezepteVerfuegbar = true;
-      console.log('rezepteVerfügbar', this.rezepteVerfuegbar);
+    const abgerufeneBilder = new Set();
 
-      // Bilder für jedes Rezept abrufen
+    this.rezepteService.getUserRezepte().subscribe(rezepte => {
+      this.rezepte = rezepte.map(rezept => ({ ...rezept }));
+      this.rezepteGeladen.emit(this.rezepte);
+      this.gefilterteRezepte = [...this.rezepte];
+      this.rezepteVerfuegbar = true;
+
       this.gefilterteRezepte.forEach(rezept => {
-        if (rezept.bildUrl) {
-          // Bildname extrahieren (z.B. nur den letzten Teil der URL)
-          const bildname = rezept.bildUrl.split('/').pop(); // Beispiel für Windows-Pfad
-          console.log('bildname', bildname)
-          if (bildname) {
-            this.rezepteService.getBild(bildname).subscribe(response => {
-              if (response.body) {
-              /*  const blob = new Blob([response.body], { type: 'image/png' });*/
-                const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
-                this.bildUrls[rezept.id] = imageUrl;
-                console.log(' Bild-URL speichern')
-              } else {
-                //Anfrage zum Bildabruf erfolgreich, aber kein gültiges Bild zurückgegeben
-                console.warn(`Bild nicht gefunden für Rezept-ID: ${rezept.id}`);
-              }
-            }, error => {
-              //Fehler, wenn während der Kommunikation mit dem Server/S3 eine Fehler auftritt
-              console.error(`Fehler beim Abrufen des Bildes für Rezept-ID: ${rezept.id}`, error);
-            });
-          } else {
-            //Extraktion des Bildnamens aus einem Rezept-Objekt schlägt fehl
-            console.warn(`Bildname konnte nicht extrahiert werden für Rezept-ID: ${rezept.id}`);
+        if (rezept && rezept.bildUrl){
+          const bildname = rezept.bildUrl.split('/').pop();
+          if (bildname && !abgerufeneBilder.has(bildname)) {
+            abgerufeneBilder.add(bildname);
+
+            // Direkte S3-URL verwenden
+            const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
+            this.bildUrls[rezept.id] = imageUrl;
           }
         }
       });
@@ -62,9 +46,7 @@ export class ListenContainerComponent implements OnInit{
   onRezepteFiltered(rezepte: Rezept[]): void {
     console.log('Geladene Rezepte im Kindkomponente:', rezepte);
     this.gefilterteRezepte = rezepte;
-    // Hier können Sie die geladenen Rezepte weiterverarbeiten, z.B. anzeigen oder in einer Eigenschaft speichern
   }
-
 
 }
 

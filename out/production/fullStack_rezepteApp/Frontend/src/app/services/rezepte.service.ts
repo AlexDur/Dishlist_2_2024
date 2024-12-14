@@ -5,7 +5,7 @@ import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
-import { EMPTY } from 'rxjs';
+import {AuthService} from "./auth.service";
 
 
 
@@ -32,45 +32,55 @@ export class RezeptService {
   //Damit können andere Teile der Anwendung, die an Änderungen des aktuellen Rezepts interessiert sind, sich darauf abonnieren.
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getJsonHeaders(): HttpHeaders {
-    return new HttpHeaders({'Content-Type': 'application/json'});
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${token}`);
+    return headers;
   }
 
-  private updateKategorieZaehler(tags: Tag[] | undefined): void {
-    const aktuelleZaehler = this.kategorieZaehlerSubject.getValue();
-    const aktualisierteZaehler = { ...aktuelleZaehler };
+  getUserRezepte(): Observable<RezeptAntwort[]> {
+    const token = localStorage.getItem('jwt_token');
 
-    if (tags) {
-      tags.forEach(tag => {
-        if (tag && tag.label) {
-          const kategorieName = tag.label;
-          aktualisierteZaehler[kategorieName] = (aktualisierteZaehler[kategorieName] || 0) + 1;
-        }
-      });
+    if (!token) {
+      return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
     }
 
-    this.kategorieZaehlerSubject.next(aktualisierteZaehler);
-  }
+    /*TODO: headers zwei mal abgerufunen in datei, also auslagern*/
+    const headers = this.getJsonHeaders().set('Accept', 'application/json', )
+      .set('Authorization', `Bearer ${token}`);
 
-
-  getAlleRezepte(): Observable<RezeptAntwort[]> {
-    const headers = this.getJsonHeaders().set('Accept', 'application/json');
-
-    return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/alleRezepte`, {headers}).pipe(
+    return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => {
-        console.log('Rezepte vom Server:', rezepte);
-        this.rezepteSubject.next(rezepte);
+        // Überprüfe den Inhalt der Antwort
+        if (!rezepte || !Array.isArray(rezepte)) {
+          console.error('API antwortet mit ungültigem Inhalt:', rezepte);
+          this.rezepteSubject.next([]);
+        } else if (rezepte.length === 0) {
+          console.warn('Keine Rezepte zurückgegeben.');
+          this.rezepteSubject.next([]);
+        } else {
+          console.log('Rezepte vom Server:', rezepte);
+          this.rezepteSubject.next(rezepte);
+        }
       }),
       catchError(error => {
-        console.error("Fehler beim Laden der Rezepte", error);
+        console.error('Fehler beim Laden der Rezepte', error);
+        if (error.status === 400) {
+          console.error('Fehler 400: Ungültiges Token oder leeres Token.');
+        } else if (error.status === 401) {
+          console.error('Fehler 401: Ungültiger Token.');
+        } else {
+          console.error('Unbekannter Fehler:', error);
+        }
         return throwError(() => new Error("Fehler beim Laden der Rezepte"));
       })
     );
   }
 
-    setCurrentRezept(rezept: Rezept) {
+  setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
   }
 
@@ -79,6 +89,7 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
+  //TODO: Funktion nur relevant, wenn Bilder lokal gespeichert werden sollen
   getBild(bildname: string): Observable<HttpResponse<Blob>> {
 
     return this.http.get<Blob>(`${this.backendUrl}/api/rezepte/bilder/${bildname}`, {
@@ -149,11 +160,22 @@ export class RezeptService {
       return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
     }
 
+    const token = localStorage.getItem('jwt_token'); // Hier holen wir das Token aus dem localStorage
+
+    if (!token) {
+      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
+      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      return throwError(() => new Error('Token fehlt.'));
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
     console.log('Formdata in service.ts', formData)
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-      observe: 'response'
+      observe: 'response',
+      headers: headers
     }).pipe(
       tap(response => {
         console.log('Server Response:', response);
@@ -162,75 +184,45 @@ export class RezeptService {
       catchError(error => {
         console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
-        return throwError(() => new Error('Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
+        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
       })
     );
   }
 
 
+  updateRezept(rezeptId: number, rezeptToSave: Rezept, formData: FormData): Observable<any> {
+    const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
+    this.currentRezeptSubject.next(rezeptToSave);
 
+    const token = localStorage.getItem('jwt_token');
+  /*  console.log('Token in updateRezept:', token);*/
 
-/*
-  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
-    const formData = new FormData();
-    formData.append('file', file); // Datei in FormData hinzufügen
+/*    if (rezeptToSave.id) {
+      console.log('Die ID des Rezepts ist vorhanden:', rezeptToSave);
+    }else{
+      console.error('Die ID des Rezepts ist FEHLT:', rezeptToSave);
+    }*/
 
-    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.put(apiUrl, formData, {
+      headers: headers,
       observe: 'response'
     }).pipe(
-      tap(response => {
-        console.log('Upload Response:', response);
-      }),
-      catchError(error => {
-        console.error('Fehler beim Bild-Upload:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-*/
-
-  /*Asynchron als Observable, weil Bildupload dauern kann.*/
-/*  uploadImage(rezeptId: number, file: File): Observable<any>{
-    const formData = new FormData();
-    formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
-
-    /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
-
-    // POST an Server, um die Datei hochzuladen
-    return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
-      tap(response => console.log('Upload erfolgreich:', response)),
-      catchError(error => {
-        console.error('Fehler beim Hochladen des Bildes', error);
-        return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
-      })
-    );
-  }*/
-
-
-  updateRezept(rezeptId: number, rezept: Rezept): Observable<any> {
-    const apiUrl = `${this.backendUrl}/api/rezepte/update/${rezeptId}`;
-    this.currentRezeptSubject.next(rezept)
-    const rezeptMitFormatiertenTags = {
-      ...rezept,
-      tags: rezept.tags ?? []
-    };
-
-    return this.http.put(apiUrl, rezeptMitFormatiertenTags, { headers: this.getJsonHeaders(), observe: 'response', responseType: 'json' }).pipe(
       tap(() => {
         const existingRezepte = this.rezepteSubject.getValue();
         const index = existingRezepte.findIndex(r => r.id === rezeptId);
         if (index !== -1) {
           const updatedRezepte = [
             ...existingRezepte.slice(0, index),
-            { ...existingRezepte[index], ...rezept },
+            { ...existingRezepte[index], ...rezeptToSave },
             ...existingRezepte.slice(index + 1)
           ];
           this.rezepteSubject.next(updatedRezepte);
         }
       }),
       catchError((error) => {
-        console.error('Fehler beim Aktualisieren des Rezepts', error);
-        return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts'));
+        return throwError(() => new Error('rservice_Fehler beim Aktualisieren des Rezepts'));
       })
     );
   }
@@ -266,4 +258,40 @@ export class RezeptService {
       this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
     }
   }
+
+  /*
+  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
+    const formData = new FormData();
+    formData.append('file', file); // Datei in FormData hinzufügen
+
+    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
+      observe: 'response'
+    }).pipe(
+      tap(response => {
+        console.log('Upload Response:', response);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Bild-Upload:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+*/
+
+  /*Asynchron als Observable, weil Bildupload dauern kann.*/
+  /*  uploadImage(rezeptId: number, file: File): Observable<any>{
+      const formData = new FormData();
+      formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
+
+      /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
+
+      // POST an Server, um die Datei hochzuladen
+      return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
+        tap(response => console.log('Upload erfolgreich:', response)),
+        catchError(error => {
+          console.error('Fehler beim Hochladen des Bildes', error);
+          return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
+        })
+      );
+    }*/
 }

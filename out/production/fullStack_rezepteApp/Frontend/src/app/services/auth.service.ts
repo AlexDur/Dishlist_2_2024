@@ -1,87 +1,92 @@
-/*
 import { Injectable } from '@angular/core';
-import { CognitoUser, CognitoUserPool, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import * as AWS from 'aws-sdk';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError  } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import {environment} from "../../environments/environment";
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';  // Importiere 'map' hier
+
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class CognitoService {
-  private userPool: CognitoUserPool;
-  private identityPoolId = 'dein-identity-pool-id'; // Ersetze mit deinem Identity Pool ID
-  private userPoolId = 'dein-user-pool-id'; // Ersetze mit deinem User Pool ID
-  private clientId = 'dein-client-id'; // Ersetze mit deinem App Client ID
+export class AuthService {
 
-  constructor() {
-    const poolData = {
-      UserPoolId: this.userPoolId,
-      ClientId: this.clientId
-    };
-    this.userPool = new CognitoUserPool(poolData);
-  }
+  private backendUrl = environment.apiUrl;
+  private tokenKey = 'cognitoToken';
+  private body: { email: string; password: string; } | undefined;
 
-  register(username: string, password: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.userPool.signUp(username, password, [], null, (err, result) => {
-        if (err) {
-          reject(err);
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string): Observable<any> {
+    this.body = { email, password };
+
+    return this.http.post(`${this.backendUrl}/api/auth/login`, this.body, { responseType: 'json' }).pipe(
+      map((response: any) => {
+        const token = response.token;
+        if (token) {
+          localStorage.setItem('jwt_token', token);
+
         } else {
-          resolve(result);
+          console.error('Kein Token in der Antwort vorhanden');
         }
-      });
-    });
+        return response;  // Rückgabe der Antwort
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Fehler im HTTP-Aufruf:', error);
+        return throwError(() => new Error('Anmeldefehler: ' + error.message));
+      })
+    );
   }
 
-  login(username: string, password: string): Promise<any> {
-    const authenticationDetails = new AuthenticationDetails({
-      Username: username,
-      Password: password
-    });
+  logout(): Observable<any> {
+    const authToken = localStorage.getItem('authToken');
 
-    const userData = {
-      Username: username,
-      Pool: this.userPool
-    };
-
-    const cognitoUser = new CognitoUser(userData);
-
-    return new Promise((resolve, reject) => {
-      cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (result) => {
-          // Temporäre Anmeldeinformationen abrufen
-          AWS.config.region = 'deine-region'; // Ersetze mit deiner Region
-          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: this.identityPoolId,
-            Logins: {
-              [`cognito-idp.deine-region.amazonaws.com/${this.userPoolId}`]: result.getIdToken().getJwtToken()
-            }
-          });
-          resolve(result);
-        },
-        onFailure: (err) => {
-          reject(err);
-        }
+    if (authToken && /^[A-Za-z0-9-_=.]+$/.test(authToken)) {
+      localStorage.removeItem('authToken');
+      return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
+        headers: { Authorization: `Bearer ${authToken}` }
       });
-    });
+    } else {
+      console.error('Ungültiger Token oder Token fehlt');
+      return of(null); // Oder eine andere Fehlerbehandlung
+    }
   }
 
-  uploadFile(file: File): Promise<any> {
-    const s3 = new AWS.S3();
-    const params = {
-      Bucket: 'dein-bucket-name', // Ersetze mit deinem Bucket-Namen
-      Key: file.name,
-      Body: file
-    };
 
-    return new Promise((resolve, reject) => {
-      s3.upload(params, (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+  /**
+   * Sendet Registrierungsdaten des Nutzers an das Backend
+   * @param email
+   * @param password
+   * @returns Ein Observable mit der Antwort des Servers
+   */
+  register(email: string, password: string): Observable<any> {
+    this.body = { email, password };
+
+    return this.http.post(`${this.backendUrl}/api/auth/register`, this.body, { responseType: 'text'}).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Fehler im HTTP-Aufruf:', error);
+        return throwError(() => new Error('Registrierungsfehler: ' + error.message));
+      })
+    );
   }
+
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  // Token speichern (z. B. nach Anmeldung)
+  setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+
+  verifyCodeBackend(verifikationCode: string, email: string): Observable<any> {
+    console.log('verifyCodebackend', verifikationCode, email)
+    return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verifikationCode, email });
+  }
+
 }
-*/
