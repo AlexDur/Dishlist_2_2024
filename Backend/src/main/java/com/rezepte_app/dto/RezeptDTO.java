@@ -14,11 +14,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class RezeptDTO {
-    private Long id; // Oder Integer, je nach deiner Datenbankkonfiguration
+    private Long id;
     private String name;
     private String onlineAdresse;
     private List<Tag> tags; // Liste von Tag-Objekten
     private String bildUrl;
+    private String userId;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     // Getter und Setter
     public String getName() {
@@ -49,6 +59,15 @@ public class RezeptDTO {
     // Getter für bildUrl
     public String getBildUrl() {
         return bildUrl;
+    }
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

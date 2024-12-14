@@ -5,6 +5,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class TagService {
     // Methode zum Hinzufügen eines neuen Tags, falls es noch nicht existiert
     // Transactional: Operationen werden innerhalb einer Transaktion durchgeführt.
     // Das bedeutet, dass entweder alle Änderungen erfolgreich durchgeführt oder im Fehlerfall komplett zurückgerollt werden.
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Tag addTag(Tag tag) {
         try {
             // Überprüfe, ob ein Tag mit dem gleichen Namen bereits existiert

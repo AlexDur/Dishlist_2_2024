@@ -19,6 +19,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "Rezept.findByUserIdOrderByIdDesc",
+                query = "SELECT r FROM Rezept r WHERE r.userId = :userId ORDER BY r.id DESC")
+})
 public class Rezept {
 
     @Id
@@ -28,6 +32,9 @@ public class Rezept {
     @JsonProperty("name")
     @Column(name = "name")
     private String name;
+
+    @Column(name="userid")
+    private String userId;
 
     @Column(name = "onlineAdresse")
     private String onlineAdresse;
@@ -60,8 +67,8 @@ public class Rezept {
 
     // Getter und Setter
 
-    public Integer getId() {
-        return Math.toIntExact((long) id);
+    public Long getId() {
+        return id;
     }
 
     public List<Tag> getTags() {
@@ -88,7 +95,6 @@ public class Rezept {
         this.onlineAdresse = onlineAdresse;
     }
 
-    // Getter und Setter für bildUrl
     public String getBildUrl() {
         return bildUrl;
     }
@@ -97,5 +103,12 @@ public class Rezept {
         this.bildUrl = bildUrl;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
 }

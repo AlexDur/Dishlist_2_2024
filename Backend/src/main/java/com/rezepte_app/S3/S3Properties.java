@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 * Lädt Konfigurationswerte für Amazon S3 aus app.properties
 * */
 @Component
+//Bindet Konfigurationsdaten aus einer Properties-Datei und macht diese als Java-Objekte verfügbar
 @ConfigurationProperties(prefix = "aws.s3")
 public class S3Properties {
     private String bucketName;

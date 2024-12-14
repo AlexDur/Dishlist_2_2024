@@ -57,12 +57,6 @@ public class Tag{
         return id;
     }
 
-
-    public List<Tag> getTags() {
-        List<Tag> tags = List.of();
-        return tags;
-    }
-
     public void setLabel(String label) {
         this.label = label;
     }
@@ -75,7 +69,7 @@ public class Tag{
         if (this == o) return true;
         if (!(o instanceof Tag)) return false;
         Tag tag = (Tag) o;
-        return id == tag.id;
+        return Objects.equals(id, tag.id);
     }
 
     /*Zur Orga von Objekten in Hashtabellen (=>schnelle Suche und Zugriff auf Objekte möglich)*/

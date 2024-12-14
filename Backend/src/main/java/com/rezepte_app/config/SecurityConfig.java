@@ -22,15 +22,22 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import com.rezepte_app.handler.CognitoLogoutHandler;
+
 
 import java.util.Arrays;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig{
 
-    private static final String SECRET_KEY = "your-secret-key";
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    private final CognitoLogoutHandler cognitoLogoutHandler;
+
+    public SecurityConfig(CognitoLogoutHandler cognitoLogoutHandler) {
+        this.cognitoLogoutHandler = cognitoLogoutHandler;
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,23 +69,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Erlaubte Ursprünge
-                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Erlaubte Methoden
-                    config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "*")); // Erlaubte Header (oder '*' für alle)
+                    config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://dish-list.de", "https://www.dish-list.de"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "*"));
                     config.setAllowCredentials(true); // Erlaube Cookies und Authentifizierung
                     return config;
                 }))
                 .csrf().disable()  // CSRF-Schutz deaktivieren
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()  // Alle Anfragen zulassen
+                        .requestMatchers("/static/**","/error", "/", "/index.html", "/api/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic().disable()  // HTTP Basic-Authentifizierung deaktivieren
                 .formLogin().disable()  // Formular-Login deaktivieren
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Keine Sessions
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
     }
+
+
 
 }
