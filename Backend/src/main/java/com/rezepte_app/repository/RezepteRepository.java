@@ -16,8 +16,11 @@ import java.util.List;
 * Daher Erbung nützlich*/
 
 /*Annotation signalisiert, dass die Klasse eine Datenzugriffsfunktion hat.*/
+/*Zugriff auf Entität*/
 @Repository
-public interface RezepteRepository extends JpaRepository<Rezept, Integer> {
+public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 
-    List<Rezept> findAllByOrderByIdDesc();
+    List<Rezept> findByUserIdOrderByIdDesc(String userId);
+
+  /*  List<Rezept> findByUserId(String userId);*/
 }

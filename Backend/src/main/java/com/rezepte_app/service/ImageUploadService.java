@@ -29,9 +29,6 @@ public class ImageUploadService {
 
     private static final Logger log = LoggerFactory.getLogger(ImageUploadService.class);
 
-    @Value("${LOCAL_DIR}")
-    private String localDir;
-
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
 
