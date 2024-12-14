@@ -79,8 +79,7 @@ a {
 }
 
 .splash-screen.fade-out {
-  opacity: 0;
-
+  opacity: 75%;
 }
 
 
@@ -827,7 +826,7 @@ h3.weiss {
   display: flex;
   justify-content: center;
   margin-bottom: 3rem;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: $tertiary-color;
   font-family: "Cooper Black";
   align-items: center;

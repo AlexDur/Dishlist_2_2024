@@ -32,7 +32,7 @@ export class SplashScreenComponent implements OnInit{
     // Navigiere nach Abschluss der Animation (3000ms)
     setTimeout(() => {
       this.router.navigate(['/intro']);
-    }, 3000); // 3 Sekunden für das Verblassen
+    }, 1000);
   }
 }
 
