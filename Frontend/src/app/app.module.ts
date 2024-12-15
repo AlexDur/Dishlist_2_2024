@@ -11,9 +11,7 @@ import {FormsModule} from "@angular/forms";
 import { SplashScreenComponent } from './intro/splash-screen/splash-screen.component';
 import { InfoScreenComponent } from './intro/info-screen/info-screen.component';
 import {ButtonModule} from "primeng/button";
-import {RouterModule} from "@angular/router";
 import {SharedModule} from "./shared/shared.module";
-import {RezeptErstellungComponent} from "./listen-container/rezept-erstellung/rezept-erstellung.component";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {RezepteModule} from "./listen-container/rezepte.module";
 import {SeitenleisteModule} from "./listen-container/seitenleiste/seitenleiste.module";
@@ -21,6 +19,7 @@ import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.componen
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
+import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 
 
 
@@ -33,7 +32,8 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
     LoginComponent,
     RegistrierungComponent,
     VerifikationComponent,
-    TableisteComponent
+    TableisteComponent,
+    DatenschutzComponent
 
    ],
 

@@ -12,8 +12,8 @@ export class TableisteComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
-  navigateTo(route: string): void {
-    this.router.navigate([route]);
+  navigateDatenschutz(event: Event): void {
+    this.router.navigate(['/datenschutzerklaerung']);
   }
 
   logoutUser(event: Event) {
@@ -43,4 +43,6 @@ export class TableisteComponent {
       this.activeTab = button;
     }
   }
+
+  protected readonly event = event;
 }

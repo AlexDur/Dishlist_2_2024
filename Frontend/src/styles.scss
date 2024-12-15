@@ -42,7 +42,7 @@ a {
 }
 
 .general-button {
-  margin-top:75px !important;
+  margin-top:40px !important;
   width: 200px;
   font-weight: bold;
   height: 50px;
@@ -58,6 +58,8 @@ a {
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
 }
+
+
 
 
 @media screen and (max-width: 750px) {
@@ -824,6 +826,7 @@ h3.weiss {
 .seiten-ueberschrift{
   font-weight: bold;
   display: flex;
+  justify-content: center;
   justify-content: center;
   margin-bottom: 3rem;
   font-size: 2.5rem;

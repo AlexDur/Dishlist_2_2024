@@ -1,4 +1,9 @@
-<div class="tab-bar">
+<div class="tab-bar" >
+  <button class="tab"  (click)="navigateDatenschutz($event)">
+    <i class="pi pi-cog"></i>
+    <span>Konto</span>
+  </button>
+
   <button class="tab"
           data-tooltip="Demnächst verfügbar"
           (click)="toggleTooltip($event)">
@@ -6,16 +11,13 @@
     <span>WishADish</span>
   </button>
 
-  <button class="tab"
+  <div class="tab" >
+    <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
+  </div>
 
-  >
-    <i class="pi pi-plus"></i>
-    <span>Rezept hinzufügen</span>
-  </button>
-
-  <button class="tab logout-button"
-  >
+  <button class="tab logout-button" (click)="logoutUser($event)">
     <i class="pi pi-sign-out"></i>
     <span>Logout</span>
+
   </button>
 </div>

@@ -18,11 +18,6 @@ export class LoginComponent {
   isAuthenticated: boolean = false;
   oidcProperties: string = '';
 
-
-
-
-
-
   constructor(private authService: AuthService, private router: Router) {
   }
 
@@ -41,15 +36,6 @@ export class LoginComponent {
         this.loginError = true;
       }
     );
-  }
-
-  // Logout-Logik
-  onLogout() {
-    this.authService.logout().subscribe(() => {
-      this.isAuthenticated = false;
-      this.email = '';
-      this.oidcProperties = '';
-    });
   }
 
   onPasswordFocus() {

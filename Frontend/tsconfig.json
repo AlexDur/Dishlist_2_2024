@@ -11,6 +11,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": false,
+    "skipLibCheck": true,
+    "types": ["node"],
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
