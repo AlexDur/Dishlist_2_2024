@@ -1,8 +1,4 @@
 <div class="tab-bar" >
-  <button class="tab"  (click)="navigateDatenschutz($event)">
-    <i class="pi pi-cog"></i>
-    <span>Konto</span>
-  </button>
 
   <button class="tab"
           data-tooltip="Demnächst verfügbar"
@@ -14,6 +10,11 @@
   <div class="tab" >
     <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
   </div>
+
+  <button class="tab"  (click)="navigateDatenschutz($event)">
+    <i class="pi pi-cog"></i>
+    <span>Konto</span>
+  </button>
 
   <button class="tab logout-button" (click)="logoutUser($event)">
     <i class="pi pi-sign-out"></i>
