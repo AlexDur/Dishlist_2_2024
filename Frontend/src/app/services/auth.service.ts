@@ -4,7 +4,7 @@ import { Observable, throwError  } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
-import { of } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';  // Importiere 'map' hier
 
 
@@ -13,10 +13,12 @@ import { map } from 'rxjs/operators';  // Importiere 'map' hier
   providedIn: 'root'
 })
 export class AuthService {
-
   private backendUrl = environment.apiUrl;
   private tokenKey = 'cognitoToken';
   private body: { email: string; password: string; } | undefined;
+  private accountDeletedSubject = new BehaviorSubject<boolean>(false);
+  accountDeleted$ = this.accountDeletedSubject.asObservable();
+
 
   constructor(private http: HttpClient) {}
 
@@ -87,6 +89,10 @@ export class AuthService {
   verifyCodeBackend(verifikationCode: string, email: string): Observable<any> {
     console.log('verifyCodebackend', verifikationCode, email)
     return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verifikationCode, email });
+  }
+
+  setAccountDeleted(status: boolean) {
+    this.accountDeletedSubject.next(status);
   }
 
 }

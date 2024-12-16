@@ -1,7 +1,10 @@
 <div class="p-3">
-  <h1 class="flex justify-content-center pb-3">Datenschutzerklärung für DishList</h1>
 
-  <p>Diese App wird von <strong>Alexander Durach</strong> betrieben, und ich verpflichte mich, Ihre Privatsphäre zu schützen. Diese Erklärung erläutert, wie ich personenbezogene Daten sammle und verwende.</p>
+
+
+  <h1 class="flex justify-content-center pb-3 text-center">Datenschutzerklärung für DishList</h1>
+
+  <p>Die App DishList wird betrieben, um Nutzern eine einfache und sichere Verwaltung ihrer Rezepte zu ermöglichen. Der Schutz der Privatsphäre der Nutzer hat höchste Priorität. Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten gesammelt und wie diese verwendet werden.</p>
 
   <h2>Gesammelte Daten:</h2>
   <ul>
@@ -16,15 +19,26 @@
   </ul>
 
   <h2>Weitergabe von Daten:</h2>
-  <p>Es werden keine personenbezogenen Daten an Dritte weitergegeben, außer es ist gesetzlich erforderlich oder notwendig, um die Funktionen der App bereitzustellen.</p>
+  <p>Es werden keine personenbezogenen Daten an Dritte weitergegeben, außer wenn dies gesetzlich vorgeschrieben ist oder für die Bereitstellung der App-Funktionen erforderlich ist.</p>
 
-  <h2>Ihre Rechte:</h2>
-  <ul>
-    <li>Sie haben das Recht, jederzeit auf die von mir gesammelten Daten zuzugreifen, diese zu berichtigen, zu löschen oder die Verarbeitung der Daten zu widerrufen.</li>
-  </ul>
+  <h2>Rechte der Nutzer:</h2>
+  <p>Nutzer haben das Recht, jederzeit auf die gespeicherten Daten zuzugreifen, diese zu berichtigen, zu löschen oder die Verarbeitung der Daten zu widerrufen.</p>
+
+  <div class="flex justify-content-center">
+  <button class="general-button" (click)="onDeleteAccount()">
+    <i class="pi pi-trash"></i>&nbsp; Konto löschen
+  </button>
+  </div>
+
+  <app-dialog
+    [message]="dialogMessage"
+    [visible]="isDialogVisible"
+    (visibleChange)="isDialogVisible = $event"
+    (confirm)="onConfirmDelete($event)">
+  </app-dialog>
 
   <div class="contact-info">
     <h2>Kontakt:</h2>
-    <p>Alexander Durach, <a href="mailto:alexdurach@hotmail.de">alexdurach&#64;hotmail.de</a></p>
+    <p>Für Anfragen oder Anliegen im Zusammenhang mit Datenschutz: <a href="mailto:alexdurach@hotmail.de">alexdurach&#64;hotmail.de</a></p>
   </div>
 </div>

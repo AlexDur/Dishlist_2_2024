@@ -1,11 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
+import { Subscription } from 'rxjs';
+import * as AWS from 'aws-sdk';
 
 @Component({
   selector: 'app-datenschutz',
-  standalone: true,
-  imports: [],
   templateUrl: './datenschutz.component.html',
 })
-export class DatenschutzComponent {
+export class DatenschutzComponent implements OnInit, OnDestroy{
+  @Output() accountDeleted = new EventEmitter<boolean>();
+  private subscription: Subscription | undefined;
+  isAccountDeleted: boolean = false;
+  username: string | null = '';
+  cognito: AWS.CognitoIdentityServiceProvider | undefined;
+  isDialogVisible: boolean = false;
+  dialogMessage: string = 'Möchtest du dein Konto wirklich löschen?';
 
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit() {
+    const token = localStorage.getItem('jwt_token');
+    console.log('Token im localStorage:', token);
+    /*this.username = this.authService.getEmailFromJWT();*/
+  /*  console.log('Benutzer E-Mail:', this.username);*/
+ /*   this.subscription = this.authService.accountDeleted$.subscribe(
+      (status) => {
+        this.isAccountDeleted = status;
+      }*/
+
+  }
+
+  onDeleteAccount() {
+    this.isDialogVisible = true;  // Zeige den Dialog an
+  }
+
+  onConfirmDelete(confirmed: boolean) {
+    if (confirmed) {
+      /*this.deleteUser();*/
+      this.authService.setAccountDeleted(true);
+      this.router.navigate(['/anmeldung']);
+      console.log('Konto wird gelöscht...');
+    } else {
+      console.log('Löschung abgebrochen.');
+    }
+    this.isDialogVisible = false;
+  }
+/*
+  deleteUser() {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) {
+      console.error('ds_Kein Token gefunden.');
+      return;
+    }
+
+    // Den Benutzer löschen
+    this.authService.deleteUser(token).subscribe(
+      (response) => {
+        console.log('Benutzer erfolgreich gelöscht:', response);
+
+        // Token löschen, wenn der Benutzer erfolgreich gelöscht wurde
+        localStorage.removeItem('jwt_token');
+
+        // Benutzer zur Anmeldeseite weiterleiten
+        this.router.navigate(['/anmeldung']);
+
+        // Den Status der Benutzerkontolöschung aktualisieren
+        this.authService.updateAccountDeletedStatus(true);
+
+        // Optional: Erfolgsnachricht anzeigen oder Bestätigung ausgeben
+        alert('Ihr Konto wurde erfolgreich gelöscht.');
+      },
+      (error) => {
+        console.error('ds_Fehler beim Löschen des Benutzers:', error);
+
+        // Optional: Benutzer benachrichtigen, dass ein Fehler aufgetreten ist
+        alert('Beim Löschen Ihres Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+      }
+    );
+  }*/
+
+
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 }

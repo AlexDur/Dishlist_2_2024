@@ -1,5 +1,8 @@
 <div class="screen">
   <div class="zentriertes-formular">
+
+    <p *ngIf="isAccountDeleted">Dein Konto wurde gelöscht</p>
+
     <h1 (click)="navigateListe($event)">Anmeldung</h1>
 
     <!-- Formular für die Anmeldung -->
