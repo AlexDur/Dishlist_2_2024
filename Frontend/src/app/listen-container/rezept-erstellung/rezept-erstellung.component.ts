@@ -278,12 +278,6 @@ export class RezeptErstellungComponent implements OnInit {
   }
 
 
-  navigateContainer(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/listen-container']);
-  }
-
-
   isFieldValid(fieldName: keyof Rezept): boolean {
     const fieldValue = this.newRecipe[fieldName];
     return typeof fieldValue === 'string' && fieldValue.trim() !== '';

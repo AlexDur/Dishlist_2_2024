@@ -36,6 +36,10 @@ export class LoginComponent implements OnInit{
         this.loginSuccess = true;
         this.loginError = false;
         this.isAuthenticated = true;
+
+        localStorage.setItem('isAuthenticated', 'true');
+
+        console.log('isAuthenticated', this.isAuthenticated);
         this.email = response.email
         this.oidcProperties = JSON.stringify(response.oidcProperties);
         this.router.navigate(['/listen-container']);

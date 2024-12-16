@@ -24,7 +24,7 @@
     "@capacitor/core": "^5.7.8",
     "@capacitor/ios": "^5.0.0",
     "amazon-cognito-identity-js": "^6.3.12",
-    "aws-sdk": "^2.1692.0",
+    "aws-sdk": "^2.1691.0",
     "eslint-config-prettier": "^8.8.0",
     "jwt-decode": "^4.0.0",
     "primeflex": "^3.3.1",

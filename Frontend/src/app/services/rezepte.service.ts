@@ -37,9 +37,11 @@ export class RezeptService {
   private getJsonHeaders(): HttpHeaders {
     const token = this.authService.getToken();
     let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${token}`);
+    headers = headers.set('Authorization', `Bearer ${token}`)
+      .set('Accept', 'application/json');
     return headers;
   }
+
 
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = localStorage.getItem('jwt_token');

@@ -19,7 +19,6 @@
           "options": {
             "aot": true,
             "outputPath": "C:/Users/alexd/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/Fullstack_RezepteApp_2/Backend/src/main/resources/static",
-
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
