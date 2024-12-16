@@ -11,6 +11,11 @@
     <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
   </div>
 
+  <div class="tab" (click)="navigateListe($event)">
+    <i class="pi pi-bars"></i>
+    <span>DishList</span>
+  </div>
+
   <button class="tab"  (click)="navigateDatenschutz($event)">
     <i class="pi pi-cog"></i>
     <span>Konto</span>
@@ -19,6 +24,5 @@
   <button class="tab logout-button" (click)="logoutUser($event)">
     <i class="pi pi-sign-out"></i>
     <span>Logout</span>
-
   </button>
 </div>

@@ -16,6 +16,10 @@ export class TableisteComponent {
     this.router.navigate(['/datenschutzerklaerung']);
   }
 
+  navigateListe(event: Event): void {
+    this.router.navigate(['/listen-container']);
+  }
+
   logoutUser(event: Event) {
     this.authService.logout().subscribe({
       next: () => {
