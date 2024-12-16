@@ -24,6 +24,7 @@ export class TableisteComponent {
     this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/anmeldung']);
+
       },
       error: (err) => {
         console.error('Fehler beim Logout', err);
