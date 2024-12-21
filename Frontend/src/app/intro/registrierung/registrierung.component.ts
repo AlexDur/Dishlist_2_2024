@@ -12,13 +12,24 @@ export class RegistrierungComponent {
   password: string = '';
   passwordInvalid = true;
   passwordTouched = false;
+  confirmPassword: string | undefined;
   errorMessage: string = '';
   showPassword = false;
   inputType = 'password';
+  passwordMismatch: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   onRegister() {
+    // Überprüfen, ob die Passwörter übereinstimmen
+    if (this.password !== this.confirmPassword) {
+      this.passwordMismatch = true;
+      return;  // Beende die Registrierung, wenn die Passwörter nicht übereinstimmen
+    }
+
+    this.passwordMismatch = false;  // Setze das Mismatch zurück, wenn die Passwörter übereinstimmen
+
+    // Registrierungsprozess aufrufen, wenn alles gültig ist
     this.authService.register(this.email, this.password).subscribe(
       response => {
         console.log('Weiterleitung Verfizierung', response);
@@ -27,7 +38,6 @@ export class RegistrierungComponent {
       error => {
         console.error('Registrierung fehlgeschlagen', error);
         console.error('Grund für: Registrierung fehlgeschlagen', error.status);
-
 
         if (error.status === 409) { // Statuscode für "Conflict"
           // Hinweis ausgeben, dass der Nutzer bereits registriert ist
@@ -40,6 +50,7 @@ export class RegistrierungComponent {
       }
     );
   }
+
 
   onPasswordFocus() {
     this.passwordTouched = true;
@@ -55,10 +66,10 @@ export class RegistrierungComponent {
     this.router.navigate(['/anmeldung']);
   }
 
-  togglePasswordVisibility() {
+/*  togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
     this.inputType = this.showPassword ? 'text' : 'password';
-  }
+  }*/
 
   protected readonly event = event;
 }

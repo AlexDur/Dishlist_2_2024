@@ -14,7 +14,7 @@
           <input class="inputfeld" [type]="inputType" placeholder="Passwort" [(ngModel)]="password" required name="password" pInputText (focus)="onPasswordFocus()" (input)="onPasswordChange()">
           <i
             class="pi toggle-password-icon"
-            [ngClass]="{'pi-eye': !showPassword, 'pi-eye-slash': showPassword}"
+            [ngClass]="{'pi-eye-slash': !showPassword, 'pi-eye': showPassword}"
             (click)="togglePasswordVisibility()">
           </i>
           <small *ngIf="passwordInvalid && passwordTouched" class="error-message">Das Passwort besteht aus mindestens 8 Stellen, einer Zahl und einem Sonderzeichen.</small>
