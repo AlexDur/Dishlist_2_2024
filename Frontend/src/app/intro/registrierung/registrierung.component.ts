@@ -66,10 +66,6 @@ export class RegistrierungComponent {
     this.router.navigate(['/anmeldung']);
   }
 
-/*  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-    this.inputType = this.showPassword ? 'text' : 'password';
-  }*/
 
   protected readonly event = event;
 }

@@ -69,19 +69,6 @@ export class ListeninhaltMobilComponent {
     }
   }
 
-  openImageModal(imageUrl: string | undefined): void {
-    if (imageUrl) {
-      this.selectedImageUrl = imageUrl;
-    } else {
-      console.warn('Kein Bild verfügbar, Modal wird nicht geöffnet.');
-    }
-  }
-
-
-  closeImageModal(): void {
-    this.selectedImageUrl = null;
-  }
-
   openUrl(url: string | undefined): void {
     if (!url) {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
@@ -108,5 +95,37 @@ export class ListeninhaltMobilComponent {
       console.warn('Ungültige URL');
     }
   }
+
+ /* openImageFullscreen(imageUrl: string): void {
+    if (imageUrl) {
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>Bildanzeige</title>
+            <style>
+              body {
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: black;
+              }
+              img {
+                max-width: 100%;
+                max-height: 100%;
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${imageUrl}" alt="Bild in voller Größe" />
+          </body>
+        </html>
+      `);
+      }
+    }
+  }*/
 
 }

@@ -4,7 +4,7 @@
     <form>
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
+          <input class="inputfeld" placeholder="Rezeptname*" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
                  [ngClass]="getInputClass('name')"
                  (blur)="onFieldBlur('name')" >
           <label for="rezeptname"><span class="required"></span></label>
@@ -12,7 +12,7 @@
         </div>
 
         <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
+          <input class="inputfeld" placeholder="Onlineadresse*" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
                  [ngClass]="getInputClass('onlineAdresse')"
                  (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()"  pInputText>
 

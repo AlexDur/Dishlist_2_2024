@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef  } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
-import { Tooltip } from 'primeng/tooltip';
+import {filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tableiste',
@@ -10,9 +10,11 @@ import { Tooltip } from 'primeng/tooltip';
 export class TableisteComponent {
   activeTab: HTMLElement | null = null;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService,
+              private cdr: ChangeDetectorRef) {}
 
   navigateDatenschutz(event: Event): void {
+    console.log('geklickt', event)
     this.router.navigate(['/datenschutzerklaerung']);
   }
 
@@ -23,14 +25,21 @@ export class TableisteComponent {
   logoutUser(event: Event) {
     this.authService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/anmeldung']);
-
+        this.authService.setIsAuthenticated(false);
+        this.authService.isAuthenticated$.pipe(
+          filter((isAuthenticated: any) => !isAuthenticated), // Warten, bis false ist
+          take(1)
+        ).subscribe(() => {
+          this.router.navigate(['/anmeldung']);
+        });
       },
       error: (err) => {
         console.error('Fehler beim Logout', err);
       }
     });
   }
+
+
 
   toggleTooltip(event: MouseEvent): void {
     const button = event.currentTarget as HTMLElement;

@@ -121,14 +121,6 @@ export class RezeptErstellungComponent implements OnInit {
     return this.tags.filter(tag => tag.type === this.selectedCategory);
   }
 
-  isAnyTagSelected(category: string): boolean {
-    const categoryTags = this.tags.filter(tag => tag.type === category);
-    console.log(`Tags for category ${category}:`, categoryTags);
-    const anySelected = categoryTags.some(tag => tag.selected);
-    console.log(`Any tag selected for category ${category}:`, anySelected);
-    return anySelected;
-  }
-
 
   toggleTagSelection(tag: Tag) {
     tag.selected = !tag.selected;
@@ -144,9 +136,6 @@ export class RezeptErstellungComponent implements OnInit {
     console.log('Aktuelle ausgewählte Tags:', this.selectedTags);
     this.cdr.detectChanges();
   }
-
-
-
 
   updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);
@@ -164,8 +153,6 @@ export class RezeptErstellungComponent implements OnInit {
     this.newRecipe.image = image;
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
-
-
 
   //Observable für die Anfragen im return
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
