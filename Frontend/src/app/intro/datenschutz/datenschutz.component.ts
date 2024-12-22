@@ -3,6 +3,7 @@ import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import { Subscription } from 'rxjs';
 import * as AWS from 'aws-sdk';
+import {filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-datenschutz',
@@ -32,20 +33,28 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
   }
 
   onDeleteAccount() {
-    this.isDialogVisible = true;  // Zeige den Dialog an
+    this.isDialogVisible = true;
   }
 
   onConfirmDelete(confirmed: boolean) {
     if (confirmed) {
-      /*this.deleteUser();*/
-      this.authService.setAccountDeleted(true);
-      this.router.navigate(['/anmeldung']);
-      console.log('Konto wird gelöscht...');
+      this.authService.logout().subscribe({
+        next: () => {
+          this.authService.setIsAuthenticated(false);
+          this.router.navigate(['/anmeldung']);
+          console.log('Konto wird gelöscht...');
+        },
+        error: (err) => {
+          console.error('Fehler beim Logout:', err);
+        }
+      });
     } else {
       console.log('Löschung abgebrochen.');
     }
     this.isDialogVisible = false;
   }
+
+
 /*
   deleteUser() {
     const token = localStorage.getItem('jwt_token');
