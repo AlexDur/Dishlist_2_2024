@@ -3,7 +3,8 @@ package com.rezepte_app.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 // Für die Verifizierung des Codes
-public class VerfikationCodeDto {
+public class
+VerfikationCodeDto {
 
 
     @JsonProperty("verifikationCode")

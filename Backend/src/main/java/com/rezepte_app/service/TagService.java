@@ -46,6 +46,7 @@ public class TagService {
         }
     }
 
+    @Transactional
     public List<Tag> saveTags(List<Tag> tags) {
         return tags.stream()
                 .map(tagRepository::save)
@@ -67,17 +68,6 @@ public class TagService {
         }
     }
 
-
-
-    // Methode zum Suchen eines Tags nach Namen
-    public Optional<Tag> findTagByLabelAndSeverity(String label, Long id) {
-        try {
-            return tagRepository.findByLabelAndId(label, id);
-        } catch (RuntimeException e) {
-            // Log the exception, handle it, or rethrow it
-            throw new ServiceException("Error finding tag by label and severity", e);
-        }
-    }
 
     // Methode zum Aktualisieren eines Tags
     @Transactional

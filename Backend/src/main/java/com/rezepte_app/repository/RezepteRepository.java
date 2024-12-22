@@ -5,6 +5,7 @@
 
 package com.rezepte_app.repository;
 import com.rezepte_app.model.Rezept;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Repository
 public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 
+    @Transactional
     List<Rezept> findByUserIdOrderByIdDesc(String userId);
 
-  /*  List<Rezept> findByUserId(String userId);*/
 }

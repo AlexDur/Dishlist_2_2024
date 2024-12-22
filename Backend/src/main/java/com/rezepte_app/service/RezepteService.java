@@ -73,7 +73,7 @@ public class RezepteService {
 
         for (Tag tag : tags) {
             Tag tagToAdd = tagService.addTag(tag);
-            if (!rezept.getTags().contains(tagToAdd)) {
+            if (tagToAdd != null && !rezept.getTags().contains(tagToAdd)) {
                 rezept.getTags().add(tagToAdd);
             }
         }
@@ -144,7 +144,7 @@ public class RezepteService {
             rezeptDTO.setId(id);
             System.out.println("rezeptDTO in RService null: " + rezeptDTO.getId());
         } else {
-            System.out.println("ID in rezeptDTO ist nicht null: " + rezeptDTO.getId());
+            logger.debug("ID in rezeptDTO ist nicht null: {}", rezeptDTO.getId());
         }
 
         existingRezept.setName(rezeptDTO.getName());
@@ -158,7 +158,7 @@ public class RezepteService {
             existingRezept.setTags(new ArrayList<>(updatedTags));
             System.out.println("U_Tags erfolgreich aktualisiert.");
         } else {
-            System.out.println("Tags NICHT erfolgreich aktualisiert.");
+            logger.debug("Tags NICHT erfolgreich aktualisiert.");
         }
 
         if (image != null && !image.isEmpty()) {
@@ -166,17 +166,17 @@ public class RezepteService {
             existingRezept.setBildUrl(bildUrl);
             System.out.println("U_Bild erfolgreich verarbeitet.");
         } else {
-            System.out.println("U_Bild NICHT erfolgreich verarbeitet.");
+            logger.debug("U_Bild NICHT erfolgreich verarbeitet.");
         }
 
-        System.out.println("existingRezept sieht so aus" + existingRezept);
+        logger.debug("existingRezept sieht so aus" + existingRezept);
 
         return rezepteRepository.save(existingRezept);
     }
 
 
 
-
+    @Transactional
     public Tag updateTag(int tagId, String label) {
         // Suchen des Tags, Update durchführen und zurückgeben des aktualisierten Tags
         Tag tag = tagRepository.findById((long) tagId).orElseThrow(() -> new IllegalArgumentException("Tag nicht gefunden"));
@@ -184,7 +184,7 @@ public class RezepteService {
         return tagRepository.save(tag);  // Speichert das aktualisierte Tag und gibt es zurück
     }
 
-
+    @Transactional
     public boolean deleteRezept(int id) {
         try {
             rezepteRepository.deleteById((long) id);
