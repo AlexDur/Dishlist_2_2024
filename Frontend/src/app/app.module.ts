@@ -33,7 +33,8 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
     RegistrierungComponent,
     VerifikationComponent,
     TableisteComponent,
-    DatenschutzComponent
+    DatenschutzComponent,
+
 
    ],
 
@@ -51,6 +52,7 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
+
 
   ],
   providers: [],

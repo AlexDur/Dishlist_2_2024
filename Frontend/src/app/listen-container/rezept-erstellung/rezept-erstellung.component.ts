@@ -113,6 +113,7 @@ export class RezeptErstellungComponent implements OnInit {
       category.selected = true;
       this.selectedCategory = category.name;
     }
+    this.cdr.detectChanges();
   }
 
 
@@ -153,6 +154,12 @@ export class RezeptErstellungComponent implements OnInit {
     this.newRecipe.image = image;
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
+
+  onPhotoCaptured(event: any) {
+    console.log('Foto wurde aufgenommen:', event);
+    // Weitere Logik hier
+  }
+
 
   //Observable für die Anfragen im return
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {

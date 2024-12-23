@@ -1,11 +1,10 @@
-<div class="screen">
+<div >
   <div class="zentriertes-formular">
-    <button class="close-button" (click)="navigateContainer($event)" style="position: absolute; top: 10px; right: 10px;">X</button>
     <div class="neues-rezept">Neues Rezept</div>
     <form>
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
+          <input class="inputfeld" placeholder="Rezeptname*" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
                  [ngClass]="getInputClass('name')"
                  (blur)="onFieldBlur('name')" >
           <label for="rezeptname"><span class="required"></span></label>
@@ -13,7 +12,7 @@
         </div>
 
         <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
+          <input class="inputfeld" placeholder="Onlineadresse*" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
                  [ngClass]="getInputClass('onlineAdresse')"
                  (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()"  pInputText>
 
@@ -21,11 +20,15 @@
           <div *ngIf="!isFieldValid('onlineAdresse')" class="error-message"></div>
 
         </div>
-        <div class="flex flex-row">
-           <div class="erstellung-kategorie">Foto</div>
-           <div class="optional">(optional)</div>
-        </div>
-        <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <div class="flex flex-row">
+             <div class="erstellung-kategorie">Foto</div>
+
+             <div class="optional">(optional)</div>
+          </div>
+          <div class="flex_bildoptionen">
+            <app-foto-upload class="foto-upload" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+            <app-camera class="camera-container" (photoCaptured)="onPhotoCaptured($event)" ></app-camera>
+          </div>
         <div>
 
 

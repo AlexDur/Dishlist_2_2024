@@ -11,10 +11,6 @@ export class DialogComponent {
   @Input() visible: boolean = false;
   isYesActive: boolean = false;
 
-  showDialog() {
-    this.visible = true;
-    this.visibleChange.emit(this.visible);
-  }
 
   // Aufruf, um den Dialog zu verstecken
   hideDialog() {

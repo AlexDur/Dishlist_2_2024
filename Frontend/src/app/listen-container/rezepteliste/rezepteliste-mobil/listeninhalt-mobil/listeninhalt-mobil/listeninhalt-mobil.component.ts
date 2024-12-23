@@ -96,36 +96,20 @@ export class ListeninhaltMobilComponent {
     }
   }
 
- /* openImageFullscreen(imageUrl: string): void {
-    if (imageUrl) {
+  openImageFullscreen(bildUrl: string): void {
+    if (bildUrl) {
       const newWindow = window.open();
       if (newWindow) {
         newWindow.document.write(`
-        <html>
-          <head>
-            <title>Bildanzeige</title>
-            <style>
-              body {
-                margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background-color: black;
-              }
-              img {
-                max-width: 100%;
-                max-height: 100%;
-              }
-            </style>
-          </head>
+       <html>
+            <link rel="stylesheet" href="assets/fullscreen-image.scss">
           <body>
-            <img src="${imageUrl}" alt="Bild in voller Größe" />
+            <img src="${bildUrl}" alt="Bild in voller Größe" />
           </body>
         </html>
       `);
       }
     }
-  }*/
+  }
 
 }

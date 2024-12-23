@@ -24,7 +24,10 @@
            <div class="erstellung-kategorie">Foto</div>
            <div class="optional">(optional)</div>
         </div>
-        <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+        <div class="flex_bildoptionen">
+          <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <app-camera  (photoCaptured)="onPhotoCaptured($event)" ></app-camera>
+        </div>
         <div>
 
 

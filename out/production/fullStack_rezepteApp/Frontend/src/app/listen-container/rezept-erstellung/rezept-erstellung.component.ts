@@ -113,20 +113,13 @@ export class RezeptErstellungComponent implements OnInit {
       category.selected = true;
       this.selectedCategory = category.name;
     }
+    this.cdr.detectChanges();
   }
 
 
   getVisibleTags() {
     // Tags nach `selectedCategory` filtern
     return this.tags.filter(tag => tag.type === this.selectedCategory);
-  }
-
-  isAnyTagSelected(category: string): boolean {
-    const categoryTags = this.tags.filter(tag => tag.type === category);
-    console.log(`Tags for category ${category}:`, categoryTags);
-    const anySelected = categoryTags.some(tag => tag.selected);
-    console.log(`Any tag selected for category ${category}:`, anySelected);
-    return anySelected;
   }
 
 
@@ -145,9 +138,6 @@ export class RezeptErstellungComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-
-
-
   updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);
     this.rezepte.forEach(rezept => {
@@ -165,6 +155,10 @@ export class RezeptErstellungComponent implements OnInit {
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
 
+  onPhotoCaptured(event: any) {
+    console.log('Foto wurde aufgenommen:', event);
+    // Weitere Logik hier
+  }
 
 
   //Observable für die Anfragen im return
@@ -275,12 +269,6 @@ export class RezeptErstellungComponent implements OnInit {
         })
       ).subscribe();
     }
-  }
-
-
-  navigateContainer(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/listen-container']);
   }
 
 

@@ -8,10 +8,10 @@
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
             class="rezept-image"
-            (click)="openUrl(rezept.onlineAdresse)"
+            (click)="openImageFullscreen(rezept.bildUrl)"
           />
         </div>
-        <div class="p-card-title">{{ rezept.name }}</div>
+        <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
         <div class="p-card-footer">
           <button
             pButton

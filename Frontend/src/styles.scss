@@ -326,6 +326,7 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
+
 }
 
 .zentriertes-formular-anmeldung{
@@ -356,6 +357,7 @@ a {
   margin-top: 15px;
   width: 100px;
   font-weight: bold;
+
   height: 40px;
   background-color: $secondary-color !important;
   color: $tertiary-color !important;
@@ -386,13 +388,12 @@ a {
   padding: 9px 40px;
   cursor: pointer;
   background-color: $secondary-color ;
-  color: white; /* Beispiel für Schriftfarbe */
-  border-radius: 50px; /* Abgerundete Ecken */
+  color: white;
+  border-radius: 50px 0 0 50px ;
   text-align: center;
   font-weight: bold;
   transition: background-color 0.3s ease;
   outline: 2px solid $tertiary-color;
-  outline-offset: 2px;
 }
 
 .upload-button-label input {
@@ -613,6 +614,78 @@ p-dialog .p-dialog-header{
   justify-content: flex-end;
 }
 
+/*CameraKomponente*/
+
+.camera-container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.camera-container .upload-button-label {
+  display: inline-block;
+  padding: 9px 40px;
+  cursor: pointer;
+  background-color: $secondary-color ;
+  color: white;
+  justify-content: center;
+  border-radius: 0 50px 50px 0;
+  text-align: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $tertiary-color;
+}
+
+.take-photo-button{
+  display: inline-block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: $detail-color;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.flex_bildoptionen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal-Hintergrund */
+.camera-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8); /* Abdunkelung */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Überlagert das Formular */
+}
+
+
+/* Video */
+video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Schließen-Button */
+.close-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: $secondary-color;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
 
 /*Seitenleiste*/
@@ -998,7 +1071,10 @@ h3.weiss {
   grid-auto-rows: minmax(0, auto);
   grid-gap: 1rem;
   width: 100%;
+  margin-bottom: 70px;
 }
+
+
 
 
 .p-card {
@@ -1016,6 +1092,7 @@ h3.weiss {
 }
 
 .rezept-image {
+  cursor: pointer;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1078,6 +1155,10 @@ h3.weiss {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+}
+
+.rezept-image-container img{
+  cursor: pointer;
 }
 
 .rezept-image-full {
@@ -1228,14 +1309,15 @@ h3.weiss {
     transform: translateX(100%);
   }
 
-  .grid-container {
+  .listen-container {
     display: flex;
     flex-direction: column;
-
+    overflow-y: auto;
     width: 100%;
     padding:.7rem;
     color:white;
     box-sizing: border-box;
+    margin-bottom: 15px;
   }
 
   .container-listeninhalt {
@@ -1244,6 +1326,7 @@ h3.weiss {
     width: 100%;
     justify-content: center;
     align-items: center;
+    margin-bottom: 70px;
   }
 
 
@@ -1255,6 +1338,8 @@ h3.weiss {
     display: block;
   }
 }
+
+
 
 
 .trennungsstrich {

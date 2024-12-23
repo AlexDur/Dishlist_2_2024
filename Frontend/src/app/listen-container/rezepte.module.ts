@@ -24,6 +24,7 @@ import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
 import {
   SeitenleisteMobilComponent
 } from "./seitenleiste/seitenleiste-mobil/seitenleiste-mobil/seitenleiste-mobil.component";
+import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
 
 @NgModule({
   declarations: [
@@ -31,13 +32,15 @@ import {
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,
-    FotoUploadComponent
+    FotoUploadComponent,
+    CameraComponent
   ],
   exports: [
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,
-    FotoUploadComponent
+    FotoUploadComponent,
+    CameraComponent
   ],
     imports: [
     CommonModule,

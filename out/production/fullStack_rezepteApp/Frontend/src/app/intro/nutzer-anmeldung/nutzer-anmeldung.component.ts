@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 
@@ -6,9 +6,12 @@ import {AuthService} from "../../services/auth.service";
   selector: 'app-nutzer-anmeldung',
   templateUrl: './nutzer-anmeldung.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+  @Input() isAccountDeleted: boolean = false;
   email: string = '';
   password: string = '';
+  passwordInvalid = false;
+  passwordTouched = false;
   showPassword = false;
   inputType = 'password';
   loginSuccess: boolean = false;
@@ -16,7 +19,15 @@ export class LoginComponent {
   isAuthenticated: boolean = false;
   oidcProperties: string = '';
 
+
   constructor(private authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit() {
+    this.authService.accountDeleted$.subscribe(status => {
+      this.isAccountDeleted = status;
+      console.log('Account deleted status:', this.isAccountDeleted);
+    });
   }
 
   onLogin() {
@@ -25,6 +36,10 @@ export class LoginComponent {
         this.loginSuccess = true;
         this.loginError = false;
         this.isAuthenticated = true;
+
+        localStorage.setItem('isAuthenticated', 'true');
+
+        console.log('isAuthenticated', this.isAuthenticated);
         this.email = response.email
         this.oidcProperties = JSON.stringify(response.oidcProperties);
         this.router.navigate(['/listen-container']);
@@ -36,14 +51,15 @@ export class LoginComponent {
     );
   }
 
-  // Logout-Logik
-  onLogout() {
-    this.authService.logout().subscribe(() => {
-      this.isAuthenticated = false;
-      this.email = '';
-      this.oidcProperties = '';
-    });
+  onPasswordFocus() {
+    this.passwordTouched = true;
   }
+
+  onPasswordChange() {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    this.passwordInvalid = !regex.test(this.password);
+  }
+
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;

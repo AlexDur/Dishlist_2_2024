@@ -4,5 +4,10 @@
  <app-listen-container [isMobile]  = "isMobile" ></app-listen-container>
 -->
 <!-- Mobile Layout -->
-<router-outlet></router-outlet>
+<div>
+  <router-outlet></router-outlet>
+  <app-tableiste *ngIf="isAuthenticated" class="tab-bar"></app-tableiste>
+</div>
+
+
 

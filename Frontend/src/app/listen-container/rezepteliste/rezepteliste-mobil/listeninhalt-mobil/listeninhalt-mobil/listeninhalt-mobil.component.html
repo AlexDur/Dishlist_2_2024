@@ -8,6 +8,7 @@
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
             class="rezept-image"
+            (click)="openImageFullscreen(rezept.bildUrl)"
 
           />
         </div>

@@ -23,6 +23,7 @@ body {
   margin:2% 30%;
 }
 
+
 h1{
   color: white;
 }
@@ -37,8 +38,16 @@ a {
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
 
+
+
+.router-outlet-wrapper{
+  background: black;
+}
+
+
+
 .general-button {
-  margin-top:75px !important;
+  margin-top:40px !important;
   width: 200px;
   font-weight: bold;
   height: 50px;
@@ -56,6 +65,8 @@ a {
 }
 
 
+
+
 @media screen and (max-width: 750px) {
   body {
     margin: 0
@@ -70,7 +81,14 @@ a {
   justify-content:center;
   align-items: center;
   height: 100vh;
+  background-color: #ffffff;
+  transition: opacity 3s ease-in-out;
 }
+
+.splash-screen.fade-out {
+  opacity: 75%;
+}
+
 
 @keyframes fadeInAndCook {
   0% {
@@ -179,12 +197,14 @@ a {
 
 .password-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   position: relative;
 }
 
 .toggle-password-icon {
   position: absolute;
+  top: 1.32rem;
   right: 0.5rem;
   cursor: pointer;
   font-size: 1.2rem;
@@ -197,8 +217,10 @@ a {
 }
 
 .error-message {
-  color: #ffffff;
-  margin-bottom: 2rem;
+  max-width: 250px;
+  margin-top: 0.5rem;
+  color: $tertiary-color;
+  text-align:center;
 }
 
 .registrierung-hinweis{
@@ -303,14 +325,25 @@ a {
 }
 
 .zentriertes-formular {
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: margin-bottom 0.3s ease-out;
+}
+
+
+
+.zentriertes-formular-anmeldung{
+  margin-top: 17rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-
-
 
 .inputfeld {
   width: 100%;
@@ -334,7 +367,6 @@ a {
   height: 40px;
   background-color: $secondary-color !important;
   color: $tertiary-color !important;
-  border-radius: 50px;
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -361,13 +393,13 @@ a {
   padding: 9px 40px;
   cursor: pointer;
   background-color: $secondary-color ;
-  color: white; /* Beispiel für Schriftfarbe */
-  border-radius: 50px; /* Abgerundete Ecken */
+  color: white;
+  border-radius: 50px 0px 0px 50px;
   text-align: center;
   font-weight: bold;
   transition: background-color 0.3s ease;
   outline: 2px solid $tertiary-color;
-  outline-offset: 2px;
+
 }
 
 .upload-button-label input {
@@ -504,6 +536,7 @@ p-dialog .p-dialog-header{
 }
 
 .dialog-message{
+  padding:10px;
 }
 
 .custom-left {
@@ -534,13 +567,18 @@ p-dialog .p-dialog-header{
 @media screen and (max-width: 750px) {
 
   .zentriertes-formular {
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
     max-width: 500px;
-    margin: 100px auto;
+    margin: 50px auto;
+  }
+
+  .zentriertes-formular-anmeldung{
+    margin-top: 15rem;
   }
 
   .p-table .p-tablewrapper table {
@@ -582,6 +620,79 @@ p-dialog .p-dialog-header{
   justify-content: flex-end;
 }
 
+
+/*CameraKomponente*/
+
+.camera-container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.camera-container .upload-button-label {
+  display: inline-block;
+  padding: 9px 40px;
+  cursor: pointer;
+  background-color: $secondary-color ;
+  color: white;
+justify-content: center;
+  border-radius: 0 50px 50px 0;
+  text-align: center;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $tertiary-color;
+}
+
+.take-photo-button{
+  display: inline-block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: $detail-color;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.flex_bildoptionen {
+  display: flex;
+  justify-content: center; /* Zentriert Buttons horizontal */
+  align-items: center;    /* Zentriert Buttons vertikal */
+}
+
+/* Modal-Hintergrund */
+.camera-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8); /* Abdunkelung */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Überlagert das Formular */
+}
+
+
+/* Video */
+video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Schließen-Button */
+.close-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: $secondary-color;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
 
 /*Seitenleiste*/
@@ -673,6 +784,12 @@ p-tag + p-tag {
   border-radius: 25px;
   animation: fadeIn 0.3s ease-in-out;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.tag-panel.expanded {
+  display: block;
+  max-height: 300px;
 }
 
 .tag {
@@ -810,8 +927,7 @@ h3.weiss {
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin-bottom: 3rem;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: $tertiary-color;
   font-family: "Cooper Black";
   align-items: center;
@@ -825,10 +941,10 @@ h3.weiss {
 
 
 .filter-icon {
+  margin-top: .5rem;
   width: 30px;
   height: 30px;
   object-fit: contain;
-  padding: 0;
   cursor: pointer;
 
   &:hover{
@@ -836,12 +952,12 @@ h3.weiss {
   }
 }
 
-/*Header*/
+/*!*Header*!
 
 .header{
   display: flex;
   justify-content: space-between;
-}
+}*/
 
 .p-overlaypanel {
   position: absolute ;
@@ -968,6 +1084,21 @@ h3.weiss {
   grid-auto-rows: minmax(0, auto);
   grid-gap: 1rem;
   width: 100%;
+  margin-bottom: 70px;
+}
+
+.fullscreen-modal {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 
 
@@ -1012,7 +1143,9 @@ h3.weiss {
   line-height: 1.5em;
   max-height: 4.5em;
   word-break: break-word;
-  margin: 5px;
+  margin-bottom: 15px;
+  text-decoration: underline;
+  border: 1px solid transparent;
 }
 
 .platzhalter-rezeptbild {
@@ -1083,14 +1216,6 @@ h3.weiss {
 
 
 @media screen and (max-width: 750px) {
-
-  .filter-button {
-
-    &:active {
-      background: linear-gradient(135deg, #373535, #252424);
-      transform: translateY(1px);
-    }
-  }
 
   .button-row {
     gap:10rem;
@@ -1187,6 +1312,14 @@ h3.weiss {
     transition: transform 0.3s ease-in-out;
   }
 
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    top: -33px;
+    left: 20%;
+    z-index: 10;
+    pointer-events: none;
+  }
 
   .fullscreen-overlay.open {
     transform: translateX(0);
@@ -1197,10 +1330,10 @@ h3.weiss {
     transform: translateX(100%);
   }
 
-  .grid-container {
+  .listen-container {
     display: flex;
     flex-direction: column;
-
+    overflow-y: auto;
     width: 100%;
     padding:.7rem;
     color:white;
@@ -1276,11 +1409,7 @@ h3.weiss {
 
 
 
-.rezept-image {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
+
 
 
 
@@ -1330,6 +1459,41 @@ h3.weiss {
   flex: 1;
   color: #333;
   text-align: center;
+  position: relative;
+
+}
+
+.tab:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+.tab::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: pre-line;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 10;
+}
+
+
+.tab.active::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pi.pi-bars {
+  margin: 6px 0!important;
 }
 
 
@@ -1344,7 +1508,6 @@ h3.weiss {
     justify-content: center;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
-    margin-right:300px
   }
 
   .tab {
@@ -1361,9 +1524,11 @@ h3.weiss {
     text-align: center;
   }
 
-  .tab:hover {
-    color: #007bff;
+  .tab::after {
+    font-size: 10px;
+    padding: 4px 8px;
   }
+}
 
   button.tab {
     display: flex;
@@ -1372,7 +1537,6 @@ h3.weiss {
   }
 
   button.tab .pi {
-    margin-bottom: 5px;
     margin-bottom: 5px;
   }
 
@@ -1385,12 +1549,18 @@ h3.weiss {
     flex: 1;
   }
 
-}
-
 /*Header*/
 
 .header{
   display: flex;
+  margin-bottom: 2rem;
   justify-content: space-between;
 }
 
+/*Datenschutz*/
+
+.contact-info {
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+  margin-bottom: 7rem;
+}

@@ -1,4 +1,7 @@
 import {Component, HostListener, OnInit} from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import {AuthService} from "./services/auth.service";
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -7,14 +10,29 @@ import {Component, HostListener, OnInit} from '@angular/core';
 export class AppComponent implements OnInit{
   title = 'fullStack_rezepteApp';
   public isMobile: boolean = false;
+  isAuthenticated: boolean = false;
+  isLoading: boolean = true;
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {
     this.checkScreenSize();
+    const isFirstLaunch = localStorage.getItem('isFirstLaunch');
+    if (!isFirstLaunch) {
+      console.log('Erster Start');
+      localStorage.setItem('isFirstLaunch', 'false');
+    }
   }
 
   ngOnInit() {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      this.authService.isAuthenticated$.subscribe(status => {
+      this.isAuthenticated = status;
+      console.log('Auth-Status:', status);
+      });
+
     this.checkScreenSize();
   }
+
 
   /*@HostListener für Reaktion auf native Ereignisse wie Klicks etc. und eben Größenänderungen des Fensters.*/
   @HostListener('window:resize', ['$event'])
