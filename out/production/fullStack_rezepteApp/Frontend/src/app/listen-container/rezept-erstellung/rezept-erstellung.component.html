@@ -20,15 +20,14 @@
           <div *ngIf="!isFieldValid('onlineAdresse')" class="error-message"></div>
 
         </div>
-          <div class="flex flex-row">
-             <div class="erstellung-kategorie">Foto</div>
-
-             <div class="optional">(optional)</div>
-          </div>
-          <div class="flex_bildoptionen">
-            <app-foto-upload class="foto-upload" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
-            <app-camera class="camera-container" (photoCaptured)="onPhotoCaptured($event)" ></app-camera>
-          </div>
+        <div class="flex flex-row">
+           <div class="erstellung-kategorie">Foto</div>
+           <div class="optional">(optional)</div>
+        </div>
+        <div class="flex_bildoptionen">
+          <app-foto-upload (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <app-camera  (photoCaptured)="onPhotoCaptured($event)" ></app-camera>
+        </div>
         <div>
 
 

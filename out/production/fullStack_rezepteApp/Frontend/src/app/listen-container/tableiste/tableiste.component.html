@@ -1,6 +1,6 @@
 <div class="tab-bar" >
 
-  <button class="tab"
+  <button class="tab p-0 pl-1"
           data-tooltip="Demnächst verfügbar"
           (click)="toggleTooltip($event)">
     <i class="pi pi-android"></i>
@@ -16,12 +16,12 @@
     <span>DishList</span>
   </div>
 
-  <button class="tab"  (click)="navigateDatenschutz($event)">
+  <button class="tab p-0"  (click)="navigateDatenschutz($event)">
     <i class="pi pi-cog"></i>
     <span>Konto</span>
   </button>
 
-  <button class="tab logout-button" (click)="logoutUser($event)">
+  <button class="tab logout-button p-0" (click)="logoutUser($event)">
     <i class="pi pi-sign-out"></i>
     <span>Logout</span>
   </button>

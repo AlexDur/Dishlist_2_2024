@@ -1,9 +1,10 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ContextMenuModule} from "primeng/contextmenu";
+
 import {ListenContainerComponent} from "./listen-container/listen-container.component";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
@@ -19,7 +20,7 @@ import {RegistrierungComponent} from "./intro/registrierung/registrierung.compon
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
-import { CommonModule } from '@angular/common';
+
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { CommonModule } from '@angular/common';
     RegistrierungComponent,
     VerifikationComponent,
     TableisteComponent,
-    DatenschutzComponent
+    DatenschutzComponent,
+
 
    ],
 
@@ -50,11 +52,12 @@ import { CommonModule } from '@angular/common';
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
-    CommonModule
+
+
   ],
   providers: [],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  exports: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

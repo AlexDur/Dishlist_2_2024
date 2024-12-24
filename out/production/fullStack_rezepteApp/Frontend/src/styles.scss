@@ -37,14 +37,9 @@ a {
 
 * {font-family: "Calibri","proxima nova light", "Helvetica Neue", "Swiss 7","Verdana", sans-serif;}
 
-
-
-
 .router-outlet-wrapper{
   background: black;
 }
-
-
 
 .general-button {
   margin-top:40px !important;
@@ -331,10 +326,8 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
-  transition: margin-bottom 0.3s ease-out;
+
 }
-
-
 
 .zentriertes-formular-anmeldung{
   margin-top: 17rem;
@@ -364,9 +357,11 @@ a {
   margin-top: 15px;
   width: 100px;
   font-weight: bold;
+
   height: 40px;
   background-color: $secondary-color !important;
   color: $tertiary-color !important;
+  border-radius: 50px;
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -394,12 +389,11 @@ a {
   cursor: pointer;
   background-color: $secondary-color ;
   color: white;
-  border-radius: 50px 0px 0px 50px;
+  border-radius: 50px 0 0 50px ;
   text-align: center;
   font-weight: bold;
   transition: background-color 0.3s ease;
   outline: 2px solid $tertiary-color;
-
 }
 
 .upload-button-label input {
@@ -620,7 +614,6 @@ p-dialog .p-dialog-header{
   justify-content: flex-end;
 }
 
-
 /*CameraKomponente*/
 
 .camera-container{
@@ -636,7 +629,7 @@ p-dialog .p-dialog-header{
   cursor: pointer;
   background-color: $secondary-color ;
   color: white;
-justify-content: center;
+  justify-content: center;
   border-radius: 0 50px 50px 0;
   text-align: center;
   font-weight: bold;
@@ -657,8 +650,8 @@ justify-content: center;
 
 .flex_bildoptionen {
   display: flex;
-  justify-content: center; /* Zentriert Buttons horizontal */
-  align-items: center;    /* Zentriert Buttons vertikal */
+  justify-content: center;
+  align-items: center;
 }
 
 /* Modal-Hintergrund */
@@ -784,12 +777,6 @@ p-tag + p-tag {
   border-radius: 25px;
   animation: fadeIn 0.3s ease-in-out;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
-
-.tag-panel.expanded {
-  display: block;
-  max-height: 300px;
 }
 
 .tag {
@@ -1087,19 +1074,7 @@ h3.weiss {
   margin-bottom: 70px;
 }
 
-.fullscreen-modal {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: black;
 
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
 
 
 .p-card {
@@ -1143,7 +1118,7 @@ h3.weiss {
   line-height: 1.5em;
   max-height: 4.5em;
   word-break: break-word;
-  margin-bottom: 15px;
+  margin: 5px;
   text-decoration: underline;
   border: 1px solid transparent;
 }
@@ -1180,6 +1155,10 @@ h3.weiss {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+}
+
+.rezept-image-container img{
+  cursor: pointer;
 }
 
 .rezept-image-full {
@@ -1338,6 +1317,7 @@ h3.weiss {
     padding:.7rem;
     color:white;
     box-sizing: border-box;
+    margin-bottom: 15px;
   }
 
   .container-listeninhalt {
@@ -1346,6 +1326,7 @@ h3.weiss {
     width: 100%;
     justify-content: center;
     align-items: center;
+    margin-bottom: 50px;
   }
 
 
@@ -1357,6 +1338,8 @@ h3.weiss {
     display: block;
   }
 }
+
+
 
 
 .trennungsstrich {
@@ -1409,7 +1392,13 @@ h3.weiss {
 
 
 
+.rezept-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  cursor: default;
 
+}
 
 
 
@@ -1493,7 +1482,7 @@ h3.weiss {
 }
 
 .pi.pi-bars {
-  margin: 6px 0!important;
+  margin-bottom: 5px !important;
 }
 
 

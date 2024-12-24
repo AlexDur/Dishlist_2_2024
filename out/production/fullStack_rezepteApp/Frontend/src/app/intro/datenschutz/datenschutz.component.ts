@@ -54,6 +54,10 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
     this.isDialogVisible = false;
   }
 
+  navigateAnmeldung(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/anmeldung']);
+  }
 
 /*
   deleteUser() {
