@@ -98,18 +98,44 @@ export class ListeninhaltMobilComponent {
 
   openImageFullscreen(bildUrl: string): void {
     if (bildUrl) {
-      const newWindow = window.open();
-      if (newWindow) {
-        newWindow.document.write(`
-       <html>
-            <link rel="stylesheet" href="assets/fullscreen-image.scss">
-          <body>
-            <img src="${bildUrl}" alt="Bild in voller Größe" />
-          </body>
-        </html>
-      `);
-      }
+      const imageElement = document.createElement('img');
+      imageElement.src = bildUrl;
+      imageElement.alt = 'Bild in voller Größe';
+      imageElement.style.width = '100%';
+      imageElement.style.height = '100%';
+      imageElement.style.objectFit = 'contain';
+      imageElement.style.backgroundColor = 'black';
+
+      const fullscreenContainer = document.createElement('div');
+      fullscreenContainer.style.position = 'fixed';
+      fullscreenContainer.style.top = '0';
+      fullscreenContainer.style.left = '0';
+      fullscreenContainer.style.width = '100vw';
+      fullscreenContainer.style.height = '100vh';
+      fullscreenContainer.style.zIndex = '10000';
+      fullscreenContainer.style.display = 'flex';
+      fullscreenContainer.style.justifyContent = 'center';
+      fullscreenContainer.style.alignItems = 'center';
+      fullscreenContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+      fullscreenContainer.style.overflow = 'hidden';
+
+      fullscreenContainer.appendChild(imageElement);
+
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+      // Schließen beim Klick
+      fullscreenContainer.addEventListener('click', () => {
+        document.body.style.overflow = '';
+        document.body.removeChild(fullscreenContainer);
+      });
+
+      document.body.appendChild(fullscreenContainer);
     }
   }
+
 
 }
