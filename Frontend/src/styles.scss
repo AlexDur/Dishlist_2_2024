@@ -57,7 +57,11 @@ a {
   transition: background-color 0.3s ease;
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
+
+
 }
+
+
 
 
 
@@ -182,6 +186,43 @@ a {
 
 .general-button:active {
   background-color: #393838;
+}
+
+//Landing
+.general-button-transparent{
+  margin-top:30px !important;
+  width: 200px;
+  font-weight: bold;
+  height: 50px;
+  background-color: transparent;
+  color: $detail_2-color !important;
+  border: 1px transparent solid !important;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+}
+
+.general-button-landing-reg{
+  margin-top:40px !important;
+  width: 200px;
+  font-weight: bold;
+  height: 50px;
+  background-color: $detail_2-color !important;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
 }
 
 //Anmeldung/Registrierung

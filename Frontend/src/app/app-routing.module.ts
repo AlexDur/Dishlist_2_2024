@@ -8,6 +8,7 @@ import {LoginComponent} from "./intro/nutzer-anmeldung/nutzer-anmeldung.componen
 import {RegistrierungComponent} from "./intro/registrierung/registrierung.component";
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
+import {LandingComponent} from "./landing/landing.component";
 
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
+  { path: 'landing', component: LandingComponent },
   { path: 'anmeldung', component: LoginComponent},
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
   { path: '**', redirectTo: 'anmeldung' }

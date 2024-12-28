@@ -20,6 +20,7 @@ import {RegistrierungComponent} from "./intro/registrierung/registrierung.compon
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
+import {LandingComponent} from "./landing/landing.component";
 
 
 
@@ -34,6 +35,7 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
     VerifikationComponent,
     TableisteComponent,
     DatenschutzComponent,
+    LandingComponent
 
 
    ],
