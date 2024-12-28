@@ -197,14 +197,6 @@ export class RezeptService {
     this.currentRezeptSubject.next(rezeptToSave);
 
     const token = localStorage.getItem('jwt_token');
-  /*  console.log('Token in updateRezept:', token);*/
-
-/*    if (rezeptToSave.id) {
-      console.log('Die ID des Rezepts ist vorhanden:', rezeptToSave);
-    }else{
-      console.error('Die ID des Rezepts ist FEHLT:', rezeptToSave);
-    }*/
-
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.http.put(apiUrl, formData, {
@@ -260,40 +252,4 @@ export class RezeptService {
       this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
     }
   }
-
-  /*
-  uploadImage(rezeptId: string, file: File): Observable<HttpResponse<string>> {
-    const formData = new FormData();
-    formData.append('file', file); // Datei in FormData hinzufügen
-
-    return this.http.post<string>(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData, {
-      observe: 'response'
-    }).pipe(
-      tap(response => {
-        console.log('Upload Response:', response);
-      }),
-      catchError(error => {
-        console.error('Fehler beim Bild-Upload:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-*/
-
-  /*Asynchron als Observable, weil Bildupload dauern kann.*/
-  /*  uploadImage(rezeptId: number, file: File): Observable<any>{
-      const formData = new FormData();
-      formData.append('file', file); // Fügt die Datei mit dem Schlüssel 'file' hinzu
-
-      /!*    const headers = new HttpHeaders(); // Erstellen eines Header-Objekts, wenn nötig*!/
-
-      // POST an Server, um die Datei hochzuladen
-      return this.http.post(`${this.backendUrl}/api/rezepte/${rezeptId}/upload`, formData).pipe(
-        tap(response => console.log('Upload erfolgreich:', response)),
-        catchError(error => {
-          console.error('Fehler beim Hochladen des Bildes', error);
-          return throwError(() => new Error('Fehler beim Hochladen des Bildes'));
-        })
-      );
-    }*/
 }

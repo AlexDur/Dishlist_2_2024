@@ -37,7 +37,6 @@ export class RezeptErstellungComponent implements OnInit {
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
   isUpdateMode: boolean = false;
-  rezeptToSave?: Rezept;
 
   categories = [
     { name: 'Gänge', selected: false },
@@ -154,12 +153,6 @@ export class RezeptErstellungComponent implements OnInit {
     this.newRecipe.image = image;
     console.log('Hochgeladenes Bild:', this.newRecipe.image);
   }
-
-  onPhotoCaptured(event: any) {
-    console.log('Foto wurde aufgenommen:', event);
-    // Weitere Logik hier
-  }
-
 
   //Observable für die Anfragen im return
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
