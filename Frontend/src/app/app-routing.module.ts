@@ -18,9 +18,7 @@ const routes: Routes = [
   { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-  { path: 'anmeldung', component: LoginComponent, children: [
-      { path: 'datenschutzerklaerung', component: DatenschutzComponent }
-    ]},
+  { path: 'anmeldung', component: LoginComponent},
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
   { path: '**', redirectTo: 'anmeldung' }
 ];

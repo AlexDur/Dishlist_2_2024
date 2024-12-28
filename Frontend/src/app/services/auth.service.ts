@@ -62,6 +62,7 @@ export class AuthService {
       localStorage.removeItem('jwt_token');
       localStorage.removeItem('isAuthenticated');
 
+
       return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${authToken}` }
       }).pipe(
