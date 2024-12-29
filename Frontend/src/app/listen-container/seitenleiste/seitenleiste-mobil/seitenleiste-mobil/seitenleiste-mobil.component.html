@@ -1,12 +1,27 @@
-<div class="seitenleiste">
+<div>
 
-  <!-- Filter-Button -->
+
   <div>
     <div class="header">
       <div class="seiten-ueberschrift">Dishes</div>
-        <div class="filter-button" (click)="toggleDropdown($event)"  >
-          <img src="assets/filter.webp" alt="Filter" class="filter-icon">
+
+      <div class="search-container">
+        <div class="search-icon" (click)="toggleSearch()">
+          <i class="pi pi-search"></i>
         </div>
+        <input
+          *ngIf="isSearchVisible"
+          type="text"
+
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="rounded-search-input"
+        />
+      </div>
+
+      <div (click)="toggleDropdown($event)"  >
+          <img src="assets/filter.webp" alt="Filter" class="filter-icon">
+      </div>
     </div>
     </div>
     <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="false" [styleClass]="'fullscreen-overlay'" (click)="closeDropdown($event)">

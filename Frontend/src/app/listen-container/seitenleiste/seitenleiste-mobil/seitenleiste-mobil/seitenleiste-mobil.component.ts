@@ -21,6 +21,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   tags: Tag[] = [...DEFAULT_TAGS];
   isDropdownOpen: boolean = false;
+  searchText: string = '';
+  isSearchVisible: boolean = false;
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService) {
@@ -119,6 +121,15 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
   }
 
+  onSearch(): void {
+    console.log('Sucheingabe:', this.searchText);
+    // Hier kann Logik zum Filtern von Daten oder zum Senden einer Anfrage hinzugefügt werden
+  }
+
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+  }
+
   filterRezepte(): void {
     // Wenn keine Tags ausgewählt sind, alle Rezepte zurückgeben
     if (this.selectedTags.length === 0) {
@@ -126,10 +137,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Beginne mit den originalen Rezepten als Ausgangspunkt
     let gefilterteRezepte = [...this.originalRezepte];
 
-    // Filtere basierend auf jedem ausgewählten Tag
     this.selectedTags.forEach(selectedTag => {
       gefilterteRezepte = gefilterteRezepte.filter(rezept =>
         rezept.tags?.some(tag => tag.label === selectedTag)

@@ -43,7 +43,7 @@ a {
 
 .general-button {
   margin-top:40px !important;
-  width: 200px;
+  width: 190px;
   font-weight: bold;
   height: 50px;
   background-color: $detail_2-color !important;
@@ -191,7 +191,7 @@ a {
 //Landing
 .general-button-transparent{
   margin-top:30px !important;
-  width: 200px;
+  width: 190px;
   font-weight: bold;
   height: 50px;
   background-color: transparent;
@@ -209,7 +209,7 @@ a {
 
 .general-button-landing-reg{
   margin-top:40px !important;
-  width: 200px;
+  width: 190px;
   font-weight: bold;
   height: 50px;
   background-color: $detail_2-color !important;
@@ -731,6 +731,53 @@ video {
 
 /*Seitenleiste*/
 
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  max-width: 70%;
+  flex-shrink: 0;
+}
+
+.search-icon {
+  cursor: pointer;
+  color: black;
+  margin-right: 20px;
+}
+
+.search-icon i {
+  cursor: pointer;
+  margin-top: 5px;
+  font-size: 30px;
+}
+
+.rounded-search-input {
+  cursor: pointer;
+  width: 0;
+  max-width: 400px;
+  padding: 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+  position: absolute;
+  opacity: 0;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  flex-grow: 1;
+  z-index: 100;
+}
+
+.rounded-search-input.active {
+  width: 200px;
+  opacity: 1;
+}
+
+.rounded-search-input:focus {
+  border-color: $detail_color;
+  box-shadow: 0 0 5px rgb(230, 87, 39);
+}
+
 .weiss{
   color: white;
   text-align: center;
@@ -740,9 +787,7 @@ video {
 
 .dropdown-close-button {
   display: none;
-
 }
-
 
 .dropdown-close-button:hover {
   background-color: dark$detail_2-color;
@@ -954,11 +999,13 @@ h3.weiss {
 .seiten-ueberschrift{
   font-weight: bold;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 2.5rem;
   color: $tertiary-color;
   font-family: "Cooper Black";
   align-items: center;
+  flex-grow: 1;
+  text-align: left;
 }
 
 .button-row{
@@ -980,12 +1027,6 @@ h3.weiss {
   }
 }
 
-/*!*Header*!
-
-.header{
-  display: flex;
-  justify-content: space-between;
-}*/
 
 .p-overlaypanel {
   position: absolute ;
@@ -1582,8 +1623,9 @@ h3.weiss {
 
 .header{
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   justify-content: space-between;
+  align-items: center;
 }
 
 /*Datenschutz*/

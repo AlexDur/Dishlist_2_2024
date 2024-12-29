@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'landing', component: LandingComponent },
   { path: 'anmeldung', component: LoginComponent},
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
-  { path: '**', redirectTo: 'anmeldung' }
+  { path: '**', redirectTo: 'landing' }
 ];
 
 
