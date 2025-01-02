@@ -16,6 +16,7 @@ export class ListenContainerComponent implements OnInit{
   rezepteVerfuegbar = false
   gefilterteRezepte: Rezept[] = [];
   bildUrls: { [key: number]: string } = {};
+  searchText: string = '';
 
   constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService) {}
 
@@ -43,9 +44,23 @@ export class ListenContainerComponent implements OnInit{
     });
   }
 
+  onSearch(): void {
+    let filteredRecipes = this.gefilterteRezepte;
+
+    // Wenn es einen Suchtext gibt, filtere die Rezepte nach dem Namen
+    if (this.searchText) {
+      filteredRecipes = filteredRecipes.filter(rezept =>
+        rezept.name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+
+    this.gefilterteRezepte = filteredRecipes;  // Gefilterte Rezepte aktualisieren
+  }
+
+  // Diese Methode wird von der Seitenleiste aufgerufen, wenn die Rezepte gefiltert wurden
   onRezepteFiltered(rezepte: Rezept[]): void {
-    console.log('Geladene Rezepte im Kindkomponente:', rezepte);
-    this.gefilterteRezepte = rezepte;
+    this.gefilterteRezepte = rezepte; // Filter anwenden
+    this.onSearch();  // Stelle sicher, dass auch die Suche auf die gefilterte Liste angewendet wird
   }
 
 }

@@ -1,21 +1,13 @@
 <div>
-
-
   <div>
     <div class="header">
       <div class="seiten-ueberschrift">Dishes</div>
-
-      <div class="search-container">
-        <div class="search-icon" (click)="toggleSearch()">
-          <i class="pi pi-search"></i>
-        </div>
+      <div class="such-container">
         <input
-          *ngIf="isSearchVisible"
           type="text"
-
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          class="rounded-search-input"
+          class="suchfeld"
         />
       </div>
 

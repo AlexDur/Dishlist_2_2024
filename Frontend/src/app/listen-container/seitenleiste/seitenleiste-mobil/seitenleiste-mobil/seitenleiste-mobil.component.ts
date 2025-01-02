@@ -1,4 +1,4 @@
-import { Component, HostListener, EventEmitter, Input, ViewChild, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, HostListener, EventEmitter, Input, ViewChild, OnInit, Output, OnDestroy, ChangeDetectorRef  } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
@@ -25,7 +25,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   isSearchVisible: boolean = false;
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService) {
+  constructor(private rezepteService: RezeptService, private cdr: ChangeDetectorRef) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts();
     });
@@ -123,11 +123,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
 
   onSearch(): void {
     console.log('Sucheingabe:', this.searchText);
-    // Hier kann Logik zum Filtern von Daten oder zum Senden einer Anfrage hinzugefügt werden
+    let filteredRecipes = this.rezepte.filter(rezept =>
+      rezept.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+    this.gefilterteRezepte.emit(filteredRecipes); // Gibt die gefilterten Rezepte an das Elternteil weiter
   }
 
   toggleSearch() {
+    console.log('toggleSearch aufgerufen,searchVisible', this.isSearchVisible)
     this.isSearchVisible = !this.isSearchVisible;
+    this.cdr.detectChanges();
+    console.log('Nach Toggle, isSearchVisible:', this.isSearchVisible);
   }
 
   filterRezepte(): void {

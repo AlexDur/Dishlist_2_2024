@@ -732,52 +732,48 @@ video {
 
 /*Seitenleiste*/
 
-.search-container {
+.such-container {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  max-width: 70%;
   flex-shrink: 0;
 }
 
+.suchfeld {
+  cursor: pointer;
+  margin-right: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+  width: 100px;
+  padding: 7.5px;
+}
+
+.suchfeld.active {
+  width: 100px;
+  opacity: 1;
+}
+
+.suchfeld:focus {
+  border-color: $detail_color;
+  box-shadow: 0 0 5px rgb(230, 87, 39);
+}
+
+/*
 .search-icon {
   cursor: pointer;
   color: black;
   margin-right: 20px;
+  z-index:100;
 }
 
 .search-icon i {
   cursor: pointer;
   margin-top: 5px;
   font-size: 28px;
-}
-
-.rounded-search-input {
-  cursor: pointer;
-  width: 0;
-  max-width: 400px;
-  padding: 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-  font-size: 16px;
-  position: absolute;
-  opacity: 0;
-  transition: width 0.3s ease, opacity 0.3s ease;
-  flex-grow: 1;
-  z-index: 100;
-}
-
-.rounded-search-input.active {
-  width: 200px;
-  opacity: 1;
-}
-
-.rounded-search-input:focus {
-  border-color: $detail_color;
-  box-shadow: 0 0 5px rgb(230, 87, 39);
-}
+}*/
 
 .weiss{
   color: white;
