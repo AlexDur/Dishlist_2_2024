@@ -9,7 +9,7 @@ $color-start: #f6a257;
 $color-end: #b34f09;
 
 $primary-color: #b61919;
-$secondary-color: #d8620f;
+$secondary-color: #f87c25;
 $tertiary-color: #e6e5e5;
 
 $detail-color: #000000; ;
@@ -740,26 +740,38 @@ video {
   flex-shrink: 0;
 }
 
+$placeholder-color: $secondary-color;
+
 .suchfeld {
   cursor: pointer;
   margin-right: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid $secondary-color;
   border-radius: 20px;
   outline: none;
+  color: $secondary-color;
   font-size: 16px;
   width: 100px;
   padding: 7.5px;
+
+  &::placeholder {
+    color: $placeholder-color;
+    transition: color 0.3s ease; // Optional: Animation des Übergangs
+  }
+
+  &:focus {
+    border-color: $detail_color;
+    box-shadow: 0 0 5px rgb(230, 87, 39);
+
+    &::placeholder {
+      color: transparent; // Entfernen des Platzhalters beim Fokussieren
+    }
+  }
+
+  &.active {
+    opacity: 1;
+  }
 }
 
-.suchfeld.active {
-  width: 100px;
-  opacity: 1;
-}
-
-.suchfeld:focus {
-  border-color: $detail_color;
-  box-shadow: 0 0 5px rgb(230, 87, 39);
-}
 
 /*
 .search-icon {
@@ -1013,7 +1025,7 @@ h3.weiss {
 
 
 .filter-icon {
-  margin-top: .5rem;
+  margin-top: .3rem;
   width: 30px;
   height: 30px;
   object-fit: contain;
