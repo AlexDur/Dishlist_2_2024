@@ -121,20 +121,25 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
   }
 
-  onSearch(): void {
+  onSearchTextChange(): void {
     console.log('Sucheingabe:', this.searchText);
+
+    // Filtere die Rezepte basierend auf dem Suchtext
     let filteredRecipes = this.rezepte.filter(rezept =>
       rezept.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
-    this.gefilterteRezepte.emit(filteredRecipes); // Gibt die gefilterten Rezepte an das Elternteil weiter
+
+    // Gib die gefilterten Rezepte zurück
+    this.gefilterteRezepte.emit(filteredRecipes);
   }
 
-  toggleSearch() {
+
+/*  toggleSearch() {
     console.log('toggleSearch aufgerufen,searchVisible', this.isSearchVisible)
     this.isSearchVisible = !this.isSearchVisible;
     this.cdr.detectChanges();
     console.log('Nach Toggle, isSearchVisible:', this.isSearchVisible);
-  }
+  }*/
 
   filterRezepte(): void {
     // Wenn keine Tags ausgewählt sind, alle Rezepte zurückgeben

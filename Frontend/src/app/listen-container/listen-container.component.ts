@@ -44,23 +44,20 @@ export class ListenContainerComponent implements OnInit{
     });
   }
 
-  onSearch(): void {
-    let filteredRecipes = this.gefilterteRezepte;
-
-    // Wenn es einen Suchtext gibt, filtere die Rezepte nach dem Namen
-    if (this.searchText) {
-      filteredRecipes = filteredRecipes.filter(rezept =>
+  applySearchFilter(): void {
+    if (this.searchText && Array.isArray(this.gefilterteRezepte)) {
+      // Filtere die bereits gefilterten Rezepte weiter nach dem Suchtext
+      this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept =>
         rezept.name.toLowerCase().includes(this.searchText.toLowerCase())
       );
     }
-
-    this.gefilterteRezepte = filteredRecipes;  // Gefilterte Rezepte aktualisieren
   }
+
 
   // Diese Methode wird von der Seitenleiste aufgerufen, wenn die Rezepte gefiltert wurden
   onRezepteFiltered(rezepte: Rezept[]): void {
-    this.gefilterteRezepte = rezepte; // Filter anwenden
-    this.onSearch();  // Stelle sicher, dass auch die Suche auf die gefilterte Liste angewendet wird
+    this.gefilterteRezepte = rezepte;
+    this.applySearchFilter();
   }
 
 }

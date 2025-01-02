@@ -6,7 +6,8 @@
         <input
           type="text"
           [(ngModel)]="searchText"
-          (input)="onSearch()"
+          (input)="onSearchTextChange()"
+          placeholder="Suche"
           class="suchfeld"
         />
       </div>
