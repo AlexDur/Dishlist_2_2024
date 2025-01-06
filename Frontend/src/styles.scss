@@ -740,22 +740,23 @@ video {
   flex-shrink: 0;
 }
 
-$placeholder-color: $secondary-color;
+$placeholder-color: whitesmoke;
 
 .suchfeld {
   cursor: pointer;
   margin-right: 1rem;
   border: 1px solid $secondary-color;
+  background-color: $secondary-color;
   border-radius: 20px;
   outline: none;
-  color: $secondary-color;
+  color: whitesmoke;
   font-size: 16px;
   width: 100px;
   padding: 7.5px;
 
   &::placeholder {
     color: $placeholder-color;
-    transition: color 0.3s ease; // Optional: Animation des Übergangs
+    transition: color 0.3s ease;
   }
 
   &:focus {
@@ -763,7 +764,7 @@ $placeholder-color: $secondary-color;
     box-shadow: 0 0 5px rgb(230, 87, 39);
 
     &::placeholder {
-      color: transparent; // Entfernen des Platzhalters beim Fokussieren
+      color: transparent;
     }
   }
 
@@ -1023,11 +1024,22 @@ h3.weiss {
   width: 100%;
 }
 
+.filter-button{
+  background-color:transparent;
+  border: none;
+  padding: 0;
+}
+
+.pi pi-sliders-h{
+  width:100%;
+  height:auto;
+}
 
 .filter-icon {
-  margin-top: .3rem;
-  width: 30px;
-  height: 30px;
+  font-size: 35px;
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
   object-fit: contain;
   cursor: pointer;
 
@@ -1037,12 +1049,7 @@ h3.weiss {
 }
 
 
-.p-overlaypanel {
-  position: absolute ;
-  top: 0 ;
-  left: 0 !important;
-  transform: none !important;
-}
+
 
 
 .ki-button {
@@ -1080,81 +1087,7 @@ h3.weiss {
   display: block;
 }
 
-.fullscreen-overlay {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 
-.dropdown-content{
-  display: flex;
-  justify-content: start;
-}
-
-.dropdown-content-title{
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.p-overlaypanel .p-overlaypanel-content{
-  height: 100vh;
-}
-
-.checkbox-label-container{
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.filter-grid {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 100%;
-  gap: 15px;
-}
-
-.filter-column {
-  width: 100%;
-  text-align: left;
-
-  padding: 15px;
-}
-
-.filter-column h3 {
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.filter-column .p-checkbox .p-checkbox-box{
-  box-sizing: border-box;
-  width: 30px;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.label-dropdown{
-  font-size: 22px;
-  padding-left: 8px;
-}
-
-.p-checkbox-box.p-highlight .p-checkbox-icon {
-  color: white !important;
-  background-color: $detail_2-color !important;
-  border-color: $detail_2-color !important;
-}
-
-.p-checkbox .p-checkbox-box.p-highlight{
-  border-color: $detail_2-color;
-  background: $detail_2-color;
-  box-shadow: $detail_2-color;
-}
 
 .container-listeninhalt {
   display: grid;
@@ -1164,8 +1097,6 @@ h3.weiss {
   width: 100%;
   margin-bottom: 70px;
 }
-
-
 
 
 .p-card {
@@ -1260,6 +1191,7 @@ h3.weiss {
   object-fit: contain;
 }
 
+/*
 .seitenleiste .p-overlaypanel {
   position: fixed !important;
   top: 0 !important;
@@ -1272,6 +1204,7 @@ h3.weiss {
   align-items: center;
   overflow: auto;
 }
+*/
 
 .seitenleiste {
   position: relative;
@@ -1285,7 +1218,182 @@ h3.weiss {
 }
 
 
+/*Filtermenue-Overlay*/
+
+.fullscreen-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Overlay, das den gesamten Bildschirm abdeckt */
+.custom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Inhalt des Overlays */
+.overlay-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 300px;
+  position: relative;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Schließen-Button im Overlay */
+.overlay-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin-bottom: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Dropdown-Inhalte */
+.dropdown-content {
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.filter-column {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.dropdown-content-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color:black;
+}
+
+.checkbox-label-container {
+  margin-bottom: 10px;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-button .filter-icon {
+  color: white;
+  transition: color 0.3s ease;
+  background-color: transparent;
+}
+
+.filter-button.active .filter-icon {
+  color: black;
+  background-color: transparent;
+}
+
+.filter-button:hover .filter-icon {
+  color: black;
+  background-color: transparent;
+}
+
+.checkbox-label-container{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.filter-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  gap: 15px;
+}
+
+.filter-column {
+  width: 100%;
+  text-align: left;
+  padding: 15px;
+}
+
+.filter-column h3 {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.filter-column .p-checkbox .p-checkbox-box{
+  box-sizing: border-box;
+  width: 30px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label-dropdown{
+  font-size: 20px;
+  padding-left: 8px;
+}
+
+.p-checkbox-box.p-highlight .p-checkbox-icon {
+  color: white !important;
+  background-color: $detail_2-color !important;
+  border-color: $detail_2-color !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight{
+  border-color: $detail_2-color;
+  background: $detail_2-color;
+  box-shadow: $detail_2-color;
+}
+
+.dropdown-content,
+.filter-column,
+.label-dropdown {
+  z-index: 1050;
+}
+
+
+
 @media screen and (max-width: 750px) {
+
+  .custom-overlay {
+    z-index: 9999;
+    pointer-events: auto;
+  }
+
+  .overlay-content {
+    height: 100vh;
+    width: 100vw;
+    pointer-events: auto;
+  }
+
+.label-dropdown{
+  color:black;
+}
+
 
   .button-row {
     gap:10rem;
@@ -1322,83 +1430,6 @@ h3.weiss {
     text-align: left;
   }
 
-  .dropdown-close-button {
-    position: fixed;
-    bottom: 50px;
-    right: 600px;
-    padding: 10px 20px;
-    border-radius: 50px;
-    background-color: $detail_2-color;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    outline: none;
-    transition: background-color 0.3s;
-  }
-
-  .filter-grid {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    gap: 10px;
-  }
-
-  .filter-column {
-    width: 100%;
-    text-align: left;
-    padding: 15px;
-    border-radius: 10px;
-  }
-
-  .filter-column h3 {
-    margin-bottom: 10px;
-    text-align: left;
-  }
-
-  .filter-column .p-checkbox .p-checkbox-box{
-    box-sizing: border-box;
-    width: 30px;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .fullscreen-overlay {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #efefef;
-    z-index: 1002 !important;
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .tooltip-text {
-    display: none;
-    position: absolute;
-    top: -33px;
-    left: 20%;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  .fullscreen-overlay.open {
-    transform: translateX(0);
-  }
-
-
-  .fullscreen-overlay.close {
-    transform: translateX(100%);
-  }
 
   .listen-container {
     display: flex;
@@ -1429,9 +1460,6 @@ h3.weiss {
     display: block;
   }
 }
-
-
-
 
 .trennungsstrich {
   border-bottom: 1px solid #ccc;

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import { Router } from "@angular/router";
@@ -18,7 +18,7 @@ export class ListenContainerComponent implements OnInit{
   bildUrls: { [key: number]: string } = {};
   searchText: string = '';
 
-  constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService) {}
+  constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const abgerufeneBilder = new Set();
@@ -28,6 +28,7 @@ export class ListenContainerComponent implements OnInit{
       this.rezepteGeladen.emit(this.rezepte);
       this.gefilterteRezepte = [...this.rezepte];
       this.rezepteVerfuegbar = true;
+      this.cdr.detectChanges();
 
       this.gefilterteRezepte.forEach(rezept => {
         if (rezept && rezept.bildUrl){

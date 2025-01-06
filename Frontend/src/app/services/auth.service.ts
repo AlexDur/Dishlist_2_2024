@@ -68,7 +68,7 @@ export class AuthService {
       }).pipe(
         catchError((error: HttpErrorResponse) => {
           console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
-          return of(null); // Rückgabe von null, falls ein Fehler auftritt
+          return of(null);
         })
       );
     } else {
