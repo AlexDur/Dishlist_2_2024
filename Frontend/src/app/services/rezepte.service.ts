@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, finalize, Observable, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, finalize, Observable, tap, throwError, map} from 'rxjs';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
@@ -31,6 +31,11 @@ export class RezeptService {
   //Observable currentRezept$ wird durch currentRezeptSubject.asObservable() erstellt.
   //Damit können andere Teile der Anwendung, die an Änderungen des aktuellen Rezepts interessiert sind, sich darauf abonnieren.
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
+
+  private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+  public spoonacularRezepte$: Observable<Rezept[]> = this.spoonacularRezepteSubject.asObservable();
+
+
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -90,16 +95,6 @@ export class RezeptService {
     // Setzt das aktuelle Rezept auf `null` zurück
     this.currentRezeptSubject.next(null);
   }
-
-  //TODO: Funktion nur relevant, wenn Bilder lokal gespeichert werden sollen
-  getBild(bildname: string): Observable<HttpResponse<Blob>> {
-
-    return this.http.get<Blob>(`${this.backendUrl}/api/rezepte/bilder/${bildname}`, {
-      observe: 'response',
-      responseType: 'blob' as 'json' // Casten auf 'json' erlaubt die Verwendung von 'blob' als responseType
-    });
-  }
-
 
 
 // Validierungsfunktion für das Rezept
@@ -252,4 +247,41 @@ export class RezeptService {
       this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
     }
   }
+
+// RezeptService
+  fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
+    const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
+
+    return this.http.get<any>(apiUrl).pipe(
+      map(response => {
+        if (response && response.recipes) {
+          // Mapping auslagern
+          return this.mapSpoonacularRezepte(response);
+        } else {
+          console.error('Ungültige Antwort von Spoonacular');
+          return []; // Leere Liste zurückgeben, falls die Antwort ungültig ist
+        }
+      }),
+      tap(recipes => {
+        // Rezepte im Subject speichern (falls benötigt)
+        this.spoonacularRezepteSubject.next(recipes);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Laden der zufälligen Rezepte von Spoonacular', error);
+        return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
+      })
+    );
+  }
+
+
+// Helper-Funktion zum Mappen der API-Daten
+  private mapSpoonacularRezepte(response: any): Rezept[] {
+    return response.recipes.map((rezept: any) => ({
+      name: rezept.title, // Mapping von title auf name
+      image: rezept.image || '', // Optional: Fallback für Image
+      bildUrl: rezept.sourceUrl || '' // Optional: Fallback für sourceUrl
+    }));
+  }
+
+
 }

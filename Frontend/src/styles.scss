@@ -1227,7 +1227,7 @@ h3.weiss {
   align-items: center;
 }
 
-/* Overlay, das den gesamten Bildschirm abdeckt */
+
 .custom-overlay {
   position: fixed;
   top: 0;
@@ -1241,7 +1241,6 @@ h3.weiss {
   z-index: 1000;
 }
 
-/* Inhalt des Overlays */
 .overlay-content {
   background-color: white;
   padding: 20px;
@@ -1253,7 +1252,6 @@ h3.weiss {
   max-height: 90vh;
 }
 
-/* Schließen-Button im Overlay */
 .overlay-close-button {
   position: absolute;
   top: 10px;
@@ -1265,7 +1263,6 @@ h3.weiss {
   cursor: pointer;
 }
 
-/* Dropdown-Inhalte */
 .dropdown-content {
   display: flex;
   justify-content: start;
@@ -1375,6 +1372,96 @@ h3.weiss {
   z-index: 1050;
 }
 
+/*Overlay Spoon*/
+
+.custom-overlay-spoon {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.overlay-content-spoon {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 300px;
+  position: relative;
+  overflow-y: auto;
+  min-height: 90vh;
+  height: 90vh;
+}
+
+.overlay-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin-bottom: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.recipe-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 200px;
+}
+
+.recipe-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+.recipe-details {
+  padding: 10px;
+  text-align: center;
+  color: black;
+}
+
+.recipe-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 8px 0;
+  color: black;
+}
+
+.recipe-description {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+/* Nachricht für keine Rezepte */
+.no-recipes-message {
+  text-align: center;
+  color: #fff;
+  font-size: 1.25rem;
+}
 
 
 @media screen and (max-width: 750px) {
