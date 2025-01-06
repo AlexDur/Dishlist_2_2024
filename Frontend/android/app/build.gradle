@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
   namespace "com.rezepte_app"
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  compileSdk rootProject.ext.compileSdkVersion
 
   // Fügen Sie den signingConfigs-Block hinzu
   signingConfigs {
@@ -18,9 +18,10 @@ android {
     applicationId "com.rezepte_app"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 102
+    versionCode 106
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    manifestPlaceholders = [excludeScreens: "large"]
     aaptOptions {
       ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
