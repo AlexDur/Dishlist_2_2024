@@ -12,75 +12,75 @@
         />
       </div>
 
-      <div (click)="toggleDropdown($event)"  >
-          <img src="assets/filter.webp" alt="Filter" class="filter-icon">
-      </div>
-    </div>
-    </div>
-    <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="false" [styleClass]="'fullscreen-overlay'" (click)="closeDropdown($event)">
-      <ng-template pTemplate>
-        <div class="dropdown-content">
-          <div class="filter-grid">
-            <!-- Spalte für Gänge -->
-            <div class="filter-column">
-              <div class="dropdown-content-title">Gänge</div>
-              <div *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
-                <div class="checkbox-label-container">
-                  <p-checkbox
-                    [(ngModel)]="art.selected"
-                    [binary]="true"
-                    (ngModelChange)="toggleTag(art);"
-                    inputId="type_{{ art.label }}">
-                  </p-checkbox>
-                  <label class="label-dropdown" for="type_{{ art.label }}">
-                    {{ art.label }} ({{ art.count }})
-                  </label>
+      <!-- Button zum Öffnen des Overlays -->
+      <button (click)="toggleOverlay($event)"   class="filter-button">
+        <i class="pi pi-sliders-h filter-icon"></i>
+      </button>
+
+      <!-- Overlay -->
+      <div *ngIf="isOverlayVisible" class="custom-overlay" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
+        <div class="overlay-content" (click)="stopPropagation($event)">
+          <!-- Schließen-Button -->
+          <button class="overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+
+          <!-- Filter-Inhalte -->
+          <div class="dropdown-content">
+            <div class="filter-grid">
+              <div class="filter-column">
+                <div class="dropdown-content-title">Gänge</div>
+                <div *ngFor="let art of getGerichtartenTags(); trackBy: trackById">
+                  <div class="checkbox-label-container">
+                    <p-checkbox
+                      [(ngModel)]="art.selected"
+                      [binary]="true"
+                      (ngModelChange)="toggleTag(art);"
+                      inputId="type_{{ art.label }}">
+                    </p-checkbox>
+                    <label class="label-dropdown" for="type_{{ art.label }}">
+                      {{ art.label }} ({{ art.count }})
+                    </label>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Spalte für Küche -->
-            <div class="filter-column">
-              <div class="dropdown-content-title">Küche</div>
-              <div *ngFor="let type of getKuechenTags(); let i = index">
-                <div class="checkbox-label-container">
-                  <p-checkbox
-                    [(ngModel)]="type.selected"
-                    [binary]="true"
-                    (ngModelChange)="toggleTag(type);"
-                    inputId="type_{{ i }}">
-                  </p-checkbox>
-                  <label class="label-dropdown" for="type_{{ i }}">
-                    {{ type.label }} ({{ type.count }})
-                  </label>
+              <div class="filter-column">
+                <div class="dropdown-content-title">Küche</div>
+                <div *ngFor="let type of getKuechenTags(); let i = index">
+                  <div class="checkbox-label-container">
+                    <p-checkbox
+                      [(ngModel)]="type.selected"
+                      [binary]="true"
+                      (ngModelChange)="toggleTag(type);"
+                      inputId="type_{{ i }}">
+                    </p-checkbox>
+                    <label class="label-dropdown" for="type_{{ i }}">
+                      {{ type.label }} ({{ type.count }})
+                    </label>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Spalte für Nährwert -->
-            <div class="filter-column">
-              <div class="dropdown-content-title">Nährwert</div>
-              <div *ngFor="let type of getNaehrwertTags(); let i = index">
-                <div class="checkbox-label-container">
-                  <p-checkbox
-                    [(ngModel)]="type.selected"
-                    [binary]="true"
-                    (ngModelChange)="toggleTag(type);"
-                    inputId="type_{{ i }}">
-                  </p-checkbox>
-                  <label class="label-dropdown" for="type_{{ i }}">
-                    {{ type.label }} ({{ type.count }})
-                  </label>
+              <div class="filter-column">
+                <div class="dropdown-content-title">Nährwert</div>
+                <div *ngFor="let type of getNaehrwertTags(); let i = index">
+                  <div class="checkbox-label-container">
+                    <p-checkbox
+                      [(ngModel)]="type.selected"
+                      [binary]="true"
+                      (ngModelChange)="toggleTag(type);"
+                      inputId="type_{{ i }}">
+                    </p-checkbox>
+                    <label class="label-dropdown" for="type_{{ i }}">
+                      {{ type.label }} ({{ type.count }})
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </ng-template>
-
-
-      <div class="flex justify-content-end">
-        <button class="dropdown-close-button" (click)="closeOverlay()">Schließen</button>
       </div>
-    </p-overlayPanel>
+
+  </div>
+  </div>
   </div>
