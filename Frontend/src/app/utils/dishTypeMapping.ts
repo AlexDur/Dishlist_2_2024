@@ -3,18 +3,19 @@ export const dishTypeMapping: { [key: string]: string } = {
   starter: 'Vorspeise',
   antipasti: 'Vorspeise',
   antipasto: 'Vorspeise',
+  snack: 'Vorspeise',
   'hor d\'oezvre': 'Vorspeise',
   soup: 'Haupt',
   lunch: 'Hauptgang',
+  Haupt: 'Hauptgang',
   'main course': 'Hauptgang',
   'main dish': 'Hauptgang',
   diner: 'Hauptgang',
-
   dessert: 'Nachtisch',
-  snack: 'Snack',
+  'Frühstück': 'Nachtisch',
 
   // Frühstück
-  breakfast: 'Frühstück',
-  morning: 'Frühstück',
+  breakfast: 'Nachtisch',
+  morning: 'Nachtisch',
 
 };

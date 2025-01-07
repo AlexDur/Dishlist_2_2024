@@ -9,7 +9,7 @@ $color-start: #f6a257;
 $color-end: #b34f09;
 
 $primary-color: #b61919;
-$secondary-color: #f87c25;
+$secondary-color: #e65727;
 $tertiary-color: #e6e5e5;
 
 $detail-color: #000000; ;
@@ -57,7 +57,6 @@ a {
   transition: background-color 0.3s ease;
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
-
 
 }
 
@@ -1389,20 +1388,22 @@ h3.weiss {
 }
 
 .overlay-content-spoon {
-  background-color: white;
+  background-color: whitesmoke;
   padding: 20px;
+  padding-top: 50px;
   border-radius: 8px;
-  width: 80%;
-  max-width: 300px;
+  width: 100%;
+  max-width: 320px;
   position: relative;
   overflow-y: auto;
-  min-height: 90vh;
+  min-height: 95vh;
   height: 90vh;
+  display: flex;
+  justify-content: center;
 }
 
 .overlay-close-button {
   position: absolute;
-  top: 10px;
   right: 10px;
   margin-bottom: 10px;
   background: none;
@@ -1410,7 +1411,6 @@ h3.weiss {
   font-size: 20px;
   cursor: pointer;
 }
-
 
 .recipe-list {
   display: flex;
@@ -1424,43 +1424,71 @@ h3.weiss {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 200px;
+  max-width: 250px;
+  border: 2px solid #e4e4e4;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.recipe-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+
+  overflow: hidden;
 }
 
 .recipe-image {
   width: 100%;
   height: auto;
   object-fit: cover;
-  border-bottom: 1px solid #ddd;
 }
 
-.recipe-details {
-  padding: 10px;
+.recipe-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Halbtransparenter Hintergrund */
+  color: white;
   text-align: center;
-  color: black;
-}
-
-.recipe-title {
   font-size: 1rem;
   font-weight: bold;
-  margin: 8px 0;
-  color: black;
+  padding: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+
 }
 
-.recipe-description {
-  font-size: 0.875rem;
-  color: #555;
-}
-
-/* Nachricht für keine Rezepte */
 .no-recipes-message {
   text-align: center;
   color: #fff;
   font-size: 1.25rem;
+}
+
+.gang-spoon{
+ font-weight: bold;
+  margin: 5px 0;
+  color: $detail-color;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #000;
+  padding: 20px;
 }
 
 

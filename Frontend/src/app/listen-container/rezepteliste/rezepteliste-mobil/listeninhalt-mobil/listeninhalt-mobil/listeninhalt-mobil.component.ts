@@ -75,7 +75,6 @@ export class ListeninhaltMobilComponent {
       return;
     }
 
-    // Entferne unnötige Leerzeichen
     url = url.trim();
 
     // Füge "http://" hinzu, wenn die URL mit "www." beginnt und kein "http://" oder "https://" hat
