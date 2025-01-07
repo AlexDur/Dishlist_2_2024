@@ -6,6 +6,9 @@ import {environment} from '../../environments/environment';
 import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
+import {TagType} from "../models/tagType";
+import {DEFAULT_TAGS} from "../models/default_tag";
+import {dishTypeMapping} from "../utils/dishTypeMapping";
 
 
 
@@ -252,10 +255,11 @@ export class RezeptService {
   fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
     const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
 
+
+
     return this.http.get<any>(apiUrl).pipe(
       map(response => {
         if (response && response.recipes) {
-          // Mapping auslagern
           return this.mapSpoonacularRezepte(response);
         } else {
           console.error('Ungültige Antwort von Spoonacular');
@@ -276,12 +280,47 @@ export class RezeptService {
 
 // Helper-Funktion zum Mappen der API-Daten
   private mapSpoonacularRezepte(response: any): Rezept[] {
-    return response.recipes.map((rezept: any) => ({
-      name: rezept.title, // Mapping von title auf name
-      image: rezept.image || '', // Optional: Fallback für Image
-      bildUrl: rezept.sourceUrl || '' // Optional: Fallback für sourceUrl
-    }));
+    // Beispiel für gültige Gänge
+    const gültigeGänge = DEFAULT_TAGS.filter(tag => tag.type === TagType.GÄNGE).map(tag => tag.label);
+
+    return response.recipes.map((rezept: any) => {
+      // Umwandlung der dishTypes in Tags
+      const tags = this.getMappedDishTypes(rezept.dishTypes);
+
+      return {
+        id: Math.random(), // ID generieren oder aus anderen Daten übernehmen
+        name: rezept.title,
+        image: rezept.image || '', // Optional: Fallback für Image
+        bildUrl: rezept.sourceUrl || '',
+        tags, // Tags füllen
+      };
+    });
   }
+
+// Helper-Funktion zur Gruppierung der dishTypes
+  getMappedDishTypes(dishTypes: string[] | undefined): any[] {
+    if (!dishTypes) return [];
+
+    const uniqueCategories = new Set<string>();
+
+    dishTypes.forEach((type) => {
+      const mappedCategory = dishTypeMapping[type.toLowerCase()];
+      if (mappedCategory) {
+        uniqueCategories.add(mappedCategory);
+      }
+    });
+
+    return Array.from(uniqueCategories).map((germanTag: string) => {
+      return {
+        id: Math.random(), // ID generieren oder aus anderen Daten übernehmen
+        type: TagType.GÄNGE, // TagType bleibt 'Gänge' für Mittagessen
+        label: germanTag, // Übersetzung oder Originalwert
+        selected: false, // Optional: Wenn du eine Auswahl benötigst
+        count: 1 // Optional: Hier eine Zählung setzen, falls erforderlich
+      };
+    });
+  }
+
 
 
 }

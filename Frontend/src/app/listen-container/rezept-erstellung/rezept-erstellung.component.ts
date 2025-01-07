@@ -15,6 +15,7 @@ import { catchError, Observable, tap, throwError } from "rxjs";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
 import {DEFAULT_TAGS} from "../../models/default_tag";
+import {TagType} from "../../models/tagType";
 
 
 @Component({
@@ -52,8 +53,6 @@ export class RezeptErstellungComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-
     // Abonnieren des Observables aus rezepteService für das aktuelle Rezept
     // Wenn e. Rezept exisitiert, dann wird es in newRecipe gespeichert und tags werden selectedTags zugewiesen
     this.rezepteService.currentRezept$.subscribe(rezept => {
@@ -61,7 +60,10 @@ export class RezeptErstellungComponent implements OnInit {
         // Flache Kopie von Rezept (es werden nur die Referenzen kopiert nicht die Inhalte) d.h. newRecipe ist unabhängig von rezept
         this.newRecipe = { ...rezept };
         // Tags gesondert abgerufen, für spätere Verarbeitung in Zähler-Darstellungen
-        this.selectedTags= rezept.tags || [];
+        this.selectedTags = (rezept.tags || []).map(tag => ({
+          ...tag,
+          type: this.mapToTagType(tag.type)
+        }));
       }
       // Wenn kein Rezept vorhanden ist, eine neue Instanz initialisieren
       else {
@@ -74,6 +76,13 @@ export class RezeptErstellungComponent implements OnInit {
       this.isUpdateMode = true;
     }
   })
+  }
+
+  private mapToTagType(type: string): TagType {
+    if (Object.values(TagType).includes(type as TagType)) {
+      return type as TagType; // Typen stimmen überein
+    }
+    throw new Error(`Ungültiger TagType: ${type}`); // Optionale Fehlerbehandlung
   }
 
   private showError(fieldName: keyof Rezept, show: boolean): void {

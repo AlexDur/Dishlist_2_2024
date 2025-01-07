@@ -15,12 +15,11 @@ export class TableisteComponent {
   @ViewChild('dropdownContent', { static: false }) dropdownContent!: ElementRef;
 
   activeTab: HTMLElement | null = null;
-  isOverlayVisible = false;
   private subscription: Subscription | undefined;
   rezepte: Rezept[] = [];
-  isLoading = false;
 
-  constructor(private rezeptService: RezeptService, private renderer: Renderer2, private router: Router, private authService: AuthService) {
+
+  constructor(private router: Router, private authService: AuthService) {
 
   }
 
@@ -56,55 +55,6 @@ export class TableisteComponent {
       }
     });
   }
-
-
-
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:touchstart', ['$event'])
-  closeOverlay(event: Event): void {
-    const content = document.querySelector('.overlay-content');
-    if (content && !content.contains(event.target as Node)) {
-      this.isOverlayVisible = false;
-      this.isLoading = false;
-    }
-  }
-
-  // Verhindert das Schließen des Overlays, wenn innerhalb des Overlays geklickt wird
-  stopPropagation(event: MouseEvent): void {
-    event.stopPropagation();
-  }
-
-  // Öffnet oder schließt das Overlay
-  toggleOverlay(event: Event) {
-    event.stopPropagation();
-    this.isOverlayVisible = !this.isOverlayVisible;
-
-    if (this.isOverlayVisible) {
-      this.loadRandomRecipes();
-    }
-  }
-
-  // Schließt das Overlay, wenn der Schließen-Button geklickt wird
-  closeOverlayButton(event: MouseEvent): void {
-    this.isOverlayVisible = false;
-    event.stopPropagation();  // Verhindert, dass das Ereignis auch das Overlay schließt
-  }
-
-  loadRandomRecipes(): void {
-    this.isLoading = true;
-
-    this.rezeptService.fetchRandomSpoonacularRezepte().subscribe({
-      next: (rezepte) => {
-        this.rezepte = rezepte; // Rezepte setzen
-        this.isLoading = false; // Ladeanzeige ausblenden
-      },
-      error: (error) => {
-        console.error('Fehler beim Abrufen der Rezepte:', error);
-        this.isLoading = false; // Fehlerfall behandeln
-      }
-    });
-  }
-
 
   protected readonly event = event;
 }
