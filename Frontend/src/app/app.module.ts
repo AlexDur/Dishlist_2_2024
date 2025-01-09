@@ -22,6 +22,7 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 import {LandingComponent} from "./landing/landing.component";
 import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/empfehlungen.component";
+import {CropperComponent} from "./listen-container/rezept-erstellung/foto-upload/cropper/cropper.component";
 
 
 
@@ -37,8 +38,7 @@ import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/e
     TableisteComponent,
     DatenschutzComponent,
     LandingComponent,
-    EmpfehlungenComponent
-
+    EmpfehlungenComponent,
 
    ],
 
@@ -60,8 +60,6 @@ import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/e
 
   ],
   providers: [],
-  exports: [
-  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

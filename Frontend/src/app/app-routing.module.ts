@@ -9,6 +9,7 @@ import {RegistrierungComponent} from "./intro/registrierung/registrierung.compon
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 import {LandingComponent} from "./landing/landing.component";
+import {CropperComponent} from "./listen-container/rezept-erstellung/foto-upload/cropper/cropper.component";
 
 
 const routes: Routes = [
@@ -20,7 +21,7 @@ const routes: Routes = [
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
   { path: 'landing', component: LandingComponent },
-  { path: 'anmeldung', component: LoginComponent},
+  { path: 'bildbearbeitung', component: CropperComponent},
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
   { path: '**', redirectTo: 'landing' }
 ];

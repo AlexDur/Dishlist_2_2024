@@ -255,8 +255,6 @@ export class RezeptService {
   fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
     const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
 
-
-
     return this.http.get<any>(apiUrl).pipe(
       map(response => {
         if (response && response.recipes) {
@@ -288,9 +286,9 @@ export class RezeptService {
       const tags = this.getMappedDishTypes(rezept.dishTypes);
 
       return {
-        id: Math.random(), // ID generieren oder aus anderen Daten übernehmen
+        id: Math.random(),
         name: rezept.title,
-        image: rezept.image || '', // Optional: Fallback für Image
+        image: rezept.image || '',
         bildUrl: rezept.sourceUrl || '',
         tags, // Tags füllen
       };

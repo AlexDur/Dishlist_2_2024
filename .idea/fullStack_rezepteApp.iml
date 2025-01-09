@@ -48,5 +48,6 @@
     </orderEntry>
     <orderEntry type="library" name="lombok" level="project" />
     <orderEntry type="library" name="lombok3" level="project" />
+    <orderEntry type="library" name="cropperjs" level="application" />
   </component>
 </module>

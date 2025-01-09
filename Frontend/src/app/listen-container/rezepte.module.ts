@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/*import {TagsComponent} from "./rezepteliste-desktop/tags/tags.component";*/
-/*import {ListeninhaltComponent} from "./rezepteliste/rezepteliste-desktop/listeninhalt/listeninhalt.component";*/
 import {TableModule} from "primeng/table";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
@@ -21,26 +19,25 @@ import {SharedModule} from "../shared/shared.module";
 import {FotoUploadComponent} from "./rezept-erstellung/foto-upload/foto-upload.component";
 import { FileUploadModule } from 'primeng/fileupload';
 import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
-import {
-  SeitenleisteMobilComponent
-} from "./seitenleiste/seitenleiste-mobil/seitenleiste-mobil/seitenleiste-mobil.component";
 import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
+import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.component";
 
 @NgModule({
   declarations: [
-  /*  ListeninhaltComponent,*/
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,
     FotoUploadComponent,
-    CameraComponent
+    CameraComponent,
+    CropperComponent
   ],
   exports: [
     ListeninhaltMobilComponent,
     RezeptHinzufuegenButtonComponent,
     RezeptErstellungComponent,
     FotoUploadComponent,
-    CameraComponent
+    CameraComponent,
+
   ],
     imports: [
     CommonModule,
@@ -55,7 +52,6 @@ import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
     ToggleButtonModule,
     SharedModule,
     FileUploadModule
-
 
     ]
 })
