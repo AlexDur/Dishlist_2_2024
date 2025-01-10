@@ -1,0 +1,12 @@
+
+<div class="image-cropper-container">
+  <h2>Bild zuschneiden</h2>
+  <div class="cropper">
+      <img #imageElement [src]="imageUrl" crossOrigin="anonymous" alt="Bild zur Bearbeitung" />
+  </div>
+  <div class="actions">
+    <button class="cropper-button button-transparent" (click)="close()">Abbrechen</button>
+    <button class="cropper-button button-filled" (click)="cropImage()">Zuschneiden</button>
+  </div>
+</div>
+
