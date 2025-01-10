@@ -452,40 +452,6 @@ a {
   font-weight: bold;
 }
 
-.cropper-wrapper-box {
-  max-height: 100vh;
-}
-
-.image-cropper-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 300px;
-  max-height: 100vh;
-  justify-content: center;
-}
-
-.cropper  {
-  margin-left: 20pxd;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
-.cropper img {
-  margin-left: 20pxd;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
-.actions{
-  z-index: 1000;
-  margin-top: 10px;
-}
 
 
 .p-field {
@@ -583,6 +549,254 @@ a {
   outline-offset: 2px;
   border-color: black !important;
 }
+
+
+// Cropper
+
+.image-cropper-container {
+  justify-content: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/*.rezept-container{
+  width: 150px;
+  height: 150px;
+}*/
+
+/*.p-card-content{
+  width: 150px;
+  height: 150px;
+}*/
+
+/*.rezept-image-container {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+}*/
+
+
+.cropper  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+}
+
+.cropper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.cropper-container {
+  padding: 0;
+  margin: 0;
+}
+
+.cropper-mask {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.cropper-mask img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.cropper-mask::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.cropper-mask::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: 2px solid white;
+  z-index: 3;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.cropper-container cropper-bg{
+ height: 500px;
+}
+
+.actions {
+  z-index: 1000;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.cropper-button {
+  width: 130px;
+  font-weight: bold;
+  height: 40px;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+
+}
+
+.button-filled {
+  background-color: $detail_2-color !important;
+  color: $tertiary-color !important;
+  border: 1px transparent solid !important;
+  font-size: 20px;
+}
+
+.button-transparent {
+  background-color: transparent;
+  color: $detail_2-color !important;
+  border: 1px transparent solid !important;
+  font-size: 20px;
+}
+
+
+.p-card {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  background-color: orange;
+}
+
+//Cropper mobile u. Listenansicht
+@media screen and (max-width: 750px) {
+
+
+  .image-cropper-container {
+
+    height: 85vh;
+
+  }
+
+  .container-listeninhalt {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(0, auto);
+    width: 90%;
+    gap:2px;
+    background-color: transparent;
+    margin: 0 auto;
+  }
+
+
+  .rezept-container {
+    width: 100%;
+    height: auto;
+    gap:0;
+  }
+
+  .p-card-content {
+    width: 150px;
+    height: 150px;
+    padding: 0;
+  }
+
+  .rezept-image-container {
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+  }
+
+  .rezept-image-container img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .p-card {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    background-color: orange;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+  }
+
+  .p-card-body{
+    width: 150px;
+    height: 150px;
+    padding: 0;
+  }
+
+  /*
+  .p-card p-component{
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+  }
+  */
+
+  .p-card-title {
+    font-size: .7rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    max-height: 4.5em;
+    word-break: break-word;
+    margin: 5px;
+    text-decoration: underline;
+    border: 1px solid transparent;
+  }
+
+  .p-card-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    padding-right: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+}
+
 
 // Dialog
 
@@ -806,21 +1020,6 @@ $placeholder-color: whitesmoke;
   }
 }
 
-
-/*
-.search-icon {
-  cursor: pointer;
-  color: black;
-  margin-right: 20px;
-  z-index:100;
-}
-
-.search-icon i {
-  cursor: pointer;
-  margin-top: 5px;
-  font-size: 28px;
-}*/
-
 .weiss{
   color: white;
   text-align: center;
@@ -847,13 +1046,6 @@ $placeholder-color: whitesmoke;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.p-card-body{
-  padding:0;
-}
-
-.p-card-content{
-  padding: 0;
-}
 
 .tag-container{
   display:flex;
@@ -970,11 +1162,11 @@ p-tag + p-tag {
 }
 
 .p-card-title {
+  font-size: 1rem;
   position: absolute;
   bottom: 5px;
   left: 5px;
   color: #f3f2f2;
-  font-size: 1rem;
   font-weight: bold;
   text-align: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
@@ -1121,62 +1313,17 @@ h3.weiss {
 }
 
 
-
-.container-listeninhalt {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(0, auto);
-  grid-gap: 1rem;
-  width: 100%;
-  margin-bottom: 70px;
-}
-
-
-.p-card {
+.seitenleiste {
   position: relative;
-  display: grid;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  cursor: pointer;
-  height: 300px;
-  aspect-ratio: 9 / 16;
-  box-sizing: border-box;
-  background-color: orange;
-  border-radius: 15px;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
-.rezept-image {
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 15px;
+.logout-button i {
+  color: $detail_2-color;
 }
 
-
-.p-card-footer {
-  margin-top: auto;
-  padding-top: 10px;
-  padding-right: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.p-card-title {
-  font-size: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.5em;
-  max-height: 4.5em;
-  word-break: break-word;
-  margin: 5px;
-  text-decoration: underline;
-  border: 1px solid transparent;
-}
 
 .platzhalter-rezeptbild {
   background-size: cover;
@@ -1187,7 +1334,6 @@ h3.weiss {
   padding: 15px;
 }
 
-
 .linie-unten {
   border: 0;
   height: 1px;
@@ -1195,8 +1341,6 @@ h3.weiss {
   margin-top: 20px;
   width: 100%;
 }
-
-
 
 .modal-overlay {
   position: fixed;
@@ -1210,44 +1354,6 @@ h3.weiss {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-}
-
-.rezept-image-container img{
-  cursor: pointer;
-}
-
-.rezept-image-full {
-  width: 80vw;
-  height: auto;
-  border: 5px solid white;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-  object-fit: contain;
-}
-
-/*
-.seitenleiste .p-overlaypanel {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 1050 !important;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-}
-*/
-
-.seitenleiste {
-  position: relative;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: flex-start;
-}
-
-.logout-button i {
-  color: $detail_2-color;
 }
 
 
@@ -1528,6 +1634,18 @@ h3.weiss {
 
 @media screen and (max-width: 750px) {
 
+
+  .listen-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 100%;
+    padding:.7rem;
+    color:white;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+  }
+
   .custom-overlay {
     z-index: 9999;
     pointer-events: auto;
@@ -1580,24 +1698,9 @@ h3.weiss {
   }
 
 
-  .listen-container {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    width: 100%;
-    padding:.7rem;
-    color:white;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-  }
-
   .container-listeninhalt {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 50px;
   }
 
 

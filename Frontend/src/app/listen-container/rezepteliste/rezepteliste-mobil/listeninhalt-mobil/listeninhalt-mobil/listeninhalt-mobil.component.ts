@@ -100,17 +100,17 @@ export class ListeninhaltMobilComponent {
       const imageElement = document.createElement('img');
       imageElement.src = bildUrl;
       imageElement.alt = 'Bild in voller Größe';
-      imageElement.style.width = '100%';
-      imageElement.style.height = '100%';
-      imageElement.style.objectFit = 'contain';
+      imageElement.style.objectFit = 'contain'; // Bild bleibt quadratisch, ohne abgeschnitten zu werden
       imageElement.style.backgroundColor = 'black';
+      imageElement.style.width = '100%'; // Bild füllt den Container in der Breite aus
+      imageElement.style.height = '100%'; // Bild füllt den Container in der Höhe aus
 
+      // Container für das Fullscreen-Bild
       const fullscreenContainer = document.createElement('div');
       fullscreenContainer.style.position = 'fixed';
-      fullscreenContainer.style.top = '0';
-      fullscreenContainer.style.left = '0';
-      fullscreenContainer.style.width = '100vw';
-      fullscreenContainer.style.height = '100vh';
+      fullscreenContainer.style.top = '50%';
+      fullscreenContainer.style.left = '50%';
+      fullscreenContainer.style.transform = 'translate(-50%, -50%)'; // Zentriert den Container
       fullscreenContainer.style.zIndex = '10000';
       fullscreenContainer.style.display = 'flex';
       fullscreenContainer.style.justifyContent = 'center';
@@ -118,10 +118,14 @@ export class ListeninhaltMobilComponent {
       fullscreenContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
       fullscreenContainer.style.overflow = 'hidden';
 
+      // Dynamisches Seitenverhältnis: Der Container wird auf die kleinere Dimension (Breite oder Höhe) gesetzt
+      const maxDimension = Math.min(window.innerWidth, window.innerHeight);  // Kleinste Dimension von Breite oder Höhe
+      fullscreenContainer.style.width = `${maxDimension}px`;  // Setzt die Breite auf die kleinere Dimension
+      fullscreenContainer.style.height = `${maxDimension}px`; // Setzt die Höhe auf die kleinere Dimension
+
       fullscreenContainer.appendChild(imageElement);
 
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-
 
       document.body.style.overflow = 'hidden';
       document.body.style.paddingRight = `${scrollbarWidth}px`;
@@ -135,6 +139,10 @@ export class ListeninhaltMobilComponent {
       document.body.appendChild(fullscreenContainer);
     }
   }
+
+
+
+
 
 
 }

@@ -7,9 +7,7 @@
             *ngIf="rezept.bildUrl"
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
-            class="rezept-image"
             (click)="openImageFullscreen(rezept.bildUrl)"
-
           />
         </div>
         <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
@@ -32,5 +30,7 @@
       </div>
     </p-card>
   </div>
-  <app-dialog [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
+  <app-dialog  [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
 </div>
+
+

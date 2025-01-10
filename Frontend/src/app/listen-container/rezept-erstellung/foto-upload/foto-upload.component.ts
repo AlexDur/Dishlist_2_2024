@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Rezept } from "../../../models/rezepte";
 import {Router} from "@angular/router";
 
@@ -7,15 +7,18 @@ import {Router} from "@angular/router";
   selector: 'app-foto-upload',
   templateUrl: './foto-upload.component.html'
 })
-export class FotoUploadComponent {
+export class FotoUploadComponent implements OnInit{
 
-  @Output() imageUploaded = new EventEmitter<File>(); // Emitter für Rezept
   @Input() rezepte: Rezept[] = [];
   isBildSelected: boolean = false;
   selectedFile: File | null = null;
 
   constructor(private router: Router) {
   }
+
+  ngOnInit(): void {}
+
+
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -41,6 +44,5 @@ export class FotoUploadComponent {
   navigateToCropper(imageUrl: string): void {
     this.router.navigate(['/bildbearbeitung'], { queryParams: { imageUrl } });
   }
-
 
 }

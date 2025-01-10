@@ -29,12 +29,6 @@ export class TableisteComponent {
     }
   }
 
-
-  navigateDatenschutz(event: Event): void {
-    console.log('geklickt', event)
-    this.router.navigate(['/datenschutzerklaerung']);
-  }
-
   navigateListe(event: Event): void {
     this.router.navigate(['/listen-container']);
   }

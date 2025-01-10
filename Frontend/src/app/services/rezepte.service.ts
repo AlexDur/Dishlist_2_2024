@@ -28,16 +28,19 @@ export class RezeptService {
   public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
-
   private currentRezeptSubject: BehaviorSubject<Rezept | null> = new BehaviorSubject<Rezept | null>(null);
 
   //Observable currentRezept$ wird durch currentRezeptSubject.asObservable() erstellt.
   //Damit können andere Teile der Anwendung, die an Änderungen des aktuellen Rezepts interessiert sind, sich darauf abonnieren.
   public currentRezept$: Observable<Rezept | null> = this.currentRezeptSubject.asObservable();
 
+  private imageSubject: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
+  public image$: Observable<File | null> = this.imageSubject.asObservable();
+
+
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public spoonacularRezepte$: Observable<Rezept[]> = this.spoonacularRezepteSubject.asObservable();
-
+  private imageUrl: string = '';
 
 
   constructor(private http: HttpClient, private authService: AuthService) { }
@@ -50,6 +53,19 @@ export class RezeptService {
     return headers;
   }
 
+  // Methode zum Setzen des Bildes
+  public setImage(file: File): void {
+    this.imageSubject.next(file);
+  }
+
+  setImageUrl(url: string): void {
+    this.imageUrl = url;
+  }
+
+  // Gibt die gespeicherte Bild-URL zurück
+  getImageUrl(): string {
+    return this.imageUrl;
+  }
 
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = localStorage.getItem('jwt_token');
@@ -98,7 +114,6 @@ export class RezeptService {
     // Setzt das aktuelle Rezept auf `null` zurück
     this.currentRezeptSubject.next(null);
   }
-
 
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
