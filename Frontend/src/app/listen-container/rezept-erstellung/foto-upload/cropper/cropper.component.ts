@@ -53,10 +53,7 @@ export class CropperComponent implements OnInit, AfterViewInit {
         this.cropper = new Cropper(image, {
           aspectRatio: 1,  // Das Bild bleibt quadratisch
           viewMode: 1,
-          responsive: true,
-          zoomable: true,
-          scalable: false,
-          dragMode: 'move',
+          scalable: true,
           background: true,
           autoCropArea: 1,
           cropBoxResizable: true,
