@@ -26,6 +26,8 @@ export class FotoUploadComponent implements OnInit{
       this.selectedFile = input.files[0];
       this.isBildSelected = true;
 
+
+
       // Erstelle eine Data-URL vom Bild
       const reader = new FileReader();
       reader.onload = (e: any) => {

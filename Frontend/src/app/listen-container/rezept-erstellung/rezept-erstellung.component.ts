@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Output,
   Input,
+  OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 
@@ -18,7 +19,7 @@ import {RezeptAntwort} from "../../models/rezeptAntwort";
 import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest  } from 'rxjs';
 
 
 @Component({
@@ -26,7 +27,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './rezept-erstellung.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RezeptErstellungComponent implements OnInit {
+export class RezeptErstellungComponent implements OnInit, OnDestroy {
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
@@ -59,44 +60,36 @@ export class RezeptErstellungComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-    console.log('ngOnInit started');
+   /*TODO: Bild hinzu noch fehlerhaft mit verschiedenen Bildern und bisherige Nutzerdaten werden gelöscht, wenn neues Bild hinzu.
+          Mögliche Lösung: Reactive Forms */
 
-    // Abonniere das aktuelle Rezept
+  ngOnInit() {
     this.subscriptions.add(
-      this.rezepteService.currentRezept$.subscribe(rezept => {
+      combineLatest([this.rezepteService.currentRezept$, this.rezepteService.image$]).subscribe(([rezept, image]) => {
         if (rezept) {
-          this.newRecipe = { ...rezept, image: rezept.image };
+          this.newRecipe = { ...rezept, image: image || rezept.image }; // Bild hinzufügen oder beibehalten
           this.selectedTags = (rezept.tags || []).map(tag => ({
             ...tag,
             type: this.mapToTagType(tag.type),
           }));
           this.isUpdateMode = true;
         } else {
-          this.rezepteService.image$.subscribe(image => {
-            if (image) {
-              this.initNewRecipe(image);
-              console.log('Bild empfangen:', image);
-            }
-          });
+          this.initNewRecipe(image); // Bild direkt an initNewRecipe übergeben
         }
+
         this.dataLoaded = true;
         this.cdr.detectChanges();
       })
     );
-
-    console.log('ngOnInit completed');
   }
 
-
-
-
+// initNewRecipe angepasst, um das Bild zu akzeptieren
   initNewRecipe(image: File | null = null) {
     this.newRecipe = {
       name: '',
       onlineAdresse: '',
       tags: [],
-      image: image || null
+      image: image // Bild direkt setzen
     };
     console.log('Neues Rezept aus initNewRecipe:', this.newRecipe);
   }
@@ -104,6 +97,7 @@ export class RezeptErstellungComponent implements OnInit {
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
+
 
 
   private mapToTagType(type: string): TagType {
