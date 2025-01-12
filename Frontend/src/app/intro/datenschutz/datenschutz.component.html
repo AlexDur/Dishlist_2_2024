@@ -1,6 +1,5 @@
 <div class="p-3">
 
-
   <h1 class="flex justify-content-center pb-3 text-center">Datenschutzerklärung für DishList</h1>
 
   <p>Die App DishList wird betrieben, um Nutzern eine einfache und sichere Verwaltung ihrer Rezepte zu ermöglichen. Der Schutz der Privatsphäre der Nutzer hat höchste Priorität. Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten gesammelt und wie diese verwendet werden.</p>
@@ -9,39 +8,28 @@
   <ul>
     <li><strong>E-Mail-Adresse:</strong> Zur Erstellung eines Benutzerkontos und zur Kommunikation mit den Nutzern. Die E-Mail-Adresse wird auf den Servern von Amazon Web Services (AWS) gespeichert.</li>
     <li><strong>Bilder:</strong> Werden für die dauerhafte Speicherung und Darstellung von Rezepten innerhalb der App verwendet. Die Speicherung der Bilder erfolgt ebenfalls auf den Servern von AWS.</li>
+    <li><strong>Suchen und Filtereinstellungen:</strong> Suchbegriffe, Tags und Präferenzen, die zur Bereitstellung von Rezeptempfehlungen über die Spoonacular-API erforderlich sind.</li>
   </ul>
 
   <h2>Verwendung der Daten:</h2>
   <ul>
     <li>Die E-Mail-Adresse wird verwendet, um ein Benutzerkonto zu erstellen und den Zugang zu den gespeicherten Rezepten zu ermöglichen.</li>
     <li>Die Bilder werden zur Anzeige und Verwaltung von Rezepten verwendet und auf AWS gespeichert.</li>
+    <li>Such- und Filtereinstellungen werden an die Spoonacular-API übermittelt, um Rezeptempfehlungen bereitzustellen.</li>
   </ul>
 
   <h2>Weitergabe von Daten:</h2>
-  <p>Es werden keine personenbezogenen Daten an Dritte weitergegeben, außer wenn dies gesetzlich vorgeschrieben ist oder für die Bereitstellung der App-Funktionen erforderlich ist.</p>
+  <p>Für die Bereitstellung der Rezeptvorschläge wird die Spoonacular-API verwendet. Dabei können Suchanfragen, Filtereinstellungen und ähnliche Nutzungsdaten an Spoonacular übermittelt werden. Spoonacular verarbeitet diese Daten gemäß ihrer eigenen Datenschutzrichtlinie, die unter <a href="https://spoonacular.com/privacy" target="_blank">https://spoonacular.com/privacy</a> eingesehen werden kann. Es werden keine weiteren personenbezogenen Daten an Dritte weitergegeben, außer wenn dies gesetzlich vorgeschrieben ist oder für die Bereitstellung der App-Funktionen erforderlich ist.</p>
 
   <h2>Rechte der Nutzer:</h2>
-  <p>Nutzer haben das Recht, jederzeit auf die gespeicherten Daten zuzugreifen, diese zu berichtigen, zu löschen oder die Verarbeitung der Daten zu widerrufen.</p>
+  <p>Nutzer haben das Recht, jederzeit auf die gespeicherten Daten zuzugreifen, diese zu berichtigen, zu löschen oder die Verarbeitung der Daten zu widerrufen. Für Daten, die durch die Spoonacular-API verarbeitet werden, gelten die Rechte entsprechend der Spoonacular-Datenschutzrichtlinie.</p>
 
- <!-- <div class="flex justify-content-center">
-  <button class="general-button" (click)="onDeleteAccount()">
-    <i class="pi pi-trash"></i>&nbsp; Konto löschen
-  </button>
-  </div>
-
-  <app-dialog
-    [message]="dialogMessage"
-    [visible]="isDialogVisible"
-    (visibleChange)="isDialogVisible = $event"
-    (confirm)="onConfirmDelete($event)">
-  </app-dialog>
--->
   <div class="contact-info">
     <h2>Kontakt:</h2>
-    <p >Für Anfragen oder Anliegen im Zusammenhang mit Datenschutz: <a href="mailto:alexdurach@hotmail.de">alexdurach&#64;hotmail.de</a></p>
+    <p>Für Anfragen oder Anliegen im Zusammenhang mit Datenschutz: <a href="mailto:alexdurach@hotmail.de">alexdurach&#64;hotmail.de</a></p>
   </div>
 
-    <div class="flex justify-content-center mt-0">
-      <button class="general-button-landing-reg mt-0" pButton (click)="navigateLanding($event)">Zurück</button>
-    </div>
+  <div class="flex justify-content-center mt-0">
+    <button class="general-button-landing-reg mt-0" pButton (click)="navigateLanding($event)">Zurück</button>
+  </div>
 </div>
