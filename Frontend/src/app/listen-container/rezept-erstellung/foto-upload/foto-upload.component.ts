@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Rezept } from "../../../models/rezepte";
 import {Router} from "@angular/router";
+import { FormGroup } from '@angular/forms';
 
 /*Bildauswahl und Weiterleitung an Cropper*/
 @Component({
@@ -13,11 +14,13 @@ export class FotoUploadComponent implements OnInit{
   isBildSelected: boolean = false;
   selectedFile: File | null = null;
 
+  @Input() rezeptForm!: FormGroup;  // Reactive Form als Input erhalten
+  @Output() imageUploaded = new EventEmitter<File>();
+
   constructor(private router: Router) {
   }
 
   ngOnInit(): void {}
-
 
 
   onFileSelected(event: Event): void {
@@ -26,7 +29,13 @@ export class FotoUploadComponent implements OnInit{
       this.selectedFile = input.files[0];
       this.isBildSelected = true;
 
+      // Gebe das ausgewählte Bild an die Elternkomponente weiter
+      this.imageUploaded.emit(this.selectedFile);
 
+      // Speichern in der Form
+      this.rezeptForm.patchValue({
+        image: this.selectedFile
+      });
 
       // Erstelle eine Data-URL vom Bild
       const reader = new FileReader();
@@ -42,6 +51,7 @@ export class FotoUploadComponent implements OnInit{
       this.isBildSelected = false;
     }
   }
+
 
   navigateToCropper(imageUrl: string): void {
     this.router.navigate(['/bildbearbeitung'], { queryParams: { imageUrl } });
