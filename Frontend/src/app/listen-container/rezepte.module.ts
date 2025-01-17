@@ -21,6 +21,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
 import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
 import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.component";
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -51,8 +52,8 @@ import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.
     CardModule,
     ToggleButtonModule,
     SharedModule,
-    FileUploadModule
-
+    FileUploadModule,
+    ReactiveFormsModule,
     ]
 })
 export class RezepteModule { }
