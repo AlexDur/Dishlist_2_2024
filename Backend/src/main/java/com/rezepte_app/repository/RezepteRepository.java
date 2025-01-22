@@ -7,11 +7,11 @@ package com.rezepte_app.repository;
 import com.rezepte_app.model.Rezept;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-
 
 /*JpaRepository Interface definiert Methoden (z.B. save(), findById(),...) für CRUD-Operationen und die Paginierung und Sortierung von Entitäten.
 * Daher Erbung nützlich*/
@@ -22,6 +22,6 @@ import java.util.List;
 public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 
     @Transactional
-    List<Rezept> findByUserIdOrderByIdDesc(String userId);
+    List<Rezept> findByUserIdOrderByIdDesc(@Param("userId") String userId);
 
 }

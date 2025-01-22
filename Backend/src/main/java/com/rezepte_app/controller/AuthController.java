@@ -25,14 +25,18 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // Hilfsmethode zur Erstellung von Standardantworten
+    private ResponseEntity<Map<String, Object>> createResponse(boolean success, String message, HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", message);
+        return new ResponseEntity<>(response, status);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody NutzerRegistrierungDto registrierungDto) {
         try {
-            authService.registerUser(
-                    registrierungDto.getEmail(),
-                    registrierungDto.getPassword()
-
-            );
+            authService.registerUser(registrierungDto.getEmail(), registrierungDto.getPassword());
             return ResponseEntity.ok("Registrierung erfolgreich");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registrierung fehlgeschlagen: " + e.getMessage());
@@ -42,28 +46,19 @@ public class AuthController {
     //HashMap um strukturierte Antwort mit mehreren Feldern im BE zu erzeugen
     @PostMapping("/verify-code")
     public  ResponseEntity<Map<String, Object>>  verifyCode(@RequestBody VerfikationCodeDto verifikationCodeDto) {
-        Map<String, Object> response = new HashMap<>();
-        System.out.println("Empfangener JSON-Body: E-Mail: " + verifikationCodeDto.getEmail() + ", Code: " + verifikationCodeDto.getVerifikationCode());
-
         String email = verifikationCodeDto.getEmail();
         String verifikationCode = verifikationCodeDto.getVerifikationCode();
 
         try {
-            // Der Code wird im Service überprüft, rechte Seite muss "true" zurückgeben, damit isVerified gilt
+
             boolean isVerified = authService.verifyCode(email, verifikationCode);
             if (isVerified) {
-                response.put("success", true);
-                response.put("message", "Verifizierung erfolgreich");
-                return ResponseEntity.ok(response);
+                return createResponse(true, "Verifizierung erfolgreich", HttpStatus.OK);
             } else {
-                response.put("success", false);
-                response.put("message", "Verifizierung fehlgeschlagen: Ungültiger Code");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return createResponse(false, "Verifizierung fehlgeschlagen: Ungültiger Code", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Fehler bei der Verifizierung: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return createResponse(false, "Fehler bei der Verifizierung: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,13 +75,10 @@ public class AuthController {
             }
 
             String token = authService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
-
-            response.put("success", true);
-            response.put("message", "Anmeldung erfolgreich");
             response.put("token", token);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.put("success", false);
+
             response.put("message", "Anmeldung fehlgeschlagen: " + (e.getMessage() != null ? e.getMessage() : "Unbekannter Fehler"));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
@@ -94,29 +86,13 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String token)  {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String token) {
         try {
             authService.logout(token);
-            response.put("success", true);
-            response.put("message", "Abmeldung erfolgreich");
-            return ResponseEntity.ok(response);
+            return createResponse(true, "Abmeldung erfolgreich", HttpStatus.OK);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Abmeldung fehlgeschlagen: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return createResponse(false, "Abmeldung fehlgeschlagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-/*    @PostMapping("/resend-verification-code")
-    public ResponseEntity<String> resendverifikationCode(@RequestBody String email) {
-        try {
-            authService.resendverifikationCode(email);
-            return ResponseEntity.ok("Verifizierungscode wurde erneut gesendet.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fehler beim Senden des Verifizierungscodes: " + e.getMessage());
-        }
-    }*/
 
 }

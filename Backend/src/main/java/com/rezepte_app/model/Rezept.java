@@ -19,10 +19,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@NamedQueries({
-        @NamedQuery(name = "Rezept.findByUserIdOrderByIdDesc",
-                query = "SELECT r FROM Rezept r WHERE r.userId = :userId ORDER BY r.id DESC")
-})
 public class Rezept {
 
     @Id

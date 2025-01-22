@@ -19,7 +19,6 @@ public class S3Properties {
     public String getBucketName() {
         return bucketName;
     }
-
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
     }

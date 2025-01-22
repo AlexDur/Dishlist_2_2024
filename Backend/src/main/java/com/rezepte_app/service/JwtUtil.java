@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Optional;
 
 @Component
 public class JwtUtil {
@@ -21,56 +22,57 @@ public class JwtUtil {
 
     public String getUserIdFromToken(String token) {
         try {
-            // JWT-Token analysieren
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            System.out.println("Parsed JWT: " + signedJWT);
-
-            // Holen des "kid" (Key ID) aus dem JWT-Header
-            String kid = signedJWT.getHeader().getKeyID();
-            System.out.println("Extracted kid: " + kid);
-
-            // Hole den PublicKey für den "kid" aus der JWKS-URL
-            RSAKey rsaKey = getPublicKeyFromCognito(kid);
-            System.out.println("RSA Key: " + rsaKey);
-
-            // Verifiziere das JWT mit dem RSAKey
-            RSASSAVerifier verifier = new RSASSAVerifier(rsaKey);
-            if (!signedJWT.verify(verifier)) {
-                throw new RuntimeException("Token-Verifikation fehlgeschlagen.");
-            }
-
-            // Extrahiere die Claims (Payload) des JWT
-            JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-            System.out.println("JWT Claims: " + claims);
-
-            // Gib die User-ID aus den Claims zurück (das "subject" im JWT ist häufig die User-ID)
-            return claims.getSubject();
-
+            SignedJWT signedJWT = parseToken(token);
+            String kid = extractKid(signedJWT);
+            RSAKey rsaKey = fetchRsaKey(kid);
+            validateToken(signedJWT, rsaKey);
+            return extractUserId(signedJWT);
         } catch (Exception e) {
-            e.printStackTrace(); // Ausgabe des Stacktraces für genauere Analyse
             throw new RuntimeException("Ungültiges JWT-Token.", e);
         }
     }
 
+    private SignedJWT parseToken(String token) throws Exception {
+        return SignedJWT.parse(token);
+    }
 
-    // Hole den PublicKey für den angegebenen "kid" aus der JWKS-URL und gebe RSAKey zurück
-    private RSAKey getPublicKeyFromCognito(String kid) throws Exception {
-        URL url = new URL(JWKS_URL);  // URL zum JWKS-Endpunkt von Cognito
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+    private String extractKid(SignedJWT signedJWT) {
+        return Optional.ofNullable(signedJWT.getHeader().getKeyID())
+                .orElseThrow(() -> new RuntimeException("Kein Key ID (kid) im JWT-Header gefunden."));
+    }
 
-        StringBuilder response = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
-
-        // Parst das JWKS JSON und extrahiert den passenden PublicKey
-        JWKSet jwkSet = JWKSet.parse(response.toString());
+    private RSAKey fetchRsaKey(String kid) throws Exception {
+        JWKSet jwkSet = fetchJwkSet();
         JWK jwk = jwkSet.getKeyByKeyId(kid);
-        if (jwk != null && jwk instanceof RSAKey) {
-            return (RSAKey) jwk;  // Gib das RSAKey zurück
+        if (jwk instanceof RSAKey rsaKey) {
+            return rsaKey;
         } else {
             throw new RuntimeException("PublicKey für den angegebenen kid nicht gefunden oder ist kein RSAKey.");
         }
     }
+
+    private JWKSet fetchJwkSet() throws Exception {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(JWKS_URL).openStream()))) {
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            return JWKSet.parse(response.toString());
+        }
+    }
+
+    private void validateToken(SignedJWT signedJWT, RSAKey rsaKey) throws Exception {
+        if (!signedJWT.verify(new RSASSAVerifier(rsaKey))) {
+            throw new RuntimeException("Token-Verifikation fehlgeschlagen.");
+        }
+    }
+
+    private String extractUserId(SignedJWT signedJWT) throws Exception {
+        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+        return Optional.ofNullable(claims.getSubject())
+                .orElseThrow(() -> new RuntimeException("Kein Benutzer-ID im JWT-Claims-Set gefunden."));
+    }
+
+
 }

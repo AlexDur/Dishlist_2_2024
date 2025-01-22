@@ -1,5 +1,7 @@
 package com.rezepte_app.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,12 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+/*Zur Interaktion mit AWS Cognito für die Benutzerregistrierung, Authentifizierung und Verifizierung von E-Mail-Codes.*/
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
 
     private final CognitoIdentityProviderClient cognitoClient;
     private final String userPoolClientId;
@@ -35,55 +41,27 @@ public class AuthService {
 
     public SignUpResponse registerUserWithSecretHash(String email, String password, String secretHash) {
         try {
-            Map<String, String> userAttributes = new HashMap<>();
-            userAttributes.put("email", email);
-
-            SignUpRequest signUpRequest = SignUpRequest.builder()
-                    .clientId(userPoolClientId)
-                    .username(email)
-                    .password(password)
-                    .userAttributes(
-                            software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType.builder()
-                                    .name("email")
-                                    .value(email)
-                                    .build()
-                    )
-                    .secretHash(secretHash)
-                    .build();
-
+            SignUpRequest signUpRequest = buildSignUpRequest(email, password, secretHash);
             return cognitoClient.signUp(signUpRequest);
         } catch (CognitoIdentityProviderException e) {
-            // Handle specific Cognito exceptions
+            logger.error("Error during user registration", e);
             throw new RuntimeException("Error during user registration: " + e.getMessage(), e);
         }
     }
 
     public boolean verifyCode(String email, String verifikationCode) {
-        System.out.println("Verifizierung gestartet: E-Mail: " + email + ", Code: " + verifikationCode);
+        if (verifikationCode == null || verifikationCode.trim().isEmpty()) {
+            System.err.println("Bestätigungscode ist null oder leer.");
+            return false;
+        }
 
         try {
-
-            if (verifikationCode == null || verifikationCode.trim().isEmpty()) {
-                System.err.println("Bestätigungscode ist null oder leer.");
-                return false;
-            }
-
             String secretHash = calculateSecretHash(this.userPoolClientSecret, email, this.userPoolClientId);
-
-            ConfirmSignUpRequest confirmSignUpRequest = ConfirmSignUpRequest.builder()
-                    .clientId(userPoolClientId)
-                    .username(email)
-                    .confirmationCode(verifikationCode)
-                    .secretHash(secretHash)
-                    .build();
-
+            ConfirmSignUpRequest confirmSignUpRequest = buildConfirmSignUpRequest(email, verifikationCode, secretHash);
             cognitoClient.confirmSignUp(confirmSignUpRequest);
             return true;
         } catch (CognitoIdentityProviderException e) {
-            // Log the error and return false for invalid or expired codes
-            System.err.println("Error verifying code: " + e.getMessage());
-            System.err.println("Cognito Error Code: " + e.awsErrorDetails().errorCode());
-            System.err.println("Cognito Error Message: " + e.awsErrorDetails().errorMessage());
+            logger.error("Error verifying code", e);
             return false;
         }
     }
@@ -95,27 +73,10 @@ public class AuthService {
         }
 
         String secretHash = calculateSecretHash(this.userPoolClientSecret, email, this.userPoolClientId);
-
         try {
             // Erstellung der Authentifizierungs-Anfrage für Cognito unter Verwendung des Builders
-            InitiateAuthRequest authRequest = InitiateAuthRequest.builder()
-                    .clientId(userPoolClientId)   // User Pool Client ID
-                    .authFlow(AuthFlowType.USER_PASSWORD_AUTH)  // Authentifizierungsflow
-                    .authParameters(
-                            Map.of(
-                                    "USERNAME", email,
-                                    "PASSWORD", password,
-                                    "SECRET_HASH", secretHash
-
-                            )
-                    ) // Authentifizierungsparameter
-                    .build();
-
-            // Authentifizierung an AWS Cognito
+            InitiateAuthRequest authRequest = buildAuthRequest(email, password, secretHash);
             InitiateAuthResponse authResponse = cognitoClient.initiateAuth(authRequest);
-
-
-            // Das Access-Token wird zurückgegeben
             return authResponse.authenticationResult().accessToken();
 
         } catch (Exception e) {
@@ -158,5 +119,40 @@ public class AuthService {
         }
     }
 
+    private SignUpRequest buildSignUpRequest(String email, String password, String secretHash) {
+        return SignUpRequest.builder()
+                .clientId(userPoolClientId)
+                .username(email)
+                .password(password)
+                .userAttributes(
+                        AttributeType.builder()
+                                .name("email")
+                                .value(email)
+                                .build()
+                )
+                .secretHash(secretHash)
+                .build();
+    }
+
+    private ConfirmSignUpRequest buildConfirmSignUpRequest(String email, String verificationCode, String secretHash) {
+        return ConfirmSignUpRequest.builder()
+                .clientId(userPoolClientId)
+                .username(email)
+                .confirmationCode(verificationCode)
+                .secretHash(secretHash)
+                .build();
+    }
+
+    private InitiateAuthRequest buildAuthRequest(String email, String password, String secretHash) {
+        return InitiateAuthRequest.builder()
+                .clientId(userPoolClientId)
+                .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
+                .authParameters(Map.of(
+                        "USERNAME", email,
+                        "PASSWORD", password,
+                        "SECRET_HASH", secretHash
+                ))
+                .build();
+    }
 
 }

@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app;
 
 import javax.naming.Context;
@@ -26,3 +27,4 @@ public class DatabaseManager {
         }
     }
 }
+*/

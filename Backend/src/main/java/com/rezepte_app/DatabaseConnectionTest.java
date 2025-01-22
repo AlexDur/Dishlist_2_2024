@@ -1,3 +1,4 @@
+/*
 package com.rezepte_app;
 
 import java.sql.Connection;
@@ -22,3 +23,4 @@ public class DatabaseConnectionTest {
     }
 }
 
+*/

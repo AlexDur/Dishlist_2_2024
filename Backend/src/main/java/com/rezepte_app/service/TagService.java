@@ -1,51 +1,42 @@
 package com.rezepte_app.service;
+
 import com.rezepte_app.model.Tag;
 import com.rezepte_app.repository.TagRepository;
-import org.hibernate.service.spi.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
 public class TagService {
 
-    @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-    @Autowired
     public TagService(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
 
-    // Methode zum Hinzufügen eines neuen Tags, falls es noch nicht existiert
-    // Transactional: Operationen werden innerhalb einer Transaktion durchgeführt.
-    // Das bedeutet, dass entweder alle Änderungen erfolgreich durchgeführt oder im Fehlerfall komplett zurückgerollt werden.
-    @Transactional(propagation = Propagation.REQUIRED)
+    /**
+     * Adds a new tag if it does not already exist.
+     *
+     * @param tag The tag to add.
+     * @return The existing or newly created tag.
+     */
+    @Transactional
     public Tag addTag(Tag tag) {
-        try {
-            // Überprüfe, ob ein Tag mit dem gleichen Namen bereits existiert
-            Optional<Tag> existingTag = tagRepository.findByLabelAndId(tag.getLabel(), tag.getId());
-
-            if (existingTag.isPresent()) {
-                // Ein Tag mit dem gleichen Namen existiert bereits, gib es zurück
-                return existingTag.get();
-            } else {
-                // Speichere den neuen Tag, da er eindeutig ist
-                return tagRepository.save(tag);
-            }
-        } catch (DataAccessException e) {
-            // Log the exception, handle it, or rethrow it
-            throw new ServiceException("Error adding tag", e);
-        }
+        return tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
+                .orElseGet(() -> tagRepository.save(tag));
     }
 
+    /**
+     * Saves a list of tags.
+     *
+     * @param tags The tags to save.
+     * @return The list of saved tags.
+     */
     @Transactional
     public List<Tag> saveTags(List<Tag> tags) {
         return tags.stream()
@@ -53,30 +44,34 @@ public class TagService {
                 .collect(Collectors.toList());
     }
 
-
-    // Methode zum Entfernen eines Tags
+    /**
+     * Removes a tag by its ID.
+     *
+     * @param tagId The ID of the tag to remove.
+     */
     @Transactional
     public void removeTag(Long tagId) {
+        if (tagId == null || tagId <= 0) {
+            throw new IllegalArgumentException("Invalid tag ID");
+        }
         try {
-            tagRepository.deleteById((long) Math.toIntExact(tagId));
-        } catch (IllegalArgumentException e) {
-            // Handle invalid ID exception
-            throw new ServiceException("Invalid tag ID", e);
+            tagRepository.deleteById(tagId);
         } catch (DataAccessException e) {
-            // Handle data access exception
-            throw new ServiceException("Error removing tag", e);
+            throw new RuntimeException("Error removing tag", e);
         }
     }
 
-
-    // Methode zum Aktualisieren eines Tags
+    /**
+     * Updates a tag.
+     *
+     * @param tag The tag to update.
+     * @return The updated tag.
+     */
     @Transactional
     public Tag updateTag(Tag tag) {
-        try {
-            return tagRepository.save(tag);
-        } catch (RuntimeException e) {
-            // Log the exception, handle it, or rethrow it
-            throw new ServiceException("Error updating tag", e);
+        if (tag == null || tag.getId() == null) {
+            throw new IllegalArgumentException("Tag or Tag ID must not be null");
         }
+        return tagRepository.save(tag);
     }
 }

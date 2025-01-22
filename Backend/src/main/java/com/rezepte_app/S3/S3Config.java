@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-
-
 /*
 * Konfig und Bereitstellung des S3-Clients
 * Erstellt e. Instanz von S3Client als SpringBean, sodass überall in App per DI verwendbar

@@ -19,7 +19,7 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @GetMapping({"/", "/index.html"})
+    @GetMapping(value = {"/", "/**"})
     public ResponseEntity<org.springframework.core.io.Resource> serveIndexHtml() {
         logger.info("Anfrage für '/' oder '/index.html' empfangen");
 
