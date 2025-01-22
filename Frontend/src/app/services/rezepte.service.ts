@@ -3,12 +3,12 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {BehaviorSubject, catchError, finalize, Observable, tap, throwError, map} from 'rxjs';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
-import {Tag} from '../models/tag';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
 import {TagType} from "../models/tagType";
 import {DEFAULT_TAGS} from "../models/default_tag";
 import {dishTypeMapping} from "../utils/dishTypeMapping";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -43,7 +43,28 @@ export class RezeptService {
   private imageUrl: string = '';
 
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {}
+
+  // Formular erstellen
+  createForm(rezept?: Rezept): FormGroup {
+    return this.fb.group({
+      name: [rezept?.name || '', [Validators.required]],
+      onlineAdresse: [rezept?.onlineAdresse || '', [Validators.required]],
+      tags: [rezept?.tags || []],
+      image: [rezept?.image || null],
+    });
+  }
+
+  // Formular aktualisieren
+  updateForm(form: FormGroup, rezept: Rezept): void {
+    form.patchValue({
+      name: rezept.name || '',
+      onlineAdresse: rezept.onlineAdresse || '',
+      tags: rezept.tags || [],
+      image: rezept.image || null,
+    });
+  }
+
 
   private getJsonHeaders(): HttpHeaders {
     const token = this.authService.getToken();
@@ -120,6 +141,11 @@ export class RezeptService {
     // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)
     // Aber Achtung: bei der Eingabe von Leerzeichen, wäre durch diese Bedingung die Eingabe gültig.
     // Daher --> trim
+
+    console.log('Rezept vor der Validierung:', rezept);
+
+
+
     if (!rezept.name || rezept.name.trim() === '') {
       console.error(`Ungültiger Wert für name: ${rezept.name}`);
       return false;

@@ -20,6 +20,7 @@ import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
 import { filter } from 'rxjs/operators';
 import { Subscription, combineLatest  } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -42,9 +43,13 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   nametouched:boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
+
+
+  dataLoaded = false;
+
+  rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
   image: any;
-  dataLoaded = false;
 
 
   categories = [
@@ -57,54 +62,58 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   constructor(
     private rezepteService: RezeptService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
   ) {}
 
-   /*TODO: Bild hinzu noch fehlerhaft mit verschiedenen Bildern und bisherige Nutzerdaten werden gelöscht, wenn neues Bild hinzu.
-          Mögliche Lösung: Reactive Forms */
 
-  ngOnInit() {
-    this.subscriptions.add(
-      combineLatest([this.rezepteService.currentRezept$, this.rezepteService.image$]).subscribe(([rezept, image]) => {
-        if (rezept) {
-          this.newRecipe = { ...rezept, image: image || rezept.image }; // Bild hinzufügen oder beibehalten
-          this.selectedTags = (rezept.tags || []).map(tag => ({
-            ...tag,
-            type: this.mapToTagType(tag.type),
-          }));
-          this.isUpdateMode = true;
-        } else {
-          this.initNewRecipe(image); // Bild direkt an initNewRecipe übergeben
-        }
 
-        this.dataLoaded = true;
-        this.cdr.detectChanges();
-      })
-    );
+  // FormGroup erstellen und die bisherigen Formularwerte in Form Controls zu integrieren
+  ngOnInit(): void {
+    console.log('Initialer Wert von newRecipe:', this.newRecipe);
+    console.log('Initialer Update-Modus:', this.isUpdateMode);
+    this.rezeptForm = this.rezepteService.createForm(this.newRecipe);
+
+    // Listener für Änderungen des 'name'-Feldes
+    this.rezeptForm.get('name')?.valueChanges.subscribe(value => {
+      console.log('Neuer Wert für name:', value);
+    });
+
+    // Listener für Änderungen des 'onlineAdresse'-Feldes
+    this.rezeptForm.get('onlineAdresse')?.valueChanges.subscribe(value => {
+      console.log('Neuer Wert für onlineAdresse:', value);
+    });
+
+    this.rezepteService.image$.subscribe(image => {
+      console.log('Neues Bild erhalten:', image);
+      if (image && !this.rezeptForm.get('image')?.value) {
+        this.rezeptForm.get('image')?.setValue(image);
+      }
+    });
+
+    // Überprüfung, ob Formulardaten bei UpdateModus gesetzt werden
+    if (this.isUpdateMode) {
+
+      this.rezepteService.updateForm(this.rezeptForm, this.newRecipe);
+    }
+
+    // Falls bereits Bild vorhanden ist, setzen
+    if (this.newRecipe.image && !this.rezeptForm.get('image')?.value) {
+      this.rezeptForm.get('image')?.setValue(this.newRecipe.image);
+    }
   }
 
-// initNewRecipe angepasst, um das Bild zu akzeptieren
-  initNewRecipe(image: File | null = null) {
-    this.newRecipe = {
-      name: '',
-      onlineAdresse: '',
-      tags: [],
-      image: image // Bild direkt setzen
-    };
-    console.log('Neues Rezept aus initNewRecipe:', this.newRecipe);
-  }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 
 
-
   private mapToTagType(type: string): TagType {
     if (Object.values(TagType).includes(type as TagType)) {
       return type as TagType; // Typen stimmen überein
     }
-    throw new Error(`Ungültiger TagType: ${type}`); // Optionale Fehlerbehandlung
+    throw new Error(`Ungültiger TagType: ${type}`);
   }
 
   private showError(fieldName: keyof Rezept, show: boolean): void {
@@ -116,10 +125,12 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
   validateAndFormatURL(): void {
-    if (this.newRecipe.onlineAdresse && !this.newRecipe.onlineAdresse.startsWith('http')) {
-      this.newRecipe.onlineAdresse = 'https://' + this.newRecipe.onlineAdresse;
+    const urlControl = this.rezeptForm.get('onlineAdresse');
+    if (urlControl?.value && !/^https?:\/\//.test(urlControl.value)) {
+      urlControl.setValue('https://' + urlControl.value); // `https://` hinzufügen, wenn nötig
     }
   }
+
 
   setCategory(category: { name: string; selected: boolean }) {
     // Die ausgewählte Kategorie umschalten
@@ -169,144 +180,90 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     });
   }
 
-/*  onImageUploaded(image: File): void {
+  onImageUploaded(image: File): void {
+    this.rezeptForm.patchValue({
+      image: image
+    });
     this.newRecipe.image = image;
-    console.log('Hochgeladenes Bild:', this.newRecipe.image);
-  }*/
+    console.log('Bild im Formular gespeichert:', image);
+  }
+
 
   handleClick(event: Event) {
-
     event.preventDefault();
 
-    if (this.dataLoaded) {
-      console.log('image in handleClick', this.newRecipe.image);
-    } else {
+    if (!this.dataLoaded || !this.image) {
       console.log('Rezept oder Bild noch nicht geladen');
     }
 
+    console.log('Form is valid and data loaded');
+    console.log('image in handleClick', this.newRecipe.image);
 
     this.tagError = false;
+
     const rezeptToSave = this.newRecipe;
-
-    const formData = new FormData();
-    const rezeptDTO = {
-      id: rezeptToSave.id,
-      name: rezeptToSave.name,
-      onlineAdresse: rezeptToSave.onlineAdresse,
-      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map((tag: {id:number, type: any; label: any; selected: any; count: any; }) => ({
-        id: tag.id,
-        type: tag.type ?? 'defaultType',
-        label: tag.label,
-        selected: tag.selected,
-        count: tag.count,
-      })) : []
-    };
-
-    //Füge rezeptDTO zu formData hinzu
-    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], {type: 'application/json'}));
-
-    //Füge image zu formData hinzu
-    if (rezeptToSave.image instanceof File) {
-      formData.append('image', rezeptToSave.image);
-    }else{
-      console.log()
-    }
-
-    console.log('formData in HandleClick', formData)
+    const formData = this.createFormData(rezeptToSave);
 
     if (!rezeptToSave.image) {
-      console.error('Kein Bild zum Speichern vorhanden!');
-      return;
+      console.log('Kein Bild zum Speichern vorhanden!');
     }
 
+    const action$ = this.isUpdateMode
+      ? this.rezepteService.updateRezept(rezeptToSave.id, this.createRezeptDTO(rezeptToSave), formData)
+      : this.saveRecipe(rezeptToSave);
 
-    if (this.isUpdateMode) {
-      console.log('rezeptToSave bei isUpdateMode', rezeptToSave)
-      this.rezepteService.updateRezept(rezeptToSave.id, rezeptDTO, formData).pipe(
-        tap(response => {
-          console.log('Rezept erfolgreich aktualisiert:', response);
-          this.isUpdateMode = false;
-          console.log('isUpdateMode nach Update', this.isUpdateMode)
-          this.router.navigate(['/listen-container']);
-        }),
-        catchError(error => {
-          return throwError(() => new Error('erstellung2_Fehler beim Aktualisieren des Rezepts.'));
-        })
-      ).subscribe();
-    } else {
-      this.saveRecipe(rezeptToSave).pipe(
-        tap(response => {
-          console.log('Rezept erfolgreich gespeichert:', response);
-          this.router.navigate(['/listen-container']);
-        }),
-        catchError(error => {
-          return throwError(() => new Error('2_Fehler beim Speichern des Rezepts.'));
-        })
-      ).subscribe();
-    }
+    action$.pipe(
+      tap(response => {
+        console.log(this.isUpdateMode ? 'Rezept erfolgreich aktualisiert' : 'Rezept erfolgreich gespeichert', response);
+        this.router.navigate(['/listen-container']);
+      }),
+      catchError(error => {
+        console.error(error);
+        return throwError(() => new Error('Fehler beim Speichern/Aktualisieren des Rezepts.'));
+      })
+    ).subscribe();
   }
 
-  //Observable für die Anfragen im return
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
+    const formData = this.createFormData(rezeptToSave);
 
-    const rezeptDTO = {
-      id: rezeptToSave.id,
-      name: rezeptToSave.name,
-      onlineAdresse: rezeptToSave.onlineAdresse,
-      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map((tag) => ({
-        id: tag.id,
-        type: tag.type ?? 'defaultType',
-        label: tag.label,
-        selected: tag.selected,
-        count: tag.count,
-      })) : []
-    };
+    return rezeptToSave.id
+      ? this.rezepteService.updateRezept(rezeptToSave.id, this.createRezeptDTO(rezeptToSave), formData)
+      : this.rezepteService.createRezept(rezeptToSave, formData);
+  }
 
-    console.log('Erstelltes RezeptDTO:', rezeptDTO);
-
+  private createFormData(rezeptToSave: Rezept): FormData {
     const formData = new FormData();
-    formData.append('rezeptDTO', new Blob([JSON.stringify(rezeptDTO)], {type: 'application/json'}));
+    formData.append('rezeptDTO', new Blob([JSON.stringify(this.createRezeptDTO(rezeptToSave))], { type: 'application/json' }));
 
     if (rezeptToSave.image instanceof File) {
       if (rezeptToSave.image.size > 10 * 1024 * 1024) {
         console.error('Bilddatei überschreitet die maximale Größe von 10 MB.');
-        return throwError(() => new Error('Bild ist zu groß.'));
+        throw new Error('Bild ist zu groß.');
       }
       formData.append('image', rezeptToSave.image);
       console.log('Bild zum Speichern:', rezeptToSave.image);
-
     } else {
       console.warn('Kein optionales Bild vorhanden:', rezeptToSave.image);
     }
 
-    // Wenn eine ID vorhanden ist, rufe die Update-Methode auf
-    if (rezeptToSave.id) {
-      console.log('rezept vor updateRezept in saveRecipe', rezeptToSave);
-      return this.rezepteService.updateRezept(rezeptToSave.id, rezeptToSave, formData).pipe(
-        tap(response => {
-          console.log('Serverantwort:', response);
-          this.updateTagCount();
-        }),
-        catchError(error => {
-          return throwError(() => new Error('Fehler beim Aktualisieren des Rezepts.'));
-        })
-      );
-    } else {
-      // Wenn keine ID vorhanden ist, rufe die Create-Methode auf
-      return this.rezepteService.createRezept(rezeptToSave, formData).pipe(
-        tap(response => {
-          console.log('Rezept erfolgreich gespeichert:', response);
-          this.updateTagCount();
-        }),
-        catchError(error => {
-          return throwError(() => new Error('Fehler beim Speichern des Rezepts.'));
-        })
-      );
-    }
+    return formData;
   }
 
-
-
+  private createRezeptDTO(rezeptToSave: Rezept) {
+    return {
+      id: rezeptToSave.id,
+      name: rezeptToSave.name,
+      onlineAdresse: rezeptToSave.onlineAdresse,
+      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map(tag => ({
+        id: tag.id,
+        type: tag.type ?? 'defaultType',
+        label: tag.label,
+        selected: tag.selected,
+        count: tag.count,
+      })) : []
+    };
+  }
 
 
   isFieldValid(fieldName: keyof Rezept): boolean {
@@ -316,7 +273,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
 
   //Validierung der Eingabedaten ab hier
-
   getInputClass(fieldName: keyof Rezept): string {
     // Nur rot anzeigen, wenn das Feld berührt wurde und ungültig ist
     if (fieldName === 'name' && this.nametouched) {

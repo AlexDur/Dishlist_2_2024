@@ -1,59 +1,53 @@
-<div >
+<div>
   <div class="zentriertes-formular">
     <div class="neues-rezept">Neues Rezept</div>
-    <form>
+    <form [formGroup]="rezeptForm" (ngSubmit)="handleClick($event)">
       <div class="p-fluid">
         <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname*" type="text" id="rezeptname" name="rezeptname" [(ngModel)]="newRecipe.name" pInputText
-                 [ngClass]="getInputClass('name')"
-                 (blur)="onFieldBlur('name')" >
+          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
+                  (blur)="onFieldBlur('name')">
           <label for="rezeptname"><span class="required"></span></label>
-          <div *ngIf="showNameError" class="error-message"></div>
+          <div *ngIf="showNameError"></div>
         </div>
 
         <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse*" type="text" id="onlineadresse" name="onlineadresse" [(ngModel)]="newRecipe.onlineAdresse"
-                 [ngClass]="getInputClass('onlineAdresse')"
-                 (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()"  pInputText>
-
+          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
+                  (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()" pInputText>
           <label for="onlineadresse"><span class="required"></span></label>
-          <div *ngIf="!isFieldValid('onlineAdresse')" class="error-message"></div>
-
+          <div *ngIf="!isFieldValid('onlineAdresse')"></div>
         </div>
+
         <div class="flex flex-row">
-           <div class="erstellung-kategorie">Foto</div>
-           <div class="optional">(optional)</div>
+          <div class="erstellung-kategorie">Foto</div>
         </div>
+
         <div class="flex_bildoptionen">
-          <app-foto-upload></app-foto-upload>
-          <!--<app-camera  (imageUploaded)="onImageUploaded($event)" ></app-camera>-->
-          <app-camera ></app-camera>
+          <app-foto-upload [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <!--<app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>-->
+          <app-camera></app-camera>
         </div>
+
         <div>
-
-
           <div class="erstellung-kategorie">Kategorie</div>
           <ng-container *ngFor="let category of categories">
-            <button (click)="setCategory(category)"
-                    class="category-button"
-                    [ngClass]="{'active': category.selected}">
+            <button (click)="setCategory(category)" class="category-button" [ngClass]="{'active': category.selected}">
               {{ category.name }}
             </button>
 
             <div *ngIf="selectedCategory === category.name" class="tag-panel">
-              <span
-                *ngFor="let tag of getVisibleTags()"
-                (click)="toggleTagSelection(tag)"
-                class="tag"
-                [class.selected]="tag.selected">
+              <span *ngFor="let tag of getVisibleTags()" (click)="toggleTagSelection(tag)" class="tag" [class.selected]="tag.selected">
                 {{ tag.label }}
               </span>
             </div>
           </ng-container>
 
           <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
-        <button (click)="handleClick($event)"  class="general-button" type="submit" pButton> {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}</button>
-      </div>
+        </div>
+
+        <button [disabled]="!rezeptForm.valid" class="general-button" type="submit" pButton>
+          {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}
+        </button>
+
       </div>
     </form>
   </div>
