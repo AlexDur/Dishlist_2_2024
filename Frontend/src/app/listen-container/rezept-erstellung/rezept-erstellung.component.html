@@ -3,6 +3,15 @@
     <div class="neues-rezept">Neues Rezept</div>
     <form [formGroup]="rezeptForm" (ngSubmit)="handleClick($event)">
       <div class="p-fluid">
+
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
+                 (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()" pInputText>
+          <label for="onlineadresse"><span class="required"></span></label>
+          <div *ngIf="!isFieldValid('onlineAdresse')"></div>
+        </div>
+
+
         <div class="p-field">
           <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
                   (blur)="onFieldBlur('name')">
@@ -10,12 +19,6 @@
           <div *ngIf="showNameError"></div>
         </div>
 
-        <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
-                  (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()" pInputText>
-          <label for="onlineadresse"><span class="required"></span></label>
-          <div *ngIf="!isFieldValid('onlineAdresse')"></div>
-        </div>
 
         <div class="flex flex-row">
           <div class="erstellung-kategorie">Foto</div>

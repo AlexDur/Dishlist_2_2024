@@ -40,7 +40,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   tagError: boolean = false;
   showNameError: boolean = false;
   showOnlineAddressError: boolean = false;
-  nametouched:boolean = false;
+  nametouched: boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
 
@@ -53,9 +53,9 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
 
   categories = [
-    { name: 'Gänge', selected: false },
-    { name: 'Küche', selected: false },
-    { name: 'Nährwert', selected: false }
+    {name: 'Gänge', selected: false},
+    {name: 'Küche', selected: false},
+    {name: 'Nährwert', selected: false}
   ];
 
 
@@ -64,24 +64,24 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
-  ) {}
-
+  ) {
+  }
 
 
   // FormGroup erstellen und die bisherigen Formularwerte in Form Controls zu integrieren
   ngOnInit(): void {
-    console.log('Initialer Wert von newRecipe:', this.newRecipe);
-    console.log('Initialer Update-Modus:', this.isUpdateMode);
-    this.rezeptForm = this.rezepteService.createForm(this.newRecipe);
+    this.rezeptForm = this.createForm(this.newRecipe);
 
-    // Listener für Änderungen des 'name'-Feldes
-    this.rezeptForm.get('name')?.valueChanges.subscribe(value => {
-      console.log('Neuer Wert für name:', value);
+    console.log('Formular nach Initialisierung:', this.rezeptForm.valid);
+    console.log('Fehler im Formular:', this.rezeptForm.errors);
+
+    Object.keys(this.rezeptForm.controls).forEach(key => {
+      const control = this.rezeptForm.get(key);
+      console.log('Control für', key, 'Valid:', control?.valid, 'Errors:', control?.errors);
     });
 
-    // Listener für Änderungen des 'onlineAdresse'-Feldes
     this.rezeptForm.get('onlineAdresse')?.valueChanges.subscribe(value => {
-      console.log('Neuer Wert für onlineAdresse:', value);
+      this.validateAndFormatURL(); // Behalte die URL-Formatierung
     });
 
     this.rezepteService.image$.subscribe(image => {
@@ -91,13 +91,10 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Überprüfung, ob Formulardaten bei UpdateModus gesetzt werden
     if (this.isUpdateMode) {
-
-      this.rezepteService.updateForm(this.rezeptForm, this.newRecipe);
+      this.updateForm(this.rezeptForm, this.newRecipe);
     }
 
-    // Falls bereits Bild vorhanden ist, setzen
     if (this.newRecipe.image && !this.rezeptForm.get('image')?.value) {
       this.rezeptForm.get('image')?.setValue(this.newRecipe.image);
     }
@@ -106,6 +103,27 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  // Formular erstellen
+  createForm(newRecipe: Rezept): FormGroup {
+    return this.fb.group({
+      name: [newRecipe.name || '', [Validators.required]],
+      onlineAdresse: [newRecipe.onlineAdresse || '', [Validators.required]],
+      tags: [newRecipe.tags || [], []],
+      image: [newRecipe.image || null, []]
+    });
+  }
+
+
+  // Formular aktualisieren
+  updateForm(form: FormGroup, rezept: Rezept): void {
+    form.patchValue({
+      name: rezept.name || '',
+      onlineAdresse: rezept.onlineAdresse || '',
+      tags: rezept.tags || [],
+      image: rezept.image || null,
+    });
   }
 
 
@@ -127,7 +145,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   validateAndFormatURL(): void {
     const urlControl = this.rezeptForm.get('onlineAdresse');
     if (urlControl?.value && !/^https?:\/\//.test(urlControl.value)) {
-      urlControl.setValue('https://' + urlControl.value); // `https://` hinzufügen, wenn nötig
+      urlControl.setValue('https://' + urlControl.value);
     }
   }
 
@@ -192,37 +210,31 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   handleClick(event: Event) {
     event.preventDefault();
 
-    if (!this.dataLoaded || !this.image) {
-      console.log('Rezept oder Bild noch nicht geladen');
+    if (this.rezeptForm.invalid) {
+      this.rezeptForm.markAllAsTouched();
+      return; // Beende die Funktion, wenn das Formular ungültig ist
     }
 
-    console.log('Form is valid and data loaded');
-    console.log('image in handleClick', this.newRecipe.image);
+    const rezeptToSave = this.rezeptForm.value as Rezept; // Rezept aus dem Formular erstellen
 
-    this.tagError = false;
 
-    const rezeptToSave = this.newRecipe;
-    const formData = this.createFormData(rezeptToSave);
-
-    if (!rezeptToSave.image) {
-      console.log('Kein Bild zum Speichern vorhanden!');
+    if (this.image instanceof File) { // this.image verwenden, falls vorhanden
+      rezeptToSave.image = this.image;
     }
 
-    const action$ = this.isUpdateMode
-      ? this.rezepteService.updateRezept(rezeptToSave.id, this.createRezeptDTO(rezeptToSave), formData)
-      : this.saveRecipe(rezeptToSave);
-
-    action$.pipe(
-      tap(response => {
+    this.saveRecipe(rezeptToSave).subscribe({
+      next: (response) => {
         console.log(this.isUpdateMode ? 'Rezept erfolgreich aktualisiert' : 'Rezept erfolgreich gespeichert', response);
         this.router.navigate(['/listen-container']);
-      }),
-      catchError(error => {
-        console.error(error);
-        return throwError(() => new Error('Fehler beim Speichern/Aktualisieren des Rezepts.'));
-      })
-    ).subscribe();
+      },
+      error: (error) => {
+        console.error('Fehler beim Speichern/Aktualisieren:', error);
+        // Fehlerbehandlung hier (z.B. Fehlermeldung anzeigen)
+      }
+    });
   }
+
+
 
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const formData = this.createFormData(rezeptToSave);
@@ -236,6 +248,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('rezeptDTO', new Blob([JSON.stringify(this.createRezeptDTO(rezeptToSave))], { type: 'application/json' }));
 
+    // Bildverarbeitung
     if (rezeptToSave.image instanceof File) {
       if (rezeptToSave.image.size > 10 * 1024 * 1024) {
         console.error('Bilddatei überschreitet die maximale Größe von 10 MB.');
@@ -249,6 +262,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
     return formData;
   }
+
 
   private createRezeptDTO(rezeptToSave: Rezept) {
     return {

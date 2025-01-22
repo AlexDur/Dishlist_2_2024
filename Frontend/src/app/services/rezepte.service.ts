@@ -45,25 +45,7 @@ export class RezeptService {
 
   constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {}
 
-  // Formular erstellen
-  createForm(rezept?: Rezept): FormGroup {
-    return this.fb.group({
-      name: [rezept?.name || '', [Validators.required]],
-      onlineAdresse: [rezept?.onlineAdresse || '', [Validators.required]],
-      tags: [rezept?.tags || []],
-      image: [rezept?.image || null],
-    });
-  }
 
-  // Formular aktualisieren
-  updateForm(form: FormGroup, rezept: Rezept): void {
-    form.patchValue({
-      name: rezept.name || '',
-      onlineAdresse: rezept.onlineAdresse || '',
-      tags: rezept.tags || [],
-      image: rezept.image || null,
-    });
-  }
 
 
   private getJsonHeaders(): HttpHeaders {
@@ -138,44 +120,39 @@ export class RezeptService {
 
 // Validierungsfunktion für das Rezept
   private validateRezept(rezept: Rezept): boolean {
-    // !rezept.name prüft, ob Wert falsy ist (null, undefined, 0, NaN, "", false)
-    // Aber Achtung: bei der Eingabe von Leerzeichen, wäre durch diese Bedingung die Eingabe gültig.
-    // Daher --> trim
-
     console.log('Rezept vor der Validierung:', rezept);
-
-
-
     if (!rezept.name || rezept.name.trim() === '') {
-      console.error(`Ungültiger Wert für name: ${rezept.name}`);
+      console.error('Ungültiger Wert für name:', rezept.name);
       return false;
     }
 
     if (!rezept.onlineAdresse || rezept.onlineAdresse.trim() === '') {
-      console.error(`Ungültiger Wert für onlineAdresse: ${rezept.onlineAdresse}`);
+      console.error('Ungültiger Wert für onlineAdresse:', rezept.onlineAdresse);
       return false;
     }
 
     if (rezept.tags && Array.isArray(rezept.tags)) {
       for (const tag of rezept.tags) {
         if (!tag.label || tag.label.trim() === '') {
-          console.error(`Ungültiger Wert für tag label: ${tag.label}`);
+          console.error('Ungültiger Wert für tag label:', tag.label);
           return false;
         }
 
         if (!tag.type || tag.type.trim() === '') {
-          console.error(`Ungültiger Wert für tag type: ${tag.type}`);
+          console.error('Ungültiger Wert für tag type:', tag.type);
           return false;
         }
       }
     } else {
-      console.error(`Ungültige oder fehlende tags: ${rezept.tags}`);
+      console.error('Ungültige oder fehlende tags:', rezept.tags);
       return false;
     }
 
-    console.log("Validierung erfolgreich");
+    console.log('Validierung erfolgreich');
     return true;
   }
+
+
 
 
   /*Sendet POST-Anfrage an Server (rezept + headers). In tap wird Serverantwort verarbeitet.
