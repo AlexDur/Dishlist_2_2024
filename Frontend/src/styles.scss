@@ -9,8 +9,8 @@ $color-start: #f6a257;
 $color-end: #b34f09;
 
 $primary-color: #b61919;
-$secondary-color: #e65727;
-$tertiary-color: #e6e5e5;
+$secondary-color: rgba(230, 87, 39, 0.8);
+$tertiary-color: #ffffff;
 
 $detail-color: #000000; ;
 $detail_2-color: #221f1f;
@@ -449,7 +449,7 @@ a {
 
 .neues-rezept{
   margin-bottom:2rem;
-  color: $tertiary-color$tertiary-color;
+  color: $tertiary-color;
   font-size: 2.3rem;
   font-weight: bold;
 }
@@ -572,10 +572,6 @@ a {
   padding: 0;
 }
 
-/*.p-card-content{
-  width: 250px;
-  height: 250px;
-}*/
 
 .container-listeninhalt {
   display: grid;
@@ -760,36 +756,36 @@ a {
   .container-listeninhalt {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Zentriert die Elemente */
-    gap: 4px;
+    gap: 5px;
     background-color: transparent;
     margin: 0 auto;
     width: 100%;
   }
 
-
-
   .rezept-container {
+
     width: 100%;
     height: auto;
     gap:0;
+    display: flex;
+    justify-content: center;
   }
 
   .p-card-content {
-    width: 150px;
-    height: 150px;
+    width: 165px;
+    height: 165px;
     padding: 0;
   }
 
   .rezept-image-container {
-    width: 150px;
-    height: 150px;
+    width: 165px;
+    height: 165px;
     cursor: pointer;
   }
 
   .rezept-image-container img {
-    width: 150px;
-    height: 150px;
+    width: 165px;
+    height: 165px;
   }
 
   .p-card {
@@ -802,14 +798,14 @@ a {
     aspect-ratio: 1 / 1;
     box-sizing: border-box;
     background-color: orange;
-    width: 150px;
-    height: 150px;
+    width: 165px;
+    height: 165px;
     object-fit: contain;
   }
 
   .p-card-body{
-    width: 150px;
-    height: 150px;
+    width: 165px;
+    height: 165px;
     padding: 0;
   }
 
@@ -922,6 +918,7 @@ p-dialog .p-dialog-header{
     width: 100%;
     max-width: 500px;
     margin: 50px auto;
+    padding-bottom: 50px;
   }
 
   .zentriertes-formular-anmeldung{
@@ -1051,27 +1048,26 @@ video {
   flex-shrink: 0;
 }
 
-$placeholder-color: whitesmoke;
+$placeholder-color: #e8d6d1;
 
 .suchfeld {
   cursor: pointer;
   margin-right: 1rem;
-  border: 1px solid $secondary-color;
-  background-color: $secondary-color;
+  border: 1px solid whitesmoke;
+  background-color: whitesmoke;
   border-radius: 20px;
   outline: none;
-  color: whitesmoke;
+  color: #dda48f;
   font-size: 16px;
   width: 100px;
   padding: 7.5px;
 
   &::placeholder {
-    color: $placeholder-color;
+    color: #dda48f;
     transition: color 0.3s ease;
   }
 
   &:focus {
-    border-color: $detail_color;
     box-shadow: 0 0 5px rgb(230, 87, 39);
 
     &::placeholder {
@@ -1082,6 +1078,16 @@ $placeholder-color: whitesmoke;
   &.active {
     opacity: 1;
   }
+}
+
+.such-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #aaa;
+  pointer-events: none;
 }
 
 .weiss{
@@ -1131,7 +1137,7 @@ p-tag + p-tag {
 .category-button {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 100px;
   margin-bottom: 10px;
   height: 40px;
   padding: 10px;
@@ -1190,7 +1196,12 @@ p-tag + p-tag {
   to { opacity: 1; }
 }
 
-
+.suchfeld {
+  font-size: 16px;
+  width: 200px;
+  height: 30px;
+  padding: 7.5px;
+}
 
 .label-abstand {
   display: flex;
@@ -1753,6 +1764,7 @@ h3.weiss {
   }
 
   .seiten-ueberschrift{
+    font-size:2rem;
     display: flex;
     justify-content: left;
   }
@@ -1925,9 +1937,8 @@ h3.weiss {
     bottom: 0;
     width: 100%;
     display: flex;
-    background-color: #f8f9fa;
+    background-color: rgb(255, 255, 255);
     justify-content: center;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
     padding: 8px 0;
   }
 

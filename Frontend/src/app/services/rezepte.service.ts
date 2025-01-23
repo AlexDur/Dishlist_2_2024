@@ -37,15 +37,12 @@ export class RezeptService {
   private imageSubject: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
   public image$: Observable<File | null> = this.imageSubject.asObservable();
 
-
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
   public spoonacularRezepte$: Observable<Rezept[]> = this.spoonacularRezepteSubject.asObservable();
   private imageUrl: string = '';
 
 
   constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {}
-
-
 
 
   private getJsonHeaders(): HttpHeaders {
@@ -61,53 +58,54 @@ export class RezeptService {
     this.imageSubject.next(file);
   }
 
-  setImageUrl(url: string): void {
-    this.imageUrl = url;
-  }
-
-  // Gibt die gespeicherte Bild-URL zurück
-  getImageUrl(): string {
-    return this.imageUrl;
-  }
-
   getUserRezepte(): Observable<RezeptAntwort[]> {
-    const token = localStorage.getItem('jwt_token');
-
+    const token = this.getToken();
     if (!token) {
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
     }
 
-    /*TODO: headers zwei mal abgerufunen in datei, also auslagern*/
-    const headers = this.getJsonHeaders().set('Accept', 'application/json', )
-      .set('Authorization', `Bearer ${token}`);
+    const headers = this.createHeaders(token);
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
-      tap(rezepte => {
-        // Überprüfe den Inhalt der Antwort
-        if (!rezepte || !Array.isArray(rezepte)) {
-          console.error('API antwortet mit ungültigem Inhalt:', rezepte);
-          this.rezepteSubject.next([]);
-        } else if (rezepte.length === 0) {
-          console.warn('Keine Rezepte zurückgegeben.');
-          this.rezepteSubject.next([]);
-        } else {
-          console.log('Rezepte vom Server:', rezepte);
-          this.rezepteSubject.next(rezepte);
-        }
-      }),
-      catchError(error => {
-        console.error('Fehler beim Laden der Rezepte', error);
-        if (error.status === 400) {
-          console.error('Fehler 400: Ungültiges Token oder leeres Token.');
-        } else if (error.status === 401) {
-          console.error('Fehler 401: Ungültiger Token.');
-        } else {
-          console.error('Unbekannter Fehler:', error);
-        }
-        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
-      })
+      tap(rezepte => this.handleResponse(rezepte)),
+      catchError(error => this.handleError(error))
     );
   }
+
+  private getToken(): string | null {
+    return localStorage.getItem('jwt_token');
+  }
+
+  private createHeaders(token: string): HttpHeaders {
+    return this.getJsonHeaders()
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
+  }
+
+  private handleResponse(rezepte: RezeptAntwort[]): void {
+    if (!rezepte || !Array.isArray(rezepte)) {
+      this.rezepteSubject.next([]);
+    } else if (rezepte.length === 0) {
+      this.rezepteSubject.next([]);
+    } else {
+      this.rezepteSubject.next(rezepte);
+    }
+  }
+
+  private handleError(error: any): Observable<never> {
+
+    switch (error.status) {
+      case 400:
+        break;
+      case 401:
+        break;
+      default:
+        break;
+    }
+
+    return throwError(() => new Error("Fehler beim Laden der Rezepte"));
+  }
+
 
   setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
@@ -120,33 +118,27 @@ export class RezeptService {
 
 // Validierungsfunktion für das Rezept
    validateRezept(rezept: Rezept): boolean {
-    console.log('Rezept vor der Validierung:', rezept);
 
      if (!rezept.name?.trim()) {
-       console.error('Ungültiger Wert für name:', rezept.name);
        return false;
      }
 
      if (!rezept.onlineAdresse?.trim()) {
-       console.error('Ungültiger Wert für onlineAdresse:', rezept.onlineAdresse);
        return false;
      }
 
      if (rezept.tags?.length) { //  Optional chaining und truthy check
        for (const tag of rezept.tags) {
          if (!tag.label?.trim()) { // Optional chaining und trim() kombiniert
-           console.error('Ungültiger Wert für tag label:', tag.label);
            return false;
          }
 
          if (!tag.type?.trim()) { // Optional chaining und trim() kombiniert
-           console.error('Ungültiger Wert für tag type:', tag.type);
            return false;
          }
        }
      }
 
-    console.log('Validierung erfolgreich');
     return true;
   }
 

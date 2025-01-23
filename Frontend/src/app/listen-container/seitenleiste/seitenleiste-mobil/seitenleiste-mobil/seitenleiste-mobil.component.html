@@ -1,15 +1,17 @@
 <div>
   <div>
     <div class="header">
-      <div class="seiten-ueberschrift">Dishes</div>
+      <div *ngIf="isMobile" class="seiten-ueberschrift">Dishes</div>
       <div class="such-container">
+
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearchTextChange()"
-          placeholder="Suche"
+          placeholder="Durchsuchen"
           class="suchfeld"
         />
+
       </div>
 
       <!-- Button zum Öffnen des Overlays -->

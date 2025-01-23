@@ -65,10 +65,10 @@ export class CropperComponent implements OnInit, AfterViewInit {
 
             // Setze die Crop-Box mit den gewünschten Abmessungen
             this.cropper.setCropBoxData({
-              left: 0,       // Position der Crop-Box
-              top: 0,        // Position der Crop-Box
-              width: 190,    // Breite der Crop-Box
-              height: 190    // Höhe der Crop-Box
+              left: 0,
+              top: 0,
+              width: 190,
+              height: 190
             });
           }
         });

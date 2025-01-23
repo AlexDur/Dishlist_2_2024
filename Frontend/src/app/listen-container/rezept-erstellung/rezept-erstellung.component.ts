@@ -37,8 +37,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   newRecipe: any = {};
   tags: Tag[] = [...DEFAULT_TAGS];
-  selectedTags: Tag[] = [];
-  tagError: boolean = false;
+
   showNameError: boolean = false;
   showOnlineAddressError: boolean = false;
   nametouched: boolean = false;
@@ -61,7 +60,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   constructor(
     private rezepteService: RezeptService,
     private router: Router,
-    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -89,8 +87,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-
-
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
@@ -106,23 +102,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       image: [newRecipe.image || null, []]
     });
   }
-
-
-  // Formular aktualisieren
-  updateForm(form: FormGroup, rezept: Rezept): void {
-    form.patchValue({
-      name: rezept.name || '',
-      onlineAdresse: rezept.onlineAdresse || '',
-      image: rezept.image || null,
-    });
-
-    const tagsArray = form.get('tags') as FormArray;
-    tagsArray.clear(); // Vorherige Tags entfernen
-    rezept.tags?.forEach(tag => {
-      tagsArray.push(this.createTagFormGroup(tag)); // Neue Tags hinzufügen
-    });
-  }
-
 
 
   private showError(fieldName: keyof Rezept, show: boolean): void {
@@ -225,17 +204,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-  updateTagCount(): void {
-    this.tags.forEach(tag => tag.count = 0);
-    this.rezepte.forEach(rezept => {
-      rezept.tags?.forEach(rezeptTag => {
-        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
-        if (foundTag) {
-          foundTag.count++;
-        }
-      });
-    });
-  }
 
   onImageUploaded(image: File): void {
     this.rezeptForm.patchValue({
@@ -344,20 +312,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     const fieldValue = this.newRecipe[fieldName];
     return typeof fieldValue === 'string' && fieldValue.trim() !== '';
   }
-
-
-  //Validierung der Eingabedaten ab hier
-/*
-  getInputClass(fieldName: keyof Rezept): string {
-    // Nur rot anzeigen, wenn das Feld berührt wurde und ungültig ist
-    if (fieldName === 'name' && this.nametouched) {
-      return this.isFieldValid(fieldName) ? '' : 'invalid';
-    } else if (fieldName === 'onlineAdresse' && this.on_adtouched) {
-      return this.isFieldValid(fieldName) ? '' : 'invalid';
-    }
-    return ''; // Standardfarbe, wenn das Feld nicht berührt wurde
-  }
-*/
 
 
 
