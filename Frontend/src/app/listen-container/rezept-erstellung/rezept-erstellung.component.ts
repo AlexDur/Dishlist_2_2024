@@ -44,9 +44,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
 
-
-  dataLoaded = false;
-
   rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
   image: any;
@@ -203,24 +200,34 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   toggleTagSelection(tag: Tag) {
-
     const tagsArray = this.rezeptForm.get('tags') as FormArray;
-    const index = tagsArray.value.findIndex((t: Tag) => t.label === tag.label && t.type === tag.type); // Index im FormArray finden
 
+    // Index des Tags im FormArray suchen
+    const index = tagsArray.value.findIndex(
+      (t: Tag) => t.label === tag.label && t.type === tag.type
+    );
 
     if (index !== -1) {
-      tagsArray.removeAt(index); // Entfernen, wenn der Tag bereits existiert
+      // Tag existiert bereits im FormArray
+      if (tagsArray.at(index).value.selected) {
+        tagsArray.removeAt(index);
+      } else {
+        tagsArray.at(index).patchValue({ selected: true });
+      }
     } else {
       const newTag = { ...tag, selected: true };
-      tagsArray.push(this.createTagFormGroup(newTag)); // Hinzufügen, wenn der Tag nicht existiert
+      tagsArray.push(this.createTagFormGroup(newTag));
     }
 
+    // Direkt das Original-Tag aktualisieren
+    tag.selected = !tag.selected;
+
+    // FormArray-Status aktualisieren
     this.rezeptForm.get('tags')?.updateValueAndValidity();
-    this.cdr.markForCheck(); //  Change Detection triggern
+    this.cdr.markForCheck();
   }
+
 
   updateTagCount(): void {
     this.tags.forEach(tag => tag.count = 0);

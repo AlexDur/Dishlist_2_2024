@@ -38,7 +38,10 @@
             </button>
 
             <div *ngIf="selectedCategory === category.name" class="tag-panel">
-              <span *ngFor="let tag of getVisibleTags()" (click)="toggleTagSelection(tag)" class="tag" [class.selected]="tag.selected">
+              <span *ngFor="let tag of getVisibleTags()"
+                    (click)="toggleTagSelection(tag)"
+                    class="tag"
+                    [class.selected]="tag.selected">
                 {{ tag.label }}
               </span>
             </div>
