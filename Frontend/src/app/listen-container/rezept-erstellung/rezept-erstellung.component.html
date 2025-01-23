@@ -43,13 +43,12 @@
               </span>
             </div>
           </ng-container>
-
-          <div *ngIf="tagError" class="error-message">Bitte wähle mindestens einen Tag aus.</div>
         </div>
 
-        <button [disabled]="!rezeptForm.valid" class="general-button" type="submit" pButton>
+        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton>
           {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}
         </button>
+
 
       </div>
     </form>

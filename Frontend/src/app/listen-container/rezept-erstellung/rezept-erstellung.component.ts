@@ -20,7 +20,7 @@ import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
 import { filter } from 'rxjs/operators';
 import { Subscription, combineLatest  } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -50,6 +50,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
   image: any;
+  isLoading = false;
 
 
   categories = [
@@ -107,10 +108,12 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   // Formular erstellen
   createForm(newRecipe: Rezept): FormGroup {
+    const tagFormArray = this.fb.array(newRecipe.tags?.map(tag => this.createTagFormGroup(tag)) ?? []);
+
     return this.fb.group({
       name: [newRecipe.name || '', [Validators.required]],
       onlineAdresse: [newRecipe.onlineAdresse || '', [Validators.required]],
-      tags: [newRecipe.tags || [], []],
+      tags: tagFormArray,
       image: [newRecipe.image || null, []]
     });
   }
@@ -127,12 +130,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-  private mapToTagType(type: string): TagType {
-    if (Object.values(TagType).includes(type as TagType)) {
-      return type as TagType; // Typen stimmen überein
-    }
-    throw new Error(`Ungültiger TagType: ${type}`);
-  }
+
 
   private showError(fieldName: keyof Rezept, show: boolean): void {
     if (fieldName === 'name') {
@@ -149,41 +147,79 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     }
   }
 
+  isFormValid(): boolean {
+    return this.rezeptForm && this.rezeptForm.status === 'VALID';
+  }
+
 
   setCategory(category: { name: string; selected: boolean }) {
-    // Die ausgewählte Kategorie umschalten
-    if (this.selectedCategory === category.name) {
-      category.selected = false;
+    event?.preventDefault();
+    if (this.selectedCategory === this.mapToTagType(category.name)) {
       this.selectedCategory = null;
     } else {
-      // Setze die ausgewählte Kategorie und setze alle anderen auf nicht ausgewählt
-      this.categories.forEach(cat => cat.selected = false);
-      category.selected = true;
-      this.selectedCategory = category.name;
+      this.selectedCategory = this.mapToTagType(category.name);
     }
+
+    category.selected = !category.selected;
     this.cdr.detectChanges();
   }
 
 
   getVisibleTags() {
     // Tags nach `selectedCategory` filtern
-    return this.tags.filter(tag => tag.type === this.selectedCategory);
+    if (this.selectedCategory !== null) {
+      return this.tags.filter(tag => tag.type === this.selectedCategory);
+    } else {
+      return [];
+    }
+  }
+
+  // FormGroup für ein einzelnes Tag erstellen
+  createTagFormGroup(tag: any): FormGroup {
+    const tagType = this.mapToTagType(tag.type); // Konvertiere den String zu TagType
+    if (!tagType) {
+      throw new Error(`Ungültiger TagType: ${tag.type}`);
+    }
+
+    return this.fb.group({
+      id: [tag.id],
+      type: [tagType],
+      label: [tag.label],
+      selected: [tag.selected],
+      count: [tag.count],
+    });
+  }
+
+  private mapToTagType(type: string): TagType | null {
+    switch (type) {
+      case 'Gänge':
+        return TagType.GÄNGE;
+      case 'Küche':
+        return TagType.KÜCHE;
+      case 'Nährwert':
+        return TagType.NÄHRWERT;
+      default:
+        return null; // Für ungültige Typen
+    }
   }
 
 
-  toggleTagSelection(tag: Tag) {
-    tag.selected = !tag.selected;
-    console.log(`Tag ${tag.label} selected status: ${tag.selected}`);
 
-    if (tag.selected) {
-      this.selectedTags.push(tag);
+  toggleTagSelection(tag: Tag) {
+
+    const tagsArray = this.rezeptForm.get('tags') as FormArray;
+    const index = tagsArray.value.findIndex((t: Tag) => t.label === tag.label && t.type === tag.type); // Index im FormArray finden
+
+
+    if (index !== -1) {
+      tagsArray.removeAt(index); // Entfernen, wenn der Tag bereits existiert
     } else {
-      this.selectedTags = this.selectedTags.filter(t => t.label !== tag.label);
+      const newTag = { ...tag, selected: true };
+      tagsArray.push(this.createTagFormGroup(newTag)); // Hinzufügen, wenn der Tag nicht existiert
     }
 
-    this.newRecipe.tags = [...this.selectedTags];
-    console.log('Aktuelle ausgewählte Tags:', this.selectedTags);
-    this.cdr.detectChanges();
+    this.rezeptForm.get('tags')?.updateValueAndValidity();
+    this.cdr.markForCheck(); //  Change Detection triggern
   }
 
   updateTagCount(): void {
@@ -210,26 +246,23 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   handleClick(event: Event) {
     event.preventDefault();
 
-    if (this.rezeptForm.invalid) {
-      this.rezeptForm.markAllAsTouched();
-      return; // Beende die Funktion, wenn das Formular ungültig ist
-    }
-
     const rezeptToSave = this.rezeptForm.value as Rezept; // Rezept aus dem Formular erstellen
-
 
     if (this.image instanceof File) { // this.image verwenden, falls vorhanden
       rezeptToSave.image = this.image;
     }
 
+    this.isLoading = true;
+
     this.saveRecipe(rezeptToSave).subscribe({
       next: (response) => {
         console.log(this.isUpdateMode ? 'Rezept erfolgreich aktualisiert' : 'Rezept erfolgreich gespeichert', response);
         this.router.navigate(['/listen-container']);
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Fehler beim Speichern/Aktualisieren:', error);
-        // Fehlerbehandlung hier (z.B. Fehlermeldung anzeigen)
+        this.isLoading = false;
       }
     });
   }
@@ -269,13 +302,16 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       id: rezeptToSave.id,
       name: rezeptToSave.name,
       onlineAdresse: rezeptToSave.onlineAdresse,
-      tags: Array.isArray(rezeptToSave.tags) ? rezeptToSave.tags.map(tag => ({
-        id: tag.id,
-        type: tag.type ?? 'defaultType',
-        label: tag.label,
-        selected: tag.selected,
-        count: tag.count,
-      })) : []
+      tags: (rezeptToSave.tags && Array.isArray(rezeptToSave.tags)) // Überprüfe auf Existenz und Array-Typ
+        ? rezeptToSave.tags.map(tag => ({
+          id: tag.id,
+          type: tag.type ?? 'defaultType',
+          label: tag.label,
+          selected:tag.selected,
+          count:tag.count
+          // selected und count werden nicht benötigt
+        }))
+        : []
     };
   }
 
@@ -287,6 +323,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
 
   //Validierung der Eingabedaten ab hier
+/*
   getInputClass(fieldName: keyof Rezept): string {
     // Nur rot anzeigen, wenn das Feld berührt wurde und ungültig ist
     if (fieldName === 'name' && this.nametouched) {
@@ -296,6 +333,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     }
     return ''; // Standardfarbe, wenn das Feld nicht berührt wurde
   }
+*/
 
 
 

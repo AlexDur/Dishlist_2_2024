@@ -5,7 +5,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="7">
+          <list size="8">
             <item index="0" class="java.lang.String" itemvalue="1" />
             <item index="1" class="java.lang.String" itemvalue="pButton" />
             <item index="2" class="java.lang.String" itemvalue="pInputText" />
@@ -13,6 +13,7 @@
             <item index="4" class="java.lang.String" itemvalue="tooltipPosition" />
             <item index="5" class="java.lang.String" itemvalue="routerLink" />
             <item index="6" class="java.lang.String" itemvalue="label" />
+            <item index="7" class="java.lang.String" itemvalue="formControlName" />
           </list>
         </value>
       </option>

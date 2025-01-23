@@ -22,7 +22,8 @@ import {TableisteComponent} from "./listen-container/tableiste/tableiste.compone
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
 import {LandingComponent} from "./landing/landing.component";
 import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/empfehlungen.component";
-
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -54,8 +55,8 @@ import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/e
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
-
-
+    CommonModule,
+    ReactiveFormsModule
 
   ],
   providers: [],

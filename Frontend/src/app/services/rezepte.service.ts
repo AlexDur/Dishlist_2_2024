@@ -119,34 +119,32 @@ export class RezeptService {
   }
 
 // Validierungsfunktion für das Rezept
-  private validateRezept(rezept: Rezept): boolean {
+   validateRezept(rezept: Rezept): boolean {
     console.log('Rezept vor der Validierung:', rezept);
-    if (!rezept.name || rezept.name.trim() === '') {
-      console.error('Ungültiger Wert für name:', rezept.name);
-      return false;
-    }
 
-    if (!rezept.onlineAdresse || rezept.onlineAdresse.trim() === '') {
-      console.error('Ungültiger Wert für onlineAdresse:', rezept.onlineAdresse);
-      return false;
-    }
+     if (!rezept.name?.trim()) {
+       console.error('Ungültiger Wert für name:', rezept.name);
+       return false;
+     }
 
-    if (rezept.tags && Array.isArray(rezept.tags)) {
-      for (const tag of rezept.tags) {
-        if (!tag.label || tag.label.trim() === '') {
-          console.error('Ungültiger Wert für tag label:', tag.label);
-          return false;
-        }
+     if (!rezept.onlineAdresse?.trim()) {
+       console.error('Ungültiger Wert für onlineAdresse:', rezept.onlineAdresse);
+       return false;
+     }
 
-        if (!tag.type || tag.type.trim() === '') {
-          console.error('Ungültiger Wert für tag type:', tag.type);
-          return false;
-        }
-      }
-    } else {
-      console.error('Ungültige oder fehlende tags:', rezept.tags);
-      return false;
-    }
+     if (rezept.tags?.length) { //  Optional chaining und truthy check
+       for (const tag of rezept.tags) {
+         if (!tag.label?.trim()) { // Optional chaining und trim() kombiniert
+           console.error('Ungültiger Wert für tag label:', tag.label);
+           return false;
+         }
+
+         if (!tag.type?.trim()) { // Optional chaining und trim() kombiniert
+           console.error('Ungültiger Wert für tag type:', tag.type);
+           return false;
+         }
+       }
+     }
 
     console.log('Validierung erfolgreich');
     return true;
