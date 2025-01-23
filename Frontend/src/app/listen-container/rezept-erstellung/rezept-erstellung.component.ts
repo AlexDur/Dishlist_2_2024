@@ -21,6 +21,7 @@ import {TagType} from "../../models/tagType";
 import { filter } from 'rxjs/operators';
 import { Subscription, combineLatest  } from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -60,6 +61,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   constructor(
     private rezepteService: RezeptService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -68,35 +70,25 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   // FormGroup erstellen und die bisherigen Formularwerte in Form Controls zu integrieren
   ngOnInit(): void {
+    this.loadRezeptToEdit();
+
+    // Erstellen des Formulars mit den geladenen Daten
     this.rezeptForm = this.createForm(this.newRecipe);
 
-    console.log('Formular nach Initialisierung:', this.rezeptForm.valid);
-    console.log('Fehler im Formular:', this.rezeptForm.errors);
-
-    Object.keys(this.rezeptForm.controls).forEach(key => {
-      const control = this.rezeptForm.get(key);
-      console.log('Control für', key, 'Valid:', control?.valid, 'Errors:', control?.errors);
+    // URL-Formatierung validieren und anpassen bei Änderungen
+    this.rezeptForm.get('onlineAdresse')?.valueChanges.subscribe(() => {
+      this.validateAndFormatURL();
     });
 
-    this.rezeptForm.get('onlineAdresse')?.valueChanges.subscribe(value => {
-      this.validateAndFormatURL(); // Behalte die URL-Formatierung
-    });
-
+    // Beobachten, ob ein Bild hochgeladen wird, und Formular entsprechend aktualisieren
     this.rezepteService.image$.subscribe(image => {
-      console.log('Neues Bild erhalten:', image);
       if (image && !this.rezeptForm.get('image')?.value) {
         this.rezeptForm.get('image')?.setValue(image);
       }
     });
-
-    if (this.isUpdateMode) {
-      this.updateForm(this.rezeptForm, this.newRecipe);
-    }
-
-    if (this.newRecipe.image && !this.rezeptForm.get('image')?.value) {
-      this.rezeptForm.get('image')?.setValue(this.newRecipe.image);
-    }
   }
+
+
 
 
   ngOnDestroy() {
@@ -121,11 +113,15 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     form.patchValue({
       name: rezept.name || '',
       onlineAdresse: rezept.onlineAdresse || '',
-      tags: rezept.tags || [],
       image: rezept.image || null,
     });
-  }
 
+    const tagsArray = form.get('tags') as FormArray;
+    tagsArray.clear(); // Vorherige Tags entfernen
+    rezept.tags?.forEach(tag => {
+      tagsArray.push(this.createTagFormGroup(tag)); // Neue Tags hinzufügen
+    });
+  }
 
 
 
@@ -255,9 +251,17 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
     const rezeptToSave = this.rezeptForm.value as Rezept; // Rezept aus dem Formular erstellen
 
-    if (this.image instanceof File) { // this.image verwenden, falls vorhanden
-      rezeptToSave.image = this.image;
+
+    if (this.isUpdateMode) {
+      rezeptToSave.id = this.newRecipe.id; // ID des bestehenden Rezepts setzen
     }
+
+    if (this.image instanceof File) {
+      rezeptToSave.image = this.image;
+    } else if (this.newRecipe.bildUrl) {
+      rezeptToSave.bildUrl = this.newRecipe.bildUrl;
+    }
+
 
     this.isLoading = true;
 
@@ -273,6 +277,19 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  //mit window.history.state wird Objekt als Referenz übergeben
+  loadRezeptToEdit() {
+    const state = window.history.state;
+    console.log('Router State:', state);
+    if (state && state['data']) {
+      this.newRecipe = state['data'];
+      this.isUpdateMode = !!this.newRecipe.id; // Setze Update-Modus basierend auf der ID
+      console.log('Geladene Rezeptdaten:', this.newRecipe);
+    }
+  }
+
+
 
 
 

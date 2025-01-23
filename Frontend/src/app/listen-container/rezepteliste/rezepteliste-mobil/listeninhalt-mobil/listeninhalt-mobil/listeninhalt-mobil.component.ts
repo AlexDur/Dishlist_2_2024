@@ -35,6 +35,7 @@ export class ListeninhaltMobilComponent {
     event.preventDefault();
     this.rezepteService.setCurrentRezept(rezept);
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
+    console.log('Weitergegeben aus Listeninhalt', rezept)
   }
 
   showDeleteDialog(rezeptId: number) {
