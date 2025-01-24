@@ -35,31 +35,27 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService, private cdRef: ChangeDetectorRef) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateTagCounts();
+      this.updateTagCounts(this.originalRezepte);
     });
   }
 
   ngOnInit(): void {
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.originalRezepte = [...rezepte];
-      this.tags = [...DEFAULT_TAGS.map(tag => ({...tag, selected: false, disabled: false}))];
+      /*this.tags = [...DEFAULT_TAGS.map(tag => ({...tag, selected: false, disabled: false}))];*/
       this.resetRezepte();
-      this.updateTagCounts();
+      this.updateTagCounts(this.originalRezepte);
     });
+
+    // Debounce für Suchtext
     this.searchSubject
       .pipe(
         debounceTime(300),
-        distinctUntilChanged() // Only emit if the search text actually changes
+        distinctUntilChanged() // Nur Emmission, wenn Suchtext sich ändert
       )
       .subscribe(searchText => {
         this.applyFilters(); // Call a combined filtering function
       });
-
-    this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.originalRezepte = rezepte;
-      this.filteredRecipes = rezepte; // Initialize filteredRecipes
-      this.updateTagCounts(); // Important to update counts initially
-    });
   }
 
 
@@ -101,10 +97,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
 
-  private updateDynamicTagCounts(rezepte: Rezept[]): void {
-    // Zähle Tag-Vorkommen in gefilterten Rezepten
+  private updateTagCounts(rezepte: Rezept[]): void {
     const zaehler: { [key: string]: number } = {};
 
+    // Zähle Tags basierend auf den Rezepten
     rezepte.forEach(rezept => {
       rezept.tags?.forEach(tag => {
         if (tag && tag.label) {
@@ -113,37 +109,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
       });
     });
 
-    // Aktualisiere Tag-Zähler und Verfügbarkeit für ALLE Tags
-    [
-      ...this.getGerichtartenTags(),
-      ...this.getKuechenTags(),
-      ...this.getNaehrwertTags()
-    ].forEach(tag => {
-      // Zähle nur Tags in den gefilterten Rezepten
-      tag.count = zaehler[tag.label] || 0;
+    // Update tags mit den gezählten Werten
+    this.updateTagsWithCounts(zaehler);
+  }
 
-      // Deaktiviere Tags mit 0 Vorkommen, außer sie sind bereits ausgewählt
+  private updateTagsWithCounts(zaehler: { [key: string]: number }): void {
+    this.tags.forEach(tag => {
+      tag.count = zaehler[tag.label] || 0;
       tag.disabled = tag.count === 0 && !tag.selected;
     });
   }
 
-  private updateTagCounts(): void {
-    const zaehler: { [key: string]: number } = {};
-
-    // Zähle Tags basierend auf den aktuell gefilterten Rezepten
-    this.rezepte.forEach(rezept => {
-      rezept.tags?.forEach(tag => {
-        if (tag && tag.label) {
-          zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
-        }
-      });
-    });
-
-    this.tags.forEach(tag => {
-      tag.count = zaehler[tag.label] || 0;
-      tag.disabled = tag.count === 0;
-    });
-  }
 
 
   getGerichtartenTags(): Tag[] {
@@ -186,7 +162,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
       );
     });
 
-    this.updateDynamicTagCounts(this.filteredRecipes);
+    this.updateTagCounts(this.filteredRecipes);
     this.cdRef.detectChanges();
     this.gefilterteRezepte.emit(this.filteredRecipes);
   }
