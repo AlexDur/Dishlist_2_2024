@@ -35,7 +35,8 @@
                     <p-checkbox
                       [(ngModel)]="art.selected"
                       [binary]="true"
-                      (ngModelChange)="toggleTag(art);"
+                      [disabled]="art.disabled || false"
+                      (onChange)="toggleTag(art);"
                       inputId="type_{{ art.label }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ art.label }}">
@@ -45,6 +46,8 @@
                 </div>
               </div>
 
+
+              <!--Küche-->
               <div class="filter-column">
                 <div class="dropdown-content-title">Küche</div>
                 <div *ngFor="let type of getKuechenTags(); let i = index">
@@ -52,7 +55,8 @@
                     <p-checkbox
                       [(ngModel)]="type.selected"
                       [binary]="true"
-                      (ngModelChange)="toggleTag(type);"
+                      [disabled]="type.disabled || false"
+                      (onChange)="toggleTag(type);"
                       inputId="type_{{ i }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ i }}">
@@ -62,6 +66,7 @@
                 </div>
               </div>
 
+              <!--Nährwert-->
               <div class="filter-column">
                 <div class="dropdown-content-title">Nährwert</div>
                 <div *ngFor="let type of getNaehrwertTags(); let i = index">
@@ -69,7 +74,8 @@
                     <p-checkbox
                       [(ngModel)]="type.selected"
                       [binary]="true"
-                      (ngModelChange)="toggleTag(type);"
+                      [disabled]="type.disabled || false"
+                      (onChange)="toggleTag(type);"
                       inputId="type_{{ i }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ i }}">

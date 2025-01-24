@@ -6,4 +6,5 @@ export interface Tag {
   label: string;
   type: TagType;
   count: number;
+  disabled: boolean;
 }
