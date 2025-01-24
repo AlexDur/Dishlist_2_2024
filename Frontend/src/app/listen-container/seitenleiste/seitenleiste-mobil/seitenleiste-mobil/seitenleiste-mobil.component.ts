@@ -12,22 +12,24 @@ import { Subject } from 'rxjs';
   templateUrl: './seitenleiste-mobil.component.html'
 })
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
-  @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+  // 1. Eingabe- und Ausgabe-Properties
   @Input() rezepte: Rezept[] = [];
   @Input() isMobile?: boolean;
+  @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
 
+  // 2. ViewChild-Referenzen
   @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
 
-  selectedTags: string[] = [];
-  originalRezepte: Rezept[] = [];
+  // 3. Private und geschützte Eigenschaften
   private subscription: Subscription | undefined;
+  private searchSubject = new Subject<string>();
+
+  // 4. Öffentliche Eigenschaften
+  originalRezepte: Rezept[] = [];
   tags: Tag[] = [...DEFAULT_TAGS];
   searchText: string = '';
   isOverlayVisible = false;
-
   filteredRecipes: Rezept[] = [];
-
-  private searchSubject = new Subject<string>();
 
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
@@ -74,7 +76,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     if (content && !content.contains(event.target as Node)) {
       this.isOverlayVisible = false;
     }
-
   }
 
   closeOverlayButton(event: Event): void {
@@ -100,61 +101,11 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
 
-  updateSelectedTags(): void {
-    this.selectedTags = this.tags
-      .filter(tag => tag.selected)
-      .map(tag => tag.label);
-  }
-
-
-  // originalRezepte = die ungefilterte Gesamtheit
-  filterRezepte(): void {
-    // Wenn keine Tags ausgewählt sind, zeige alle Rezepte
-    if (this.selectedTags.length === 0) {
-      this.gefilterteRezepte.emit(this.originalRezepte);
-      this.updateDynamicTagCounts(this.originalRezepte);
-      return;
-    }
-
-    // Gruppiere Tags nach Kategorien
-    const selectedTagsByCategory = {
-      'Gänge': this.getGerichtartenTags().filter(t => t.selected).map(t => t.label),
-      'Küche': this.getKuechenTags().filter(t => t.selected).map(t => t.label),
-      'Nährwert': this.getNaehrwertTags().filter(t => t.selected).map(t => t.label)
-    };
-
-    // Filtere Rezepte basierend auf ausgewählten Tags
-    let gefilterteRezepte = this.originalRezepte.filter(rezept => {
-      // Prüfe jede Kategorie
-      for (const [category, selectedTags] of Object.entries(selectedTagsByCategory)) {
-        if (selectedTags.length > 0) {
-          // Wenn Tags in dieser Kategorie ausgewählt sind
-          const matchingTag = rezept.tags?.find(tag =>
-            selectedTags.includes(tag.label) && tag.type === category
-          );
-
-          // Wenn kein passender Tag gefunden wird, rausfiltern
-          if (!matchingTag) {
-            return false;
-          }
-        }
-      }
-      return true;
-    });
-
-    // Sende gefilterte Rezepte
-    this.gefilterteRezepte.emit(gefilterteRezepte);
-
-    // Aktualisiere dynamische Tag-Zähler
-    this.updateDynamicTagCounts(gefilterteRezepte);
-  }
-
-
-  private updateDynamicTagCounts(filteredRecipes: Rezept[]): void {
+  private updateDynamicTagCounts(rezepte: Rezept[]): void {
     // Zähle Tag-Vorkommen in gefilterten Rezepten
     const zaehler: { [key: string]: number } = {};
 
-    filteredRecipes.forEach(rezept => {
+    rezepte.forEach(rezept => {
       rezept.tags?.forEach(tag => {
         if (tag && tag.label) {
           zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
@@ -194,13 +145,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleTag(tag: Tag): void {
-    tag.selected = !tag.selected;
-    this.applyFilters();
-  }
-
-
-
 
   getGerichtartenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Gänge');
@@ -219,10 +163,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.searchSubject.next(this.searchText);
   }
 
-  onCheckboxChange(tag: Tag, event: any): void {
-    tag.selected = event.checked; // Manually update the tag's selected state
-    this.applyFilters(); // Immediately apply filters
-    // No need for cdRef.detectChanges() here
+
+  toggleTag(tag: Tag): void {
+    tag.selected = !tag.selected;
+    this.applyFilters();
   }
 
   applyFilters(): void {
@@ -243,8 +187,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     });
 
     this.updateDynamicTagCounts(this.filteredRecipes);
+    this.cdRef.detectChanges();
     this.gefilterteRezepte.emit(this.filteredRecipes);
-    this.cdRef.detectChanges(); // Erzwinge die Aktualisierung der Ansicht
   }
 
 
