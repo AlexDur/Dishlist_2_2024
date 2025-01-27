@@ -22,6 +22,9 @@ import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
 import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
 import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.component";
 import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FilterkreiseComponent
+} from "./rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filterkreise/filterkreise.component";
 
 @NgModule({
   declarations: [
@@ -30,7 +33,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     RezeptErstellungComponent,
     FotoUploadComponent,
     CameraComponent,
-    CropperComponent
+    CropperComponent,
+    FilterkreiseComponent,
   ],
   exports: [
     ListeninhaltMobilComponent,

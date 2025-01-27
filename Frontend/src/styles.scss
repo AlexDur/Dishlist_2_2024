@@ -612,6 +612,9 @@ a {
   height: 165px;
 }
 
+
+
+
 .p-card {
   position: relative;
   display: grid;
@@ -744,6 +747,38 @@ a {
   background-color: orange;
 }
 
+/*Filterkreise*/
+.filter-container {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 30px 40px;
+}
+
+.filter-text {
+  font-size: 16px; // Optional: Passe die Schriftgröße des Texts an
+}
+
+.filter-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75px;
+  height: 75px;
+  border: 2px solid #fb874e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5); // Transparenter Hintergrund
+}
+
+.filter-plus {
+  font-size: 10px;
+  font-weight: bold;
+}
+
 //Cropper mobile u. Listenansicht
 @media screen and (max-width: 750px) {
 
@@ -758,7 +793,7 @@ a {
     flex-wrap: wrap;
     gap: 5px;
     background-color: transparent;
-    margin: 0 auto;
+    margin: 2rem auto;
     width: 100%;
   }
 
@@ -1057,7 +1092,7 @@ $placeholder-color: #e8d6d1;
   background-color: whitesmoke;
   border-radius: 20px;
   outline: none;
-  color: #dda48f;
+  color: #fb874e;
   font-size: 16px;
   width: 100px;
   padding: 7.5px;

@@ -1,8 +1,11 @@
-
+<div>
+<app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
 <div class="container-listeninhalt">
+
   <div *ngFor="let rezept of gefilterteRezepte">
     <p-card>
       <div class="rezept-container">
+
         <div class="rezept-image-container">
           <img
             *ngIf="rezept.bildUrl"
@@ -33,4 +36,4 @@
   </div>
   <app-dialog  [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
 </div>
-
+</div>

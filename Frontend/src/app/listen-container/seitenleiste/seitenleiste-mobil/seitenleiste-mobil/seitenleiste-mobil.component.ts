@@ -143,6 +143,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   toggleTag(tag: Tag): void {
     tag.selected = !tag.selected;
     this.applyFilters();
+
   }
 
   applyFilters(): void {
