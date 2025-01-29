@@ -20,8 +20,10 @@ import {RegistrierungComponent} from "./intro/registrierung/registrierung.compon
 import {VerifikationComponent} from "./intro/verifikation/verifikation.component";
 import {TableisteComponent} from "./listen-container/tableiste/tableiste.component";
 import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
-
-
+import {LandingComponent} from "./landing/landing.component";
+import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/empfehlungen.component";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
     VerifikationComponent,
     TableisteComponent,
     DatenschutzComponent,
-
+    LandingComponent,
+    EmpfehlungenComponent,
 
    ],
 
@@ -52,12 +55,11 @@ import {DatenschutzComponent} from "./intro/datenschutz/datenschutz.component";
     ButtonModule,
     SharedModule,
     ToggleButtonModule,
-
+    CommonModule,
+    ReactiveFormsModule
 
   ],
   providers: [],
-  exports: [
-  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,6 +12,7 @@ export class AppComponent implements OnInit{
   public isMobile: boolean = false;
   isAuthenticated: boolean = false;
   isLoading: boolean = true;
+  selectedTags: string[]=[];
 
   constructor(private authService: AuthService, private router: Router) {
     this.checkScreenSize();
@@ -45,6 +46,11 @@ export class AppComponent implements OnInit{
 
   private checkScreenSize() {
     this.isMobile = window.innerWidth < 768;
+  }
+
+  onSelectedTagsChange(newSelectedTags: string[]): void {
+    this.selectedTags = newSelectedTags;
+    console.log('Erhaltene selectedTags von der Kindkomponente:', this.selectedTags);
   }
 }
 

@@ -6,5 +6,6 @@ export interface Rezept {
   tags?: Array<{id:number, type: string; label: string; selected: boolean; count: number }>;
   image?: File | null;
   bildUrl?: string;
+
 }
 

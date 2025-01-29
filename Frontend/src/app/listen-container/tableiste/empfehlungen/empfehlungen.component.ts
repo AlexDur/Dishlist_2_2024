@@ -1,23 +1,38 @@
-import { Component, ViewChild, Renderer2, ChangeDetectorRef, HostListener, ElementRef  } from '@angular/core';
+import { Component, Input, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import { timeout } from 'rxjs';
 
 import {dishTypeMapping} from "../../../utils/dishTypeMapping";
+import {Tag} from "../../../models/tag";
+import {TagService} from "../../../services/tags.service";
 
 @Component({
   selector: 'app-empfehlungen',
   templateUrl: './empfehlungen.component.html'
 })
-export class EmpfehlungenComponent {
+export class EmpfehlungenComponent implements OnInit, OnChanges {
   isOverlayVisible = false;
   isLoading = false;
   rezepte: Rezept[] = [];
-
-  constructor(private rezeptService: RezeptService) { }
-
+  selectedTags: Tag[] = [];
 
 
+  constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService) { }
+
+  ngOnInit(): void {
+    // Abonniere das selectedTags Observable im ngOnInit
+/*    this.tagService.selectedTags$.subscribe(tags => {
+      this.selectedTags = tags;
+/!*      console.log('selectedTags in Empfehlungen', this.selectedTags);*!/
+    });*/
+  }
+
+  ngOnChanges(): void {
+    this.cdr.detectChanges();
+
+    // Jedes Mal, wenn sich die gefilterten Rezepte ändern, Tags neu extrahieren
+  }
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])

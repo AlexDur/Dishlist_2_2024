@@ -62,12 +62,13 @@ export class AuthService {
       localStorage.removeItem('jwt_token');
       localStorage.removeItem('isAuthenticated');
 
+
       return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${authToken}` }
       }).pipe(
         catchError((error: HttpErrorResponse) => {
           console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
-          return of(null); // Rückgabe von null, falls ein Fehler auftritt
+          return of(null);
         })
       );
     } else {

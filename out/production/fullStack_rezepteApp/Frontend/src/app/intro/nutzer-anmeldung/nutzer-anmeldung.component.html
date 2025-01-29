@@ -20,9 +20,10 @@
           <small *ngIf="passwordInvalid && passwordTouched" class="error-message">Das Passwort besteht aus mindestens 8 Stellen, einer Zahl und einem Sonderzeichen.</small>
         </div>
         <button class="general-button" type="submit" pButton>Anmelden</button>
-        <p class="registrierung-hinweis">
+
+       <!-- <p class="registrierung-hinweis">
           Noch kein Konto? <a routerLink="/registrierung">Hier registrieren</a>
-        </p>
+        </p>-->
         <!--<p class="registrierung-hinweis">
           <a routerLink="/registrierung">Passwort zurücksetzen</a>
         </p>-->
@@ -36,6 +37,6 @@
         </div>
       </div>
     </form>
-    <p style="color: white;text-align: center; width: 80%">Wie deine Daten verarbeitet werden, erfährst du unter <a href="/anmeldung/datenschutzerklaerung"  style="text-decoration: underline; color: white;">Datenschutz</a>.</p>
+    <button class="general-button-transparent" pButton (click)="navigateLanding($event)">Zurück</button>
 </div>
 </div>

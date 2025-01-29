@@ -61,9 +61,10 @@ export class RegistrierungComponent {
     this.passwordInvalid = !regex.test(this.password);
   }
 
-  navigateAnmeldung(event: Event) {
+
+  navigateLanding(event: MouseEvent) {
     event.preventDefault();
-    this.router.navigate(['/anmeldung']);
+    this.router.navigate(['/landing']);
   }
 
 

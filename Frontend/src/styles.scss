@@ -15,6 +15,8 @@ $tertiary-color: #ffffff;
 $detail-color: #000000; ;
 $detail_2-color: #221f1f;
 
+$hover-color1: #0e9fae;
+
 body {
   background: linear-gradient(to bottom,$color-start, $color-end);
   background-attachment: fixed;
@@ -752,7 +754,8 @@ a {
   position: relative;
   display: inline-block;
   text-align: center;
-  margin: 30px 40px;
+  margin: 40px 40px;
+  margin-bottom: 50px;
 }
 
 .filter-text {
@@ -766,15 +769,16 @@ a {
   transform: translate(-50%, -50%);
   width: 75px;
   height: 75px;
-  border: 2px solid #fb874e;
+  border: 2px solid $hover-color1;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.5); // Transparenter Hintergrund
+  background: rgba(14, 159, 174, 0.5);
 }
 
 .filter-plus {
+  color: whitesmoke;
   font-size: 10px;
   font-weight: bold;
 }
@@ -1477,6 +1481,10 @@ h3.weiss {
   align-items: center;
 }
 
+.ki-label{
+  color: $hover-color1;
+}
+
 
 .custom-overlay {
   position: fixed;
@@ -1948,7 +1956,7 @@ h3.weiss {
 
 .tab:hover {
   background-color: #f8f9fa;
-  color: #007bff;
+  color:$hover-color1;
 }
 
 .tab::after {

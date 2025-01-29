@@ -1,21 +1,32 @@
-import { Component, ChangeDetectorRef  } from '@angular/core';
+import { Component, ViewChild, Renderer2, ChangeDetectorRef, HostListener, ElementRef  } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import {filter, take } from 'rxjs/operators';
+import {RezeptService} from "../../services/rezepte.service";
+import { Subscription } from 'rxjs';
+import {Rezept} from "../../models/rezepte";
 
 @Component({
   selector: 'app-tableiste',
   templateUrl: './tableiste.component.html',
 })
 export class TableisteComponent {
+
+  @ViewChild('dropdownContent', { static: false }) dropdownContent!: ElementRef;
+
   activeTab: HTMLElement | null = null;
+  private subscription: Subscription | undefined;
+  rezepte: Rezept[] = [];
 
-  constructor(private router: Router, private authService: AuthService,
-              private cdr: ChangeDetectorRef) {}
 
-  navigateDatenschutz(event: Event): void {
-    console.log('geklickt', event)
-    this.router.navigate(['/datenschutzerklaerung']);
+  constructor(private router: Router, private authService: AuthService) {
+
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   navigateListe(event: Event): void {
@@ -37,25 +48,6 @@ export class TableisteComponent {
         console.error('Fehler beim Logout', err);
       }
     });
-  }
-
-
-
-  toggleTooltip(event: MouseEvent): void {
-    const button = event.currentTarget as HTMLElement;
-
-    // Toggle 'active' Klasse auf dem aktuellen Button
-    if (this.activeTab && this.activeTab !== button) {
-      this.activeTab.classList.remove('active');
-    }
-
-    if (button.classList.contains('active')) {
-      button.classList.remove('active');
-      this.activeTab = null;
-    } else {
-      button.classList.add('active');
-      this.activeTab = button;
-    }
   }
 
   protected readonly event = event;

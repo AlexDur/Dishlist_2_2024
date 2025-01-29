@@ -70,4 +70,9 @@ export class LoginComponent implements OnInit{
     event.preventDefault();
     this.router.navigate(['/listen-container']);
   }
+
+  navigateLanding(event: MouseEvent) {
+    event.preventDefault();
+    this.router.navigate(['/landing']);
+  }
 }

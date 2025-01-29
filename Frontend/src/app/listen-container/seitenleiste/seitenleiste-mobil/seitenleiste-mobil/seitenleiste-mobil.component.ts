@@ -1,4 +1,4 @@
-import { Component, HostListener, EventEmitter, Renderer2, Input, ElementRef, ViewChild, OnInit, Output, OnDestroy, ChangeDetectorRef  } from '@angular/core';
+import { Component, HostListener, EventEmitter, OnChanges, SimpleChanges, Input, ElementRef, ViewChild, OnInit, Output, OnDestroy, ChangeDetectorRef  } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
@@ -6,16 +6,18 @@ import { Subscription } from 'rxjs';
 import {DEFAULT_TAGS} from "../../../../models/default_tag";
 import { debounceTime, distinctUntilChanged  } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import {TagService} from "../../../../services/tags.service";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
   templateUrl: './seitenleiste-mobil.component.html'
 })
-export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
+export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges {
   // 1. Eingabe- und Ausgabe-Properties
   @Input() rezepte: Rezept[] = [];
   @Input() isMobile?: boolean;
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+  @Output() selectedTagsChange = new EventEmitter<string[]>();
 
   // 2. ViewChild-Referenzen
   @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
@@ -30,7 +32,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   searchText: string = '';
   isOverlayVisible = false;
   filteredRecipes: Rezept[] = [];
-
+  selectedTags: string[] = [];
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
   constructor(private rezepteService: RezeptService, private cdRef: ChangeDetectorRef) {
@@ -40,12 +42,15 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.selectedTags = this.tags.filter(tag => tag.selected).map(tag => tag.label);
+
+
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.originalRezepte = [...rezepte];
-      /*this.tags = [...DEFAULT_TAGS.map(tag => ({...tag, selected: false, disabled: false}))];*/
       this.resetRezepte();
       this.updateTagCounts(this.originalRezepte);
     });
+
 
     // Debounce für Suchtext
     this.searchSubject
@@ -54,8 +59,15 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
         distinctUntilChanged() // Nur Emmission, wenn Suchtext sich ändert
       )
       .subscribe(searchText => {
-        this.applyFilters(); // Call a combined filtering function
+        this.applyFilters();
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedTags']) {
+      // Update tags' selected state based on selectedTags
+      this.updateTagsSelection();
+    }
   }
 
 
@@ -82,7 +94,16 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
   toggleOverlay(event: Event): void {
     event.stopPropagation();
     this.isOverlayVisible = !this.isOverlayVisible;
+
+    if (this.isOverlayVisible) {
+      // Update the selected state of tags when the overlay is opened
+      this.tags.forEach(tag => {
+        tag.selected = this.selectedTags.includes(tag.label);
+      });
+      console.log('Overlay geöffnet, selectedTags:', this.selectedTags);
+    }
   }
+
 
   stopPropagation(event: Event): void {
     event.stopPropagation();
@@ -142,23 +163,21 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
 
   toggleTag(tag: Tag): void {
     tag.selected = !tag.selected;
+    const selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
+    this.selectedTagsChange.emit(selectedTags);
+    console.log('selectedTags aus Seitenleiste', selectedTags)
     this.applyFilters();
-
   }
 
   applyFilters(): void {
-    const selectedTags = this.tags.filter(tag => tag.selected).map(tag => tag.label);
-
     this.filteredRecipes = this.originalRezepte.filter(rezept => {
       const matchesSearch = !this.searchText || rezept.name.toLowerCase().includes(this.searchText.toLowerCase());
 
       if (!matchesSearch) return false;
 
-      // Wenn keine Tags ausgewählt sind, zeige das Rezept
-      if (selectedTags.length === 0) return true;
+      if (this.selectedTags.length === 0) return true;
 
-      // Prüfe, ob das Rezept alle ausgewählten Tags enthält
-      return selectedTags.every(selectedTag =>
+      return this.selectedTags.every(selectedTag =>
         rezept.tags?.some(rTag => rTag.label === selectedTag)
       );
     });
@@ -168,5 +187,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.gefilterteRezepte.emit(this.filteredRecipes);
   }
 
-
+  private updateTagsSelection(): void {
+    // Synchronize the selected state of tags with selectedTags
+    this.tags.forEach(tag => {
+      tag.selected = this.selectedTags.includes(tag.label);
+    });
+  }
 }

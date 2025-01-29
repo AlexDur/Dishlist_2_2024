@@ -1,6 +1,5 @@
 <div class="screen">
   <div class="zentriertes-formular">
-    <button class="zurueck-button" (click)="navigateAnmeldung($event)" style="position: absolute; top: 10px; left: 10px;"><</button>
     <h1>Registrierung</h1>
     <form (ngSubmit)="onRegister()">
       <div class="p-fluid">
@@ -26,5 +25,6 @@
         <button class="general-button" type="submit" pButton>Registrieren</button>
       </div>
     </form>
+    <button class="general-button-transparent" pButton (click)="navigateLanding($event)">Zurück</button>
   </div>
 </div>

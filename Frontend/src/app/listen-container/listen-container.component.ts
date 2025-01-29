@@ -33,7 +33,9 @@ export class ListenContainerComponent implements OnInit{
       this.rezepteGeladen.emit(this.rezepte);
       this.gefilterteRezepte = [...this.rezepte];
       this.rezepteVerfuegbar = true;
-      console.log('selectedTags in Listen-Container', this.selectedTags)
+
+      this.selectedTags = [...this.selectedTags];
+      console.log('Rezepte geladen, selectedTags bleibt erhalten:', this.selectedTags);
       this.cdr.detectChanges();
 
       this.gefilterteRezepte.forEach(rezept => {
@@ -69,7 +71,6 @@ export class ListenContainerComponent implements OnInit{
 
   onSelectedTagsChange(selectedTags: string[]): void {
     this.selectedTags = selectedTags;
-    console.log('selectedTags in Elternkomponente', this.selectedTags)
     console.log('selectedTags in Elternkomponente (onSelectedTagsChange)', selectedTags);
   }
 
