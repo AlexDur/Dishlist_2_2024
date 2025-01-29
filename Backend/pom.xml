@@ -125,7 +125,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.16</version> <!-- Verwende eine passende Version von slf4j-api -->
+            <version>2.0.16</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -264,7 +264,7 @@
                         <image>openjdk:17-jdk-slim</image>
                     </from>
                     <to>
-                        <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_74</image>
+                        <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_79</image>
                     </to>
                     <container>
                         <mainClass>com.rezepte_app.RezepteAppApplication</mainClass>

@@ -36,7 +36,7 @@ public class Rezept {
     private String onlineAdresse;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "rezept_tags",
             joinColumns = @JoinColumn(name = "rezept_id"),

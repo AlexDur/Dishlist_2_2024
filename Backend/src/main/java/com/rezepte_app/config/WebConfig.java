@@ -10,10 +10,22 @@ public class WebConfig implements WebMvcConfigurer {
 
 
     //stellt sicher, dass Anfragen an /assets/** auf Dateien im Verzeichnis classpath:/static/assets/ weitergeleitet werden.
-    @Override
+   /* @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/assets/**")
-                .addResourceLocations("classpath:/static/assets/");
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
+    }*/
+
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/{spring:[a-zA-Z0-9]+}")
+                .setViewName("forward:/index.html");
+        registry.addViewController("/{spring:[a-zA-Z0-9]+}/**")
+                .setViewName("forward:/index.html");
+
     }
 
 }

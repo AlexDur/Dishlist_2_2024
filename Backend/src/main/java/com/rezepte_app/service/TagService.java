@@ -19,59 +19,32 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    /**
-     * Adds a new tag if it does not already exist.
-     *
-     * @param tag The tag to add.
-     * @return The existing or newly created tag.
-     */
     @Transactional
     public Tag addTag(Tag tag) {
-        return tagRepository.findByLabelAndId(tag.getLabel(), tag.getId())
-                .orElseGet(() -> tagRepository.save(tag));
+        if (tag.getId() == null) {
+            // Neues Tag: Nur nach Label suchen
+            return tagRepository.findByLabel(tag.getLabel())
+                    .orElseGet(() -> tagRepository.save(tag));
+        } else {
+            // Existierendes Tag: Nach ID und Label suchen
+            return tagRepository.findByIdAndLabel(tag.getId(), tag.getLabel())
+                    .orElseGet(() -> tagRepository.save(tag));
+        }
     }
 
-    /**
-     * Saves a list of tags.
-     *
-     * @param tags The tags to save.
-     * @return The list of saved tags.
-     */
+
     @Transactional
     public List<Tag> saveTags(List<Tag> tags) {
-        return tags.stream()
-                .map(tagRepository::save)
-                .collect(Collectors.toList());
+        tags.forEach(this::validateTag);
+        return tagRepository.saveAll(tags);
     }
 
-    /**
-     * Removes a tag by its ID.
-     *
-     * @param tagId The ID of the tag to remove.
-     */
-    @Transactional
-    public void removeTag(Long tagId) {
-        if (tagId == null || tagId <= 0) {
-            throw new IllegalArgumentException("Invalid tag ID");
-        }
-        try {
-            tagRepository.deleteById(tagId);
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error removing tag", e);
+    private void validateTag(Tag tag) {
+        if (tag == null || tag.getLabel() == null || tag.getLabel().isBlank()) {
+            throw new IllegalArgumentException("Tag label must not be null or empty");
         }
     }
 
-    /**
-     * Updates a tag.
-     *
-     * @param tag The tag to update.
-     * @return The updated tag.
-     */
-    @Transactional
-    public Tag updateTag(Tag tag) {
-        if (tag == null || tag.getId() == null) {
-            throw new IllegalArgumentException("Tag or Tag ID must not be null");
-        }
-        return tagRepository.save(tag);
-    }
+
+
 }

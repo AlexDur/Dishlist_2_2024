@@ -152,9 +152,6 @@ public class RezepteController {
     }
 
     // Hilfsmethoden für createRezept
-
-
-
     private ResponseEntity<Map<String, Object>> handleValidationErrors(BindingResult result) {
         Map<String, Object> validationErrorResponse = new HashMap<>();
         validationErrorResponse.put("error", "Validierungsfehler im RezeptDTO.");

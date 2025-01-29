@@ -47,7 +47,6 @@ public class RezepteService {
     }
 
     // Im RezepteService
-    @Transactional
     public List<Rezept> fetchAlleRezepte(String userId) {
         List<Rezept> alleRezepte = rezepteRepository.findByUserIdOrderByIdDesc(userId);
         logRezepteInfo(userId, alleRezepte);
