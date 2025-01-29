@@ -1,15 +1,17 @@
+<div>
+<app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
 <div class="container-listeninhalt">
+
   <div *ngFor="let rezept of gefilterteRezepte">
     <p-card>
       <div class="rezept-container">
+
         <div class="rezept-image-container">
           <img
             *ngIf="rezept.bildUrl"
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
-            class="rezept-image"
             (click)="openImageFullscreen(rezept.bildUrl)"
-
           />
         </div>
         <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
@@ -32,5 +34,6 @@
       </div>
     </p-card>
   </div>
-  <app-dialog [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
+  <app-dialog  [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
+</div>
 </div>

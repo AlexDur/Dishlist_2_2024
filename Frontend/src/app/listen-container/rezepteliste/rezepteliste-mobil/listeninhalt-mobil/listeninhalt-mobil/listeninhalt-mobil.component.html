@@ -1,5 +1,7 @@
 <div>
-<app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
+  <div *ngIf="selectedTags.length > 0">
+    <app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
+  </div>
 <div class="container-listeninhalt">
 
   <div *ngFor="let rezept of gefilterteRezepte">

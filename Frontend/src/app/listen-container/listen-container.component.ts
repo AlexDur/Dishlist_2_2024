@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import { Router } from "@angular/router";
 import {AuthService} from "../services/auth.service";
+import {Tag} from "../models/tag";
+import {DEFAULT_TAGS} from "../models/default_tag";
 
 @Component({
   selector: 'app-listen-container',
@@ -11,12 +13,15 @@ import {AuthService} from "../services/auth.service";
 
 export class ListenContainerComponent implements OnInit{
   @Input() isMobile?: boolean;
+  @Output() selectedTagsChange: EventEmitter<string[]> = new EventEmitter<string[]>(); // Output-EventEmitter
+
   rezepteGeladen: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
   rezepteVerfuegbar = false
   gefilterteRezepte: Rezept[] = [];
   bildUrls: { [key: number]: string } = {};
   searchText: string = '';
+  selectedTags: string[] = [];
 
   constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
@@ -28,6 +33,7 @@ export class ListenContainerComponent implements OnInit{
       this.rezepteGeladen.emit(this.rezepte);
       this.gefilterteRezepte = [...this.rezepte];
       this.rezepteVerfuegbar = true;
+      console.log('selectedTags in Listen-Container', this.selectedTags)
       this.cdr.detectChanges();
 
       this.gefilterteRezepte.forEach(rezept => {
@@ -60,6 +66,13 @@ export class ListenContainerComponent implements OnInit{
     this.gefilterteRezepte = rezepte;
     this.applySearchFilter();
   }
+
+  onSelectedTagsChange(selectedTags: string[]): void {
+    this.selectedTags = selectedTags;
+    console.log('selectedTags in Elternkomponente', this.selectedTags)
+    console.log('selectedTags in Elternkomponente (onSelectedTagsChange)', selectedTags);
+  }
+
 
 }
 

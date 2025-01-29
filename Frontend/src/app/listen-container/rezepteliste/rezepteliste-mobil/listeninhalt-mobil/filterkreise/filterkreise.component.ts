@@ -6,4 +6,5 @@ import { Component, Input  } from '@angular/core';
 })
 export class FilterkreiseComponent {
   @Input() label: string = '';
+  @Input() tag: string = '';
 }

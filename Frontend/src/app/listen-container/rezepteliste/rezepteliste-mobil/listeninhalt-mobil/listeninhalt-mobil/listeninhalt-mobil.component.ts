@@ -2,46 +2,39 @@ import {
   Component,
   ElementRef,
   Input,
-  ViewChild
+  ViewChild,
+  OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {Router} from "@angular/router";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
-import {Tag} from "../../../../../models/tag";
 
 @Component({
   selector: 'app-listeninhaltmobil',
   templateUrl: './listeninhalt-mobil.component.html'
 })
-export class ListeninhaltMobilComponent {
+export class ListeninhaltMobilComponent implements OnChanges{
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
   @Input() rezepteVerfügbar: boolean = false;
   @Input() visible: boolean = false;
+  @Input() selectedTags: string[] = [];
 
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
 
-  selectedTags: string[] = [];
-
-  constructor( private rezepteService: RezeptService,  private router:Router) {}
-
+  constructor( private rezepteService: RezeptService,  private router:Router, private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(): void {
+    this.cdr.detectChanges();
+    console.log('selectedTags in Listeninhalt', this.selectedTags)
     // Jedes Mal, wenn sich die gefilterten Rezepte ändern, Tags neu extrahieren
-    this.updateSelectedTags();
   }
 
-  updateSelectedTags(): void {
-    const tags = this.gefilterteRezepte
-      .flatMap(rezept => rezept.tags || [])
-      .filter(tag => tag.selected)
-      .filter((tag, index, self) => self.indexOf(tag) === index);
-    this.selectedTags = tags.map(tag => tag.label);
-  }
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();

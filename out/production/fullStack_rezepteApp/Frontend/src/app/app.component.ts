@@ -23,15 +23,18 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      this.authService.isAuthenticated$.subscribe(status => {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe();
+
+    this.authService.isAuthenticated$.subscribe(status => {
       this.isAuthenticated = status;
       console.log('Auth-Status:', status);
-      });
+    });
 
     this.checkScreenSize();
   }
+
 
 
   /*@HostListener für Reaktion auf native Ereignisse wie Klicks etc. und eben Größenänderungen des Fensters.*/
