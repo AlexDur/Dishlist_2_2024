@@ -93,3 +93,13 @@ release.properties
 *.log
 application.yml
 application.properties
+
+# PrimeIcons Fonts (EOT, WOFF, etc.)
+primeicons.*.eot
+primeicons.*.woff
+primeicons.*.woff2
+primeicons.*.ttf
+primeicons.*.svg
+
+# Andere Build- oder temporäre Dateien
+node_modules/

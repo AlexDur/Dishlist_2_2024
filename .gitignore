@@ -145,3 +145,12 @@ lombok.config
 # Ignoriere alle generierten Styles mit Hash im Dateinamen
 /styles.*.css
 /styles.*.js
+
+# PrimeIcons Fonts (EOT, WOFF, etc.)
+primeicons.*.eot
+primeicons.*.woff
+primeicons.*.woff2
+primeicons.*.ttf
+primeicons.*.svg
+
+
