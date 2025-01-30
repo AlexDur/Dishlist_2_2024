@@ -67,6 +67,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     if (changes['selectedTags']) {
       // Update tags' selected state based on selectedTags
       this.updateTagsSelection();
+
     }
   }
 
@@ -163,6 +164,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   toggleTag(tag: Tag): void {
     tag.selected = !tag.selected;
+
+
     const selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
     this.selectedTagsChange.emit(selectedTags);
     console.log('selectedTags aus Seitenleiste', selectedTags)
