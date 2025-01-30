@@ -1,6 +1,6 @@
 <div>
   <div *ngIf="selectedTags.length > 0">
-    <app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
+    <app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"  (tagRemoved)="onTagRemoved(tag)"></app-filterkreise>
   </div>
 <div class="container-listeninhalt">
 

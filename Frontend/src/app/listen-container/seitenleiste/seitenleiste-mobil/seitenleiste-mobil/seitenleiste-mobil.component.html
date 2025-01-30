@@ -35,7 +35,7 @@
                     <p-checkbox
                       [binary]="true"
                       [disabled]="art.disabled || false"
-                      (onChange)="toggleTag(art);"
+                      (onChange)="toggleTagInSidebar(art);"
                       inputId="type_{{ art.label }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ art.label }}">
@@ -54,7 +54,7 @@
                     <p-checkbox
                       [binary]="true"
                       [disabled]="type.disabled || false"
-                      (onChange)="toggleTag(type);"
+                      (onChange)="toggleTagInSidebar(type);"
                       inputId="type_{{ i }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ i }}">
@@ -72,7 +72,7 @@
                     <p-checkbox
                       [binary]="true"
                       [disabled]="type.disabled || false"
-                      (onChange)="toggleTag(type);"
+                      (onChange)="toggleTagInSidebar(type);"
                       inputId="type_{{ i }}">
                     </p-checkbox>
                     <label class="label-dropdown" for="type_{{ i }}">

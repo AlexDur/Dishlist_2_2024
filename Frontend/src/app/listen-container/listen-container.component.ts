@@ -5,6 +5,8 @@ import { Router } from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import {Tag} from "../models/tag";
 import {DEFAULT_TAGS} from "../models/default_tag";
+import { Subscription } from 'rxjs';
+import {TagService} from "../services/tags.service";
 
 @Component({
   selector: 'app-listen-container',
@@ -15,6 +17,9 @@ export class ListenContainerComponent implements OnInit{
   @Input() isMobile?: boolean;
   @Output() selectedTagsChange: EventEmitter<string[]> = new EventEmitter<string[]>(); // Output-EventEmitter
 
+  //wird verwendet (obwohl ausgegraut)
+  private tagsSubscription: Subscription | undefined;
+
   rezepteGeladen: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
   rezepte: Rezept[] = [];
   rezepteVerfuegbar = false
@@ -23,10 +28,14 @@ export class ListenContainerComponent implements OnInit{
   searchText: string = '';
   selectedTags: string[] = [];
 
-  constructor(private rezepteService: RezeptService,   private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {}
+  constructor(private rezepteService: RezeptService, private tagService: TagService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const abgerufeneBilder = new Set();
+
+    this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
+      this.selectedTags = tags;
+    });
 
     this.rezepteService.getUserRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({ ...rezept }));
@@ -68,12 +77,6 @@ export class ListenContainerComponent implements OnInit{
     this.gefilterteRezepte = rezepte;
     this.applySearchFilter();
   }
-
-  onSelectedTagsChange(selectedTags: string[]): void {
-    this.selectedTags = selectedTags;
-    console.log('selectedTags in Elternkomponente (onSelectedTagsChange)', selectedTags);
-  }
-
 
 }
 

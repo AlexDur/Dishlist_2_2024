@@ -3,39 +3,54 @@ import {
   ElementRef,
   Input,
   ViewChild,
-  OnChanges,
-  SimpleChanges
+  Output, EventEmitter, OnInit, OnDestroy
 } from '@angular/core';
 import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {Router} from "@angular/router";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
-import {Tag} from "../../../../../models/tag";
+import { Subscription } from 'rxjs';
+import {TagService} from "../../../../../services/tags.service";
 
 @Component({
   selector: 'app-listeninhaltmobil',
   templateUrl: './listeninhalt-mobil.component.html'
 })
-export class ListeninhaltMobilComponent {
+export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
   @Input() rezepte: Rezept[] = [];
   @Input() gefilterteRezepte: Rezept[] = [];
   @Input() rezepteVerfügbar: boolean = false;
   @Input() visible: boolean = false;
-  @Input() selectedTags: string[] = [];
+  @Output() selectedRemoveTags = new EventEmitter<string[]>();
+
+  private tagsSubscription: Subscription | undefined;
+  selectedTags: string[] = [];
 
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
 
 
-  constructor( private rezepteService: RezeptService,  private router:Router) {}
+  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router) {}
+
+  ngOnInit(): void {
+    this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
+      this.selectedTags = tags;
+      console.log('Listeninhalt mit selectedTags:', this.selectedTags);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.tagsSubscription) {
+      this.tagsSubscription.unsubscribe();
+    }
+  }
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
     this.rezepteService.setCurrentRezept(rezept);
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
-    console.log('Weitergegeben aus Listeninhalt', rezept)
   }
 
   showDeleteDialog(rezeptId: number) {
@@ -60,35 +75,23 @@ export class ListeninhaltMobilComponent {
         () => {
           this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept => rezept.id !== id);
           this.displayDeleteDialog = false;
-        },
-        error => {
-          console.error('Fehler beim Löschen des Rezepts', error);
-        }
-      );
-    } else {
-      console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
+        });
     }
   }
+
 
   openUrl(url: string | undefined): void {
     if (!url) {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
       return;
     }
-
     url = url.trim();
-
-    // Füge "http://" hinzu, wenn die URL mit "www." beginnt und kein "http://" oder "https://" hat
     if (url.startsWith('www.')) {
       url = 'http://' + url;
     }
-
-    // Füge "http://" hinzu, wenn die URL weder mit "http://" noch mit "https://" beginnt
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'http://' + url;
     }
-
-    // Grundlegende Validierung, um sicherzustellen, dass die URL jetzt mit "http://" oder "https://" beginnt
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank');
     } else {
@@ -141,6 +144,12 @@ export class ListeninhaltMobilComponent {
 
       document.body.appendChild(fullscreenContainer);
     }
+  }
+
+  onTagRemoved(tag: string): void {
+    this.selectedTags = this.selectedTags.filter(t => t !== tag);
+    this.selectedRemoveTags.emit(this.selectedTags); // Jetzt existiert das Property
+    console.log('Tag entfernt:', tag, 'Neue Tags:', this.selectedTags);
   }
 
 }

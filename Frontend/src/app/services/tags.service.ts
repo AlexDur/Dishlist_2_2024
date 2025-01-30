@@ -12,14 +12,25 @@ import {DEFAULT_TAGS} from "../models/default_tag";
 })
 export class TagService {
   private tagsSubject = new BehaviorSubject<Tag[]>([]);
-  public tags$ = this.tagsSubject.asObservable();
-  private backendUrl = environment.apiUrl;
-  tags: Tag[] = DEFAULT_TAGS
 
-  constructor(private http: HttpClient, private rezepteService: RezeptService) {}
+  // BehaviorSubject hält die aktuellen selectedTags
+  private selectedTagsSubject = new BehaviorSubject<string[]>([]);
+  selectedTags$ = this.selectedTagsSubject.asObservable();
 
-  getTags(): Tag[] {
-    return this.tags;
+  constructor(private http: HttpClient) {}
+
+  setSelectedTags(tags: string[]): void {
+    this.selectedTagsSubject.next(tags);
+  }
+
+  toggleTag(tag: string): void {
+    const currentTags = this.selectedTagsSubject.value;
+    if (currentTags.includes(tag)) {
+      this.setSelectedTags(currentTags.filter(t => t !== tag));
+    } else {
+      this.setSelectedTags([...currentTags, tag]);
+    }
+    console.log('in TagService', this.selectedTags$)
   }
 
   updateTag(tag: Tag) {
@@ -30,7 +41,8 @@ export class TagService {
     return this.http.put<Tag>(`/${tag.id}`, tag);
   }
 
-  updateSelectedTags(selectedTags: Tag[]): void {
+  //Hilfsfunktion essentiell für UpdateDates (unklar wieso ausgegraut)
+  private updateSelectedTags(selectedTags: Tag[]): void {
     const validTags = selectedTags.filter(tag => tag.id !== undefined);
 
     if (validTags.length === 0) {
@@ -47,32 +59,5 @@ export class TagService {
         console.error('Fehler beim Aktualisieren der Tags', error);
       }
     });
-  }
-
-  getSelectedTags(): Tag[] {
-    return this.tagsSubject.getValue();
-  }
-
-  countTags(tagLabel: string): Observable<number> {
-    return this.rezepteService.rezepte$.pipe(
-      map(rezepte =>
-        rezepte.reduce((count, rezept) => {
-          const tagExists = rezept.tags?.some(tag => tag.label === tagLabel);
-          return count + (tagExists ? 1 : 0);
-        }, 0)
-      )
-    );
-  }
-
-  getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gänge');
-  }
-
-  getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Küche');
-  }
-
-  getNaehrwertTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Nährwert');
   }
 }

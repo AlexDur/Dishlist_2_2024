@@ -17,16 +17,16 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   @Input() rezepte: Rezept[] = [];
   @Input() isMobile?: boolean;
   @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
-  @Output() selectedTagsChange = new EventEmitter<string[]>();
 
   // 2. ViewChild-Referenzen
   @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
 
   // 3. Private und geschützte Eigenschaften
-  private subscription: Subscription | undefined;
+  /*private subscription: Subscription | undefined;*/
   private searchSubject = new Subject<string>();
 
   // 4. Öffentliche Eigenschaften
+  subscription: Subscription = new Subscription();
   originalRezepte: Rezept[] = [];
   tags: Tag[] = [...DEFAULT_TAGS];
   searchText: string = '';
@@ -35,14 +35,20 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   selectedTags: string[] = [];
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService, private cdRef: ChangeDetectorRef) {
+  constructor(private rezepteService: RezeptService,  private tagService: TagService, private cdRef: ChangeDetectorRef) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts(this.originalRezepte);
     });
   }
 
   ngOnInit(): void {
-    this.selectedTags = this.tags.filter(tag => tag.selected).map(tag => tag.label);
+    this.subscription.add(
+      this.tagService.selectedTags$.subscribe(tags => {
+        this.selectedTags = tags;  // Updates when selectedTags change
+        console.log('Aktualisierte ausgewählte Tags:', this.selectedTags);
+        this.applyFilters();
+      })
+    );
 
 
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
@@ -61,6 +67,9 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       .subscribe(searchText => {
         this.applyFilters();
       });
+
+    this.tagService.setSelectedTags(this.tags.filter(tag => tag.selected).map(tag => tag.label));
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -142,19 +151,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     });
   }
 
-
-
+  //Zur Filterung der Tags
   getGerichtartenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Gänge');
   }
-
   getKuechenTags(): Tag[] {
     return this.tags.filter(tag => tag.type === 'Küche');
   }
-
   getNaehrwertTags(): Tag[] {
     return this.tags.filter(tag => tag.type == "Nährwert")
   }
+
 
 
   onSearchTextChange(): void {
@@ -162,13 +169,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
 
-  toggleTag(tag: Tag): void {
-    tag.selected = !tag.selected;
-
-
-    const selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
-    this.selectedTagsChange.emit(selectedTags);
-    console.log('selectedTags aus Seitenleiste', selectedTags)
+  toggleTagInSidebar(tag: Tag): void {
+    this.tagService.toggleTag(tag.label);
     this.applyFilters();
   }
 
@@ -191,7 +193,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private updateTagsSelection(): void {
-    // Synchronize the selected state of tags with selectedTags
+
     this.tags.forEach(tag => {
       tag.selected = this.selectedTags.includes(tag.label);
     });
