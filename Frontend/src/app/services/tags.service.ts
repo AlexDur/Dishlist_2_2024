@@ -23,6 +23,7 @@ export class TagService {
     this.selectedTagsSubject.next(tags);
   }
 
+  //Zum Hinzufügen und Entfernen von Tags (beides in Seitenelsite und Entfernen auch in Filterkreisen)
   toggleTag(tag: string): void {
     const currentTags = this.selectedTagsSubject.value;
     if (currentTags.includes(tag)) {

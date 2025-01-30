@@ -146,10 +146,11 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     }
   }
 
+  //Tag aus der Liste der ausgewählten Tags entfernen:
+  //Aktualisierte Liste der ausgewählten Tags an die Elternkomponente weitergeben
   onTagRemoved(tag: string): void {
     this.selectedTags = this.selectedTags.filter(t => t !== tag);
-    this.selectedRemoveTags.emit(this.selectedTags); // Jetzt existiert das Property
-    console.log('Tag entfernt:', tag, 'Neue Tags:', this.selectedTags);
+    this.selectedRemoveTags.emit(this.selectedTags);
   }
 
 }
