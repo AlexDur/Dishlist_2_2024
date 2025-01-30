@@ -5,7 +5,7 @@ export const dishTypeMapping: { [key: string]: string } = {
   antipasto: 'Vorspeise',
   snack: 'Vorspeise',
   'hor d\'oezvre': 'Vorspeise',
-  soup: 'Haupt',
+  soup: 'Hauptgang',
   lunch: 'Hauptgang',
   Haupt: 'Hauptgang',
   'main course': 'Hauptgang',
