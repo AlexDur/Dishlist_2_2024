@@ -236,28 +236,26 @@ export class RezeptService {
       }),
       catchError((error) => {
         console.error('Fehler beim Löschen des Rezepts', error);
-        return throwError(new Error('Fehler beim Löschen des Rezepts'));
+        return throwError(() => new Error('Rezept konnte nicht gelöscht werden.'));
+
       })
     );
   }
 
-  updateTagCountsAfterDeletion(id: number) {
-    let currentRezepte = this.rezepteSubject.getValue();
-    let deletedRezept = currentRezepte.find(rezept => rezept.id === id);
+  private updateTagCountsAfterDeletion(id: number): void {
+    const currentRezepte = this.rezepteSubject.getValue();
+    const newZaehler = { ...this.kategorieZaehlerSubject.getValue() };
 
-    if (deletedRezept && deletedRezept.tags) {
-      let zaehler = this.kategorieZaehlerSubject.getValue();
+    currentRezepte.find(rezept => rezept.id === id)?.tags?.forEach(tag => {
+      if (tag.label) {
+        newZaehler[tag.label] = Math.max(0, (newZaehler[tag.label] || 0) - 1);
+      }
+    });
 
-      deletedRezept.tags.forEach(tag => {
-        if (tag.label && zaehler[tag.label] && zaehler[tag.label] > 0) {
-          zaehler[tag.label] -= 1;
-        }
-      });
-
-      this.kategorieZaehlerSubject.next(zaehler);
-      this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
-    }
+    this.kategorieZaehlerSubject.next(newZaehler);
+    this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
   }
+
 
 // RezeptService
   fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
