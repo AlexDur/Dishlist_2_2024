@@ -1,7 +1,8 @@
-import { Component, Input, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
+import { Component, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import { timeout } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import {dishTypeMapping} from "../../../utils/dishTypeMapping";
 import {Tag} from "../../../models/tag";
@@ -12,20 +13,22 @@ import {TagService} from "../../../services/tags.service";
   templateUrl: './empfehlungen.component.html'
 })
 export class EmpfehlungenComponent implements OnInit, OnChanges {
+  private tagsSubscription: Subscription | undefined;
+
   isOverlayVisible = false;
   isLoading = false;
   rezepte: Rezept[] = [];
-  selectedTags: Tag[] = [];
+  selectedTags: string[] = [];
+
 
 
   constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService) { }
 
   ngOnInit(): void {
     // Abonniere das selectedTags Observable im ngOnInit
-/*    this.tagService.selectedTags$.subscribe(tags => {
+    this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
-/!*      console.log('selectedTags in Empfehlungen', this.selectedTags);*!/
-    });*/
+    });
   }
 
   ngOnChanges(): void {

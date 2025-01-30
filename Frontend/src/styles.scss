@@ -1482,8 +1482,16 @@ h3.weiss {
   align-items: center;
 }
 
-.ki-label{
-  color: $hover-color1;
+.ki-label {
+  position: absolute;
+  top: -5px;
+  right: -1px;
+  background: $hover-color1;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 5px;
 }
 
 
