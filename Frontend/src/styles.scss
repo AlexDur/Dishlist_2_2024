@@ -744,33 +744,28 @@ a {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
   cursor: pointer;
-  /*aspect-ratio: 1 / 1;*/
   box-sizing: border-box;
   background-color: orange;
 }
 
-/*Filterkreise*/
+/*Filterblasen*/
 .filter-container {
-  position: relative;
   display: inline-block;
-  text-align: center;
-  margin: 40px 40px;
-  margin-bottom: 50px;
+  gap: 5px;
+  align-content: start;
+  justify-content: flex-start;
+  padding: 10px;
+  padding-left: 0;
 }
 
-.filter-text {
-  font-size: 16px; // Optional: Passe die Schriftgröße des Texts an
-}
+
 
 .filter-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 75px;
-  height: 75px;
+  min-width: 30px;
+  height: 30px;
+  padding: 5px 10px;
   border: 2px solid $hover-color1;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -780,16 +775,20 @@ a {
 
 .filter-plus {
   color: whitesmoke;
-  font-size: 10px;
+  font-size: 16px;
   font-weight: bold;
 }
 
-//Cropper mobile u. Listenansicht
+
+//Filterkreis, Cropper mobile u. Listenansicht
 @media screen and (max-width: 750px) {
 
+  .filter-container {
+    padding-bottom: 0;
+  }
 
   .image-cropper-container {
-    margin-top: 1rem;
+    margin-top: 1.3rem;
     height: 85vh;
   }
 
@@ -799,6 +798,7 @@ a {
     gap: 5px;
     background-color: transparent;
     margin: 2rem auto;
+    margin-top: 1rem;
     width: 100%;
   }
 

@@ -80,7 +80,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -100,7 +99,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     this.isOverlayVisible = false;
   }
 
-
   toggleOverlay(event: Event): void {
     event.stopPropagation();
     this.isOverlayVisible = !this.isOverlayVisible;
@@ -114,7 +112,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-
   stopPropagation(event: Event): void {
     event.stopPropagation();
   }
@@ -126,7 +123,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   resetRezepte(): void {
     this.rezepte = [...this.originalRezepte];
   }
-
 
   private updateTagCounts(rezepte: Rezept[]): void {
     const zaehler: { [key: string]: number } = {};
@@ -162,12 +158,9 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     return this.tags.filter(tag => tag.type == "Nährwert")
   }
 
-
-
   onSearchTextChange(): void {
     this.searchSubject.next(this.searchText);
   }
-
 
   toggleTagInSidebar(tag: Tag): void {
     this.tagService.toggleTag(tag.label);
