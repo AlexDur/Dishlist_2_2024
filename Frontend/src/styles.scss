@@ -1704,6 +1704,7 @@ h3.weiss {
 }
 
 .recipe-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1723,11 +1724,10 @@ h3.weiss {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.recipe-image-container {
+.spoon-recipe-image-container {
   position: relative;
   width: 100%;
   height: auto;
-
   overflow: hidden;
 }
 
@@ -1742,28 +1742,66 @@ h3.weiss {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Halbtransparenter Hintergrund */
+  background: rgba(0, 0, 0, 0.8);
   color: white;
-  text-align: center;
   font-size: 1rem;
   font-weight: bold;
   padding: 8px;
   box-sizing: border-box;
   cursor: pointer;
+  text-align: left;
 
+}
+
+.spoon-trennstrich {
+  color: black;
 }
 
 .no-recipes-message {
   text-align: center;
-  color: #fff;
+  color: white;
   font-size: 1.25rem;
 }
 
 .gang-spoon{
  font-weight: bold;
   margin: 5px 0;
-  color: $detail-color;
+  color: $secondary-color;
 }
+
+button.spoon-button {
+  position: absolute;
+  top: 10px;
+  right: 3px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  z-index: 9999;
+}
+
+button.spoon-button:first-of-type {
+  background-color: $secondary-color;
+  right: 50px; /* Abstand zum anderen Button */
+}
+
+button.spoon-button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+button.spoon-button + button.spoon-button {
+  margin-left: 5px;
+}
+
 
 .loading-spinner {
   display: flex;
@@ -1798,6 +1836,7 @@ h3.weiss {
     height: 100vh;
     width: 100vw;
     pointer-events: auto;
+    padding: 0;
   }
 
 .label-dropdown{
