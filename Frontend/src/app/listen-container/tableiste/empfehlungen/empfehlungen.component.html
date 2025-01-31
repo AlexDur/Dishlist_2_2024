@@ -19,27 +19,47 @@
       <div *ngIf="rezepte && rezepte.length > 0; else noRecipes" class="recipe-list">
         <div *ngFor="let rezept of rezepte" class="recipe-item">
           <div *ngIf="rezept.tags && rezept.tags.length > 0">
-            <p class="gang-spoon" *ngFor="let tag of rezept.tags">{{ tag.label }}</p>
 
-          </div>
-          <div *ngIf="!rezept.tags || rezept.tags.length === 0" >
+
+
+          <div *ngIf="!rezept.tags || rezept.tags.length === 0">
             <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '')">Dish</p>
           </div>
 
-          <div class="recipe-image-container">
-            <img *ngIf="rezept.image" [src]="rezept.image" [alt]="rezept.name" class="recipe-image" (click)="openUrlSpoon(rezept.bildUrl || '')" />
-            <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.bildUrl || '')">
-              {{ rezept.name }}
-            </div>
-          </div>
+          <button pButton class="spoon-button" (click)="addRecipe(rezept)">
+            <i class="pi pi-check"></i>
+          </button>
+          <button pButton class="spoon-button" (click)="removeRecipe(rezept)">
+            <i class="pi pi-times"></i>
+          </button>
 
+
+            <div class="spoon-recipe-image-container">
+              <img *ngIf="rezept.image" [src]="rezept.image" [alt]="rezept.name" class="recipe-image" (click)="openUrlSpoon(rezept.bildUrl || '')" />
+
+              <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.bildUrl || '')">
+              <span class="recipe-tags" *ngIf="rezept.tags && rezept.tags.length > 0">
+                <span class="gang-spoon">
+                            {{ rezept.tags | formatTags }}
+                  </span>
+              </span>
+                <span class="spoon-trennstrich" *ngIf="rezept.tags && rezept.tags.length > 0">|</span>
+                <span class="recipe-name">{{ rezept.name }}</span>
+              </div>
+            </div>
+
+
+
+
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Falls keine Rezepte vorhanden sind -->
+
+      <!-- Falls keine Rezepte vorhanden sind -->
     <ng-template #noRecipes>
       <div class="no-recipes-message">Keine Rezepte verfügbar</div>
     </ng-template>
   </div>
+</div>
 </div>
