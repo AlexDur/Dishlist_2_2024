@@ -1953,6 +1953,7 @@ h3.weiss {
   align-items: center;
   justify-content: center;
   background: none;
+  font-weight: bold;
   border: none;
   cursor: pointer;
   font-size: 14px;
@@ -1986,11 +1987,10 @@ h3.weiss {
   z-index: 10;
 }
 
-
-.tab.active::after {
-  opacity: 1;
-  visibility: visible;
+.tab.active {
+  color: $hover-color1;
 }
+
 
 .pi.pi-bars {
   margin-bottom: 5px !important;
@@ -2004,8 +2004,10 @@ h3.weiss {
     bottom: 0;
     width: 100%;
     display: flex;
-    background-color: rgb(255, 255, 255);
+    border-top: 1px solid #8f420a;
+    background-color: rgb(232, 225, 221);
     justify-content: center;
+
     padding: 8px 0;
   }
 

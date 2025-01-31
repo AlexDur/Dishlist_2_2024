@@ -3,9 +3,6 @@ import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import { timeout } from 'rxjs';
 import { Subscription } from 'rxjs';
-
-import {dishTypeMapping} from "../../../utils/dishTypeMapping";
-import {Tag} from "../../../models/tag";
 import {TagService} from "../../../services/tags.service";
 
 @Component({
@@ -25,7 +22,6 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService) { }
 
   ngOnInit(): void {
-    // Abonniere das selectedTags Observable im ngOnInit
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
     });
@@ -33,8 +29,6 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.cdr.detectChanges();
-
-    // Jedes Mal, wenn sich die gefilterten Rezepte ändern, Tags neu extrahieren
   }
 
   @HostListener('document:click', ['$event'])

@@ -1,4 +1,4 @@
-import { Component, ViewChild, Renderer2, ChangeDetectorRef, HostListener, ElementRef  } from '@angular/core';
+import { Component, ViewChild, OnInit, Renderer2, ChangeDetectorRef, HostListener, ElementRef  } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import {filter, take } from 'rxjs/operators';
@@ -10,30 +10,34 @@ import {Rezept} from "../../models/rezepte";
   selector: 'app-tableiste',
   templateUrl: './tableiste.component.html',
 })
-export class TableisteComponent {
-
+export class TableisteComponent implements OnInit{
   @ViewChild('dropdownContent', { static: false }) dropdownContent!: ElementRef;
 
-  activeTab: HTMLElement | null = null;
-  private subscription: Subscription | undefined;
+  activeTab: number = 2;
   rezepte: Rezept[] = [];
 
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService) { }
 
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  ngOnInit() {
+    const savedTab = localStorage.getItem('activeTab');
+    this.activeTab = savedTab ? parseInt(savedTab, 10) : 2;
   }
 
   navigateListe(event: Event): void {
+    event.preventDefault();
+    this.setActiveTab(2);
     this.router.navigate(['/listen-container']);
   }
 
-  logoutUser(event: Event) {
+  setActiveTab(index: number) {
+    this.activeTab = index;
+    localStorage.setItem('activeTab', index.toString());
+  }
+
+  logoutUser(event: Event)  {
+    event.preventDefault();
+    this.setActiveTab(-1);
     this.authService.logout().subscribe({
       next: () => {
         this.authService.setIsAuthenticated(false);
