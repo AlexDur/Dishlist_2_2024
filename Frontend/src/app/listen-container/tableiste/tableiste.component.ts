@@ -38,6 +38,7 @@ export class TableisteComponent implements OnInit{
   logoutUser(event: Event)  {
     event.preventDefault();
     this.setActiveTab(-1);
+    localStorage.removeItem('activeTab');
     this.authService.logout().subscribe({
       next: () => {
         this.authService.setIsAuthenticated(false);
