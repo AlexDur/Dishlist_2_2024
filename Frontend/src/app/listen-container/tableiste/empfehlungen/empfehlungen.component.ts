@@ -1,30 +1,37 @@
-import { Component, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
+import { Component,Input, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
+import {Router} from "@angular/router";
 import { timeout } from 'rxjs';
 import { Subscription } from 'rxjs';
 import {TagService} from "../../../services/tags.service";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-empfehlungen',
   templateUrl: './empfehlungen.component.html'
 })
 export class EmpfehlungenComponent implements OnInit, OnChanges {
+  @Input() rezepte: Rezept[] = [];
+
   private tagsSubscription: Subscription | undefined;
 
+  gefilterteRezepte$: Observable<Rezept[]>;
   isOverlayVisible = false;
   isLoading = false;
-  rezepte: Rezept[] = [];
   selectedTags: string[] = [];
 
 
 
-  constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService) { }
+  constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService, private router: Router) {
+    this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
+  }
 
   ngOnInit(): void {
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
     });
+    this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
   }
 
   ngOnChanges(): void {
@@ -59,7 +66,8 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   // Schließt das Overlay, wenn der Schließen-Button geklickt wird
   closeOverlayButton(event: MouseEvent): void {
     this.isOverlayVisible = false;
-    event.stopPropagation();  // Verhindert, dass das Ereignis auch das Overlay schließt
+    event.stopPropagation();
+    this.router.navigate(['/listen-container']);
   }
 
   loadRandomRecipes(): void {
@@ -99,5 +107,18 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
     }
   }
 
+
+  removeRecipe(rezept:Rezept) {
+
+  }
+
+  addRecipe(rezept:Rezept) {
+    this.rezeptService.addRezeptToList(rezept);
+  /*  this.updateGefilterteRezepte;*/
+  }
+
+/*  updateGefilterteRezepte(rezepte: Rezept[]): void {
+    this.gefilterteRezepte$.next(rezepte);
+  }*/
 
 }

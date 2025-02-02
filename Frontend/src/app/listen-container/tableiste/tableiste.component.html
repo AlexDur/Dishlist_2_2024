@@ -3,11 +3,11 @@
     <app-empfehlungen ></app-empfehlungen>
   </div>
 
-  <div class="tab" [ngClass]="{'active': activeTab === 1}" >
-    <app-rezept-hinzufuegen-button [activeTab]="activeTab" (tabChange)="setActiveTab($event)"></app-rezept-hinzufuegen-button>
+  <div class="tab" [ngClass]="{'active': activeTab === 1}">
+    <app-rezept-hinzufuegen-button  ></app-rezept-hinzufuegen-button>
   </div>
 
-  <div class="tab" (click)="navigateListe($event)" [ngClass]="{'active': activeTab === 2}">
+  <div class="tab" [ngClass]="{'active': activeTab === 2}" (click)="navigateListe($event)">
     <i class="pi pi-bars"></i>
     <span>DishList</span>
   </div>
