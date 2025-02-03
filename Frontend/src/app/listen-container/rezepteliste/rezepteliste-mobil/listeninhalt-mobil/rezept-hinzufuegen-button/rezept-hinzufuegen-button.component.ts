@@ -1,22 +1,30 @@
-import { Component, Input, Output, EventEmitter  } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter  } from '@angular/core';
 import {Router} from "@angular/router";
 import {RezeptService} from "../../../../../services/rezepte.service";
+import {TabService} from "../../../../../services/tab.service";
 
 @Component({
   selector: 'app-rezept-hinzufuegen-button',
   templateUrl: './rezept-hinzufuegen-button.component.html'
 })
-export class RezeptHinzufuegenButtonComponent {
+export class RezeptHinzufuegenButtonComponent implements OnInit{
   @Input() isMobile?: boolean;
-  @Input() activeTab!: number;
-  @Output() tabChange = new EventEmitter<number>();
+  activeTab!: number;
 
-  constructor(private router: Router, private rezepteService: RezeptService) {}
+  constructor(private router: Router, private rezepteService: RezeptService, private tabService: TabService) {}
+
+  ngOnInit() {
+    this.tabService.activeTab$.subscribe((tab) => {
+      this.activeTab = tab;
+    });
+  }
 
   navigateForm(event: MouseEvent) {
     event.preventDefault();
-    this.tabChange.emit(1);  
+    this.tabService.setActiveTab(1);
     this.rezepteService.clearCurrentRezept();
     this.router.navigate(['/rezepterstellung']);
+
   }
+
 }

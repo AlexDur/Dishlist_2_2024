@@ -19,26 +19,37 @@ import {TagService} from "../../../../../services/tags.service";
 export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
+  @Input() tagsFromSidebarChanged: boolean = false;
   @Input() rezepte: Rezept[] = [];
-  @Input() gefilterteRezepte: Rezept[] = [];
+  /*@Input() selectedTagsInSidebar: boolean = false*/
+ /* @Input() gefilterteRezepte: Rezept[] = [];*/
   @Input() rezepteVerfügbar: boolean = false;
   @Input() visible: boolean = false;
   @Output() selectedRemoveTags = new EventEmitter<string[]>();
 
-  private tagsSubscription: Subscription | undefined;
-  selectedTags: string[] = [];
 
+  private tagsSubscription: Subscription | undefined;
+
+  gefilterteRezepte: Rezept[] = [];
+  selectedTags: string[] = [];
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
 
 
-  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router) {}
+
+  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router) {
+  }
 
   ngOnInit(): void {
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
-      console.log('Listeninhalt mit selectedTags:', this.selectedTags);
     });
+
+    //Neuer Wert der aus der Gesamtheit "rezepte" genommen wird, wird gefilterteRezepte zugeordnet
+    this.rezepteService.gefilterteRezepte$.subscribe(rezepte => {
+      this.gefilterteRezepte = rezepte;
+    });
+
   }
 
   ngOnDestroy(): void {

@@ -24,6 +24,7 @@ import {LandingComponent} from "./landing/landing.component";
 import {EmpfehlungenComponent} from "./listen-container/tableiste/empfehlungen/empfehlungen.component";
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import {FormatTagsPipe} from "./shared/pipes/spoonTags";
 
 @NgModule({
   declarations: [
@@ -43,22 +44,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 
   // Wenn das AppModul das RezeptelistenModul importiert, kann das AppModul die exportierten Komponenten des
   // RezeptelistenModuls in seinen eigenen Komponenten oder in anderen Modulen, die es importiert, verwenden.
-  imports: [
-    BrowserModule,
-    RezepteModule,
-    SeitenleisteModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ContextMenuModule,
-    CheckboxModule,
-    FormsModule,
-    ButtonModule,
-    SharedModule,
-    ToggleButtonModule,
-    CommonModule,
-    ReactiveFormsModule
+    imports: [
+        BrowserModule,
+        RezepteModule,
+        SeitenleisteModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        ContextMenuModule,
+        CheckboxModule,
+        FormsModule,
+        ButtonModule,
+        SharedModule,
+        ToggleButtonModule,
+        CommonModule,
+        ReactiveFormsModule,
+        FormatTagsPipe
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -33,7 +33,7 @@
         <div>
           <div class="erstellung-kategorie">Kategorie</div>
           <ng-container *ngFor="let category of categories">
-            <button (click)="setCategory(category)" class="category-button" [ngClass]="{'active': category.selected}">
+            <button (click)="setCategory( category)" class="category-button" [ngClass]="{'active': category.selected}">
               {{ category.name }}
             </button>
 

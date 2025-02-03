@@ -20,8 +20,7 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   isOverlayVisible = false;
   isLoading = false;
   selectedTags: string[] = [];
-
-
+  tagsFromSidebarChanged: boolean = false;
 
   constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService, private router: Router) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
@@ -117,8 +116,7 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   /*  this.updateGefilterteRezepte;*/
   }
 
-/*  updateGefilterteRezepte(rezepte: Rezept[]): void {
-    this.gefilterteRezepte$.next(rezepte);
-  }*/
-
+  onTagsFromSidebarChange(status: boolean): void {
+    this.tagsFromSidebarChanged = status;
+  }
 }

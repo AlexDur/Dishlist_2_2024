@@ -1,4 +1,4 @@
-import { Component, HostListener, EventEmitter, OnChanges, SimpleChanges, Input, ElementRef, ViewChild, OnInit, Output, OnDestroy, ChangeDetectorRef  } from '@angular/core';
+import { Component, HostListener, EventEmitter, OnChanges, SimpleChanges, Input, ElementRef, ViewChild, OnInit, Output, OnDestroy  } from '@angular/core';
 import { Rezept } from '../../../../models/rezepte';
 import { RezeptService } from '../../../../services/rezepte.service';
 import { Tag } from '../../../../models/tag';
@@ -16,7 +16,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   // 1. Eingabe- und Ausgabe-Properties
   @Input() rezepte: Rezept[] = [];
   @Input() isMobile?: boolean;
-  @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
 
   // 2. ViewChild-Referenzen
   @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
@@ -26,6 +25,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   private searchSubject = new Subject<string>();
 
   // 4. Öffentliche Eigenschaften
+
   subscription: Subscription = new Subscription();
   originalRezepte: Rezept[] = [];
   tags: Tag[] = [...DEFAULT_TAGS];
@@ -33,20 +33,22 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   isOverlayVisible = false;
   filteredRecipes: Rezept[] = [];
   selectedTags: string[] = [];
+  seletedTagInSidebar: boolean = false
+
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService,  private tagService: TagService, private cdRef: ChangeDetectorRef) {
+  constructor(private rezepteService: RezeptService,  private tagService: TagService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts(this.originalRezepte);
     });
   }
 
   ngOnInit(): void {
-    this.subscription.add(
+      this.subscription.add(
       this.tagService.selectedTags$.subscribe(tags => {
-        this.selectedTags = tags;  // Updates when selectedTags change
+        this.selectedTags = tags;
         console.log('Aktualisierte ausgewählte Tags:', this.selectedTags);
-        this.applyFilters();
+
       })
     );
 
@@ -85,6 +87,12 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       this.subscription.unsubscribe();
     }
   }
+
+  toggleTagInSidebar(tag: Tag): void {
+    this.tagService.toggleTag(tag.label);
+    this.applyFilters();
+  }
+
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])
@@ -149,10 +157,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   //Zur Filterung der Tags
   getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gänge');
+    return this.tags.filter(tag => tag.type === 'Mahlzeit');
   }
   getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Küche');
+    return this.tags.filter(tag => tag.type === 'Länderküche');
   }
   getNaehrwertTags(): Tag[] {
     return this.tags.filter(tag => tag.type == "Nährwert")
@@ -162,31 +170,16 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     this.searchSubject.next(this.searchText);
   }
 
-  toggleTagInSidebar(tag: Tag): void {
-    this.tagService.toggleTag(tag.label);
-    this.applyFilters();
-  }
-
   applyFilters(): void {
-    this.filteredRecipes = this.originalRezepte.filter(rezept => {
-      const matchesSearch = !this.searchText || rezept.name.toLowerCase().includes(this.searchText.toLowerCase());
-
-      if (!matchesSearch) return false;
-
-      if (this.selectedTags.length === 0) return true;
-
-      return this.selectedTags.every(selectedTag =>
-        rezept.tags?.some(rTag => rTag.label === selectedTag)
-      );
+    console.log('applyFilters called');
+    this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe(filteredRecipes => {
+      this.filteredRecipes = filteredRecipes;
+      this.updateTagCounts(this.filteredRecipes);
     });
 
-    this.updateTagCounts(this.filteredRecipes);
-    this.cdRef.detectChanges();
-    this.gefilterteRezepte.emit(this.filteredRecipes);
   }
 
   private updateTagsSelection(): void {
-
     this.tags.forEach(tag => {
       tag.selected = this.selectedTags.includes(tag.label);
     });

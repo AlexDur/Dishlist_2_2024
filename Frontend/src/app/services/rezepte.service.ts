@@ -18,14 +18,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 export class RezeptService {
+
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
 
-  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
-
-  //Observable rezepte$ wird durch currentRezeptSubject.asObservable() erstellt.
+  //Observable rezepte$ wird durch gefilterteRezepteSubject.asObservable() erstellt.
   //Das ist das abbonnierbar für Interessenten
-  public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
+  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+  private gefilterteRezepteSubject = new BehaviorSubject<Rezept[]>([]);
+  rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
+  gefilterteRezepte$ = this.gefilterteRezepteSubject.asObservable();
+
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private currentRezeptSubject: BehaviorSubject<Rezept | null> = new BehaviorSubject<Rezept | null>(null);
@@ -42,7 +45,11 @@ export class RezeptService {
   private imageUrl: string = '';
 
 
-  constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {}
+
+
+
+  constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {
+  }
 
 
   private getJsonHeaders(): HttpHeaders {
@@ -58,6 +65,7 @@ export class RezeptService {
     this.imageSubject.next(file);
   }
 
+  // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject
   getUserRezepte(): Observable<RezeptAntwort[]> {
     const token = this.getToken();
     if (!token) {
@@ -85,10 +93,13 @@ export class RezeptService {
   private handleResponse(rezepte: RezeptAntwort[]): void {
     if (!rezepte || !Array.isArray(rezepte)) {
       this.rezepteSubject.next([]);
+      this.gefilterteRezepteSubject.next([]);
     } else if (rezepte.length === 0) {
       this.rezepteSubject.next([]);
+      this.gefilterteRezepteSubject.next([]);
     } else {
-      this.rezepteSubject.next(rezepte);
+      this.rezepteSubject.next(rezepte); // Alle Rezepte speichern
+      this.gefilterteRezepteSubject.next(rezepte);
     }
   }
 
@@ -192,9 +203,10 @@ export class RezeptService {
       catchError(error => {
         console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
-        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
+        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts'));
       })
     );
+
   }
 
 
@@ -284,8 +296,8 @@ export class RezeptService {
 
 // Helper-Funktion zum Mappen der API-Daten
   private mapSpoonacularRezepte(response: any): Rezept[] {
-    // Beispiel für gültige Gänge
-    const gültigeGänge = DEFAULT_TAGS.filter(tag => tag.type === TagType.GÄNGE).map(tag => tag.label);
+
+    const Mahlzeoit = DEFAULT_TAGS.filter(tag => tag.type === TagType.MAHLZEIT).map(tag => tag.label);
 
     return response.recipes.map((rezept: any) => {
       // Umwandlung der dishTypes in Tags
@@ -316,15 +328,47 @@ export class RezeptService {
 
     return Array.from(uniqueCategories).map((germanTag: string) => {
       return {
-        id: Math.random(), // ID generieren oder aus anderen Daten übernehmen
-        type: TagType.GÄNGE, // TagType bleibt 'Gänge' für Mittagessen
+        id: Math.random(),
+        type: TagType.MAHLZEIT,
         label: germanTag, // Übersetzung oder Originalwert
-        selected: false, // Optional: Wenn du eine Auswahl benötigst
-        count: 1 // Optional: Hier eine Zählung setzen, falls erforderlich
+        selected: false,
+        count: 1
       };
     });
   }
 
+  //aus spoon-Rezepten
+  addRezeptToList(rezept: Rezept): void {
+    const currentList = this.gefilterteRezepteSubject.value;
+    if (!currentList.some(r => r.id === rezept.id)) {
+      // Rezept nur hinzufügen, wenn es noch nicht in der Liste ist
+      this.gefilterteRezepteSubject.next([...currentList, rezept]);
+    }
+  }
 
 
-}
+  getFilteredRezepte(tags: string[], searchText: string): Observable<Rezept[]> {
+    return this.rezepte$.pipe(
+      map(rezepte => {
+        const gefilterteRezepte = rezepte.filter(rezept => {
+          const matchesSearch = !searchText || rezept.name.toLowerCase().includes(searchText.toLowerCase());
+
+          if (!matchesSearch) return false;
+
+          if (tags.length === 0) return true;
+
+          return tags.every(selectedTag =>
+            rezept.tags?.some(rTag => rTag.label === selectedTag)
+          );
+        });
+
+        // Aktualisiere die gefilterteRezepteSubject mit den neuen gefilterten Rezepten
+        this.gefilterteRezepteSubject.next(gefilterteRezepte);
+
+        // Gibt die gefilterten Rezepte zurück
+        return gefilterteRezepte;
+      })
+    );
+
+  }
+  }

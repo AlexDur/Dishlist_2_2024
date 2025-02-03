@@ -1,10 +1,6 @@
 import {Component, EventEmitter, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
 import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
-import { Router } from "@angular/router";
-import {AuthService} from "../services/auth.service";
-import {Tag} from "../models/tag";
-import {DEFAULT_TAGS} from "../models/default_tag";
 import { Subscription } from 'rxjs';
 import {TagService} from "../services/tags.service";
 
@@ -27,28 +23,40 @@ export class ListenContainerComponent implements OnInit{
   bildUrls: { [key: number]: string } = {};
   searchText: string = '';
   selectedTags: string[] = [];
+  selectedTagsInSidebar: boolean = false;
 
-  constructor(private rezepteService: RezeptService, private tagService: TagService, private cdr: ChangeDetectorRef) {}
+
+  constructor(private rezepteService: RezeptService, private tagService: TagService, private cdr: ChangeDetectorRef) {
+  }
 
   ngOnInit(): void {
     const abgerufeneBilder = new Set();
 
+    // Abonniere die ausgewählten Tags
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
+      // Sobald die Tags geändert werden, wende die Filter an
+      this.applyFilters(); // Filter anwenden, wenn Tags sich ändern
     });
 
+    // Abrufen der Rezepte
     this.rezepteService.getUserRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({ ...rezept }));
+      console.log('rezepte in LContainer', this.rezepte)
       this.rezepteGeladen.emit(this.rezepte);
+
+      // Anfangswerte für gefilterte Rezepte setzen
       this.gefilterteRezepte = [...this.rezepte];
+      console.log('gefilterRezepte in LContainer', this.gefilterteRezepte)
       this.rezepteVerfuegbar = true;
 
       this.selectedTags = [...this.selectedTags];
       console.log('Rezepte geladen, selectedTags bleibt erhalten:', this.selectedTags);
       this.cdr.detectChanges();
 
+      // Bilder für die Rezepte laden
       this.gefilterteRezepte.forEach(rezept => {
-        if (rezept && rezept.bildUrl){
+        if (rezept && rezept.bildUrl) {
           const bildname = rezept.bildUrl.split('/').pop();
           if (bildname && !abgerufeneBilder.has(bildname)) {
             abgerufeneBilder.add(bildname);
@@ -59,9 +67,19 @@ export class ListenContainerComponent implements OnInit{
           }
         }
       });
+
+      // Wende Filter direkt nach dem Abrufen der Rezepte an
+      this.applyFilters();
     });
   }
 
+// Filter anwenden
+  applyFilters(): void {
+    this.applySearchFilter();
+    this.applyTagFilter();
+  }
+
+// Filter nach Suchtext anwenden
   applySearchFilter(): void {
     if (this.searchText && Array.isArray(this.gefilterteRezepte)) {
       // Filtere die bereits gefilterten Rezepte weiter nach dem Suchtext
@@ -71,11 +89,19 @@ export class ListenContainerComponent implements OnInit{
     }
   }
 
+// Filter nach Tags anwenden
+  applyTagFilter(): void {
+    if (Array.isArray(this.selectedTags) && this.selectedTags.length > 0) {
+      // Filtere die Rezepte basierend auf den Tags
+      this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept =>
+        this.selectedTags.every(tag => rezept.tags?.some(rTag => rTag.label === tag))
+      );
+    }
+  }
 
-  // Diese Methode wird von der Seitenleiste aufgerufen, wenn die Rezepte gefiltert wurden
-  onRezepteFiltered(rezepte: Rezept[]): void {
-    this.gefilterteRezepte = rezepte;
-    this.applySearchFilter();
+  onSelectedTagsInSidebarChange(isInSidebar: boolean): void {
+    console.log('selectedTagsInSidebar geändert:', isInSidebar);
+    // Weitere Logik basierend auf dem Wert von isInSidebar
   }
 
 }

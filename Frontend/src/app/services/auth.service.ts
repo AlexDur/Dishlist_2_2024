@@ -5,7 +5,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 import { of, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';  // Importiere 'map' hier
+import { map } from 'rxjs/operators';
+import {TabService} from "./tab.service";  // Importiere 'map' hier
 
 
 
@@ -23,7 +24,7 @@ export class AuthService {
   accountDeleted$ = this.accountDeletedSubject.asObservable();
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tabService: TabService) {
     const storedAuth = localStorage.getItem('isAuthenticated') === 'true';
     this.isAuthenticatedSubject.next(storedAuth);
   }
@@ -39,6 +40,7 @@ export class AuthService {
           localStorage.setItem('jwt_token', token);
           localStorage.setItem('isAuthenticated', 'true');
           this.isAuthenticatedSubject.next(true);
+          this.tabService.resetTab();
         } else {
           console.error('Kein Token in der Antwort vorhanden');
           this.isAuthenticatedSubject.next(false);
