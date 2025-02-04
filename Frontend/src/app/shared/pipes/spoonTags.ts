@@ -9,6 +9,6 @@ export class FormatTagsPipe implements PipeTransform {
     if (!tags || tags.length === 0) {
       return '';
     }
-    return tags.map(tag => tag.label).join(' / '); // .label verwenden
+    return tags.map(tag => tag.label).join(' / ');
   }
 }

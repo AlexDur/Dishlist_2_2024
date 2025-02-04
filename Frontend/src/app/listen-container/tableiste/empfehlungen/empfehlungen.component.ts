@@ -1,4 +1,4 @@
-import { Component,Input, HostListener, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
+import { Component,Input, HostListener, ChangeDetectorRef, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import {Router} from "@angular/router";
@@ -11,10 +11,11 @@ import { Observable } from 'rxjs';
   selector: 'app-empfehlungen',
   templateUrl: './empfehlungen.component.html'
 })
-export class EmpfehlungenComponent implements OnInit, OnChanges {
+export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rezepte: Rezept[] = [];
 
   private tagsSubscription: Subscription | undefined;
+  private subscription: Subscription | undefined;
 
   gefilterteRezepte$: Observable<Rezept[]>;
   isOverlayVisible = false;
@@ -22,7 +23,7 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   selectedTags: string[] = [];
   tagsFromSidebarChanged: boolean = false;
 
-  constructor(private rezeptService: RezeptService,  private cdr: ChangeDetectorRef, private tagService: TagService, private router: Router) {
+  constructor(private rezeptService: RezeptService, private cdr: ChangeDetectorRef, private tagService: TagService, private router: Router) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
   }
 
@@ -35,6 +36,12 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.cdr.detectChanges();
+  }
+
+  ngOnDestroy() { // Wichtig: Beim Zerstören der Komponente das Abonnement beenden
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -107,16 +114,19 @@ export class EmpfehlungenComponent implements OnInit, OnChanges {
   }
 
 
-  removeRecipe(rezept:Rezept) {
+  removeRecipe(rezept: Rezept) {
 
   }
 
-  addRecipe(rezept:Rezept) {
-    this.rezeptService.addRezeptToList(rezept);
-  /*  this.updateGefilterteRezepte;*/
-  }
+  addRecipe(rezept: Rezept) {
+    this.subscription = this.rezeptService.addRezeptToList(rezept).subscribe(
+      () => {
 
-  onTagsFromSidebarChange(status: boolean): void {
-    this.tagsFromSidebarChanged = status;
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Fehler beim Hinzufügen des Rezepts:', error);
+      }
+    );
   }
 }

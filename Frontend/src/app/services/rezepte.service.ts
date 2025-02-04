@@ -128,27 +128,56 @@ export class RezeptService {
   }
 
 // Validierungsfunktion für das Rezept
-   validateRezept(rezept: Rezept): boolean {
+  validateRezept(rezept: Rezept): boolean {
 
-     if (!rezept.name?.trim()) {
-       return false;
-     }
+    if (!rezept.name?.trim()) {
+      return false;
+    }
 
-     if (!rezept.onlineAdresse?.trim()) {
-       return false;
-     }
+    if (!rezept.onlineAdresse?.trim()) {
+      return false;
+    }
 
-     if (rezept.tags?.length) { //  Optional chaining und truthy check
-       for (const tag of rezept.tags) {
-         if (!tag.label?.trim()) { // Optional chaining und trim() kombiniert
-           return false;
-         }
+    if (rezept.tags?.length) {
+      for (const tag of rezept.tags) {
+        if (!tag.label?.trim()) {
+          return false;
+        }
 
-         if (!tag.type?.trim()) { // Optional chaining und trim() kombiniert
-           return false;
-         }
-       }
-     }
+        if (!tag.type?.trim()) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+
+  validateSpoonRezept(rezept: Rezept): boolean {
+    if (!rezept.name?.trim()) {
+      return false;
+    }
+
+    // Spoonacular-Rezepte haben keine verpflichtende `onlineAdresse`
+    if (!rezept.bildUrl?.trim()) {
+      return false;
+    }
+
+    // Tags sind optional, aber wenn sie vorhanden sind, sollten sie valide sein
+    if (rezept.tags?.length) {
+      for (const tag of rezept.tags) {
+        console.log('Tag-Objekt:', tag);
+        console.log('Tag-Typ:', typeof tag.type, 'Wert:', tag.type);
+
+        // Sicherstellen, dass tag.type ein String ist, bevor trim() angewendet wird
+        const tagType = Object.values(tag.type).join(' '); // Alle Werte des type-Objekts zusammenfügen
+
+        if (!tag.label?.trim() || !tagType.trim()) {
+          return false;
+        }
+      }
+    }
 
     return true;
   }
@@ -172,14 +201,23 @@ export class RezeptService {
       console.log(key, value);
     });
 
-    // Validierung des Rezeptes
-    if (!this.validateRezept(rezept)) {
+    const isSpoonacularRezept = rezept.onlineAdresse?.startsWith('https://www.foodista.com');
+
+    console.log(`Erkannter Rezepttyp: ${isSpoonacularRezept ? 'Spoonacular-Rezept' : 'Manuell erstelltes Rezept'}`);
+
+
+    const isValid = isSpoonacularRezept
+      ? this.validateSpoonRezept(rezept)
+      : this.validateRezept(rezept);
+
+    if (!isValid) {
       console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
-      return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
+      this.loadingSubject.next(false);
+      return throwError(() => new Error('Rezept ist ungültig.'));
     }
 
-    const token = localStorage.getItem('jwt_token'); // Hier holen wir das Token aus dem localStorage
+
+    const token = localStorage.getItem('jwt_token'); // Token aus localStorage holen
 
     if (!token) {
       console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
@@ -269,84 +307,6 @@ export class RezeptService {
   }
 
 
-// RezeptService
-  fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
-    const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
-
-    return this.http.get<any>(apiUrl).pipe(
-      map(response => {
-        if (response && response.recipes) {
-          return this.mapSpoonacularRezepte(response);
-        } else {
-          console.error('Ungültige Antwort von Spoonacular');
-          return []; // Leere Liste zurückgeben, falls die Antwort ungültig ist
-        }
-      }),
-      tap(recipes => {
-        // Rezepte im Subject speichern (falls benötigt)
-        this.spoonacularRezepteSubject.next(recipes);
-      }),
-      catchError(error => {
-        console.error('Fehler beim Laden der zufälligen Rezepte von Spoonacular', error);
-        return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
-      })
-    );
-  }
-
-
-// Helper-Funktion zum Mappen der API-Daten
-  private mapSpoonacularRezepte(response: any): Rezept[] {
-
-    const Mahlzeoit = DEFAULT_TAGS.filter(tag => tag.type === TagType.MAHLZEIT).map(tag => tag.label);
-
-    return response.recipes.map((rezept: any) => {
-      // Umwandlung der dishTypes in Tags
-      const tags = this.getMappedDishTypes(rezept.dishTypes);
-
-      return {
-        id: Math.random(),
-        name: rezept.title,
-        image: rezept.image || '',
-        bildUrl: rezept.sourceUrl || '',
-        tags, // Tags füllen
-      };
-    });
-  }
-
-// Helper-Funktion zur Gruppierung der dishTypes
-  getMappedDishTypes(dishTypes: string[] | undefined): any[] {
-    if (!dishTypes) return [];
-
-    const uniqueCategories = new Set<string>();
-
-    dishTypes.forEach((type) => {
-      const mappedCategory = dishTypeMapping[type.toLowerCase()];
-      if (mappedCategory) {
-        uniqueCategories.add(mappedCategory);
-      }
-    });
-
-    return Array.from(uniqueCategories).map((germanTag: string) => {
-      return {
-        id: Math.random(),
-        type: TagType.MAHLZEIT,
-        label: germanTag, // Übersetzung oder Originalwert
-        selected: false,
-        count: 1
-      };
-    });
-  }
-
-  //aus spoon-Rezepten
-  addRezeptToList(rezept: Rezept): void {
-    const currentList = this.gefilterteRezepteSubject.value;
-    if (!currentList.some(r => r.id === rezept.id)) {
-      // Rezept nur hinzufügen, wenn es noch nicht in der Liste ist
-      this.gefilterteRezepteSubject.next([...currentList, rezept]);
-    }
-  }
-
-
   getFilteredRezepte(tags: string[], searchText: string): Observable<Rezept[]> {
     return this.rezepte$.pipe(
       map(rezepte => {
@@ -371,4 +331,159 @@ export class RezeptService {
     );
 
   }
+
+
+// SPOON
+  fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
+    const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
+
+    return this.http.get<any>(apiUrl).pipe(
+      map(response => {
+        if (response && response.recipes) {
+          return this.mapSpoonacularRezepte(response);
+        } else {
+          console.error('Ungültige Antwort von Spoonacular');
+          return []; // Leere Liste zurückgeben, falls die Antwort ungültig ist
+        }
+      }),
+      tap(recipes => {
+        // Rezepte im Subject speichern (falls benötigt)
+        this.spoonacularRezepteSubject.next(recipes);
+      }),
+      catchError(error => {
+        console.error('Fehler beim Laden der zufälligen Rezepte von Spoonacular', error);
+        return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
+      })
+    );
   }
+
+
+  // Helper-Funktion zum Mappen der API-Daten
+  // Dadurch sind die Attribute aus API in der html anzeigbar unter den Namen, wie ich sie im Projekt für die gleichbedeutenden Attribute unter "rezept." angelegt habe
+  private mapSpoonacularRezepte(response: any): Rezept[] {
+
+    return response.recipes.map((rezept: any) => {
+      // Umwandlung der dishTypes in Tags
+      const tags = this.getMappedDishTypes(rezept.dishTypes);
+
+      return {
+        id: Math.random(),
+        name: rezept.title,
+        bildUrl: rezept.image || '',
+        onlineAdresse: rezept.sourceUrl || '',
+        tags,
+        image: null,
+      };
+    });
+  }
+
+// Helper-Funktion zur Gruppierung der dishTypes
+  getMappedDishTypes(dishTypes: string[] | undefined): any[] {
+    if (!dishTypes) return [];
+
+    const uniqueCategories = new Set<string>();
+
+    dishTypes.forEach((type) => {
+      const mappedCategory = dishTypeMapping[type.toLowerCase()];
+      if (mappedCategory) {
+        uniqueCategories.add(mappedCategory);
+      }
+    });
+
+    return Array.from(uniqueCategories).map((germanTag: string) => {
+      return {
+        id: Math.random(),
+        type: 'MAHLZEIT',
+        label: germanTag,
+        selected: false,
+        count: 1
+      };
+    });
+  }
+
+  //aus spoon-Rezepten
+  //Das Problem war: Content-Type wurde für rezeptDTO nicht korrekt gesetzt, weil kein File-Blob vorhanden war
+  //Lösung: Erstellung eines Blobs (obwohl eigentlich keine Datei mitgesendet wird)
+  addRezeptToList(rezept: Rezept, image?: string | Blob | undefined): Observable<Rezept> {
+    const token = localStorage.getItem('jwt_token'); // Token aus Local Storage holen
+    if (!token) {
+      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
+      return throwError(() => new Error('Kein Token gefunden.'));
+    }
+
+    const formData = new FormData();
+    const rezeptBlob = new Blob([JSON.stringify(rezept)], { type: 'application/json' });
+    formData.append('rezeptDTO', rezeptBlob, 'rezept.json');
+
+    if (image) {
+      formData.append('image', image);
+    }
+
+    return this.http.post<Rezept>(
+      `${this.backendUrl}/api/rezepte/create`,
+      formData,
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } // Token hier verwenden
+    ).pipe(
+      catchError((error) => {
+        console.error('Fehler beim Erstellen des Rezepts:', error);
+        return throwError(() => new Error('Fehler beim Erstellen des Rezepts'));
+      })
+    );
+  }
+
+
+
+  /*saveSpoonacularRezept(rezept: any, image?: File): Observable<Rezept> {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) {
+      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
+      return throwError(() => new Error('Token fehlt.'));
+    }
+
+    const formData = new FormData();
+    formData.append('rezeptDTO', JSON.stringify(rezept));
+
+    if (image) {
+      formData.append('image', image);
+    }
+
+    return this.http.post<Rezept>(
+      `${this.backendUrl}/api/rezepte/create`,
+      formData,
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+    ).pipe(
+      catchError(error => {
+        console.error('Fehler beim Speichern des Rezepts', error);
+        return throwError(() => new Error("Fehler beim Speichern des Rezepts"));
+      })
+    );
+  }*/
+
+
+
+
+
+  private mapSpoonacularToRezept(spoonacularRezept: any): Rezept {
+    console.log('Original Rezept von Spoonacular:', spoonacularRezept);
+
+    const mapSpoonToDishlish: Rezept = {
+      id: 0,
+      name: spoonacularRezept.name || 'Unbenannt',
+      onlineAdresse: spoonacularRezept.sourceUrl || '',
+      bildUrl: spoonacularRezept.image || '',
+      image: null,
+      tags: (spoonacularRezept.dishTypes?.map((dish: string, index: number) => {
+        return {
+          id: index,
+          type: 'MAHLZEIT',
+          label: 'MAHLZEIT',
+          selected: false,
+          count: 1
+        };
+      }) || []),
+    };
+
+    console.log('Nach dem Mapping in mapSpoonacularToRezept:', mapSpoonToDishlish);
+    return mapSpoonToDishlish;
+  }
+}
