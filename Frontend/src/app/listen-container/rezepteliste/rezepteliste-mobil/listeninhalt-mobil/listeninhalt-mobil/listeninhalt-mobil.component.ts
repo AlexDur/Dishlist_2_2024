@@ -3,7 +3,7 @@ import {
   ElementRef,
   Input,
   ViewChild,
-  Output, EventEmitter, OnInit, OnDestroy
+  Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef
 } from '@angular/core';
 import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
@@ -37,7 +37,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
 
 
 
-  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router) {
+  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -48,8 +48,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     //Neuer Wert der aus der Gesamtheit "rezepte" genommen wird, wird gefilterteRezepte zugeordnet
     this.rezepteService.gefilterteRezepte$.subscribe(rezepte => {
       this.gefilterteRezepte = rezepte;
-    });
-
+    })
   }
 
   ngOnDestroy(): void {
@@ -157,8 +156,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Tag aus der Liste der ausgewählten Tags entfernen:
-  //Aktualisierte Liste der ausgewählten Tags an die Elternkomponente weitergeben
+  //Tag aus der Liste der ausgewählten Tags entfernen
   onTagRemoved(tag: string): void {
     this.selectedTags = this.selectedTags.filter(t => t !== tag);
     this.selectedRemoveTags.emit(this.selectedTags);

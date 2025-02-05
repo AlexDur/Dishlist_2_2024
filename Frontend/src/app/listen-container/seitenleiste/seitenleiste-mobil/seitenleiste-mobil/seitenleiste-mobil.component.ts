@@ -47,6 +47,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       this.subscription.add(
       this.tagService.selectedTags$.subscribe(tags => {
         this.selectedTags = tags;
+        this.applyFilters();
         console.log('Aktualisierte ausgewählte Tags:', this.selectedTags);
 
       })
@@ -76,7 +77,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedTags']) {
-      // Update tags' selected state based on selectedTags
       this.updateTagsSelection();
 
     }
@@ -90,7 +90,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   toggleTagInSidebar(tag: Tag): void {
     this.tagService.toggleTag(tag.label);
-    this.applyFilters();
   }
 
 

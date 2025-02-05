@@ -580,7 +580,7 @@ a {
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: minmax(0, auto);
   width: 100%;
-  gap:3px;
+  gap: 5px 1px;
   background-color: transparent;
   margin: 0 auto;
 }
@@ -614,9 +614,6 @@ a {
   height: 165px;
 }
 
-
-
-
 .p-card {
   position: relative;
   display: grid;
@@ -627,8 +624,8 @@ a {
   aspect-ratio: 1 / 1;
   box-sizing: border-box;
   background-color: orange;
-  width: 150px;
-  height: 150px;
+  width: 165px;
+  height: 165px;
   object-fit: contain;
 }
 
@@ -737,7 +734,7 @@ a {
 }
 
 
-.p-card {
+/*.p-card {
   position: relative;
   display: grid;
   overflow: hidden;
@@ -746,7 +743,7 @@ a {
   cursor: pointer;
   box-sizing: border-box;
   background-color: orange;
-}
+}*/
 
 /*Filterblasen*/
 .filter-container {
@@ -861,17 +858,16 @@ a {
 
   .p-card-title {
     font-size: .7rem !important;
+    font-weight: bold;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5em;
-    max-height: 4.5em;
+    max-height: 5em;
     word-break: break-word;
-    margin: 5px;
-    text-decoration: underline;
-    border: 1px solid transparent;
+    padding: 7px 3px;
   }
 
 }
@@ -1277,19 +1273,22 @@ p-tag + p-tag {
 }
 
 .p-card-title {
-  font-size: .8rem;
   position: absolute;
-  bottom: 3px;
-  left: 3px;
-  color: #f3f2f2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  font-size: 0.8rem;
   font-weight: bold;
+  color: #f3f2f2;
   text-align: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+
   background: rgba(0, 0, 0, 0.7);
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-bottom: 0;
+  padding: 3px 5px;
+  margin: 0;
 }
+
 
 .p-card-footer {
   position: absolute;
@@ -1485,7 +1484,7 @@ h3.weiss {
 .ki-label {
   position: absolute;
   top: -5px;
-  right: -1px;
+  right: 2px;
   background: $hover-color1;
   color: white;
   font-size: 12px;
@@ -1523,10 +1522,12 @@ h3.weiss {
   position: absolute;
   top: 10px;
   right: 10px;
+  width: 30px;
+  height: 30px;
   margin-bottom: 10px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 28px;
   cursor: pointer;
 }
 
@@ -1679,9 +1680,10 @@ h3.weiss {
   max-width: 320px;
   position: relative;
   overflow-y: auto;
-  min-height: 95vh;
-  height: 90vh;
+  min-height: 75vh;
+  height: 75vh;
   display: flex;
+  align-items: center;
   justify-content: center;
 }
 
@@ -1691,8 +1693,13 @@ h3.weiss {
   margin-bottom: 10px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 28px;
   cursor: pointer;
+}
+
+.overlay-close-button:active,
+.overlay-close-button:hover {
+  color: black;
 }
 
 .recipe-list {
@@ -1750,7 +1757,6 @@ h3.weiss {
   box-sizing: border-box;
   cursor: pointer;
   text-align: left;
-
 }
 
 .spoon-trennstrich {
@@ -1766,40 +1772,49 @@ h3.weiss {
 .gang-spoon{
  font-weight: bold;
   margin: 5px 0;
-  color: $secondary-color;
 }
 
-button.spoon-button {
+.no-tags-font-color {
+  color: $secondary-color; /* Wenn selectedTags vorhanden sind */
+}
+
+.selected-tags-font-color {
+  color: $hover-color1; /* Wenn selectedTags leer ist */
+}
+
+.spoon-button {
   position: absolute;
   top: 10px;
-  right: 3px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  border: none;
+  right: 10px;
+  border: 2px solid black;
   border-radius: 50%;
   cursor: pointer;
   padding: 5px;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 5px;
   z-index: 9999;
+  color: white;
+ /* background-color: $secondary-color;*/
 }
 
-button.spoon-button:first-of-type {
-  background-color: $secondary-color;
-  right: 50px; /* Abstand zum anderen Button */
+.no-tags {
+  background-color: $secondary-color; /* Wenn selectedTags vorhanden sind */
 }
 
-button.spoon-button:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-  color: black;
+.selected-tags {
+  background-color: $hover-color1; /* Wenn selectedTags leer ist */
 }
 
-button.spoon-button + button.spoon-button {
-  margin-left: 5px;
+
+.spoon-button:hover {
+  background-color: darken($secondary-color, 20%);
+}
+
+.spoon-button:active {
+  background-color: darken($secondary-color, 30%);
+  transform: scale(0.90);
 }
 
 
@@ -1814,6 +1829,11 @@ button.spoon-button + button.spoon-button {
 
 
 @media screen and (max-width: 750px) {
+
+ .overlay-content-spoon {
+    min-height: 90vh;
+    height: 90vh;
+  }
 
 
   .listen-container {
@@ -1982,7 +2002,7 @@ button.spoon-button + button.spoon-button {
   display: flex;
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
+  padding: 6px 0;
   border-radius: 5px;
 }
 
@@ -2047,7 +2067,7 @@ button.spoon-button + button.spoon-button {
     background-color: rgb(232, 225, 221);
     justify-content: center;
 
-    padding: 8px 0;
+    padding: 4px 0;
   }
 
   .tab {

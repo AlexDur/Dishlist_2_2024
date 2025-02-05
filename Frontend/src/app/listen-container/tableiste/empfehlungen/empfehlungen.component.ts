@@ -2,16 +2,15 @@ import { Component,Input, HostListener, ChangeDetectorRef, OnChanges, OnInit, On
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import {Router} from "@angular/router";
-import { timeout } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Subscription, of, Observable, timeout } from 'rxjs';
 import {TagService} from "../../../services/tags.service";
-import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-empfehlungen',
   templateUrl: './empfehlungen.component.html'
 })
-export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
+export class EmpfehlungenComponent implements OnInit, OnDestroy {
   @Input() rezepte: Rezept[] = [];
 
   private tagsSubscription: Subscription | undefined;
@@ -21,9 +20,8 @@ export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
   isOverlayVisible = false;
   isLoading = false;
   selectedTags: string[] = [];
-  tagsFromSidebarChanged: boolean = false;
 
-  constructor(private rezeptService: RezeptService, private cdr: ChangeDetectorRef, private tagService: TagService, private router: Router) {
+  constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
   }
 
@@ -32,17 +30,9 @@ export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
       this.selectedTags = tags;
     });
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
+
   }
 
-  ngOnChanges(): void {
-    this.cdr.detectChanges();
-  }
-
-  ngOnDestroy() { // Wichtig: Beim Zerstören der Komponente das Abonnement beenden
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])
@@ -50,7 +40,6 @@ export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
     const content = document.querySelector('.overlay-content');
     if (content && !content.contains(event.target as Node)) {
       this.isOverlayVisible = false;
-      this.isLoading = false;
     }
   }
 
@@ -82,11 +71,11 @@ export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
     const TIMEOUT_DURATION = 5000;
 
     this.rezeptService.fetchRandomSpoonacularRezepte().pipe(
-      timeout(TIMEOUT_DURATION) // Timeout nach der angegebenen Dauer
+      timeout(TIMEOUT_DURATION)
     ).subscribe({
       next: (rezepte) => {
         this.rezepte = rezepte.map((rezept) => {
-          // Sicherstellen, dass jedes Rezept Tags hat
+
           if (!rezept.tags) {
             rezept.tags = [];
           }
@@ -113,20 +102,24 @@ export class EmpfehlungenComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-
-  removeRecipe(rezept: Rezept) {
-
+  //Hinzu-Knopf
+  addRecipe(rezept: Rezept): void {
+    this.isLoading = true;
+    this.rezeptService.addRezeptToList(rezept).pipe(
+      catchError((error: any) => {
+        this.isLoading = false;
+        console.error('Fehler beim Speichern des Rezepts:', error);
+        return of(null);
+      })
+    ).subscribe(() => {
+      this.isLoading = false; // Erfolg
+    });
   }
 
-  addRecipe(rezept: Rezept) {
-    this.subscription = this.rezeptService.addRezeptToList(rezept).subscribe(
-      () => {
 
-        this.cdr.detectChanges();
-      },
-      (error) => {
-        console.error('Fehler beim Hinzufügen des Rezepts:', error);
-      }
-    );
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

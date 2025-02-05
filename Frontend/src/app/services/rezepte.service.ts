@@ -1,14 +1,12 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, finalize, Observable, tap, throwError, map} from 'rxjs';
+import {EventEmitter, Injectable, NgZone } from '@angular/core';
+import {BehaviorSubject, catchError, Observable, tap, throwError, map} from 'rxjs';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
-import {TagType} from "../models/tagType";
-import {DEFAULT_TAGS} from "../models/default_tag";
 import {dishTypeMapping} from "../utils/dishTypeMapping";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 
 
 
@@ -41,14 +39,8 @@ export class RezeptService {
   public image$: Observable<File | null> = this.imageSubject.asObservable();
 
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
-  public spoonacularRezepte$: Observable<Rezept[]> = this.spoonacularRezepteSubject.asObservable();
-  private imageUrl: string = '';
 
-
-
-
-
-  constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private authService: AuthService, private ngZone: NgZone) {
   }
 
 
@@ -127,7 +119,7 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
-// Validierungsfunktion für das Rezept
+ // Validierungsfunktion für manuell erstelltes Rezept
   validateRezept(rezept: Rezept): boolean {
 
     if (!rezept.name?.trim()) {
@@ -153,25 +145,23 @@ export class RezeptService {
     return true;
   }
 
-
+  // Validierung für Spoon-Rezept
   validateSpoonRezept(rezept: Rezept): boolean {
     if (!rezept.name?.trim()) {
       return false;
     }
 
-    // Spoonacular-Rezepte haben keine verpflichtende `onlineAdresse`
+    // Spoonacular-Rezepte haben eine verpflichtende `bildUrl`
     if (!rezept.bildUrl?.trim()) {
       return false;
     }
 
-    // Tags sind optional, aber wenn sie vorhanden sind, sollten sie valide sein
     if (rezept.tags?.length) {
       for (const tag of rezept.tags) {
         console.log('Tag-Objekt:', tag);
         console.log('Tag-Typ:', typeof tag.type, 'Wert:', tag.type);
 
-        // Sicherstellen, dass tag.type ein String ist, bevor trim() angewendet wird
-        const tagType = Object.values(tag.type).join(' '); // Alle Werte des type-Objekts zusammenfügen
+        const tagType = Object.values(tag.type).join(' ');
 
         if (!tag.label?.trim() || !tagType.trim()) {
           return false;
@@ -195,23 +185,17 @@ export class RezeptService {
    */
   createRezept(rezept: Rezept, formData: FormData): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
-
-    console.log('FormData-Inhalte vor dem Senden:');
     formData.forEach((value, key) => {
       console.log(key, value);
     });
 
     const isSpoonacularRezept = rezept.onlineAdresse?.startsWith('https://www.foodista.com');
 
-    console.log(`Erkannter Rezepttyp: ${isSpoonacularRezept ? 'Spoonacular-Rezept' : 'Manuell erstelltes Rezept'}`);
-
-
     const isValid = isSpoonacularRezept
       ? this.validateSpoonRezept(rezept)
       : this.validateRezept(rezept);
 
     if (!isValid) {
-      console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
       this.loadingSubject.next(false);
       return throwError(() => new Error('Rezept ist ungültig.'));
     }
@@ -220,7 +204,6 @@ export class RezeptService {
     const token = localStorage.getItem('jwt_token'); // Token aus localStorage holen
 
     if (!token) {
-      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
       this.loadingSubject.next(false); // Ladezustand zurücksetzen
       return throwError(() => new Error('Token fehlt.'));
     }
@@ -235,11 +218,9 @@ export class RezeptService {
       headers: headers
     }).pipe(
       tap(response => {
-        console.log('Server Response:', response);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
       }),
       catchError(error => {
-        console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
         return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts'));
       })
@@ -285,7 +266,6 @@ export class RezeptService {
         this.updateTagCountsAfterDeletion(id);
       }),
       catchError((error) => {
-        console.error('Fehler beim Löschen des Rezepts', error);
         return throwError(() => new Error('Rezept konnte nicht gelöscht werden.'));
 
       })
@@ -329,11 +309,10 @@ export class RezeptService {
         return gefilterteRezepte;
       })
     );
-
   }
 
-
-// SPOON
+  // SPOON
+  // Zufälliger Abruf der Spoon-Rezepte
   fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
     const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
 
@@ -342,16 +321,13 @@ export class RezeptService {
         if (response && response.recipes) {
           return this.mapSpoonacularRezepte(response);
         } else {
-          console.error('Ungültige Antwort von Spoonacular');
-          return []; // Leere Liste zurückgeben, falls die Antwort ungültig ist
+          return [];
         }
       }),
       tap(recipes => {
-        // Rezepte im Subject speichern (falls benötigt)
         this.spoonacularRezepteSubject.next(recipes);
       }),
       catchError(error => {
-        console.error('Fehler beim Laden der zufälligen Rezepte von Spoonacular', error);
         return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
       })
     );
@@ -363,7 +339,6 @@ export class RezeptService {
   private mapSpoonacularRezepte(response: any): Rezept[] {
 
     return response.recipes.map((rezept: any) => {
-      // Umwandlung der dishTypes in Tags
       const tags = this.getMappedDishTypes(rezept.dishTypes);
 
       return {
@@ -401,13 +376,11 @@ export class RezeptService {
     });
   }
 
-  //aus spoon-Rezepten
   //Das Problem war: Content-Type wurde für rezeptDTO nicht korrekt gesetzt, weil kein File-Blob vorhanden war
   //Lösung: Erstellung eines Blobs (obwohl eigentlich keine Datei mitgesendet wird)
   addRezeptToList(rezept: Rezept, image?: string | Blob | undefined): Observable<Rezept> {
     const token = localStorage.getItem('jwt_token'); // Token aus Local Storage holen
     if (!token) {
-      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
       return throwError(() => new Error('Kein Token gefunden.'));
     }
 
@@ -422,68 +395,20 @@ export class RezeptService {
     return this.http.post<Rezept>(
       `${this.backendUrl}/api/rezepte/create`,
       formData,
-      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } // Token hier verwenden
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
     ).pipe(
+      tap((savedRezept) => {
+
+        this.ngZone.run(() => {
+          const currentList = this.gefilterteRezepteSubject.value;
+          this.gefilterteRezepteSubject.next([...currentList, savedRezept]);
+        });
+
+      }),
       catchError((error) => {
-        console.error('Fehler beim Erstellen des Rezepts:', error);
         return throwError(() => new Error('Fehler beim Erstellen des Rezepts'));
       })
     );
   }
 
-
-
-  /*saveSpoonacularRezept(rezept: any, image?: File): Observable<Rezept> {
-    const token = localStorage.getItem('jwt_token');
-    if (!token) {
-      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
-      return throwError(() => new Error('Token fehlt.'));
-    }
-
-    const formData = new FormData();
-    formData.append('rezeptDTO', JSON.stringify(rezept));
-
-    if (image) {
-      formData.append('image', image);
-    }
-
-    return this.http.post<Rezept>(
-      `${this.backendUrl}/api/rezepte/create`,
-      formData,
-      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
-    ).pipe(
-      catchError(error => {
-        console.error('Fehler beim Speichern des Rezepts', error);
-        return throwError(() => new Error("Fehler beim Speichern des Rezepts"));
-      })
-    );
-  }*/
-
-
-
-
-
-  private mapSpoonacularToRezept(spoonacularRezept: any): Rezept {
-    console.log('Original Rezept von Spoonacular:', spoonacularRezept);
-
-    const mapSpoonToDishlish: Rezept = {
-      id: 0,
-      name: spoonacularRezept.name || 'Unbenannt',
-      onlineAdresse: spoonacularRezept.sourceUrl || '',
-      bildUrl: spoonacularRezept.image || '',
-      image: null,
-      tags: (spoonacularRezept.dishTypes?.map((dish: string, index: number) => {
-        return {
-          id: index,
-          type: 'MAHLZEIT',
-          label: 'MAHLZEIT',
-          selected: false,
-          count: 1
-        };
-      }) || []),
-    };
-
-    console.log('Nach dem Mapping in mapSpoonacularToRezept:', mapSpoonToDishlish);
-    return mapSpoonToDishlish;
-  }
 }
