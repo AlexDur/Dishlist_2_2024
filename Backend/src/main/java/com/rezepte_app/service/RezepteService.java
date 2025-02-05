@@ -91,12 +91,20 @@ public class RezepteService {
 
     //Hier Konvertierung des RezeptDTO zu Rezept
     @Transactional
-    public Rezept createRezept(@Valid RezeptDTO rezeptDTO, String userId, MultipartFile image) throws IOException {
+    public Rezept createRezept(@Valid RezeptDTO rezeptDTO, String userId, MultipartFile image, String imageUrl) throws IOException {
         Rezept rezept = convertDtoToRezept(rezeptDTO, userId);
-        handleImageUpload(rezept, image);
+
+        if (image != null && !image.isEmpty()) {
+            handleImageUpload(rezept, image);
+        } else if (imageUrl != null && !imageUrl.isBlank()) {
+
+            rezept.setBildUrl(imageUrl);
+        }
+
         handleTags(rezept);
         return rezepteRepository.save(rezept);
     }
+
 
     private Rezept convertDtoToRezept(RezeptDTO rezeptDTO, String userId) {
         Rezept rezept = rezeptMapper.rezeptDTOToRezept(rezeptDTO);

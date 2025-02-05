@@ -95,61 +95,59 @@ public class RezepteController {
     /*Controller generell, hier: Controller-Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Ist für den Empfang und das Parsing
      der Daten aus dem Frontent zuständig. Übergibt die empfangenen Daten an den Serivce (wo eig.
      Geschäftslogik sitzt). Zudem wird die HTTP-Antwort erstellt und an FE gesendet (Das passiert hier im try-catch*/
-    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> createRezept(
             @RequestHeader(value = "Authorization") String authorizationHeader,
-            @RequestPart("rezeptDTO") @Valid RezeptDTO rezeptDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "rezeptDTO") RezeptDTO rezeptDTO,  // RezeptDTO muss immer als Teil des Formulardaten gesendet werden
+            @RequestPart(value = "image", required = false) MultipartFile image,  // Bild ist optional
             BindingResult result) {
 
-        System.out.println("Empfangene Daten (Create): " + rezeptDTO);
-
+        // Überprüfe auf Validierungsfehler
         if (result.hasErrors()) {
-            return handleValidationErrors(result);
+            return handleValidationErrors(result); // Stelle sicher, dass du die Validierungsfehler behandelst
         }
 
         try {
-
             // Extrahiere die User-ID aus dem JWT-Token
             String userId = extractUserIdFromToken(authorizationHeader);
 
-            // Tags validieren und ausgeben
+            // Tags validieren (falls notwendig)
             validateAndLogTags(rezeptDTO);
 
-            // Bildinformationen ausgeben
-            if (image != null && !image.isEmpty()) {
-                System.out.println("Empfangenes Bild: " + image.getOriginalFilename());
-                // Bild hochladen und die URL zurückgeben
-                String imageUrl = s3ImageUploadService.uploadImageToS3(image, userId);
-                System.out.println("Bild hochgeladen. URL: " + imageUrl);
+            // Bild hochladen, falls es eine Datei gibt
+            String imageUrl = rezeptDTO.getBildUrl();
+
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                // Verwende bestehende Bild-URL
+            } else if (image != null && !image.isEmpty()) {
+                imageUrl = s3ImageUploadService.uploadImageToS3(image, userId);
             } else {
-                System.out.println("Kein Bild übergeben.");
+                logger.warn("Kein Bild vorhanden. Rezept wird ohne Bild gespeichert.");
             }
 
-            // Rezept erstellen
-            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, userId, image);
+            // Rezept speichern
+            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, userId, image, imageUrl);
 
             // Antwort zurückgeben
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Rezept erfolgreich erstellt.");
             response.put("id", createdRezept.getId());
-            logger.info("Antwort beim Erstellen des Rezepts: {}", response);
+            response.put("name", createdRezept.getName());
+            response.put("bildUrl", createdRezept.getBildUrl());
+            response.put("onlineAdresse", createdRezept.getOnlineAdresse());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
         } catch (Exception e) {
-
-            logger.error("Fehler beim Erstellen des Rezepts", e);
-
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", "Interner Serverfehler beim Erstellen des Rezepts.");
             errorResponse.put("details", "Es gab einen internen Fehler beim Verarbeiten des Rezepts.");
 
-
-            logger.error("Fehlerantwort beim Erstellen des Rezepts: {}", errorResponse);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+
 
     // Hilfsmethoden für createRezept
     private ResponseEntity<Map<String, Object>> handleValidationErrors(BindingResult result) {

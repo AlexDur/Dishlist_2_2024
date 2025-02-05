@@ -14,6 +14,16 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "Rezept.findByUserIdOrderByIdDesc",
+                query = "SELECT r FROM Rezept r WHERE r.userId = :userId ORDER BY r.id DESC"
+        ),
+        @NamedQuery(
+                name = "Rezept.findByUserIdOrderByIdDesc.count",
+                query = "SELECT COUNT(r) FROM Rezept r WHERE r.userId = :userId"
+        )
+})
 @Table(name = "rezepte")
 @Data
 @NoArgsConstructor
@@ -36,7 +46,7 @@ public class Rezept {
     private String onlineAdresse;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "rezept_tags",
             joinColumns = @JoinColumn(name = "rezept_id"),

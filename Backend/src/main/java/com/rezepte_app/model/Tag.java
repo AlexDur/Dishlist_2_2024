@@ -11,10 +11,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
 @Table(name ="tags")
 @Data // Generiert Getter, Setter, toString, equals, hashCode
 @NoArgsConstructor //Generiert einen Standardkonstruktor
+@NamedQuery(
+        name = "Tag.findByIdAndLabel",
+        query = "SELECT t FROM Tag t WHERE t.id = :id AND t.label = :label"
+)
 public class Tag{
 
     @Id
@@ -22,6 +27,7 @@ public class Tag{
     private Long id;
 
     @NotBlank(message="Label muss vorhanden sein")
+    @Column(name = "label", nullable = false)
     private String label;
 
     @NotBlank(message="Typ muss vorhanden sein")
