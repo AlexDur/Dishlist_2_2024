@@ -10,11 +10,16 @@
 
         <div class="rezept-image-container">
           <img
-            *ngIf="rezept.bildUrl"
+            *ngIf="rezept.bildUrl; else defaultImage"
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
             (click)="openImageFullscreen(rezept.bildUrl)"
           />
+          <ng-template #defaultImage>
+            <div  class="platzhalter-bild">
+              <img src="assets/plate.webp" alt="Standardbild">
+            </div>
+          </ng-template>
         </div>
         <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
         <div class="p-card-footer">

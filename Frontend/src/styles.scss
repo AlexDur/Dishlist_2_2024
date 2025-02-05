@@ -734,16 +734,7 @@ a {
 }
 
 
-/*.p-card {
-  position: relative;
-  display: grid;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  cursor: pointer;
-  box-sizing: border-box;
-  background-color: orange;
-}*/
+
 
 /*Filterblasen*/
 .filter-container {
@@ -1439,15 +1430,6 @@ h3.weiss {
   color: $detail_2-color;
 }
 
-
-.platzhalter-rezeptbild {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 8px;
-  min-height: 250px;
-  padding: 15px;
-}
 
 .linie-unten {
   border: 0;
