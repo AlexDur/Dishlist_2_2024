@@ -582,12 +582,12 @@ a {
   width: 100%;
   gap: 5px 1px;
   background-color: transparent;
-  margin: 0 auto;
+  margin: 0.5rem auto;
 
 }
 
 .rezept-image-container img{
-  width: 155px;
+  width: 153px;
   height: 155px;
 }
 
@@ -599,7 +599,7 @@ a {
 }
 
 .p-card-content {
-  width: 155px;
+  width: 153px;
   height: 155px;
   padding: 0;
 }
@@ -611,7 +611,7 @@ a {
 }
 
 .rezept-image-container img {
-  width: 155px;
+  width: 153px;
   height: 155px;
 }
 
@@ -625,7 +625,7 @@ a {
   aspect-ratio: 1 / 1;
   box-sizing: border-box;
   background-color: orange;
-  width: 155px;
+  width: 153px;
   height: 155px;
   object-fit: contain;
 }
@@ -743,15 +743,40 @@ a {
   gap: 5px;
   align-content: start;
   justify-content: flex-start;
-  padding: 10px;
   padding-left: 0;
+}
+
+.filter-kreis-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 
 
+.filterkreis-clear{
+  flex-shrink: 0;
+  font-weight: bold;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $hover-color1;
+  outline-offset: 2px;
+  background-color: $hover-color1;
+  border: 2px solid $hover-color1;
+  color: $tertiary-color;
+
+  z-index: 1001;
+  text-align: center;
+}
+
 .filter-circle {
   min-width: 30px;
-  height: 30px;
+  height: auto;
   padding: 5px 10px;
   border: 2px solid $hover-color1;
   border-radius: 10px;
@@ -760,6 +785,7 @@ a {
   justify-content: center;
   background: rgba(14, 159, 174, 0.5);
   cursor: pointer;
+  margin: 3px;
 }
 
 .filter-plus {
@@ -1564,10 +1590,10 @@ h3.weiss {
 
 
 .filter-column {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   padding-right: 0;
-  padding-left: 0px;
+  padding-left: 60px;
 }
 
 .filter-column h3 {
@@ -2078,7 +2104,7 @@ h3.weiss {
 
 .header{
   display: flex;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   justify-content: space-between;
   align-items: center;
 }

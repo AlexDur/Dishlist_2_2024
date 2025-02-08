@@ -1,7 +1,11 @@
 <div>
+<div class="filter-kreis-container">
   <div *ngIf="selectedTags.length > 0">
-    <app-filterkreise  *ngFor="let tag of selectedTags" [label]="tag"  (tagRemoved)="onTagRemoved(tag)"></app-filterkreise>
+    <app-filterkreise  *ngFor="let tag of selectedTags" [label]="tag"  (tagRemoved)="onTagRemoved(tag)" class="filterkreis">
+    </app-filterkreise>
   </div>
+  <div *ngIf="selectedTags.length > 0" class="filterkreis-clear" (click)="clearTags()" icon="pi pi-trash">X</div>
+</div>
 <div class="container-listeninhalt">
 
   <div *ngFor="let rezept of gefilterteRezepte">
