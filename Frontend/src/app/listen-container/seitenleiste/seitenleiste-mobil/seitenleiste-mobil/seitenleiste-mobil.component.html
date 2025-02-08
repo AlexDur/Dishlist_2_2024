@@ -33,6 +33,7 @@
                   <div class="checkbox-label-container">
                     <p-checkbox
                       [binary]="true"
+                      [ngModel]="art.selected"
                       [disabled]="art.disabled || false"
                       (onChange)="toggleTagInSidebar(art);"
                       inputId="type_{{ art.label }}">
@@ -52,6 +53,7 @@
                   <div class="checkbox-label-container">
                     <p-checkbox
                       [binary]="true"
+                      [ngModel]="type.selected"
                       [disabled]="type.disabled || false"
                       (onChange)="toggleTagInSidebar(type);"
                       inputId="type_{{ i }}">
@@ -70,6 +72,7 @@
                   <div class="checkbox-label-container">
                     <p-checkbox
                       [binary]="true"
+                      [ngModel]="type.selected"
                       [disabled]="type.disabled || false"
                       (onChange)="toggleTagInSidebar(type);"
                       inputId="type_{{ i }}">

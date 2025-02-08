@@ -111,10 +111,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     this.isOverlayVisible = !this.isOverlayVisible;
 
     if (this.isOverlayVisible) {
-      // Update the selected state of tags when the overlay is opened
-      this.tags.forEach(tag => {
-        tag.selected = this.selectedTags.includes(tag.label);
-      });
+      this.updateTagsSelection();
       console.log('Overlay geöffnet, selectedTags:', this.selectedTags);
     }
   }

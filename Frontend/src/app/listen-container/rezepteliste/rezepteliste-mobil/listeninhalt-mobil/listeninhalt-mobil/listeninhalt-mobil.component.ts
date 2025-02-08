@@ -166,6 +166,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   clearTags(){
     console.log('clear Tags');
     this.selectedTags = [];
+    this.tagService.setSelectedTags([]);
   }
 
 }
