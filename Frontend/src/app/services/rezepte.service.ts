@@ -6,6 +6,7 @@ import {environment} from '../../environments/environment';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
 import {dishTypeMapping} from "../utils/dishTypeMapping";
+import {reverseDishTypeMapping} from "../utils/dishTypeMapping_reverse";
 
 
 
@@ -313,8 +314,24 @@ export class RezeptService {
 
   // SPOON
   // Zufälliger Abruf der Spoon-Rezepte
-  fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
-    const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
+  fetchRandomSpoonacularRezepte(tags: string[] = []): Observable<Rezept[]> {
+    let apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
+
+    let apiTags: string[] = [];
+
+    tags.forEach(tag => {
+      const mappedTags = reverseDishTypeMapping[tag];
+      if (mappedTags) {
+        apiTags.push(...mappedTags);
+      }
+    });
+
+    if (apiTags.length > 0) {
+      const tagsQuery = apiTags.join(',');
+      apiUrl += `&tags=${encodeURIComponent(tagsQuery)}`;
+    }
+
+    console.log('API-URL:', apiUrl);
 
     return this.http.get<any>(apiUrl).pipe(
       map(response => {
@@ -328,6 +345,7 @@ export class RezeptService {
         this.spoonacularRezepteSubject.next(recipes);
       }),
       catchError(error => {
+        console.error('API-Fehler:', error);
         return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
       })
     );
