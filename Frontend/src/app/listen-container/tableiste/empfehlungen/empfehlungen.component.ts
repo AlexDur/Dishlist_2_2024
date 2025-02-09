@@ -28,6 +28,7 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
+      console.log('selectedTag in Empfehlungen', this.selectedTags)
     });
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
 
@@ -70,12 +71,15 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
     const TIMEOUT_DURATION = 5000;
 
-    this.rezeptService.fetchRandomSpoonacularRezepte().pipe(
+    console.log('Übergebene Tags an Spoonacular:', this.selectedTags);
+    this.rezeptService.fetchRandomSpoonacularRezepte(this.selectedTags).pipe(
       timeout(TIMEOUT_DURATION)
     ).subscribe({
       next: (rezepte) => {
+        console.log('Empfangene Rezepte:', rezepte);
         this.rezepte = rezepte.map((rezept) => {
 
+          console.log('Empfangene Rezepte.Tags:', rezept.tags);
           if (!rezept.tags) {
             rezept.tags = [];
           }
@@ -120,6 +124,9 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+    if (this.tagsSubscription) {
+      this.tagsSubscription.unsubscribe();
     }
   }
 }
