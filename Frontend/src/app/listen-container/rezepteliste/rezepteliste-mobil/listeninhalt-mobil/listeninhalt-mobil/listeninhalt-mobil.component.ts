@@ -116,8 +116,9 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       imageElement.alt = 'Bild in voller Größe';
       imageElement.style.objectFit = 'contain';
       imageElement.style.backgroundColor = 'black';
-      imageElement.style.width = '100%';
-      imageElement.style.height = '100%';
+      imageElement.style.width = '100vw';
+      imageElement.style.height = '100vh';
+      imageElement.style.cursor = 'default';
 
       // Container für das Fullscreen-Bild
       const fullscreenContainer = document.createElement('div');
@@ -133,7 +134,8 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       fullscreenContainer.style.alignItems = 'center';
       fullscreenContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
       fullscreenContainer.style.overflow = 'hidden';
-
+      fullscreenContainer.style.paddingTop = '400px'
+      fullscreenContainer.style.paddingBottom = '400px'
 
       const maxDimension = Math.min(window.innerWidth, window.innerHeight);
       fullscreenContainer.style.width = `${maxDimension}px`;
