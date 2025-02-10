@@ -766,12 +766,15 @@ a {
   transition: background-color 0.3s ease;
   outline: 2px solid $hover-color1;
   outline-offset: 2px;
-  background-color: $hover-color1;
+  background: rgba(14, 159, 174, 0.5);
   border: 2px solid $hover-color1;
   color: $tertiary-color;
-
-  z-index: 1001;
   text-align: center;
+}
+
+.filterkreis-clear:hover,
+.filterkreis-clear.active {
+  background: rgb(14, 159, 174);
 }
 
 .filter-circle {
@@ -786,6 +789,11 @@ a {
   background: rgba(14, 159, 174, 0.5);
   cursor: pointer;
   margin: 3px;
+}
+
+.filter-circle:hover,
+.filter-circle.active {
+  background: rgb(14, 159, 174);
 }
 
 .filter-plus {
@@ -812,8 +820,8 @@ a {
     flex-wrap: wrap;
     gap: 5px;
     background-color: transparent;
-    margin: 2rem auto;
-    margin-top: 1rem;
+    margin: 1rem auto;
+    margin-top: .6rem;
     width: 100%;
   }
 
@@ -1513,6 +1521,7 @@ h3.weiss {
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 1000;
 }
 
@@ -1536,6 +1545,7 @@ h3.weiss {
   justify-content: start;
   width: 90%;
   flex-wrap: wrap;
+
 }
 
 
@@ -1693,6 +1703,12 @@ h3.weiss {
   color: black;
 }
 
+.overlay-content-überschrift{
+  margin-bottom: 1rem;
+  color: $secondary-color;
+  text-align: left;
+}
+
 .recipe-list {
   display: flex;
   flex-wrap: wrap;
@@ -1750,13 +1766,13 @@ h3.weiss {
   text-align: left;
 }
 
-.spoon-trennstrich {
+cd f.spoon-trennstrich {
   color: black;
 }
 
 .no-recipes-message {
   text-align: center;
-  color: white;
+  color: black;
   font-size: 1.25rem;
 }
 
@@ -1994,6 +2010,7 @@ h3.weiss {
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
   padding: 6px 0;
+  padding-bottom: 4px;
   border-radius: 5px;
 }
 
@@ -2057,8 +2074,6 @@ h3.weiss {
     border-top: 1px solid #8f420a;
     background-color: rgb(232, 225, 221);
     justify-content: center;
-
-    padding: 4px 0;
   }
 
   .tab {

@@ -19,9 +19,7 @@ export class TagService {
 
   constructor(private http: HttpClient) {}
 
-  setSelectedTags(tags: string[]): void {
-    this.selectedTagsSubject.next(tags);
-  }
+
 
   //Zum Hinzufügen und Entfernen von Tags (beides in Seitenelsite und Entfernen auch in Filterkreisen)
   toggleTag(tag: string): void {
@@ -41,6 +39,8 @@ export class TagService {
     }
     return this.http.put<Tag>(`/${tag.id}`, tag);
   }
+
+
 
   //Hilfsfunktion essentiell für UpdateDates (unklar wieso ausgegraut)
   private updateSelectedTags(selectedTags: Tag[]): void {
@@ -62,5 +62,7 @@ export class TagService {
     });
   }
 
-
+  setSelectedTags(tags: string[]): void {
+    this.selectedTagsSubject.next(tags);
+  }
 }
