@@ -624,7 +624,7 @@ a {
   cursor: pointer;
   aspect-ratio: 1 / 1;
   box-sizing: border-box;
-  background-color: orange;
+  background-color: #dcd9d9;
   width: 153px;
   height: 155px;
   object-fit: contain;
@@ -860,7 +860,6 @@ a {
     cursor: pointer;
     aspect-ratio: 1 / 1;
     box-sizing: border-box;
-    background-color: orange;
     width: 165px;
     height: 165px;
     object-fit: contain;
@@ -1331,11 +1330,18 @@ p-tag + p-tag {
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  width: 30px;
+  height: auto;
+
 }
 
 .p-card-footer button:hover {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
+}
+
+.edit-button .pi, .delete-button .pi {
+  font-size: 0.8rem;
 }
 
 

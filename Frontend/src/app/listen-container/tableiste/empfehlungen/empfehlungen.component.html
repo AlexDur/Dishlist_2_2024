@@ -15,11 +15,11 @@
         <span>Lädt Dishes...</span>
       </div>
 
-      <div *ngIf="selectedTags.length == 0" class="overlay-content-überschrift">
+      <div *ngIf="selectedTags.length == 0 && rezepte.length > 0;" class="overlay-content-überschrift">
         <span>Zufällige Rezeptvorschläge</span>
       </div>
 
-      <div *ngIf="selectedTags.length != 0" class="overlay-content-überschrift spoon-tags-ueberschrift" >
+      <div *ngIf="selectedTags.length != 0 && rezepte.length > 0;" class="overlay-content-überschrift spoon-tags-ueberschrift" >
         <span>{{selectedTags[0]}}</span>
       </div>
 
