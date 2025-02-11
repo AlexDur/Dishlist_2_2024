@@ -1,10 +1,11 @@
-import { Component,Input, HostListener, ChangeDetectorRef, OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { Component,Input, HostListener, OnInit, OnDestroy } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import {Router} from "@angular/router";
-import { Subscription, of, Observable, timeout } from 'rxjs';
+import { Subscription, of, finalize, Observable, timeout } from 'rxjs';
 import {TagService} from "../../../services/tags.service";
 import { catchError } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-empfehlungen',
@@ -19,6 +20,7 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   gefilterteRezepte$: Observable<Rezept[]>;
   isOverlayVisible = false;
   isLoading = false;
+  errorMessage: string | null = null;
   selectedTags: string[] = [];
 
   constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router) {
@@ -49,16 +51,6 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  // Öffnet oder schließt das Overlay
-  toggleOverlay(event: Event) {
-    event.stopPropagation();
-    this.isOverlayVisible = !this.isOverlayVisible;
-
-    if (this.isOverlayVisible) {
-      this.loadRandomRecipes();
-    }
-  }
-
   // Schließt das Overlay, wenn der Schließen-Button geklickt wird
   closeOverlayButton(event: MouseEvent): void {
     this.isOverlayVisible = false;
@@ -66,35 +58,44 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     this.router.navigate(['/listen-container']);
   }
 
-  loadRandomRecipes(): void {
+  // Öffnet oder schließt das Overlay
+  toggleOverlay(event: Event) {
+    event.stopPropagation();
+    this.isOverlayVisible = !this.isOverlayVisible;
+
+    if (this.isOverlayVisible) {
+      this.loadSpoonRezepte();
+    }
+  }
+
+  loadSpoonRezepte(): void {
     this.isLoading = true;
+    this.errorMessage = null; // Setze die Fehlermeldung zurück
 
     const TIMEOUT_DURATION = 5000;
 
-    console.log('Übergebene Tags an Spoonacular:', this.selectedTags);
-    this.rezeptService.fetchRandomSpoonacularRezepte(this.selectedTags).pipe(
-      timeout(TIMEOUT_DURATION)
-    ).subscribe({
-      next: (rezepte) => {
-        console.log('Empfangene Rezepte:', rezepte);
-        this.rezepte = rezepte.map((rezept) => {
+    console.log('an fetchSpoon weitergebene Tags für Spoon-Abfrage:', this.selectedTags);
 
-          console.log('Empfangene Rezepte.Tags:', rezept.tags);
-          if (!rezept.tags) {
-            rezept.tags = [];
-          }
-          return rezept;
-        });
-        this.isLoading = false;
-      },
-      error: (error) => {
+    this.rezeptService.fetchSpoonRezepte(this.selectedTags).pipe(
+      timeout(TIMEOUT_DURATION),
+      catchError((error) => {
         if (error.name === 'TimeoutError') {
           console.error('Die Anfrage hat das Zeitlimit überschritten.');
+          this.errorMessage = 'Die Anfrage hat das Zeitlimit überschritten. Bitte versuche es später noch einmal.'; // Benutzerfreundliche Nachricht
         } else {
           console.error('Fehler beim Abrufen der Rezepte:', error);
+          this.errorMessage = 'Ein Fehler ist beim Abrufen der Rezepte aufgetreten. Bitte versuche es später noch einmal.'; // Allgemeine Fehlermeldung
         }
-        this.isLoading = false;
-      }
+        return of([]); // Gib ein leeres Array zurück, um den Observable-Strom fortzusetzen
+      }),
+      finalize(() => this.isLoading = false)
+    ).subscribe((rezepte) => {
+      console.log('Empfangene Rezepte:', rezepte);
+      this.rezepte = rezepte.map((rezept) => ({
+        ...rezept, // Behält alle anderen Eigenschaften des Rezepts bei
+        tags: rezept.tags ?? [] // Setzt tags auf ein leeres Array, falls rezept.tags null oder undefined ist
+      }));
+
     });
   }
 

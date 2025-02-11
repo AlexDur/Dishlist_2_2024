@@ -19,6 +19,10 @@
         <span>Zufällige Rezeptvorschläge</span>
       </div>
 
+      <div *ngIf="selectedTags.length != 0" class="overlay-content-überschrift spoon-tags-ueberschrift" >
+        <span>{{selectedTags[0]}}</span>
+      </div>
+
       <!-- Rezeptliste -->
       <div *ngIf="rezepte && rezepte.length > 0; else noRecipes" class="recipe-list">
         <div *ngFor="let rezept of rezepte" class="recipe-item">
@@ -37,7 +41,7 @@
             <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.onlineAdresse || '')">
               <span class="recipe-tags" *ngIf="rezept.tags && rezept.tags.length > 0; else noTags">
               <span class="gang-spoon" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}">
-              {{ rezept.tags | formatTags }}
+                {{ rezept.tags | formatTags }}
             </span>
               </span>
 

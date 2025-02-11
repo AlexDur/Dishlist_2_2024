@@ -1,15 +1,12 @@
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse, HttpParams} from '@angular/common/http';
 import {EventEmitter, Injectable, NgZone } from '@angular/core';
 import {BehaviorSubject, catchError, Observable, tap, throwError, map} from 'rxjs';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
-import {dishTypeMapping} from "../utils/dishTypeMapping";
-import {reverseDishTypeMapping} from "../utils/dishTypeMapping_reverse";
-
-
-
+import {spoonDataMapping} from "../utils/spoonDataMapping";
+import {reverseSpoonDataMapping} from "../utils/reverseSpoonDataMapping";
 
 @Injectable({
   providedIn: 'root'
@@ -313,51 +310,50 @@ export class RezeptService {
   }
 
   // SPOON
-  // Zufälliger Abruf der Spoon-Rezepte
-  fetchRandomSpoonacularRezepte(tags: string[] = []): Observable<Rezept[]> {
-    let apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
-
-    let apiTags: string[] = [];
+  // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
+  fetchSpoonRezepte(tags: string[] = []): Observable<Rezept[]> {
+    let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&random=true&apiKey=${environment.spoonacularApiKey}`;
+    let apiDishTypes: string[] = [];
+    let apiCuisines: string[] = [];
 
     tags.forEach(tag => {
-      const mappedTags = reverseDishTypeMapping[tag];
-      if (mappedTags) {
-        apiTags.push(...mappedTags);
-      }
+      const dishTypeTags = reverseSpoonDataMapping['dishTypes'][tag];
+      if (dishTypeTags) apiDishTypes.push(...dishTypeTags);
+
+      const cuisineTags = reverseSpoonDataMapping['cuisines'][tag];
+      if (cuisineTags) apiCuisines.push(...cuisineTags);
     });
 
-    if (apiTags.length > 0) {
-      const tagsQuery = apiTags.join(',');
-      apiUrl += `&tags=${encodeURIComponent(tagsQuery)}`;
+    if (apiDishTypes.length > 0) {
+      apiUrl += `&type=${encodeURIComponent(apiDishTypes.join(','))}`;
     }
+    if (apiCuisines.length > 0) {
+      apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`;
+    }
+
+    // Zufälligen Offset zwischen 0 und 20 (oder dynamisch nach totalResults) setzen
+    const randomOffset = Math.floor(Math.random() * 20);
+    apiUrl += `&offset=${randomOffset}`;
 
     console.log('API-URL:', apiUrl);
 
     return this.http.get<any>(apiUrl).pipe(
-      map(response => {
-        if (response && response.recipes) {
-          return this.mapSpoonacularRezepte(response);
-        } else {
-          return [];
-        }
-      }),
-      tap(recipes => {
-        this.spoonacularRezepteSubject.next(recipes);
-      }),
+      map(response => response.results ? this.mapSpoonRezepte(response) : []),
+      tap(recipes => this.spoonacularRezepteSubject.next(recipes)),
       catchError(error => {
         console.error('API-Fehler:', error);
-        return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
+        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
       })
     );
   }
 
 
-  // Helper-Funktion zum Mappen der API-Daten
-  // Dadurch sind die Attribute aus API in der html anzeigbar unter den Namen, wie ich sie im Projekt für die gleichbedeutenden Attribute unter "rezept." angelegt habe
-  private mapSpoonacularRezepte(response: any): Rezept[] {
+  private mapSpoonRezepte(response: any): Rezept[] {
+    return response.results.map((rezept: any) => {  // Angepasst auf 'results' statt 'recipes'
+      const dishTypeTags = this.getMappedDishTypes(rezept.dishTypes);
+      const cuisineTags = this.getMappedCuisines(rezept.cuisines);  // Neu hinzugefügt
 
-    return response.recipes.map((rezept: any) => {
-      const tags = this.getMappedDishTypes(rezept.dishTypes);
+      const tags = [...dishTypeTags, ...cuisineTags];  // Beide Tags kombinieren
 
       return {
         id: Math.random(),
@@ -370,29 +366,61 @@ export class RezeptService {
     });
   }
 
+
+
+  /*TODO: Hier die Unterscheidung zwischen Meal und Cuisine wirksam werden lassen*/
 // Helper-Funktion zur Gruppierung der dishTypes
-  getMappedDishTypes(dishTypes: string[] | undefined): any[] {
+  getMappedDishTypes(dishTypes: { type: string; category: string }[] | undefined) {
     if (!dishTypes) return [];
 
-    const uniqueCategories = new Set<string>();
+    const uniqueTags = new Set<string>();
 
-    dishTypes.forEach((type) => {
-      const mappedCategory = dishTypeMapping[type.toLowerCase()];
-      if (mappedCategory) {
-        uniqueCategories.add(mappedCategory);
+    dishTypes.forEach((dish) => {
+      const translatedTag = spoonDataMapping[dish.category]?.[dish.type.toLowerCase()];
+
+      if (translatedTag) {
+        uniqueTags.add(translatedTag);
       }
     });
 
-    return Array.from(uniqueCategories).map((germanTag: string) => {
+    return Array.from(uniqueTags).map((translatedTag: string) => {
+      const type =
+        Object.values(spoonDataMapping['dishTypes']).includes(translatedTag) ? 'Mahlzeit' :
+          Object.values(spoonDataMapping['cuisines']).includes(translatedTag) ? 'Länderküche' :
+            'Unbekannt';
+
       return {
         id: Math.random(),
-        type: 'MAHLZEIT',
-        label: germanTag,
+        type,
+        label: translatedTag,
         selected: false,
         count: 1
       };
     });
   }
+
+  getMappedCuisines(cuisines: string[] | undefined) {
+    if (!cuisines) return [];
+
+    const uniqueCuisines = new Set<string>();
+
+    cuisines.forEach((cuisine) => {
+      const translatedCuisine = spoonDataMapping['cuisines'][cuisine];
+      if (translatedCuisine) {
+        uniqueCuisines.add(translatedCuisine);
+      }
+    });
+
+    return Array.from(uniqueCuisines).map((translatedCuisine: string) => ({
+      id: Math.random(),
+      type: 'Länderküche',
+      label: translatedCuisine,
+      selected: false,
+      count: 1
+    }));
+  }
+
+
 
   //Das Problem war: Content-Type wurde für rezeptDTO nicht korrekt gesetzt, weil kein File-Blob vorhanden war
   //Lösung: Erstellung eines Blobs (obwohl eigentlich keine Datei mitgesendet wird)

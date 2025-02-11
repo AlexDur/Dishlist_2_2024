@@ -25,6 +25,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   FilterkreiseComponent
 } from "./rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filterkreise/filterkreise.component";
+import {EmpfehlungenComponent} from "./tableiste/empfehlungen/empfehlungen.component";
+import {FormatTagsPipe} from "../shared/pipes/spoonTags";
+import { AsyncPipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +39,8 @@ import {
     CameraComponent,
     CropperComponent,
     FilterkreiseComponent,
+    EmpfehlungenComponent,
+
   ],
   exports: [
     ListeninhaltMobilComponent,
@@ -42,9 +48,10 @@ import {
     RezeptErstellungComponent,
     FotoUploadComponent,
     CameraComponent,
+    EmpfehlungenComponent,
 
   ],
-    imports: [
+  imports: [
     CommonModule,
     TableModule,
     HttpClientModule,
@@ -58,6 +65,8 @@ import {
     SharedModule,
     FileUploadModule,
     ReactiveFormsModule,
-    ]
+    FormatTagsPipe,
+    AsyncPipe,
+  ]
 })
 export class RezepteModule { }
