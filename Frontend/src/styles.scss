@@ -556,7 +556,108 @@ a {
 
 
 
+// Listenansicht Cards
+
+.p-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+.p-card-title {
+  font-size: .7rem !important;
+  font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5em;
+  max-height: 5em;
+  word-break: break-word;
+  padding: 7px 3px;
+}
+
+.p-card-body{
+  padding: 0;
+}
+
+.container-listeninhalt {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: minmax(0, auto);
+  width: 100%;
+  gap: 5px;
+  background-color: transparent;
+  margin: 0.5rem auto;
+
+}
+
+.rezept-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.p-card-content {
+  padding: 0;
+}
+
+.rezept-image-container img {
+  width: 160px;
+  height: 160px;
+  display: block;
+}
+
+@media screen and (max-width: 750px) {
+  .container-listeninhalt {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .p-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .rezept-image-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    aspect-ratio: 1 / 1;
+  }
+
+
+  .filter-container {
+    padding-bottom: 0;
+  }
+
+  .image-cropper-container {
+    margin-top: 1.3rem;
+    height: 85vh;
+  }
+
+}
+
 // Cropper
+.cropper  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+}
 
 .image-cropper-container {
   margin-top: 6rem;
@@ -568,76 +669,6 @@ a {
   height: 50vh;
   padding: 20px;
   box-sizing: border-box;
-}
-
-.p-card-body{
-  padding: 0;
-}
-
-
-.container-listeninhalt {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: minmax(0, auto);
-  width: 100%;
-  gap: 5px 1px;
-  background-color: transparent;
-  margin: 0.5rem auto;
-
-}
-
-.rezept-image-container img{
-  width: 153px;
-  height: 155px;
-}
-
-
-.rezept-container {
-  width: 100%;
-  height: auto;
-  gap:0;
-}
-
-.p-card-content {
-  width: 153px;
-  height: 155px;
-  padding: 0;
-}
-
-.rezept-image-container {
-  width: 155px;
-  height: 155px;
-  cursor: pointer;
-}
-
-.rezept-image-container img {
-  width: 153px;
-  height: 155px;
-}
-
-.p-card {
-  position: relative;
-  display: grid;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  cursor: pointer;
-  aspect-ratio: 1 / 1;
-  box-sizing: border-box;
-  background-color: #dcd9d9;
-  width: 153px;
-  height: 155px;
-  object-fit: contain;
-}
-
-.cropper  {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  position: relative;
 }
 
 .cropper img {
@@ -804,98 +835,7 @@ a {
 
 
 //Filterkreis, Cropper mobile u. Listenansicht
-@media screen and (max-width: 750px) {
 
-  .filter-container {
-    padding-bottom: 0;
-  }
-
-  .image-cropper-container {
-    margin-top: 1.3rem;
-    height: 85vh;
-  }
-
-  .container-listeninhalt {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    background-color: transparent;
-    margin: 1rem auto;
-    margin-top: .6rem;
-    width: 100%;
-  }
-
-  .rezept-container {
-
-    width: 100%;
-    height: auto;
-    gap:0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .p-card-content {
-    width: 165px;
-    height: 165px;
-    padding: 0;
-  }
-
-  .rezept-image-container {
-    width: 165px;
-    height: 165px;
-    cursor: pointer;
-  }
-
-  .rezept-image-container img {
-    width: 165px;
-    height: 165px;
-  }
-
-  .p-card {
-    position: relative;
-    display: grid;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    cursor: pointer;
-    aspect-ratio: 1 / 1;
-    box-sizing: border-box;
-    width: 165px;
-    height: 165px;
-    object-fit: contain;
-  }
-
-  .p-card-body{
-    width: 165px;
-    height: 165px;
-    padding: 0;
-  }
-
-
-
-  .p-card-footer {
-    margin-top: auto;
-    padding-top: 5px;
-    padding-right: 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .p-card-title {
-    font-size: .7rem !important;
-    font-weight: bold;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5em;
-    max-height: 5em;
-    word-break: break-word;
-    padding: 7px 3px;
-  }
-
-}
 
 
 // Dialog
@@ -969,6 +909,8 @@ p-dialog .p-dialog-header{
 }
 
 @media screen and (max-width: 750px) {
+
+
 
   .zentriertes-formular {
 

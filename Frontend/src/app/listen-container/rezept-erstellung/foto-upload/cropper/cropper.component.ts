@@ -92,36 +92,35 @@ export class CropperComponent implements OnInit, AfterViewInit {
   cropImage(): void {
     if (this.isCropperInitialized) {
       const croppedCanvas = this.cropper.getCroppedCanvas();
-      console.log('Canvas-Dimensionen:', croppedCanvas.width, croppedCanvas.height);
 
-      // Log die Originalabmessungen des Bildes vor dem Zuschneiden
-      const image = this.imageElement.nativeElement as HTMLImageElement;
-      console.log('Originalbild-Dimensionen:', image.naturalWidth, image.naturalHeight);
+      const size = Math.min(croppedCanvas.width, croppedCanvas.height);
+      const x = (croppedCanvas.width - size) / 2;
+      const y = (croppedCanvas.height - size) / 2;
 
-      if (croppedCanvas.width !== croppedCanvas.height) {
-        console.error('Das zugeschnittene Bild ist nicht quadratisch!');
+      const fixedCanvas = document.createElement('canvas');
+      fixedCanvas.width = size;
+      fixedCanvas.height = size;
+      const ctx = fixedCanvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(croppedCanvas, -x, -y, croppedCanvas.width, croppedCanvas.height);
+      } else {
+        console.error("2D rendering context not available");
         return;
       }
 
-      croppedCanvas.toBlob((blob: Blob) => {
-        if (blob) {
+      fixedCanvas.toBlob((blob: Blob | null) => { // <= Hier die Änderung
+        if (blob) { // <= Und hier die Überprüfung
           const file = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
-          console.log('Gecropptes Bild:', file);
-
-          // Bild über den RezeptService setzen
           this.rezepteService.setImage(file);
-
-          // Navigiere zurück zur Rezepterstellung
           this.router.navigate(['/rezepterstellung']);
+        } else {
+          console.error("Fehler beim Erstellen des Blobs."); // <= Fehlerbehandlung
         }
       }, 'image/jpeg');
     } else {
       console.error('Cropper nicht initialisiert');
     }
   }
-
-
-
 
 
   close() {
