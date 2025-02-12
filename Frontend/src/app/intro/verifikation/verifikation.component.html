@@ -1,8 +1,8 @@
 <div class="screen">
   <div class="zentriertes-formular">
     <button class="zurueck-button" (click)="navigateRegistrierung($event)" style="position: absolute; top: 10px; left: 10px;"><</button>
-  <h2>Verifizierungscode eingeben</h2>
-  <p class="flex p-4 mb-4 text-center">Bitte geben Sie den sechsstelligen Code ein, den Sie per E-Mail erhalten haben.</p>
+  <h2 class="mb-0">Verifizierungscode eingeben</h2>
+  <p class="flex p-4 mb-3 text-center">Bitte geben Sie den sechsstelligen Code ein, den Sie per E-Mail erhalten haben.</p>
   <div class="p-field">
     <input class="inputfeld-verifikation" placeholder="6-stelliger Code" type="text" [(ngModel)]="verifikationCode" required name="email" pInputText>
   </div>

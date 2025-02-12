@@ -171,7 +171,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     switch (type) {
       case 'Mahlzeit':
         return TagType.MAHLZEIT;
-      case 'Länderküche':
+      case 'Landesküche':
         return TagType.LÄNDERKÜCHE;
       case 'Nährwert':
         return TagType.NÄHRWERT;

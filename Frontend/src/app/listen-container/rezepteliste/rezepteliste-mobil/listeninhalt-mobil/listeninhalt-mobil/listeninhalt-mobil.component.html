@@ -20,12 +20,12 @@
             (click)="openImageFullscreen(rezept.bildUrl)"
           />
           <ng-template #defaultImage>
-            <div >
-              <img src="assets/plate.webp" alt="Standardbild">
+            <div>
+              <img src="assets/plate.webp" alt="Standardbild" style="background-color: #D5D3D3FF;">
             </div>
           </ng-template>
         </div>
-       <!-- <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>-->
+        <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
         <div class="p-card-footer">
           <button
             pButton
