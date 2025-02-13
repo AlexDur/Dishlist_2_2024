@@ -14,9 +14,9 @@ export const DEFAULT_TAGS: Tag[] = [
   { id: 8, label: 'Japanisch', count: 0, selected: false, type: TagType.LÄNDERKÜCHE, disabled: false },
   { id: 9, label: 'Koreanisch', count: 0, selected: false, type: TagType.LÄNDERKÜCHE, disabled: false },
   { id: 10, label: 'Mexikanisch', count: 0, selected: false, type: TagType.LÄNDERKÜCHE, disabled: false },
-  { id: 11, label: 'ballaststoffreich', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
+/*  { id: 11, label: 'ballaststoffreich', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
   { id: 12, label: 'kalorienarm', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
   { id: 13, label: 'kalorienreich', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
   { id: 14, label: 'proteinreich', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
-  { id: 15, label: 'zuckerarm', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },
+  { id: 15, label: 'zuckerarm', count: 0, selected: false, type: TagType.NÄHRWERT, disabled: false },*/
 ];

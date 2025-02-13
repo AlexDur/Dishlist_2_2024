@@ -54,8 +54,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   categories = [
     {name: 'Mahlzeit', selected: false},
-    {name: 'Länderküche', selected: false},
-    {name: 'Nährwert', selected: false}
+    {name: 'Länderküche', selected: false}/*,
+    {name: 'Nährwert', selected: false}*/
   ];
 
 

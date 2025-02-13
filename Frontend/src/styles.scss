@@ -1632,12 +1632,12 @@ h3.weiss {
   max-width: 320px;
   position: relative;
   overflow-y: auto;
-
   min-height: 80vh;
   height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow:hidden;
 }
 
 .overlay-close-button {
