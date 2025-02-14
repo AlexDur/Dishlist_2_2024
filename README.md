@@ -7,7 +7,7 @@ Der Nutzer kann Online-Rezepte manuell in der App speichern. Dabei können neben
 - Küche (Deutsch, Italienisch, Japanisch, etc.)  
 - Nährwert (proteinreich, kalorienarm, etc.).
 
-Dank dieser Tags ist eine genauere Beschreibung des Rezepts möglich, welche das Filtern der bereits angelegten Rezepts erlaubt.
+Mittels dieser Tags ist eine genauere Beschreibung des Rezepts möglich, welche das Filtern der bereits angelegten Rezepts erlaubt.
 Gespeicherte Rezepte können in einer Übersicht angezeigt und mithilfe der gesetzten Tags gefiltert werden.
 
 Beim Setzen eines oder mehrerer Filter aus den drei Kategorien kann der Nutzer künftig per Knopfdruck drei Rezepte empfohlen bekommen, die den gewählten Kriterien entsprechen. Die Empfehlungslogik basiert auf Content-based Filtering – einer Methode im Bereich der künstlichen Intelligenz (KI). Dabei werden die Tags der gefilterten Rezepte mit den Attributen in einer angebundenen API (Spoontastic) abgeglichen, um passende Vorschläge zu ermitteln und dem Nutzer anzuzeigen.
