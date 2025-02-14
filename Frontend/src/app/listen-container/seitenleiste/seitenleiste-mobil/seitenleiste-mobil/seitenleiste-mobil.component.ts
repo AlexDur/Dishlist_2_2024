@@ -156,7 +156,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     return this.tags.filter(tag => tag.type === 'Mahlzeit');
   }
   getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Länderküche');
+    return this.tags.filter(tag => tag.type === 'Landesküche');
   }
   getNaehrwertTags(): Tag[] {
     return this.tags.filter(tag => tag.type == "Nährwert")

@@ -586,6 +586,11 @@ a {
   max-height: 5em;
   word-break: break-word;
   padding: 7px 3px;
+  transition: color 0.3s ease-in-out;
+}
+
+.p-card-title:hover {
+  color: #ff8000;
 }
 
 .p-card-body{
@@ -862,8 +867,15 @@ p-dialog .p-dialog-header{
   margin:0;
 }
 
+.p-dialog .p-dialog-header .p-dialog-header-icon{
+ height: 0;
+
+}
+
 .dialog-message{
   padding:10px;
+
+  margin-bottom: 1.3rem;
 }
 
 .general-button-dialog-ja {
@@ -1631,7 +1643,6 @@ h3.weiss {
   width: 100%;
   max-width: 320px;
   position: relative;
-  overflow-y: auto;
   min-height: 80vh;
   height: 80vh;
   display: flex;
