@@ -20,7 +20,7 @@
       </div>
 
       <div *ngIf="selectedTags.length != 0 && rezepte.length > 0;" class="overlay-content-überschrift spoon-tags-ueberschrift" >
-        <span>{{selectedTags[0]}}</span>
+        <span>{{ selectedTags.join('; ') }}</span>
       </div>
 
       <!-- Rezeptliste -->
@@ -46,7 +46,7 @@
               </span>
 
               <ng-template #noTags>
-                <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '')" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}">Dish</p>
+                <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '')" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}"></p>
               </ng-template>
 
               <span class="spoon-trennstrich" *ngIf="rezept.tags && rezept.tags.length > 0">|</span>

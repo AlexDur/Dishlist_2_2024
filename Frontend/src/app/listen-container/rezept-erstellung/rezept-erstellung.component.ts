@@ -45,6 +45,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   nametouched: boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
+  isBildSelected: boolean = false;
 
   rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
@@ -244,6 +245,9 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
           this.tabService.setActiveTab(2);
         });
 
+        this.isBildSelected = false;
+
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -260,6 +264,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     if (state && state['data']) {
       this.newRecipe = state['data'];
       this.isUpdateMode = !!this.newRecipe.id; // Setze Update-Modus basierend auf der ID
+      this.isBildSelected = state['isBildSelected'] || false;
+      console.log('edit Data', state)
     }
   }
 

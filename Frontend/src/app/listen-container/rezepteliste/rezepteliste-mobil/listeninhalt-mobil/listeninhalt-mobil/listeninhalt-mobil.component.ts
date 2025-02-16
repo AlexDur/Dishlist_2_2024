@@ -27,14 +27,13 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   @Output() selectedRemoveTags = new EventEmitter<string[]>();
 
-
   private tagsSubscription: Subscription | undefined;
 
   gefilterteRezepte: Rezept[] = [];
   selectedTags: string[] = [];
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
-
+  isBildSelected: boolean = false;
 
 
   constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private cdr: ChangeDetectorRef) {
@@ -59,8 +58,20 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
+    console.log('Button clicked');
     this.rezepteService.setCurrentRezept(rezept);
-    this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
+    console.log('Bild URL:', rezept.bildUrl);
+    if (rezept.bildUrl) {
+      this.isBildSelected = true;
+      console.log('isBildSelected', this.isBildSelected);
+    } else {
+      this.isBildSelected = false;
+      console.log('isBildSelected', this.isBildSelected);
+    }
+    // rezept als state-Daten an Zielseite übergeben
+    this.router.navigate(['/rezepterstellung'], { state: { data: rezept, isBildSelected: this.isBildSelected } });
+
+
   }
 
   showDeleteDialog(rezeptId: number) {

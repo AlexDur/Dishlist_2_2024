@@ -17,7 +17,6 @@ export class RezeptService {
 
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
-
   //Observable rezepte$ wird durch gefilterteRezepteSubject.asObservable() erstellt.
   //Das ist das abbonnierbar für Interessenten
   private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
@@ -36,6 +35,9 @@ export class RezeptService {
   private imageSubject: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
   public image$: Observable<File | null> = this.imageSubject.asObservable();
 
+  private croppedImageSubject = new BehaviorSubject<File | null>(null);
+  croppedImage$ = this.croppedImageSubject.asObservable();
+
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
 
   constructor(private http: HttpClient, private authService: AuthService, private ngZone: NgZone) {
@@ -53,6 +55,10 @@ export class RezeptService {
   // Methode zum Setzen des Bildes
   public setImage(file: File): void {
     this.imageSubject.next(file);
+  }
+
+  setCroppedImage(image: File | null): void {
+    this.croppedImageSubject.next(image);
   }
 
   // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject
@@ -106,6 +112,7 @@ export class RezeptService {
 
     return throwError(() => new Error("Fehler beim Laden der Rezepte"));
   }
+
 
 
   setCurrentRezept(rezept: Rezept) {
@@ -315,20 +322,34 @@ export class RezeptService {
     let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&random=true&apiKey=${environment.spoonacularApiKey}`;
     let apiDishTypes: string[] = [];
     let apiCuisines: string[] = [];
+    let combinedTags: string[] = [];
 
     tags.forEach(tag => {
       const dishTypeTags = reverseSpoonDataMapping['dishTypes'][tag];
-      if (dishTypeTags) apiDishTypes.push(...dishTypeTags);
-
       const cuisineTags = reverseSpoonDataMapping['cuisines'][tag];
-      if (cuisineTags) apiCuisines.push(...cuisineTags);
+
+
+      if (dishTypeTags && cuisineTags) {
+        // Kombiniere, wenn sowohl dishType als auch cuisine vorhanden sind
+        dishTypeTags.forEach(dishType => {
+          cuisineTags.forEach(cuisine => {
+            combinedTags.push(`${dishType},${cuisine}`); // Komma-getrennt für Spoonacular API
+          });
+        });
+      } else if (dishTypeTags) {
+        apiDishTypes.push(...dishTypeTags);
+      } else if (cuisineTags) {
+        apiCuisines.push(...cuisineTags);
+      }
     });
 
-    if (apiDishTypes.length > 0) {
-      apiUrl += `&type=${encodeURIComponent(apiDishTypes.join(','))}`;
+    if (combinedTags.length > 0) {
+      apiUrl += `&type=${encodeURIComponent(combinedTags.join('|'))}`; // | für ODER-Verknüpfung bei kombinierten Suchbegriffen
+    } else if (apiDishTypes.length > 0) {
+      apiUrl += `&type=${encodeURIComponent(apiDishTypes.join(','))}`; // , für UND-Verknüpfung bei nur dishTypes
     }
     if (apiCuisines.length > 0) {
-      apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`;
+      apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`; // , für UND-Verknüpfung bei nur cuisines
     }
 
     // Zufälligen Offset zwischen 0 und 20 (oder dynamisch nach totalResults) setzen
@@ -386,7 +407,7 @@ export class RezeptService {
     return Array.from(uniqueTags).map((translatedTag: string) => {
       const type =
         Object.values(spoonDataMapping['dishTypes']).includes(translatedTag) ? 'Mahlzeit' :
-          Object.values(spoonDataMapping['cuisines']).includes(translatedTag) ? 'Länderküche' :
+          Object.values(spoonDataMapping['cuisines']).includes(translatedTag) ? 'Landesküche' :
             'Unbekannt';
 
       return {
@@ -413,7 +434,7 @@ export class RezeptService {
 
     return Array.from(uniqueCuisines).map((translatedCuisine: string) => ({
       id: Math.random(),
-      type: 'Länderküche',
+      type: 'Landesküche',
       label: translatedCuisine,
       selected: false,
       count: 1

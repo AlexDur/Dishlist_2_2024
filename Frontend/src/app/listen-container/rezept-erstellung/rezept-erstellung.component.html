@@ -5,18 +5,17 @@
       <div class="p-fluid">
 
         <div class="p-field">
+          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
+                 (blur)="onFieldBlur('name')">
+          <label for="rezeptname"><span class="required"></span></label>
+          <div *ngIf="showNameError"></div>
+        </div>
+
+        <div class="p-field">
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
                  (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()" pInputText>
           <label for="onlineadresse"><span class="required"></span></label>
           <div *ngIf="!isFieldValid('onlineAdresse')"></div>
-        </div>
-
-
-        <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
-                  (blur)="onFieldBlur('name')">
-          <label for="rezeptname"><span class="required"></span></label>
-          <div *ngIf="showNameError"></div>
         </div>
 
 
@@ -25,7 +24,7 @@
         </div>
 
         <div class="flex_bildoptionen">
-          <app-foto-upload [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <app-foto-upload   [isBildSelected]="isBildSelected"  [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
           <!--<app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>-->
           <app-camera></app-camera>
         </div>
