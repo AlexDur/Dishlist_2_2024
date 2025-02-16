@@ -15,11 +15,11 @@ export class CropperComponent implements OnInit, AfterViewInit {
   @Input() imageUrl!: string;
 /*  @Output() imageCropped = new EventEmitter<File>();*/
   @Output() closeCropper = new EventEmitter<void>(); // Event zum Schließen der Bearbeitung
-
+  /*@Output() isbildSelected = new EventEmitter<Rezept>();*/
 
   private cropper: any;
   private isCropperInitialized: boolean = false;
-  /*selectedFile: File | null = null;*/
+
 
   @ViewChild('imageElement') imageElement!: ElementRef;
   /*@ViewChild('canvasElement') canvasElement!: ElementRef;*/
@@ -125,7 +125,7 @@ export class CropperComponent implements OnInit, AfterViewInit {
 
   close() {
     if (this.cropper) {
-      this.cropper.destroy(); // Zerstöre den Cropper richtig, um doppelte Instanzen zu vermeiden
+      this.cropper.destroy();
     }
     this.closeCropper.emit();
     this.router.navigate(['/rezepterstellung']);

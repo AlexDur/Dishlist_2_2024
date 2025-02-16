@@ -42,16 +42,13 @@ export class ListenContainerComponent implements OnInit{
     // Abrufen der Rezepte
     this.rezepteService.getUserRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({ ...rezept }));
-      console.log('rezepte in LContainer', this.rezepte)
       this.rezepteGeladen.emit(this.rezepte);
 
       // Anfangswerte für gefilterte Rezepte setzen
       this.gefilterteRezepte = [...this.rezepte];
-      console.log('gefilterRezepte in LContainer', this.gefilterteRezepte)
       this.rezepteVerfuegbar = true;
 
       this.selectedTags = [...this.selectedTags];
-      console.log('Rezepte geladen, selectedTags bleibt erhalten:', this.selectedTags);
       this.cdr.detectChanges();
 
       // Bilder für die Rezepte laden

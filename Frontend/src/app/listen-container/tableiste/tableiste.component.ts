@@ -40,6 +40,7 @@ export class TableisteComponent implements OnInit, OnDestroy {
 
 
   logoutUser(event: Event)  {
+    console.log('Logout angestoßen in Komponente')
     event.preventDefault();
     this.tabService.setActiveTab(-1);
     this.authService.logout().subscribe({

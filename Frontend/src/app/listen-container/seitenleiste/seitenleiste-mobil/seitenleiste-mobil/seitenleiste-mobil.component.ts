@@ -48,7 +48,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       this.tagService.selectedTags$.subscribe(tags => {
         this.selectedTags = tags;
         this.applyFilters();
-        console.log('Aktualisierte ausgewählte Tags:', this.selectedTags);
 
       })
     );
@@ -112,7 +111,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
     if (this.isOverlayVisible) {
       this.updateTagsSelection();
-      console.log('Overlay geöffnet, selectedTags:', this.selectedTags);
     }
   }
 
@@ -167,7 +165,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   applyFilters(): void {
-    console.log('applyFilters called');
     this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe(filteredRecipes => {
       this.filteredRecipes = filteredRecipes;
       this.updateTagCounts(this.filteredRecipes);
