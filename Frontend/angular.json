@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
-            "outputPath": "C:/Users/alexd/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/Fullstack_RezepteApp_2/Backend/src/main/resources/static",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -49,7 +49,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "baseHref": "./",
+              "baseHref": "/",
               "sourceMap": false,
               "buildOptimizer": true,
               "budgets": [

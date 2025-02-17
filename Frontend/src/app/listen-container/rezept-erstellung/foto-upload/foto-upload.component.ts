@@ -17,7 +17,6 @@ export class FotoUploadComponent implements OnInit{
 
   selectedFile: File | null = null;
 
-
   constructor(private router: Router, private rezepteService: RezeptService) {
   }
 

@@ -366,7 +366,7 @@ a {
 }
 
 .zentriertes-formular {
-  margin-top: 6rem;
+  margin-top: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -450,7 +450,7 @@ a {
 }
 
 .bild-selected {
-  background-color: black; /* Farbe, wenn ein Bild ausgewählt wurde */
+  background-color: black;
 }
 
 .neues-rezept{
@@ -1737,6 +1737,11 @@ h3.weiss {
   text-align: left;
 }
 
+.recipe-title-overlay:hover{
+  color: $secondary-color;
+}
+
+
 cd f.spoon-trennstrich {
   color: black;
 }
@@ -1833,7 +1838,7 @@ cd f.spoon-trennstrich {
   }
 
   .overlay-content {
-    height: 100vh;
+    height: 55vh;
     width: 100vw;
     pointer-events: auto;
     padding: 0;

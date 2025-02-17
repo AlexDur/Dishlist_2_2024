@@ -14,7 +14,7 @@ import {reverseSpoonDataMapping} from "../utils/reverseSpoonDataMapping";
 
 
 export class RezeptService {
-
+  private currentRecipe: any = {};
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
   //Observable rezepte$ wird durch gefilterteRezepteSubject.asObservable() erstellt.
@@ -180,6 +180,8 @@ export class RezeptService {
 
 
 
+
+
   /*Sendet POST-Anfrage an Server (rezept + headers). In tap wird Serverantwort verarbeitet.
   currentRezeptSubject speichert als Behaviousubject den aktuellen Zustand des Rezepts im Service.
   next setzt Wert des BS auf übergebenes rezept und leitet es damit an alle weiter, die currentRezept-Observable abonniert haben
@@ -314,6 +316,14 @@ export class RezeptService {
         return gefilterteRezepte;
       })
     );
+  }
+
+  updateCurrentRecipe(update: Partial<any>) {
+    this.currentRecipe = { ...this.currentRecipe, ...update };
+  }
+
+  getCurrentRecipe() {
+    return this.currentRecipe;
   }
 
   // SPOON

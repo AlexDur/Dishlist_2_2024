@@ -4,7 +4,7 @@ import { Observable, throwError  } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
-import { of, BehaviorSubject } from 'rxjs';
+import { of, BehaviorSubject, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {TabService} from "./tab.service";  // Importiere 'map' hier
 
@@ -36,6 +36,7 @@ export class AuthService {
       map((response: any) => {
         const token = response.token;
 
+
         if (token) {
           localStorage.setItem('jwt_token', token);
           localStorage.setItem('isAuthenticated', 'true');
@@ -59,15 +60,20 @@ export class AuthService {
 
   logout(): Observable<any> {
     const authToken = localStorage.getItem('jwt_token');
+    console.log('jwtToken in Logout im auth.service', authToken)
 
     if (authToken && /^[A-Za-z0-9-_=.]+$/.test(authToken)) {
       localStorage.removeItem('jwt_token');
       localStorage.removeItem('isAuthenticated');
 
-
+      console.log("Header:", { Authorization: `Bearer ${authToken}` });
+      const url = `${this.backendUrl}/api/auth/logout`;
+      console.log("URL:", url);
       return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${authToken}` }
       }).pipe(
+        tap(response => console.log("Antwort vom Server:", response)), // Log die Antwort
+
         catchError((error: HttpErrorResponse) => {
           console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
           return of(null);
