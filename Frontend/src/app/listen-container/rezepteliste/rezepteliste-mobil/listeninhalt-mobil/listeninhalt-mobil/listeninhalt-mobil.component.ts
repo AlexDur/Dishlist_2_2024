@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 import { Subscription } from 'rxjs';
 import {TagService} from "../../../../../services/tags.service";
+import {TabService} from "../../../../../services/tab.service";
 
 @Component({
   selector: 'app-listeninhaltmobil',
@@ -36,7 +37,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   isBildSelected: boolean = false;
 
 
-  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private cdr: ChangeDetectorRef) {
+  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private tabService: TabService) {
   }
 
   ngOnInit(): void {
@@ -69,6 +70,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       console.log('isBildSelected', this.isBildSelected);
     }
     // rezept als state-Daten an Zielseite übergeben
+    this.tabService.setActiveTab(1);
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept, isBildSelected: this.isBildSelected } });
 
 
