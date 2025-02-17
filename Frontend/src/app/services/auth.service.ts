@@ -60,30 +60,30 @@ export class AuthService {
 
   logout(): Observable<any> {
     const authToken = localStorage.getItem('jwt_token');
-    console.log('jwtToken in Logout im auth.service', authToken)
 
-    if (authToken && /^[A-Za-z0-9-_=.]+$/.test(authToken)) {
-      localStorage.removeItem('jwt_token');
-      localStorage.removeItem('isAuthenticated');
+    // Überprüfen, ob das authToken existiert und einem gültigen Format entspricht
+    if (authToken && /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(authToken)) {
 
-      console.log("Header:", { Authorization: `Bearer ${authToken}` });
-      const url = `${this.backendUrl}/api/auth/logout`;
-      console.log("URL:", url);
+      // HTTP-POST-Request für die Abmeldung
       return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${authToken}` }
       }).pipe(
-        tap(response => console.log("Antwort vom Server:", response)), // Log die Antwort
-
+        tap(response => {
+          console.log("Antwort vom Server:", response);
+          // Lokale Speicherung löschen (auch wenn Logout erfolgreich war)
+          localStorage.clear();
+        }),
         catchError((error: HttpErrorResponse) => {
           console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
-          return of(null);
+          return of(null); // Fehlerbehandlung: Null zurückgeben, damit keine weiteren Aktionen folgen
         })
       );
     } else {
       console.error('Ungültiger Token oder Token fehlt');
-      return of(null); // Rückgabe von null, falls kein Token vorhanden ist
+      return of(null); // Kein Token vorhanden oder Token ungültig
     }
   }
+
 
 
   setIsAuthenticated(status: boolean): void {
