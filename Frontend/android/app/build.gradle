@@ -7,7 +7,7 @@ android {
   // Fügen Sie den signingConfigs-Block hinzu
   signingConfigs {
     release {
-      storeFile file(project.hasProperty('MY_RELEASE_STORE_FILE') ? MY_RELEASE_STORE_FILE : "C:/Users/alexd/release-key-feb16_25.jks")
+      storeFile file("C:/Users/alexd/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/GooglePlayStore/release-key-feb16_25.jks")
       storePassword project.MY_RELEASE_STORE_PASSWORD
       keyAlias project.MY_RELEASE_KEY_ALIAS
       keyPassword project.MY_RELEASE_KEY_PASSWORD
@@ -18,7 +18,7 @@ android {
     applicationId "com.rezepte_app"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 115
+    versionCode 135
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     manifestPlaceholders = [excludeScreens: "large"]
@@ -34,12 +34,6 @@ android {
       signingConfig signingConfigs.release // Verweisen Sie auf die signingConfig für den Release-Build
     }
   }
-}
-
-repositories {
-    flatDir{
-        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
-    }
 }
 
 dependencies {

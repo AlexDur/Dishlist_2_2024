@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/fullStack_rezepteApp.iml" filepath="$PROJECT_DIR$/.idea/fullStack_rezepteApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Frontend/android/app/src/main/main.iml" filepath="$PROJECT_DIR$/Frontend/android/app/src/main/main.iml" />
     </modules>
   </component>
 </project>

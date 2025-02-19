@@ -103,3 +103,5 @@ primeicons.*.svg
 
 # Andere Build- oder temporäre Dateien
 node_modules/
+
+gradle.properties
