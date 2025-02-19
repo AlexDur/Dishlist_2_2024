@@ -475,12 +475,10 @@ export class RezeptService {
       { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
     ).pipe(
       tap((savedRezept) => {
-
         this.ngZone.run(() => {
           const currentList = this.gefilterteRezepteSubject.value;
-          this.gefilterteRezepteSubject.next([...currentList, savedRezept]);
+          this.gefilterteRezepteSubject.next([savedRezept, ...currentList]); // Rezept an den Anfang einfügen
         });
-
       }),
       catchError((error) => {
         return throwError(() => new Error('Fehler beim Erstellen des Rezepts'));
