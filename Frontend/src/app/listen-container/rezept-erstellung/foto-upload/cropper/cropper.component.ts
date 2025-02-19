@@ -10,19 +10,27 @@ import {RezeptService} from "../../../../services/rezepte.service";
   templateUrl: './cropper.component.html'
 })
 
-export class CropperComponent implements OnInit, AfterViewInit {
-  @Input() rezepte: Rezept[] = [];
+export class CropperComponent {
+
+  @Output() closeOverlay = new EventEmitter<void>();
+
+  onClose() {
+    this.closeOverlay.emit();
+  }
+
+
+ /* @Input() rezepte: Rezept[] = [];
   @Input() imageUrl!: string;
-/*  @Output() imageCropped = new EventEmitter<File>();*/
+/!*  @Output() imageCropped = new EventEmitter<File>();*!/
   @Output() closeCropper = new EventEmitter<void>(); // Event zum Schließen der Bearbeitung
-  /*@Output() isbildSelected = new EventEmitter<Rezept>();*/
+  /!*@Output() isbildSelected = new EventEmitter<Rezept>();*!/
 
   private cropper: any;
   private isCropperInitialized: boolean = false;
 
 
   @ViewChild('imageElement') imageElement!: ElementRef;
-  /*@ViewChild('canvasElement') canvasElement!: ElementRef;*/
+  /!*@ViewChild('canvasElement') canvasElement!: ElementRef;*!/
 
   constructor(private router: Router, private route: ActivatedRoute, private rezepteService: RezeptService) {
     this.route.queryParams.subscribe(params => {
@@ -129,5 +137,5 @@ export class CropperComponent implements OnInit, AfterViewInit {
     }
     this.closeCropper.emit();
     this.router.navigate(['/rezepterstellung']);
-  }
+  }*/
 }
