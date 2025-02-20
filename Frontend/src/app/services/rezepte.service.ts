@@ -37,12 +37,15 @@ export class RezeptService {
   private imageSubject: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
   public image$: Observable<File | null> = this.imageSubject.asObservable();
 
-  private croppedImageSubject = new BehaviorSubject<File | null>(null);
-  croppedImage$ = this.croppedImageSubject.asObservable();
+  private isBildSelectedSubject = new BehaviorSubject<boolean>(false);
+  isBildSelected$ = this.isBildSelectedSubject.asObservable();
 
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
 
+
+
   constructor(private http: HttpClient, private authService: AuthService, private ngZone: NgZone) {
+    console.log('Initial isBildSelectedSubject value:', this.isBildSelectedSubject.getValue());
   }
 
 
@@ -59,8 +62,12 @@ export class RezeptService {
     this.imageSubject.next(file);
   }
 
-  setCroppedImage(image: File | null): void {
-    this.croppedImageSubject.next(image);
+  setIsBildSelected(value: boolean) {
+    this.isBildSelectedSubject.next(value);
+  }
+
+  setImageSelected(image: any): void {
+    this.isBildSelectedSubject.next(!!image);
   }
 
   // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject

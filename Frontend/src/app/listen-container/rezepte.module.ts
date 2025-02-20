@@ -18,7 +18,6 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {SharedModule} from "../shared/shared.module";
 import {FotoUploadComponent} from "./rezept-erstellung/foto-upload/foto-upload.component";
 import { FileUploadModule } from 'primeng/fileupload';
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
 import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
 import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.component";
 import { ReactiveFormsModule } from '@angular/forms';
@@ -40,7 +39,6 @@ import { AsyncPipe } from '@angular/common';
     CropperComponent,
     FilterkreiseComponent,
     EmpfehlungenComponent,
-
   ],
   exports: [
     ListeninhaltMobilComponent,
@@ -49,15 +47,12 @@ import { AsyncPipe } from '@angular/common';
     FotoUploadComponent,
     CameraComponent,
     EmpfehlungenComponent,
-
   ],
   imports: [
-    CommonModule,
     TableModule,
     HttpClientModule,
     FormsModule,
     TagModule,
-    SeitenleisteModule,
     RatingModule,
     ButtonModule,
     CardModule,
@@ -67,6 +62,7 @@ import { AsyncPipe } from '@angular/common';
     ReactiveFormsModule,
     FormatTagsPipe,
     AsyncPipe,
+    CommonModule,
   ]
 })
 export class RezepteModule { }

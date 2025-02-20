@@ -1,11 +1,13 @@
 <div class="camera-container">
+
   <!-- Kamera-Button -->
   <label
     class="upload-button-label"
-    [ngClass]="{'bild-selected': isBildSelected}"
-    (click)="startCamera()"  >
+    [class.cameraShot-selected]="isCameraShot"
+    (click)="startCamera()">
     <i class="pi pi-camera"></i>
   </label>
+
 </div>
 
 <!-- Kameraansicht -->

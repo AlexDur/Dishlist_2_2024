@@ -3,7 +3,6 @@ import {
   OnInit,
   EventEmitter,
   Output,
-  Input,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -12,16 +11,14 @@ import {
 import { Rezept } from "../../models/rezepte";
 import { Tag } from "../../models/tag";
 import { RezeptService } from "../../services/rezepte.service";
-import { Router, NavigationEnd  } from "@angular/router";
-import { catchError, Observable, tap, throwError } from "rxjs";
+import { Router  } from "@angular/router";
+import { Observable, } from "rxjs";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
 import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
-import { filter } from 'rxjs/operators';
-import { Subscription, combineLatest  } from 'rxjs';
+import { Subscription  } from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {TabService} from "../../services/tab.service";
 import {TagService} from "../../services/tags.service";
 
@@ -45,6 +42,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   nametouched: boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
+  isBildSelected$: Observable<boolean>;
   isBildSelected: boolean = false;
 
   rezeptForm!: FormGroup;
@@ -65,9 +63,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private tabService: TabService,
-    private tagService: TagService
-  ) {
+    private tabService: TabService
+  ) {this.isBildSelected$ = this.rezepteService.isBildSelected$
   }
 
 
@@ -245,7 +242,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
           this.tabService.setActiveTab(2);
         });
 
-        this.isBildSelected = false;
+        this.rezepteService.setIsBildSelected(false);
 
 
         this.isLoading = false;
@@ -263,7 +260,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     const state = window.history.state;
     if (state && state['data']) {
       this.newRecipe = state['data'];
-      this.isUpdateMode = !!this.newRecipe.id; // Setze Update-Modus basierend auf der ID
+      this.isUpdateMode = !!this.newRecipe.id;
       this.isBildSelected = state['isBildSelected'] || false;
       console.log('edit Data', state)
     }

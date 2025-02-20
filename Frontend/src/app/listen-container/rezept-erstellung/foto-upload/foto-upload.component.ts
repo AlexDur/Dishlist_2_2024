@@ -1,30 +1,52 @@
-import { Component, ChangeDetectorRef , ViewChild, ElementRef, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectorRef , ViewChild, ElementRef, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import Cropper from 'cropperjs';
 import { RezeptService } from "../../../services/rezepte.service";
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable,Subscription  } from "rxjs";
+
 
 @Component({
   selector: 'app-foto-upload',
   templateUrl: './foto-upload.component.html'
 })
-export class FotoUploadComponent implements OnInit {
+export class FotoUploadComponent implements OnInit, OnDestroy {
   @Input() rezeptForm!: FormGroup;
   @Input() isBildSelected: boolean = false;
   @Output() imageUploaded = new EventEmitter<File>();
 
+  private subscription: Subscription | undefined;
+  isBildSelected$: Observable<boolean>;
   selectedFile: File | null = null;
   cropper: any;
   @ViewChild('imageElement') imageElement!: ElementRef;
   isCropperVisible = false; // Steuert die Sichtbarkeit des Croppers
   imageUrl: string | null = null; // Speichert die Data-URL
 
-  constructor(private rezepteService: RezeptService, private cdr: ChangeDetectorRef, private router: Router) {}
+  constructor(private rezepteService: RezeptService, private cdr: ChangeDetectorRef, private router: Router) {
+    this.isBildSelected$ = this.rezepteService.isBildSelected$
+  }
 
   ngOnInit(): void {
+
+
     this.rezepteService.image$.subscribe(image => {
-      this.isBildSelected = !!image; // Vereinfacht die Überprüfung
+      this.isBildSelected = !!image || this.isBildSelected;
+      this.rezepteService.setImageSelected(image);
     });
+
+    this.subscription = this.isBildSelected$.subscribe(value => {
+      this.isBildSelected = value;
+      this.cdr.detectChanges();
+    });
+
+    console.log('Initial isBildSelected value in FotoUploadComponent:', this.isBildSelected);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   onFileSelected(event: Event): void {
@@ -39,7 +61,7 @@ export class FotoUploadComponent implements OnInit {
       }
 
       this.selectedFile = file;
-      this.isBildSelected = true;
+      this.rezepteService.setIsBildSelected(true);
       this.rezeptForm.patchValue({ image: file }); // Direkt in das Formular
 
       const reader = new FileReader();
@@ -52,7 +74,7 @@ export class FotoUploadComponent implements OnInit {
       reader.readAsDataURL(this.selectedFile);
     } else {
       this.selectedFile = null;
-      this.isBildSelected = false;
+      this.rezepteService.setIsBildSelected(false);
       this.isCropperVisible = false;
       this.imageUrl = null;
       if (this.cropper) {
@@ -113,7 +135,7 @@ export class FotoUploadComponent implements OnInit {
           this.rezeptForm.patchValue({ image: file });
 
           this.isCropperVisible = false;
-          this.isBildSelected = true;
+          this.rezepteService.setIsBildSelected(true);
 
           this.imageUrl = null;
           this.cropper.destroy();
@@ -141,6 +163,6 @@ export class FotoUploadComponent implements OnInit {
       this.cropper = null;
     }
     this.selectedFile = null;
-    this.isBildSelected = false;
+    this.rezepteService.setIsBildSelected(false);
   }
 }

@@ -24,9 +24,8 @@
         </div>
 
         <div class="flex_bildoptionen">
-          <app-foto-upload   [isBildSelected]="isBildSelected"  [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
-          <!--<app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>-->
-          <app-camera></app-camera>
+          <app-foto-upload [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
+          <app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>
         </div>
 
         <div>

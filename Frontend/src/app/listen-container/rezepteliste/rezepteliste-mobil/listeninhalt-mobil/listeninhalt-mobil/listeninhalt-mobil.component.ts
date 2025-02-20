@@ -61,7 +61,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     event.preventDefault();
     console.log('Button clicked');
     this.rezepteService.setCurrentRezept(rezept);
-    console.log('Bild URL:', rezept.bildUrl);
+
     if (rezept.bildUrl) {
       this.isBildSelected = true;
       console.log('isBildSelected', this.isBildSelected);
