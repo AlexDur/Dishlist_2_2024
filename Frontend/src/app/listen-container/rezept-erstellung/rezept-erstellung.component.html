@@ -1,7 +1,7 @@
 <div>
   <div class="zentriertes-formular">
     <div class="neues-rezept">Neues Dish</div>
-    <form [formGroup]="rezeptForm" (ngSubmit)="handleClick($event)">
+    <form [formGroup]="rezeptForm" >
       <div class="p-fluid">
 
         <div class="p-field">
@@ -47,7 +47,7 @@
           </ng-container>
         </div>
 
-        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton>
+        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton (click)="handleClick($event)">
           {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}
         </button>
 

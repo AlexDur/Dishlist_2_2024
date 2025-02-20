@@ -55,7 +55,7 @@ export class RezeptService {
   }
 
   // Methode zum Setzen des Bildes
-  public setImage(file: File): void {
+  setImage(file: File): void {
     this.imageSubject.next(file);
   }
 

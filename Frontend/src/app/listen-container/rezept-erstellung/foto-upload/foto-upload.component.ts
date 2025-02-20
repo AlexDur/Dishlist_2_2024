@@ -2,23 +2,24 @@ import { Component, ChangeDetectorRef , ViewChild, ElementRef, OnInit, Input, Ou
 import Cropper from 'cropperjs';
 import { RezeptService } from "../../../services/rezepte.service";
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-foto-upload', // Beibehaltung des ursprünglichen Selektors
-  templateUrl: './foto-upload.component.html', // Aktualisiertes Template
-  styleUrls: ['./foto-upload.component.scss'] // Optionale Styles
+  selector: 'app-foto-upload',
+  templateUrl: './foto-upload.component.html'
 })
 export class FotoUploadComponent implements OnInit {
   @Input() rezeptForm!: FormGroup;
   @Input() isBildSelected: boolean = false;
   @Output() imageUploaded = new EventEmitter<File>();
+
   selectedFile: File | null = null;
   cropper: any;
   @ViewChild('imageElement') imageElement!: ElementRef;
   isCropperVisible = false; // Steuert die Sichtbarkeit des Croppers
   imageUrl: string | null = null; // Speichert die Data-URL
 
-  constructor(private rezepteService: RezeptService, private cdr: ChangeDetectorRef) {}
+  constructor(private rezepteService: RezeptService, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.rezepteService.image$.subscribe(image => {
@@ -110,13 +111,23 @@ export class FotoUploadComponent implements OnInit {
           const file = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
           this.rezepteService.setImage(file);
           this.rezeptForm.patchValue({ image: file });
+
           this.isCropperVisible = false;
-          this.isBildSelected = true; // Optional: Setze isBildSelected auf true
+          this.isBildSelected = true;
+
           this.imageUrl = null;
           this.cropper.destroy();
           this.cropper = null;
+
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+            this.router.navigate(['/rezepterstellung']);
+          }, 0);
         } else {
           console.error("Fehler beim Erstellen des Blobs.");
+          this.router.navigate(['/rezepterstellung']);
+
         }
       }, 'image/jpeg');
     }

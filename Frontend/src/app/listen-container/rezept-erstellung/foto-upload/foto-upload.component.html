@@ -5,8 +5,9 @@
   </label>
 
   <div *ngIf="isCropperVisible" class="image-cropper-overlay">  <div class="image-cropper-content">  <div class="neues-rezept">Bild zuschneiden</div>  <div class="image-cropper-container">  <div class="cropper">  <img #imageElement [src]="imageUrl" crossOrigin="anonymous" alt="Bild zur Bearbeitung" class="image-element"/>  </div>
-    <div class="actions">  <button class="cropper-button button-transparent" (click)="closeCropper()">Abbrechen</button>
+    <div class="actions">
       <button class="cropper-button button-filled" (click)="cropImage()">Zuschneiden</button>
+      <button class="cropper-button button-transparent" (click)="closeCropper()">Abbrechen</button>
     </div>
   </div>
   </div>
