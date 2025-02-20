@@ -145,7 +145,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   private updateTagsWithCounts(zaehler: { [key: string]: number }): void {
     this.tags.forEach(tag => {
       tag.count = zaehler[tag.label] || 0;
-      tag.disabled = tag.count === 0 && !tag.selected;
+
     });
   }
 
