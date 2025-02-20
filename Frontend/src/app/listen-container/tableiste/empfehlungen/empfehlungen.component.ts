@@ -105,7 +105,6 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   }
 
   openUrlSpoon(url: string, type: 'image' | 'recipe'): void {
-    console.log('Open URL:', url, 'Type:', type);
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
@@ -115,17 +114,23 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
   //Hinzu-Knopf
   addRecipe(rezept: Rezept): void {
+    if (this.isClicked) return; // Falls der Button schon einmal geklickt wurde, nichts tun
+
     this.isLoading = true;
+    this.isClicked = true; // Button dauerhaft deaktivieren
+
     this.rezeptService.addRezeptToList(rezept).pipe(
       catchError((error: any) => {
         this.isLoading = false;
+        this.isClicked = false; // Falls ein Fehler auftritt, Button wieder aktivieren
         console.error('Fehler beim Speichern des Rezepts:', error);
         return of(null);
       })
     ).subscribe(() => {
-      this.isLoading = false; // Erfolg
+      this.isLoading = false; // API-Call abgeschlossen
     });
   }
+
 
 
   ngOnDestroy() {

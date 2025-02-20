@@ -31,8 +31,11 @@
             pButton
             class="spoon-button"
             (click)="addRecipe(rezept)"
-            [disabled]="isLoading"
-            [ngClass]="{'selected-tags': selectedTags.length > 0, 'no-tags': selectedTags.length === 0}">
+            [disabled]="isLoading || isClicked"
+            [ngClass]="{
+              'selected-tags': selectedTags.length > 0,
+              'no-tags': selectedTags.length === 0,
+              'disabled-spoon-button': isLoading || isClicked}">
             <i class="pi pi-check"></i>
           </button>
 
