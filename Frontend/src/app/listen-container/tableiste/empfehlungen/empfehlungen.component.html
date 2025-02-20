@@ -31,26 +31,26 @@
             pButton
             class="spoon-button"
             (click)="addRecipe(rezept)"
+            [disabled]="isLoading"
             [ngClass]="{'selected-tags': selectedTags.length > 0, 'no-tags': selectedTags.length === 0}">
             <i class="pi pi-check"></i>
           </button>
 
           <div class="spoon-recipe-image-container">
-            <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl" [alt]="rezept.name" class="recipe-image" (click)="openUrlSpoon(rezept.bildUrl || '')" />
+            <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl" [alt]="rezept.name" class="recipe-image"  (click)="openUrlSpoon(rezept.bildUrl || '', 'image')" />
 
-            <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.onlineAdresse || '')">
-              <span class="recipe-tags" *ngIf="rezept.tags && rezept.tags.length > 0; else noTags">
+            <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.onlineAdresse || '', 'recipe')">
+              <div class="recipe-tags" *ngIf="rezept.tags && rezept.tags.length > 0; else noTags">
               <span class="gang-spoon" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}">
-                {{ rezept.tags | formatTags }}
-            </span>
-              </span>
+                {{ rezept.tags | formatTags }}</span>
+              </div>
 
               <ng-template #noTags>
-                <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '')" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}"></p>
+                <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '', 'image')"  [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}"></p>
               </ng-template>
 
               <span class="spoon-trennstrich" *ngIf="rezept.tags && rezept.tags.length > 0">|</span>
-              <span class="recipe-name" (click)="openUrlSpoon(rezept.bildUrl || '')">{{ rezept.name }} </span>
+              <span class="recipe-name" (click)="openUrlSpoon(rezept.onlineAdresse || '', 'recipe')">{{ rezept.name }} </span>
             </div>
           </div>
 

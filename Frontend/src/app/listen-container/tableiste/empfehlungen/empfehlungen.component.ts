@@ -1,10 +1,11 @@
-import { Component,Input, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component,Input, HostListener, OnInit, OnDestroy, ChangeDetectorRef  } from '@angular/core';
 import {RezeptService} from "../../../services/rezepte.service";
 import {Rezept} from "../../../models/rezepte";
 import {Router} from "@angular/router";
 import { Subscription, of, finalize, Observable, timeout } from 'rxjs';
 import {TagService} from "../../../services/tags.service";
 import { catchError } from 'rxjs/operators';
+
 
 
 @Component({
@@ -22,8 +23,9 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   isLoading = false;
   errorMessage: string | null = null;
   selectedTags: string[] = [];
+  isClicked = false;
 
-  constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router) {
+  constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router, private cdRef: ChangeDetectorRef) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
   }
 
@@ -88,7 +90,10 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
         }
         return of([]); // Gib ein leeres Array zurück, um den Observable-Strom fortzusetzen
       }),
-      finalize(() => this.isLoading = false)
+      finalize(() => {
+        this.isLoading = false;
+        this.cdRef.detectChanges(); // Manuelles Aktualisieren der UI
+      })
     ).subscribe((rezepte) => {
       console.log('Empfangene Rezepte:', rezepte);
       this.rezepte = rezepte.map((rezept) => ({
@@ -99,11 +104,12 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     });
   }
 
-  openUrlSpoon(url: string): void {
+  openUrlSpoon(url: string, type: 'image' | 'recipe'): void {
+    console.log('Open URL:', url, 'Type:', type);
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
-      console.error('Ungültige URL: ', url);
+      console.error('Ungültige URL: ', url, 'Type:', type);
     }
   }
 

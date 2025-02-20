@@ -1,12 +1,14 @@
 import {HttpClient, HttpHeaders, HttpResponse, HttpParams} from '@angular/common/http';
 import {EventEmitter, Injectable, NgZone } from '@angular/core';
-import {BehaviorSubject, catchError, Observable, tap, throwError, map} from 'rxjs';
+import {BehaviorSubject,  Observable,  throwError, of, forkJoin } from 'rxjs';
+import { switchMap, map, catchError, tap,mergeMap  } from 'rxjs/operators';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
 import {spoonDataMapping} from "../utils/spoonDataMapping";
 import {reverseSpoonDataMapping} from "../utils/reverseSpoonDataMapping";
+import {SpoonacularApiAntwortGesamt} from "../models/SpoonacularApiAntwort";
 
 @Injectable({
   providedIn: 'root'
@@ -150,32 +152,6 @@ export class RezeptService {
     return true;
   }
 
-  // Validierung für Spoon-Rezept
-  validateSpoonRezept(rezept: Rezept): boolean {
-    if (!rezept.name?.trim()) {
-      return false;
-    }
-
-    // Spoonacular-Rezepte haben eine verpflichtende `bildUrl`
-    if (!rezept.bildUrl?.trim()) {
-      return false;
-    }
-
-    if (rezept.tags?.length) {
-      for (const tag of rezept.tags) {
-        console.log('Tag-Objekt:', tag);
-        console.log('Tag-Typ:', typeof tag.type, 'Wert:', tag.type);
-
-        const tagType = Object.values(tag.type).join(' ');
-
-        if (!tag.label?.trim() || !tagType.trim()) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
 
 
 
@@ -330,6 +306,7 @@ export class RezeptService {
   // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
   fetchSpoonRezepte(tags: string[] = []): Observable<Rezept[]> {
     let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&random=true&apiKey=${environment.spoonacularApiKey}`;
+
     let apiDishTypes: string[] = [];
     let apiCuisines: string[] = [];
     let combinedTags: string[] = [];
@@ -340,7 +317,6 @@ export class RezeptService {
 
 
       if (dishTypeTags && cuisineTags) {
-        // Kombiniere, wenn sowohl dishType als auch cuisine vorhanden sind
         dishTypeTags.forEach(dishType => {
           cuisineTags.forEach(cuisine => {
             combinedTags.push(`${dishType},${cuisine}`); // Komma-getrennt für Spoonacular API
@@ -368,8 +344,34 @@ export class RezeptService {
 
     console.log('API-URL:', apiUrl);
 
-    return this.http.get<any>(apiUrl).pipe(
-      map(response => response.results ? this.mapSpoonRezepte(response) : []),
+
+    // this.http.get gibt ein Observale zurück
+    // "response =>" ist eine anonyme Funktion. Sie nimmt die API-Antwort (response) als Eingabe
+    return this.http.get<SpoonacularApiAntwortGesamt>(apiUrl).pipe(
+      tap(response => console.log('API Response:', response)),
+      switchMap((response: SpoonacularApiAntwortGesamt) => {
+        console.log(response);
+        if (!response.results || response.results.length === 0) {
+          return of([]);
+        }
+
+        const recipeIds = response.results.map(rezept => rezept.id);
+
+        const detailRequests = recipeIds.map(id =>
+          this.http.get<any>(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${environment.spoonacularApiKey}`)
+        );
+
+        return forkJoin(detailRequests).pipe(
+          mergeMap((detailResponses: any[]) => {
+            const mappedRecipes = detailResponses.map((detailResponse, index) => {
+              console.log('Detail Response:', detailResponse);
+              const rezept = response.results[index];
+              return this.mapSpoonRezepte({ ...rezept, sourceUrl: detailResponse.sourceUrl });
+            });
+            return of(mappedRecipes); // Gib ein Observable mit dem Array zurück
+          })
+        );
+      }),
       tap(recipes => this.spoonacularRezepteSubject.next(recipes)),
       catchError(error => {
         console.error('API-Fehler:', error);
@@ -379,28 +381,36 @@ export class RezeptService {
   }
 
 
-  private mapSpoonRezepte(response: any): Rezept[] {
-    return response.results.map((rezept: any) => {  // Angepasst auf 'results' statt 'recipes'
-      const dishTypeTags = this.getMappedDishTypes(rezept.dishTypes);
-      const cuisineTags = this.getMappedCuisines(rezept.cuisines);  // Neu hinzugefügt
 
-      const tags = [...dishTypeTags, ...cuisineTags];  // Beide Tags kombinieren
 
-      return {
-        id: Math.random(),
-        name: rezept.title,
-        bildUrl: rezept.image || '',
-        onlineAdresse: rezept.sourceUrl || '',
-        tags,
-        image: null,
-      };
-    });
+  //Übernimmt die igentliche Transformation der API-Antwort
+  private mapSpoonRezepte(rezept: any): Rezept {
+    console.log('mapSpoonRezepte Input:', rezept);
+    const dishTypeTags = this.getMappedDishTypes(rezept.dishTypes);
+    const cuisineTags = this.getMappedCuisines(rezept.cuisines);
+
+    const uniqueTags = [...dishTypeTags, ...cuisineTags].filter((tag, index, self) =>
+      self.findIndex(t => t.label === tag.label) === index
+    );
+
+    const mappedRezept = {
+      id: rezept.id,
+      name: rezept.title,
+      bildUrl: rezept.image,
+      onlineAdresse: rezept.sourceUrl || '',
+      dishTypes: rezept.dishTypes || [],
+      cuisines: rezept.cuisines || [],
+      tags: uniqueTags,
+    };
+    console.log('Mapped Rezept:', mappedRezept); // Loggen des gemappten Rezepts
+    return mappedRezept;
   }
 
 
 
   /*TODO: Hier die Unterscheidung zwischen Meal und Cuisine wirksam werden lassen*/
-// Helper-Funktion zur Gruppierung der dishTypes
+  //Helper-Funktion zur Gruppierung der dishTypes
+  //Um dishTypes in meine Tag-Struktur zu mappen
   getMappedDishTypes(dishTypes: { type: string; category: string }[] | undefined) {
     if (!dishTypes) return [];
 
@@ -485,5 +495,33 @@ export class RezeptService {
       })
     );
   }
+
+  // Validierung für Spoon-Rezept
+  validateSpoonRezept(rezept: Rezept): boolean {
+    if (!rezept.name?.trim()) {
+      return false;
+    }
+
+    // Spoonacular-Rezepte haben eine verpflichtende `bildUrl`
+    if (!rezept.bildUrl?.trim()) {
+      return false;
+    }
+
+    if (rezept.tags?.length) {
+      for (const tag of rezept.tags) {
+        console.log('Tag-Objekt:', tag);
+        console.log('Tag-Typ:', typeof tag.type, 'Wert:', tag.type);
+
+        const tagType = Object.values(tag.type).join(' ');
+
+        if (!tag.label?.trim() || !tagType.trim()) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
 
 }
