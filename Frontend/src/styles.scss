@@ -226,8 +226,8 @@ a {
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
-  background-color: $detail_2-color !important;
-  color: white !important;
+  background-color: transparent;
+  color: black !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -394,7 +394,13 @@ a {
   align-items:center;
 }
 
-.zentriertes-formular {
+.rezept-erstellung{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zentriertes-formular-erstellung {
   margin-top: 4rem;
   display: flex;
   flex-direction: column;
@@ -417,9 +423,10 @@ a {
 .landing-datenschutz-hinweis{
   width: 250px;
   text-align: center;
+  color: white;
   a {
     text-decoration: underline;
-    color: black;
+    color: white;
   }
 }
 
@@ -678,6 +685,17 @@ a {
     width: 100%;
     box-sizing: border-box;
   }
+
+  .landing-datenschutz-hinweis {
+    width: 250px;
+    text-align: center;
+    color: black !important;
+    a {
+      text-decoration: underline;
+      color: black !important;
+    }
+  }
+
 
   .p-card {
     width: 100%;
@@ -947,32 +965,44 @@ a {
 // Dialog
 
 .dialog{
-  padding:0;
+
   display:flex;
   height:30px;
   justify-content:center;
   text-align: center;
 }
 
-p-dialog .p-dialog-header{
+
+.dialog-container{
+  padding: 1rem;
+  border-radius: 25px;
+  background-color: white;
+}
+
+.p-dialog .p-dialog-header{
   padding:.3px;
+  background: none;
+}
+
+.p-dialog .p-dialog-footer{
+  padding: 0;
 }
 
 .p-dialog-content{
   padding:0;
   padding-bottom: .3px;
   margin:0;
+  background-color: transparent;
 }
 
 .p-dialog .p-dialog-header .p-dialog-header-icon{
  height: 0;
-
 }
 
 .dialog-message{
   padding:10px;
-
-  margin-bottom: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .general-button-dialog-ja {
@@ -1016,6 +1046,7 @@ p-dialog .p-dialog-header{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 15px;
   gap: 10px;
 }
 
@@ -1031,21 +1062,23 @@ p-dialog .p-dialog-header{
   }
 
   .landing-button-reg{
-    color: $secondary-color !important;
+    color: white !important;
+    background-color: #191818;
   }
 
   .landing-button-anmeldung{
     color: black !important;
-    backdrop-filter: blur(10px);
+    background-color: white;
+  /*  backdrop-filter: blur(10px);*/
   }
 
   .landing-datenschutz-hinweis {
-    backdrop-filter: blur(10px);
-    color: black;
+    backdrop-filter: blur(30px);
+
     text-align: center;
     width: 80%;
     border-radius: 50px;
-    padding: 5px;
+    padding: 15px;
 
   }
 
@@ -1059,7 +1092,15 @@ p-dialog .p-dialog-header{
     width: 100%;
   }
 
-  .zentriertes-formular {
+
+  .hidden-preload {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  .zentriertes-formular-erstellung {
 
     display: flex;
     flex-direction: column;
@@ -1067,12 +1108,11 @@ p-dialog .p-dialog-header{
     justify-content: center;
     width: 100%;
     max-width: 500px;
-    margin: 30px auto;
     padding-bottom: 50px;
   }
 
   .zentriertes-formular-anmeldung{
-    padding-top: 3rem;
+    padding-top: 6rem;
   }
 
   .p-table .p-tablewrapper table {
@@ -1487,11 +1527,9 @@ h3.weiss {
   align-items: center;
   flex-grow: 1;
   text-align: left;
+  margin-bottom: 3rem;
 }
 
-.landing-button-reg{
-  color: white;
-}
 
 .button-row{
   display: flex;

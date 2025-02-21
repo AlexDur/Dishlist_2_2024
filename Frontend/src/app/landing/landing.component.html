@@ -1,5 +1,5 @@
-<div class="landing-seite">
-  <div class="zentriertes-formular-landing">
+<div class="landing-seite" >
+  <div class="zentriertes-formular-landing" *ngIf="backgroundLoaded">
   <div class="landing-seiten-ueberschrift">DishList</div>
   <button class="landing-button-reg"  pButton (click)="navigateReg($event)">Konto erstellen</button>
   <button class="landing-button-anmeldung"  pButton (click)="navigateAnmeldung($event)">Anmelden</button>

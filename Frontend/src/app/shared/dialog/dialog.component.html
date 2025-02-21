@@ -1,9 +1,9 @@
 <p-dialog class="dialog" header="" [(visible)]="visible" [modal]="true">
-
-  <h3 class="dialog-message">{{ message }}</h3>
-  <p-footer class="footer-buttons">
-    <button type="button" pButton label="Ja" (click)="onConfirm()" class="general-button-dialog-ja"  [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-left': true}"></button>
-    <button type="button" pButton label="Nein" (click)="onDecline()" class="general-button-dialog-nein"  [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-right': true}"></button>
-  </p-footer>
+  <div class="dialog-container">
+    <h3 class="dialog-message">{{ message }}</h3>
+    <p-footer class="footer-buttons">
+      <button type="button" pButton label="Ja" (click)="onConfirm()" class="general-button-dialog-ja"  [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-left': true}"></button>
+      <button type="button" pButton label="Nein" (click)="onDecline()" class="general-button-dialog-nein"  [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-right': true}"></button>
+    </p-footer>
+  </div>
 </p-dialog>
-
