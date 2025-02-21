@@ -190,7 +190,6 @@ a {
   background-color: #393838;
 }
 
-//Landing
 .general-button-transparent{
   margin-top:20px !important;
   width: 300px;
@@ -198,7 +197,7 @@ a {
   font-weight: bold;
   height: 30px;
   background-color: transparent;
-  color: $detail_2-color !important;
+  color: black;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -210,14 +209,44 @@ a {
   outline-offset: 2px;
 }
 
-.general-button-landing-reg{
+//Landing
+
+.zentriertes-formular-landing{
+  padding-top: 17rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing-button-reg{
   margin-top:20px !important;
   width: 300px;
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
   background-color: $detail_2-color !important;
-  color: $tertiary-color !important;
+  color: white !important;
+  border: 1px transparent solid !important;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+}
+
+.landing-button-anmeldung{
+  margin-top:20px !important;
+  width: 300px;
+  border-radius: 50px;
+  font-weight: bold;
+  height: 30px;
+  background-color: transparent;
+  color: black !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -383,6 +412,18 @@ a {
   justify-content: center;
   width: 100%;
 }
+
+//Landing
+.landing-datenschutz-hinweis{
+  width: 250px;
+  text-align: center;
+  a {
+    text-decoration: underline;
+    color: black;
+  }
+}
+
+
 
 .inputfeld {
   width: 100%;
@@ -981,7 +1022,42 @@ p-dialog .p-dialog-header{
 
 @media screen and (max-width: 750px) {
 
+  .zentriertes-formular-landing{
+    padding-top: 5rem;
+  }
 
+  .landing-seiten-ueberschrift{
+    color: $secondary-color !important;
+  }
+
+  .landing-button-reg{
+    color: $secondary-color !important;
+  }
+
+  .landing-button-anmeldung{
+    color: black !important;
+    backdrop-filter: blur(10px);
+  }
+
+  .landing-datenschutz-hinweis {
+    backdrop-filter: blur(10px);
+    color: black;
+    text-align: center;
+    width: 80%;
+    border-radius: 50px;
+    padding: 5px;
+
+  }
+
+
+  .landing-seite{
+    background-image: url('/assets/landing3.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+  }
 
   .zentriertes-formular {
 
@@ -996,7 +1072,7 @@ p-dialog .p-dialog-header{
   }
 
   .zentriertes-formular-anmeldung{
-    margin-top: 23rem;
+    padding-top: 3rem;
   }
 
   .p-table .p-tablewrapper table {
@@ -1401,16 +1477,20 @@ h3.weiss {
   text-align: left;
 }
 
-.seiten-ueberschrift{
+.landing-seiten-ueberschrift{
   font-weight: bolder;
   display: flex;
   justify-content: flex-start;
   font-size: 2.5rem;
-  color: $tertiary-color;
+  color: white;
   font-family: "Impact", "Arial", sans-serif;
   align-items: center;
   flex-grow: 1;
   text-align: left;
+}
+
+.landing-button-reg{
+  color: white;
 }
 
 .button-row{
@@ -1798,8 +1878,11 @@ h3.weiss {
   text-align: left;
 }
 
-.recipe-title-overlay:hover{
-  color: $secondary-color;
+.recipe-title-overlay {
+  &:hover,
+  &:active {
+    color: $secondary-color;
+  }
 }
 
 
@@ -2108,7 +2191,7 @@ cd f.spoon-trennstrich {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
     font-size: 14px;

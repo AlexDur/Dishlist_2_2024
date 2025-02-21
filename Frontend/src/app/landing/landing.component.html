@@ -1,9 +1,10 @@
-<div>
-  <div class="zentriertes-formular-anmeldung">
-
-  <div class="seiten-ueberschrift">DishList</div>
-  <p style="color: white;text-align: center; width: 80%">Indem du fortfährst, erklärst du dich mit unseren <a routerLink="/datenschutzerklaerung"  style="text-decoration: underline; color: white;">Datenschutzhinweisen</a> einverstanden.</p>
-  <button class="general-button-landing-reg"  pButton (click)="navigateReg($event)">Konto erstellen</button>
-  <button class="general-button-transparent"  pButton (click)="navigateAnmeldung($event)">Anmelden</button>
-</div>
+<div class="landing-seite">
+  <div class="zentriertes-formular-landing">
+  <div class="landing-seiten-ueberschrift">DishList</div>
+  <button class="landing-button-reg"  pButton (click)="navigateReg($event)">Konto erstellen</button>
+  <button class="landing-button-anmeldung"  pButton (click)="navigateAnmeldung($event)">Anmelden</button>
+    <p class="landing-datenschutz-hinweis">
+      Indem du fortfährst, erklärst du dich mit unseren
+      <a routerLink="/datenschutzerklaerung">Datenschutzhinweisen</a> einverstanden.
+    </p> </div>
 </div>
