@@ -54,7 +54,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   categories = [
     {name: 'Mahlzeit', selected: false},
     {name: 'Landesküche', selected: false},
-    {name: 'Nährwert', selected: false}
+    {name: 'Ernährungsweise', selected: false}
   ];
 
 
@@ -171,8 +171,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
         return TagType.MAHLZEIT;
       case 'Landesküche':
         return TagType.LANDESKÜCHE;
-      case 'Nährwert':
-        return TagType.NÄHRWERT;
+      case 'Ernährungsweise':
+        return TagType.ERNÄHRUNGSWEISE;
       default:
         return null; // Für ungültige Typen
     }

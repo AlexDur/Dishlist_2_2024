@@ -1,8 +1,9 @@
 export const reverseSpoonDataMapping: { [category: string]: { [key: string]: string[] } } = {
   dishTypes: {
-    'Hauptgang': ['main course', 'lunch', 'dinner', 'main dish', 'soup'],
-    'Vorspeise': ['starter', 'antipasti', 'antipasto', 'snack', 'hor d\'oezvre'],
-    'Nachtisch': ['dessert', 'breakfast', 'morning', 'Frühstück']
+    'Vorspeise': ['starter', 'antipasti', 'antipasto', 'appetizer', 'side dish', 'hor d\'oezvre'],
+    'Hauptgang': ['main course', 'lunch', 'dinner', 'main dish', 'soup', 'Haupt' ],
+    'Nachtisch': ['dessert', 'morning'],
+    'Snack': ['Frühstück', 'brunch', 'breakfast', 'morning', 'morning meal', 'snack', 'dip', 'sauce', 'spread', 'condiment'],
   },
   cuisines: {
     'Chinesisch': ['Chinese'],

@@ -301,14 +301,6 @@ export class RezeptService {
     );
   }
 
-/*  updateCurrentRecipe(update: Partial<any>) {
-    this.currentRecipe = { ...this.currentRecipe, ...update };
-  }
-
-  getCurrentRecipe() {
-    return this.currentRecipe;
-  }*/
-
   // SPOON
   // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
   fetchSpoonRezepte(tags: string[] = []): Observable<Rezept[]> {
@@ -344,6 +336,20 @@ export class RezeptService {
     if (apiCuisines.length > 0) {
       apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`; // , für UND-Verknüpfung bei nur cuisines
     }
+
+    if (tags.includes('vegetarisch')) {
+      apiUrl += '&vegetarian=true';
+    }
+
+    if (tags.includes('vegan')) {
+      apiUrl += '&vegan=true';
+    }
+
+    if (tags.includes('pescatarian')) {
+      apiUrl += '&pescatarian=true';
+    }
+
+
 
     // Zufälligen Offset zwischen 0 und 20 (oder dynamisch nach totalResults) setzen
     const randomOffset = Math.floor(Math.random() * 20);
@@ -386,9 +392,6 @@ export class RezeptService {
       })
     );
   }
-
-
-
 
   //Übernimmt die igentliche Transformation der API-Antwort
   private mapSpoonRezepte(rezept: any): Rezept {
@@ -527,9 +530,6 @@ export class RezeptService {
         }
       }
     }
-
     return true;
   }
-
-
 }

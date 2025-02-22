@@ -3,17 +3,24 @@ export const spoonDataMapping: { [category: string]: { [key: string]: string } }
     starter: 'Vorspeise',
     antipasti: 'Vorspeise',
     antipasto: 'Vorspeise',
+    appetizer: 'Vorspeise',
+    'side dish': 'Vorspeise',
     'hor d\'oezvre': 'Vorspeise',
+
     soup: 'Hauptgang',
     lunch: 'Hauptgang',
     Haupt: 'Hauptgang',
     'main course': 'Hauptgang',
     'main dish': 'Hauptgang',
-    diner: 'Hauptgang',
+    dinner: 'Hauptgang',
+
     dessert: 'Nachtisch',
-    'Frühstück': 'Nachtisch',
-    breakfast: 'Nachtisch',
-    morning: 'Nachtisch',
+
+    'Frühstück': 'Snack',
+    brunch: 'Snack',
+    breakfast: 'Snack',
+    morning: 'Snack',
+    'morning meal': 'Snack',
     snack: 'Snack',
     dip: 'Snack',
     sauce: 'Snack',
@@ -21,18 +28,18 @@ export const spoonDataMapping: { [category: string]: { [key: string]: string } }
     condiment: 'Snack'
   },
   cuisines: {
-    Chinese: 'Chinesisch',
-    German: 'Deutsch',
-    Indian: 'Indisch',
-    Italian: 'Italienisch',
-    Japanese: 'Japanisch',
-    Korean: 'Koreanisch',
-    Mexican: 'Mexikanisch',
+    Chinese: 'chinesisch',
+    German: 'deutsch',
+    Indian: 'indisch',
+    Italian: 'italienisch',
+    Japanese: 'japanisch',
+    Korean: 'koreanisch',
+    Mexican: 'mexikanisch',
   },
-  /*  'ballaststoffreich'
-  'kalorienarm'
-  'kalorienreich'
-  'proteinreich'
-  'zuckerarm'*/
-
+  'food lifestyles': {
+    carnivorous: 'fleischhaltig',
+    pescatarian: 'fischhaltig',
+    vegan: 'vegan',
+    vegetarian: 'vegetarisch',
+  },
 };
