@@ -301,6 +301,14 @@ a {
   font-weight: bold;
 }
 
+.zentriertes-formular-registrierung{
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 //Verfikation
 .inputfeld-verifikation {
   width: 100%;
@@ -411,7 +419,6 @@ a {
 }
 
 .zentriertes-formular-anmeldung{
-  margin-top: 17rem;
   display: flex;
   flex-direction: column;
   align-items: center;
