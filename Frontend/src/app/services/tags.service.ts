@@ -3,7 +3,6 @@ import {BehaviorSubject, forkJoin, map, Observable, throwError} from 'rxjs';
 import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
 import {RezeptService} from "./rezepte.service";
-import {environment} from "../../environments/environment";
 import {DEFAULT_TAGS} from "../models/default_tag";
 
 
@@ -20,8 +19,11 @@ export class TagService {
   constructor(private http: HttpClient) {}
 
 
+  /*setSelectedTags(tags: string[]): void {
+    this.selectedTagsSubject.next(tags);
+  }*/
 
-  //Zum Hinzufügen und Entfernen von Tags (beides in Seitenelsite und Entfernen auch in Filterkreisen)
+  //Zum Hinzufügen und Entfernen von Tags (beides in Seiteneleiste und Entfernen auch in Filterkreisen)
   toggleTag(tag: string): void {
     const currentTags = this.selectedTagsSubject.value;
     if (currentTags.includes(tag)) {
@@ -29,7 +31,7 @@ export class TagService {
     } else {
       this.setSelectedTags([...currentTags, tag]);
     }
-    console.log('in TagService', this.selectedTags$)
+    this.updateSelectedTags(this.tagsSubject.value);
   }
 
   updateTag(tag: Tag) {
@@ -63,6 +65,7 @@ export class TagService {
   }
 
   setSelectedTags(tags: string[]): void {
+    console.log('Aktualisierte selectedTags:', tags);
     this.selectedTagsSubject.next(tags);
   }
 }

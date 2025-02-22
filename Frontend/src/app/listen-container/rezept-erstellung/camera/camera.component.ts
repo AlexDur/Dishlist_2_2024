@@ -25,7 +25,6 @@ export class CameraComponent implements AfterViewInit, OnDestroy{
   }
 
   ngAfterViewInit() {
-    console.log('View ist initialisiert');
     this.subscription = this.isCameraShot$.subscribe(value => {
       console.log('isCameraShot Wert erhalten:', value);
       this.isCameraShot = value;

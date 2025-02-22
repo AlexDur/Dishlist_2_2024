@@ -3,11 +3,6 @@ export const spoonDataMapping: { [category: string]: { [key: string]: string } }
     starter: 'Vorspeise',
     antipasti: 'Vorspeise',
     antipasto: 'Vorspeise',
-    snack: 'Vorspeise',
-    condiment: 'Vorspeise',
-    dip: 'Vorspeise',
-    sauce: 'Vorspeise',
-    spread: 'Vorspeise',
     'hor d\'oezvre': 'Vorspeise',
     soup: 'Hauptgang',
     lunch: 'Hauptgang',
@@ -19,6 +14,11 @@ export const spoonDataMapping: { [category: string]: { [key: string]: string } }
     'Frühstück': 'Nachtisch',
     breakfast: 'Nachtisch',
     morning: 'Nachtisch',
+    snack: 'Snack',
+    dip: 'Snack',
+    sauce: 'Snack',
+    spread: 'Snack',
+    condiment: 'Snack'
   },
   cuisines: {
     Chinese: 'Chinesisch',

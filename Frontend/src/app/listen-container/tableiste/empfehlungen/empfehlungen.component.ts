@@ -32,7 +32,6 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
-      console.log('selectedTag in Empfehlungen', this.selectedTags)
     });
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
 
@@ -112,22 +111,21 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Hinzu-Knopf
   addRecipe(rezept: Rezept): void {
     if (this.isClicked) return; // Falls der Button schon einmal geklickt wurde, nichts tun
 
     this.isLoading = true;
-    this.isClicked = true; // Button dauerhaft deaktivieren
+    this.isClicked = true;
 
     this.rezeptService.addRezeptToList(rezept).pipe(
       catchError((error: any) => {
         this.isLoading = false;
-        this.isClicked = false; // Falls ein Fehler auftritt, Button wieder aktivieren
+        this.isClicked = false;
         console.error('Fehler beim Speichern des Rezepts:', error);
         return of(null);
       })
     ).subscribe(() => {
-      this.isLoading = false; // API-Call abgeschlossen
+      this.isLoading = false;
     });
   }
 

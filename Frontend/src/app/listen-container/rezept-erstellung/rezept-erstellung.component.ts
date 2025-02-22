@@ -53,8 +53,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   categories = [
     {name: 'Mahlzeit', selected: false},
-    {name: 'Landesküche', selected: false}/*,
-    {name: 'Nährwert', selected: false}*/
+    {name: 'Landesküche', selected: false},
+    {name: 'Nährwert', selected: false}
   ];
 
 
@@ -310,6 +310,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
         }))
         : []
     };
+
   }
 
 

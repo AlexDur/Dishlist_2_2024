@@ -1,11 +1,20 @@
-import { Component, HostListener, EventEmitter, OnChanges, SimpleChanges, Input, ElementRef, ViewChild, OnInit, Output, OnDestroy  } from '@angular/core';
-import { Rezept } from '../../../../models/rezepte';
-import { RezeptService } from '../../../../services/rezepte.service';
-import { Tag } from '../../../../models/tag';
-import { Subscription } from 'rxjs';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {Rezept} from '../../../../models/rezepte';
+import {RezeptService} from '../../../../services/rezepte.service';
+import {Tag} from '../../../../models/tag';
+import {Subject, Subscription} from 'rxjs';
 import {DEFAULT_TAGS} from "../../../../models/default_tag";
-import { debounceTime, distinctUntilChanged  } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {TagService} from "../../../../services/tags.service";
 
 @Component({
@@ -114,6 +123,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
+
   stopPropagation(event: Event): void {
     event.stopPropagation();
   }
@@ -127,25 +137,34 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private updateTagCounts(rezepte: Rezept[]): void {
+    console.log("🔍 Starte updateTagCounts mit", rezepte.length, "Rezepten AUFGERUFEN DURCH:", new Error().stack);
+
+
     const zaehler: { [key: string]: number } = {};
 
-    // Zähle Tags basierend auf den Rezepten
     rezepte.forEach(rezept => {
+      console.log("📌 Rezept:", rezept.name, "Tags:", rezept.tags?.map(t => t.label));
+
       rezept.tags?.forEach(tag => {
         if (tag && tag.label) {
+          console.log(`✅ Rezept "${rezept.name}" enthält Tag: "${tag.label}"`);
+
           zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
+        } else {
+          console.warn(`⚠️ Rezept "${rezept.name}" enthält einen ungültigen Tag:`, tag);
         }
       });
     });
 
-    // Update tags mit den gezählten Werten
+    console.log("📊 Endgültiger Tag-Zähler:", zaehler);
     this.updateTagsWithCounts(zaehler);
   }
+
+
 
   private updateTagsWithCounts(zaehler: { [key: string]: number }): void {
     this.tags.forEach(tag => {
       tag.count = zaehler[tag.label] || 0;
-
     });
   }
 

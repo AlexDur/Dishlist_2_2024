@@ -301,13 +301,13 @@ export class RezeptService {
     );
   }
 
-  updateCurrentRecipe(update: Partial<any>) {
+/*  updateCurrentRecipe(update: Partial<any>) {
     this.currentRecipe = { ...this.currentRecipe, ...update };
   }
 
   getCurrentRecipe() {
     return this.currentRecipe;
-  }
+  }*/
 
   // SPOON
   // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
@@ -492,9 +492,10 @@ export class RezeptService {
       { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
     ).pipe(
       tap((savedRezept) => {
+        console.log('formData', savedRezept)
         this.ngZone.run(() => {
           const currentList = this.gefilterteRezepteSubject.value;
-          this.gefilterteRezepteSubject.next([savedRezept, ...currentList]); // Rezept an den Anfang einfügen
+          this.gefilterteRezepteSubject.next([savedRezept, ...currentList]);
         });
       }),
       catchError((error) => {

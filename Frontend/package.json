@@ -28,6 +28,7 @@
     "@capacitor/ios": "^6.0.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "aws-sdk": "^2.1691.0",
+    "axios": "^1.7.9",
     "cordova-plugin-camera": "^8.0.0",
     "cropperjs": "^1.6.2",
     "eslint-config-prettier": "^8.8.0",
