@@ -137,26 +137,18 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private updateTagCounts(rezepte: Rezept[]): void {
-    console.log("🔍 Starte updateTagCounts mit", rezepte.length, "Rezepten AUFGERUFEN DURCH:", new Error().stack);
-
-
     const zaehler: { [key: string]: number } = {};
 
     rezepte.forEach(rezept => {
-      console.log("📌 Rezept:", rezept.name, "Tags:", rezept.tags?.map(t => t.label));
-
       rezept.tags?.forEach(tag => {
         if (tag && tag.label) {
-          console.log(`✅ Rezept "${rezept.name}" enthält Tag: "${tag.label}"`);
-
           zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
         } else {
-          console.warn(`⚠️ Rezept "${rezept.name}" enthält einen ungültigen Tag:`, tag);
+          console.warn(` Rezept "${rezept.name}" enthält einen ungültigen Tag:`, tag);
         }
       });
     });
 
-    console.log("📊 Endgültiger Tag-Zähler:", zaehler);
     this.updateTagsWithCounts(zaehler);
   }
 
