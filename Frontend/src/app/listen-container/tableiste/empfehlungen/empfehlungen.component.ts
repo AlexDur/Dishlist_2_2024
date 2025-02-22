@@ -71,6 +71,7 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
   loadSpoonRezepte(): void {
     this.isLoading = true;
+    this.isClicked = false;
     this.errorMessage = null; // Setze die Fehlermeldung zurück
 
     const TIMEOUT_DURATION = 5000;
