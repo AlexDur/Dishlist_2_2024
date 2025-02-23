@@ -58,8 +58,8 @@ export class RezeptService {
   }
 
   // Methode zum Setzen des Bildes
-  setImage(file: File): void {
-    this.imageSubject.next(file);
+  setImage(image: File | null): void {
+    this.imageSubject.next(image);
   }
 
   setIsBildSelected(value: boolean) {
@@ -305,26 +305,51 @@ export class RezeptService {
   // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
   fetchSpoonRezepte(tags: string[] = []): Observable<Rezept[]> {
     let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&random=true&apiKey=${environment.spoonacularApiKey}`;
+    /*let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&vegan=true&apiKey=${environment.spoonacularApiKey}`;
+*/
 
     let apiDishTypes: string[] = [];
     let apiCuisines: string[] = [];
+    let apiDiets: string[] = [];
     let combinedTags: string[] = [];
 
     tags.forEach(tag => {
       const dishTypeTags = reverseSpoonDataMapping['dishTypes'][tag];
       const cuisineTags = reverseSpoonDataMapping['cuisines'][tag];
+      const dietTags = reverseSpoonDataMapping['diets'][tag];
 
-
-      if (dishTypeTags && cuisineTags) {
+      if (dishTypeTags && cuisineTags && dietTags) {
+        dishTypeTags.forEach(dishType => {
+          cuisineTags.forEach(cuisine => {
+            dietTags.forEach(diet => {
+              combinedTags.push(`${dishType},${cuisine},${diet}`); // Komma-getrennt für Spoonacular API
+            });
+          });
+        });
+      } else if (dishTypeTags && cuisineTags) {
         dishTypeTags.forEach(dishType => {
           cuisineTags.forEach(cuisine => {
             combinedTags.push(`${dishType},${cuisine}`); // Komma-getrennt für Spoonacular API
+          });
+        });
+      } else if (dishTypeTags && dietTags) {
+        dishTypeTags.forEach(dishType => {
+          dietTags.forEach(diet => {
+            combinedTags.push(`${dishType},${diet}`);
+          });
+        });
+      } else if (cuisineTags && dietTags) {
+        cuisineTags.forEach(cuisine => {
+          dietTags.forEach(diet => {
+            combinedTags.push(`${cuisine},${diet}`);
           });
         });
       } else if (dishTypeTags) {
         apiDishTypes.push(...dishTypeTags);
       } else if (cuisineTags) {
         apiCuisines.push(...cuisineTags);
+      } else if (dietTags) {
+        apiDiets.push(...dietTags);
       }
     });
 
@@ -336,26 +361,13 @@ export class RezeptService {
     if (apiCuisines.length > 0) {
       apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`; // , für UND-Verknüpfung bei nur cuisines
     }
-
-    if (tags.includes('vegetarisch')) {
-      apiUrl += '&vegetarian=true';
+    if (apiDiets.length > 0) {
+      apiUrl += `&diet=${encodeURIComponent(apiDiets.join(','))}`; // , für UND-Verknüpfung bei nur diets
     }
-
-    if (tags.includes('vegan')) {
-      apiUrl += '&vegan=true';
-    }
-
-    if (tags.includes('pescatarian')) {
-      apiUrl += '&pescatarian=true';
-    }
-
-
 
     // Zufälligen Offset zwischen 0 und 20 (oder dynamisch nach totalResults) setzen
-    const randomOffset = Math.floor(Math.random() * 20);
+    const randomOffset = Math.floor(Math.random() * 300);
     apiUrl += `&offset=${randomOffset}`;
-
-    console.log('API-URL:', apiUrl);
 
 
     // this.http.get gibt ein Observale zurück

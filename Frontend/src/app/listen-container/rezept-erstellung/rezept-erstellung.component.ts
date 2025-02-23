@@ -44,6 +44,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   selectedCategory: string | null = null;
   isBildSelected$: Observable<boolean>;
   isBildSelected: boolean = false;
+  selectedFile: File | null = null;
 
   rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
@@ -217,7 +218,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-  handleClick(event: Event) {
+  submitForm(event: Event) {
     event.preventDefault();
 
     const rezeptToSave = this.rezeptForm.value as Rezept; // Rezept aus dem Formular erstellen
@@ -237,13 +238,16 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     this.saveRecipe(rezeptToSave).subscribe({
       next: (response) => {
 
+        this.rezeptForm.get('image')?.setValue(null);
+        this.rezepteService.setImage(null);
+        this.rezeptForm.reset();
+        this.selectedFile = null;
+        this.rezepteService.setIsBildSelected(false);
+        this.isLoading = false;
 
         this.router.navigate(['/listen-container']).then(() => {
           this.tabService.setActiveTab(2);
         });
-
-        this.rezepteService.setIsBildSelected(false);
-
 
         this.isLoading = false;
       },
