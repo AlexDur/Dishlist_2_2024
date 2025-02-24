@@ -36,7 +36,7 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
     this.isDialogVisible = true;
   }
 
-  onConfirmDelete(confirmed: boolean) {
+  /*onConfirmDelete(confirmed: boolean) {
     if (confirmed) {
       this.authService.logout().subscribe({
         next: () => {
@@ -52,7 +52,7 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
       console.log('Löschung abgebrochen.');
     }
     this.isDialogVisible = false;
-  }
+  }*/
 
   navigateLanding(event: Event) {
     event.preventDefault();

@@ -50,9 +50,9 @@ export class RezeptService {
 
 
   private getJsonHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
+/*    const token = this.authService.getToken();*/
     let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${token}`)
+    headers = headers/*.set('Authorization', `Bearer ${token}`)*/
       .set('Accept', 'application/json');
     return headers;
   }
@@ -72,12 +72,12 @@ export class RezeptService {
 
   // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject
   getUserRezepte(): Observable<RezeptAntwort[]> {
-    const token = this.getToken();
+  /*  const token = this.getToken();
     if (!token) {
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
-    }
+    }*/
 
-    const headers = this.createHeaders(token);
+    const headers = this.createHeaders();
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => this.handleResponse(rezepte)),
@@ -85,14 +85,14 @@ export class RezeptService {
     );
   }
 
-  private getToken(): string | null {
+/*  private getToken(): string | null {
     return localStorage.getItem('jwt_token');
-  }
+  }*/
 
-  private createHeaders(token: string): HttpHeaders {
+  private createHeaders(): HttpHeaders {
     return this.getJsonHeaders()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`);
+     /* .set('Authorization', `Bearer ${token}`);*/
   }
 
   private handleResponse(rezepte: RezeptAntwort[]): void {
@@ -198,14 +198,14 @@ export class RezeptService {
       return throwError(() => new Error('Token fehlt.'));
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  /*  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);*/
 
     console.log('Formdata in service.ts', formData)
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-      observe: 'response',
-      headers: headers
+      observe: 'response'/*,
+      headers: headers*/
     }).pipe(
       tap(response => {
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
@@ -224,10 +224,10 @@ export class RezeptService {
     this.currentRezeptSubject.next(rezeptToSave);
 
     const token = localStorage.getItem('jwt_token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+/*    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);*/
 
     return this.http.put(apiUrl, formData, {
-      headers: headers,
+     /* headers: headers,*/
       observe: 'response'
     }).pipe(
       tap(() => {
@@ -503,8 +503,8 @@ export class RezeptService {
 
     return this.http.post<Rezept>(
       `${this.backendUrl}/api/rezepte/create`,
-      formData,
-      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+      formData/*,
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }*/
     ).pipe(
       tap((savedRezept) => {
         console.log('formData', savedRezept)

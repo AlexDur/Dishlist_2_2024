@@ -29,11 +29,11 @@ export class AppComponent implements OnInit{
       filter(event => event instanceof NavigationEnd)
     ).subscribe();
 
-    this.authService.isAuthenticated$.subscribe(status => {
+   /* this.authService.isAuthenticated$.subscribe(status => {
       this.isAuthenticated = status;
       console.log('Auth-Status:', status);
       this.redirectToLastVisitedRoute();
-    });
+    });*/
 
     this.checkScreenSize();
   }

@@ -14,7 +14,7 @@ import {TabService} from "./tab.service";  // Importiere 'map' hier
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  /*private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
   private backendUrl = environment.apiUrl;
@@ -91,12 +91,12 @@ export class AuthService {
   }
 
 
-  /**
+  /!**
    * Sendet Registrierungsdaten des Nutzers an das Backend
    * @param email
    * @param password
    * @returns Ein Observable mit der Antwort des Servers
-   */
+   *!/
   register(email: string, password: string): Observable<any> {
     this.body = { email, password };
 
@@ -139,5 +139,5 @@ export class AuthService {
   setAccountDeleted(status: boolean) {
     this.accountDeletedSubject.next(status);
   }
-
+*/
 }

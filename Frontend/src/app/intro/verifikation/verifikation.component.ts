@@ -26,7 +26,7 @@ export class VerifikationComponent implements OnInit{
   }
 
   // Methode zum Verifizieren des Codes
-  verifyCode(event:Event) {
+ /* verifyCode(event:Event) {
     event.preventDefault();
     // Überprüfen, ob der Code 6 Zeichen lang ist
     if (this.verifikationCode.length !== 6) {
@@ -62,7 +62,7 @@ export class VerifikationComponent implements OnInit{
           this.successMessage = '';
         }
       });
-  }
+  }*/
 
   navigateRegistrierung(event: Event) {
     event.preventDefault();
