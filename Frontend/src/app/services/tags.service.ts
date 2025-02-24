@@ -42,14 +42,11 @@ export class TagService {
     return this.http.put<Tag>(`/${tag.id}`, tag);
   }
 
-
-
   //Hilfsfunktion essentiell für UpdateDates (unklar wieso ausgegraut)
   private updateSelectedTags(selectedTags: Tag[]): void {
     const validTags = selectedTags.filter(tag => tag.id !== undefined);
 
     if (validTags.length === 0) {
-      console.error('Keine gültigen Tags zum Aktualisieren gefunden.');
       return;
     }
 

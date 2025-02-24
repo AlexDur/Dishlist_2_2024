@@ -12,6 +12,8 @@ export class RezeptHinzufuegenButtonComponent implements OnInit{
   @Input() isMobile?: boolean;
   activeTab!: number;
   isBildSelected$: Observable<boolean>;
+  image?: null;
+
 
   constructor(private router: Router, private rezepteService: RezeptService, private tabService: TabService) {
     this.isBildSelected$ = this.rezepteService.isBildSelected$
@@ -29,6 +31,7 @@ export class RezeptHinzufuegenButtonComponent implements OnInit{
     this.rezepteService.clearCurrentRezept();
     this.rezepteService.setIsBildSelected(false);
     this.rezepteService.setImageSelected(false);
+    this.image = null;
     this.isBildSelected$.pipe(take(1)).subscribe(value => { // Abonniere das Observable
       console.log('isBildSelected nach + Dish - Klick in Tab ', value); // Gib den booleschen Wert aus
     });

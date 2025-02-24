@@ -425,7 +425,7 @@ a {
   justify-content: center;
   width: 100%;
 }
-
+f
 //Landing
 .landing-datenschutz-hinweis{
   width: 250px;
@@ -1023,11 +1023,11 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
-  outline-offset: 2px;
-  background-color: $detail_2-color;
+/*  outline: 2px solid $detail_2-color;*/
+/*  outline-offset: 2px;*/
+  background-color: transparent;
   border: 2px solid $detail_2-color;
-  color: $tertiary-color;
+  color: $detail_2-color;
   width: 250px;
 }
 
@@ -2245,8 +2245,12 @@ cd f.spoon-trennstrich {
     text-align: center;
   }
 
-
+  .tab:active {
+    background: transparent;
+  }
 }
+
+
 
   button.tab {
     display: flex;

@@ -46,7 +46,7 @@
           </ng-container>
         </div>
 
-        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton (click)="handleClick($event)">
+        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton (click)="submitForm($event)">
           {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}
         </button>
 

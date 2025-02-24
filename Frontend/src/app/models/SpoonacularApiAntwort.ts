@@ -3,8 +3,11 @@ export interface SpoonacularApiAntwort {
   title: string;
   image: string;
   sourceUrl: string;
-  dishTypes: any[];
+  dishTypes: string[];
   cuisines: string[];
+  foodLifestyles: string;
+  diets: string[];
+
 }
 
 export interface SpoonacularApiAntwortGesamt {

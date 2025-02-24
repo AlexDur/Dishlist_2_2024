@@ -30,13 +30,29 @@ export class FotoUploadComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
 
-    this.rezepteService.image$.subscribe(image => {
-      this.isBildSelected = !!image || this.isBildSelected;
-      this.rezepteService.setImageSelected(image);
+    this.subscription = this.rezepteService.image$.subscribe(image => {
+      // Setze die Bildauswahl basierend auf dem Bild
+      if (image) {
+        this.isBildSelected = true;
+      } else {
+        this.isBildSelected = false;
+        this.resetImageSelection(); // Setze die Bildauswahl zurück, wenn kein Bild vorhanden ist
+      }
+      this.rezepteService.setImageSelected(image); // Aktualisiere den Bildstatus im Service
     });
+
+
 
     this.subscription = this.isBildSelected$.subscribe(value => {
       this.isBildSelected = value;
+      if (!value) {
+        this.selectedFile = null;
+        this.imageUrl = null;
+        if (this.cropper) {
+          this.cropper.destroy();
+          this.cropper = null;
+        }
+      }
       this.cdr.detectChanges();
     });
 
@@ -60,29 +76,41 @@ export class FotoUploadComponent implements OnInit, OnDestroy {
         return;
       }
 
+      // Setze die ausgewählte Datei
       this.selectedFile = file;
       this.rezepteService.setIsBildSelected(true);
       this.rezeptForm.patchValue({ image: file }); // Direkt in das Formular
 
+      // Lese die Datei mit FileReader
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.imageUrl = e.target.result;
+        this.imageUrl = e.target.result; // Setze die Bild-URL
         this.isCropperVisible = true; // Cropper anzeigen
         this.cdr.detectChanges();
         this.initializeCropper(); // Wichtig für ViewChild
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
-      this.selectedFile = null;
-      this.rezepteService.setIsBildSelected(false);
-      this.isCropperVisible = false;
-      this.imageUrl = null;
-      if (this.cropper) {
-        this.cropper.destroy();
-        this.cropper = null;
-      }
+
+      this.resetImageSelection();
     }
   }
+
+// Hilfsmethode zum Zurücksetzen der Bildauswahl
+  resetImageSelection(): void {
+    this.selectedFile = null;
+    this.rezepteService.setIsBildSelected(false);
+    this.isCropperVisible = false;
+    this.imageUrl = null; // Bild-URL zurücksetzen
+    if (this.cropper) {
+      this.cropper.destroy(); // Zerstöre den Cropper, falls vorhanden
+      this.cropper = null;
+    }
+  }
+
+
+
+
 
   validateFile(file: File): { isValid: boolean, message?: string } {
     const allowedTypes = ['image/jpeg', 'image/png'];

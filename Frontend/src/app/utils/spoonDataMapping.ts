@@ -28,15 +28,15 @@ export const spoonDataMapping: { [category: string]: { [key: string]: string } }
     condiment: 'Snack'
   },
   cuisines: {
-    Chinese: 'chinesisch',
-    German: 'deutsch',
-    Indian: 'indisch',
-    Italian: 'italienisch',
-    Japanese: 'japanisch',
-    Korean: 'koreanisch',
-    Mexican: 'mexikanisch',
+    chinese: 'chinesisch',
+    german: 'deutsch',
+    indian: 'indisch',
+    italian: 'italienisch',
+    japanese: 'japanisch',
+    korean: 'koreanisch',
+    mexican: 'mexikanisch',
   },
-  'food lifestyles': {
+   diets: {
     carnivorous: 'fleischhaltig',
     pescatarian: 'fischhaltig',
     vegan: 'vegan',
