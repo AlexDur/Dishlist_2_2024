@@ -18,13 +18,16 @@ import {ToggleButtonModule} from "primeng/togglebutton";
 import {SharedModule} from "../shared/shared.module";
 import {FotoUploadComponent} from "./rezept-erstellung/foto-upload/foto-upload.component";
 import { FileUploadModule } from 'primeng/fileupload';
-import {SeitenleisteModule} from "./seitenleiste/seitenleiste.module";
 import {CameraComponent} from "./rezept-erstellung/camera/camera.component";
 import {CropperComponent} from "./rezept-erstellung/foto-upload/cropper/cropper.component";
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   FilterkreiseComponent
 } from "./rezepteliste/rezepteliste-mobil/listeninhalt-mobil/filterkreise/filterkreise.component";
+import {EmpfehlungenComponent} from "./tableiste/empfehlungen/empfehlungen.component";
+import {FormatTagsPipe} from "../shared/pipes/spoonTags";
+import { AsyncPipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import {
     CameraComponent,
     CropperComponent,
     FilterkreiseComponent,
+    EmpfehlungenComponent,
   ],
   exports: [
     ListeninhaltMobilComponent,
@@ -42,15 +46,13 @@ import {
     RezeptErstellungComponent,
     FotoUploadComponent,
     CameraComponent,
-
+    EmpfehlungenComponent,
   ],
-    imports: [
-    CommonModule,
+  imports: [
     TableModule,
     HttpClientModule,
     FormsModule,
     TagModule,
-    SeitenleisteModule,
     RatingModule,
     ButtonModule,
     CardModule,
@@ -58,6 +60,9 @@ import {
     SharedModule,
     FileUploadModule,
     ReactiveFormsModule,
-    ]
+    FormatTagsPipe,
+    AsyncPipe,
+    CommonModule,
+  ]
 })
 export class RezepteModule { }

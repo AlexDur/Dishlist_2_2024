@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import {AuthService} from "./services/auth.service";
 import { filter } from 'rxjs/operators';
 import {NavigationService} from "./services/navigation.service";
+import {UserInterfaceService} from "./services/userInterface.service";
 
 
 @Component({
@@ -11,11 +12,11 @@ import {NavigationService} from "./services/navigation.service";
 })
 export class AppComponent implements OnInit{
   title = 'fullStack_rezepteApp';
-  public isMobile: boolean = false;
+  isMobile: boolean = false;
   isAuthenticated: boolean = false;
   selectedTags: string[]=[];
 
-  constructor(private authService: AuthService, private router: Router, private navigationService: NavigationService) {
+  constructor(private authService: AuthService, private router: Router, private uiService: UserInterfaceService, private navigationService: NavigationService) {
     this.checkScreenSize();
     const isFirstLaunch = localStorage.getItem('isFirstLaunch');
     if (!isFirstLaunch) {
@@ -25,6 +26,11 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
+
+    this.uiService.isMobile$.subscribe(isMobile => {
+      this.isMobile = isMobile;
+    });
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe();
@@ -35,7 +41,7 @@ export class AppComponent implements OnInit{
       this.redirectToLastVisitedRoute();
     });*/
 
-    this.checkScreenSize();
+
   }
 
   private redirectToLastVisitedRoute() {

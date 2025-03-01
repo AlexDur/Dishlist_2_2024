@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.rezepte_app',
+  appId: 'com.dishlist_app',
   appName: 'DishList',
   webDir: 'www.dish-list.de'
 };

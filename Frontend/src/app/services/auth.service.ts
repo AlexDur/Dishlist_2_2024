@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 import { of, BehaviorSubject, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {TabService} from "./tab.service";  // Importiere 'map' hier
+import {UserInterfaceService} from "./userInterface.service";  // Importiere 'map' hier
 
 
 
@@ -24,7 +24,7 @@ export class AuthService {
   accountDeleted$ = this.accountDeletedSubject.asObservable();
 
 
-  constructor(private http: HttpClient, private tabService: TabService) {
+  constructor(private http: HttpClient, private tabService: UserInterfaceService) {
     const storedAuth = localStorage.getItem('isAuthenticated') === 'true';
     this.isAuthenticatedSubject.next(storedAuth);
   }

@@ -1,11 +1,12 @@
 <button class="tab p-0 pl-1" (click)="toggleOverlay($event)">
+  <span *ngIf="selectedTags.length > 0" class="ki-label">AI</span>
   <i class="pi pi-android"></i>
   <span>Wish-A-Dish</span>
 </button>
 
 <div *ngIf="isOverlayVisible" class="custom-overlay-spoon" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
   <div class="overlay-content-spoon" (click)="stopPropagation($event)">
-    <!-- Schließen-Button -->
+
     <button class="overlay-close-button" (click)="closeOverlayButton($event)">X</button>
 
     <div class="overlay-content-inner">
@@ -14,31 +15,54 @@
         <span>Lädt Dishes...</span>
       </div>
 
+      <div *ngIf="selectedTags.length == 0 && rezepte.length > 0;" class="overlay-content-überschrift">
+        <span>Zufällige Rezeptvorschläge</span>
+      </div>
+
+      <div *ngIf="selectedTags.length != 0 && rezepte.length > 0;" class="overlay-content-überschrift spoon-tags-ueberschrift" >
+        <span>{{ selectedTags.join('; ') }}</span>
+      </div>
+
       <!-- Rezeptliste -->
       <div *ngIf="rezepte && rezepte.length > 0; else noRecipes" class="recipe-list">
         <div *ngFor="let rezept of rezepte" class="recipe-item">
-          <div *ngIf="rezept.tags && rezept.tags.length > 0">
-            <p class="gang-spoon" *ngFor="let tag of rezept.tags">{{ tag.label }}</p>
 
-          </div>
-          <div *ngIf="!rezept.tags || rezept.tags.length === 0" >
-            <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '')">Dish</p>
-          </div>
+          <button
+            pButton
+            class="spoon-button"
+            (click)="addRecipe(rezept)"
+            [disabled]="isLoading || isClicked"
+            [ngClass]="{
+              'selected-tags': selectedTags.length > 0,
+              'no-tags': selectedTags.length === 0,
+              'disabled-spoon-button': isLoading || isClicked}">
+            <i class="pi pi-plus"></i>
+          </button>
 
-          <div class="recipe-image-container">
-            <img *ngIf="rezept.image" [src]="rezept.image" [alt]="rezept.name" class="recipe-image" (click)="openUrlSpoon(rezept.bildUrl || '')" />
-            <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.bildUrl || '')">
-              {{ rezept.name }}
+          <div class="spoon-recipe-image-container">
+            <img *ngIf="rezept.bildUrl" [src]="rezept.bildUrl" [alt]="rezept.name" class="recipe-image"  (click)="openUrlSpoon(rezept.bildUrl || '', 'image')" />
+
+            <div class="recipe-title-overlay" (click)="openUrlSpoon(rezept.onlineAdresse || '', 'recipe')">
+              <div class="recipe-tags" *ngIf="rezept.tags && rezept.tags.length > 0; else noTags">
+              <span class="gang-spoon" [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}">
+                {{ rezept.tags | formatTags }}</span>
+              </div>
+
+              <ng-template #noTags>
+                <p class="gang-spoon" (click)="openUrlSpoon(rezept.bildUrl || '', 'image')"  [ngClass]="{'selected-tags-font-color': selectedTags.length > 0, 'no-tags-font-color': selectedTags.length === 0}"></p>
+              </ng-template>
+
+              <span class="spoon-trennstrich" *ngIf="rezept.tags && rezept.tags.length > 0">|</span>
+              <span class="recipe-name" (click)="openUrlSpoon(rezept.onlineAdresse || '', 'recipe')">{{ rezept.name }} </span>
             </div>
           </div>
 
         </div>
       </div>
-    </div>
 
-    <!-- Falls keine Rezepte vorhanden sind -->
     <ng-template #noRecipes>
       <div class="no-recipes-message">Keine Rezepte verfügbar</div>
     </ng-template>
   </div>
+</div>
 </div>

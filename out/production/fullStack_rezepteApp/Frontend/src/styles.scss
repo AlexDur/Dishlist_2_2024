@@ -15,12 +15,14 @@ $tertiary-color: #ffffff;
 $detail-color: #000000; ;
 $detail_2-color: #221f1f;
 
+$hover-color1: #0e9fae;
+
 body {
   background: linear-gradient(to bottom,$color-start, $color-end);
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
-  margin:2% 30%;
+  margin:2% 28.5%;
 }
 
 
@@ -43,9 +45,9 @@ a {
 
 .general-button {
   margin-top:40px !important;
-  width: 200px;
+  width: 300px;
   font-weight: bold;
-  height: 40px;
+  height: 30px;
   border-radius: 50px;
   background-color: $detail_2-color !important;
   color: $tertiary-color !important;
@@ -188,15 +190,14 @@ a {
   background-color: #393838;
 }
 
-//Landing
 .general-button-transparent{
-  margin-top:30px !important;
-  width: 200px;
+  margin-top:20px !important;
+  width: 300px;
   border-radius: 50px;
   font-weight: bold;
-  height: 40px;
+  height: 30px;
   background-color: transparent;
-  color: $detail_2-color !important;
+  color: black;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -208,14 +209,44 @@ a {
   outline-offset: 2px;
 }
 
-.general-button-landing-reg{
-  margin-top:40px !important;
-  width: 240px;
+//Landing
+
+.zentriertes-formular-landing{
+  padding-top: 17rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing-button-reg{
+  margin-top:20px !important;
+  width: 300px;
   border-radius: 50px;
   font-weight: bold;
-  height: 40px;
-  background-color: $detail_2-color !important;
-  color: $tertiary-color !important;
+  height: 30px;
+  background-color: transparent;
+  color: black !important;
+  border: 1px transparent solid !important;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $detail_2-color;
+  outline-offset: 2px;
+}
+
+.landing-button-anmeldung{
+  margin-top:20px !important;
+  width: 300px;
+  border-radius: 50px;
+  font-weight: bold;
+  height: 30px;
+  background-color: transparent;
+  color: black !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -270,6 +301,14 @@ a {
   font-weight: bold;
 }
 
+.zentriertes-formular-registrierung{
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 //Verfikation
 .inputfeld-verifikation {
   width: 100%;
@@ -284,13 +323,14 @@ a {
 }
 
 .general-button-verfikation{
-  width: 180px;
+  width: 300px;
+  border-radius: 50px;
   font-weight: bold;
-  height: 42px;
+  height: 30px;
   background-color: $detail_2-color !important;
   color: $tertiary-color !important;
   border: 1px transparent solid !important;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -320,7 +360,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 300px;
 }
 
 .optional{
@@ -362,28 +402,46 @@ a {
   align-items:center;
 }
 
-.zentriertes-formular {
-  margin-top: 6rem;
+.rezept-erstellung{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zentriertes-formular-erstellung {
+  margin-top: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-
+  padding-bottom: 60px;
 }
 
 .zentriertes-formular-anmeldung{
-  margin-top: 17rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
+f
+//Landing
+.landing-datenschutz-hinweis{
+  width: 250px;
+  text-align: center;
+  color: white;
+  a {
+    text-decoration: underline;
+    color: white;
+  }
+}
+
+
 
 .inputfeld {
   width: 100%;
-  max-width: 250px;
+  max-width: 300px;
   padding: 10px;
   border-radius: 5px;
   margin: 10px auto;
@@ -427,7 +485,10 @@ a {
 }
 
 .upload-button-label{
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  width: 100px;
+  height: 30px;
   padding: 9px 40px;
   cursor: pointer;
   background-color: $secondary-color ;
@@ -444,13 +505,17 @@ a {
 }
 
 .bild-selected {
-  background-color: black; /* Farbe, wenn ein Bild ausgewählt wurde */
+  background-color: black;
+}
+
+.cameraShot-selected{
+  background-color: black !important;
 }
 
 .neues-rezept{
-  margin-bottom:2rem;
+  margin-bottom:1rem;
   color: $tertiary-color;
-  font-size: 2.3rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -477,6 +542,7 @@ a {
 
 .close-button {
   position: absolute;
+  margin-top: 2rem;
   top: 10px;
   right: 10px;
   background: white;
@@ -554,10 +620,127 @@ a {
 
 
 
+// Listenansicht Cards
+
+.p-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+.p-card-title {
+  font-size: .7rem !important;
+  font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5em;
+  max-height: 5em;
+  word-break: break-word;
+  padding: 7px 3px;
+  transition: color 0.3s ease-in-out;
+}
+
+.p-card-title:hover {
+  color: #ff8000;
+}
+
+.p-card-body{
+  padding: 0;
+}
+
+.container-listeninhalt {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: minmax(0, auto);
+  width: 100%;
+  gap: 5px;
+  background-color: transparent;
+  margin: 0.5rem auto;
+
+}
+
+.rezept-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.p-card-content {
+  padding: 0;
+}
+
+.rezept-image-container img {
+  width: 160px;
+  height: 160px;
+  display: block;
+}
+
+@media screen and (max-width: 750px) {
+  .container-listeninhalt {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .landing-datenschutz-hinweis {
+    width: 250px;
+    text-align: center;
+    color: black !important;
+    a {
+      text-decoration: underline;
+      color: black !important;
+    }
+  }
+
+
+  .p-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .rezept-image-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    aspect-ratio: 1 / 1;
+  }
+
+
+  .filter-container {
+    padding-bottom: 0;
+  }
+
+  .image-cropper-container {
+    margin-top: 1.3rem;
+    height: 85vh;
+  }
+
+}
+
 // Cropper
+.cropper  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+}
 
 .image-cropper-container {
-  margin-top: 6rem;
+  margin-bottom: 2rem;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -568,76 +751,32 @@ a {
   box-sizing: border-box;
 }
 
-.p-card-body{
-  padding: 0;
-}
-
-
-.container-listeninhalt {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: minmax(0, auto);
+.image-cropper-overlay { /* Der Overlay-Stil */
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  gap:3px;
-  background-color: transparent;
-  margin: 0 auto;
-}
-
-.rezept-image-container img{
-  width: 165px;
-  height: 165px;
-}
-
-
-.rezept-container {
-  width: 100%;
-  height: auto;
-  gap:0;
-}
-
-.p-card-content {
-  width: 165px;
-  height: 165px;
-  padding: 0;
-}
-
-.rezept-image-container {
-  width: 165px;
-  height: 165px;
-  cursor: pointer;
-}
-
-.rezept-image-container img {
-  width: 165px;
-  height: 165px;
-}
-
-
-
-
-.p-card {
-  position: relative;
-  display: grid;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  cursor: pointer;
-  aspect-ratio: 1 / 1;
-  box-sizing: border-box;
-  background-color: orange;
-  width: 150px;
-  height: 150px;
-  object-fit: contain;
-}
-
-.cropper  {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  position: relative;
+  z-index: 1000; /* Wichtig: Stelle sicher, dass der Overlay über anderen Elementen liegt */
+}
+
+.image-cropper-content { /* Der Content-Bereich des Overlays */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optionaler Schatten */
+}
+
+.image-element { /* Stil für das Bild im Cropper */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Oder cover, je nach Bedarf */
 }
 
 .cropper img {
@@ -698,15 +837,17 @@ a {
   z-index: 1000;
   margin-top: 30px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   width: 100%;
   gap: 20px;
 }
 
 .cropper-button {
-  width: 130px;
+  width: 200px;
   font-weight: bold;
-  height: 40px;
+  height: 30px;
   color: $tertiary-color !important;
   border: 1px transparent solid !important;
   font-size: 12px;
@@ -717,7 +858,7 @@ a {
   transition: background-color 0.3s ease;
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
-
+  border-radius: 50px;
 }
 
 .button-filled {
@@ -734,171 +875,147 @@ a {
   font-size: 20px;
 }
 
+.direct-image-cropper-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
 
-.p-card {
-  position: relative;
-  display: grid;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  /*aspect-ratio: 1 / 1;*/
-  box-sizing: border-box;
-  background-color: orange;
+  z-index: 1000;
 }
 
-/*Filterkreise*/
+.direct-image-cropper-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/*Filterblasen*/
 .filter-container {
-  position: relative;
   display: inline-block;
-  text-align: center;
-  margin: 30px 40px;
+  gap: 5px;
+  align-content: start;
+  justify-content: flex-start;
+  padding-left: 0;
 }
 
-.filter-text {
-  font-size: 16px; // Optional: Passe die Schriftgröße des Texts an
+.filter-kreis-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+.filterkreis-clear{
+  flex-shrink: 0;
+  font-weight: bold;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: background-color 0.3s ease;
+  outline: 2px solid $hover-color1;
+  outline-offset: 2px;
+  background: rgba(14, 159, 174, 0.5);
+  border: 2px solid $hover-color1;
+  color: $tertiary-color;
+  text-align: center;
+}
+
+.filterkreis-clear:hover,
+.filterkreis-clear.active {
+  background: rgb(14, 159, 174);
 }
 
 .filter-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 75px;
-  height: 75px;
-  border: 2px solid #fb874e;
-  border-radius: 50%;
+  min-width: 30px;
+  height: auto;
+  padding: 5px 10px;
+  border: 2px solid $hover-color1;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.5); // Transparenter Hintergrund
+  background: rgba(14, 159, 174, 0.5);
+  cursor: pointer;
+  margin: 3px;
+}
+
+.filter-circle:hover,
+.filter-circle.active {
+  background: rgb(14, 159, 174);
 }
 
 .filter-plus {
-  font-size: 10px;
+  color: whitesmoke;
+  font-size: 16px;
   font-weight: bold;
 }
 
-//Cropper mobile u. Listenansicht
-@media screen and (max-width: 750px) {
 
+//Filterkreis, Cropper mobile u. Listenansicht
 
-  .image-cropper-container {
-    margin-top: 1rem;
-    height: 85vh;
-  }
-
-  .container-listeninhalt {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    background-color: transparent;
-    margin: 2rem auto;
-    width: 100%;
-  }
-
-  .rezept-container {
-
-    width: 100%;
-    height: auto;
-    gap:0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .p-card-content {
-    width: 165px;
-    height: 165px;
-    padding: 0;
-  }
-
-  .rezept-image-container {
-    width: 165px;
-    height: 165px;
-    cursor: pointer;
-  }
-
-  .rezept-image-container img {
-    width: 165px;
-    height: 165px;
-  }
-
-  .p-card {
-    position: relative;
-    display: grid;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    cursor: pointer;
-    aspect-ratio: 1 / 1;
-    box-sizing: border-box;
-    background-color: orange;
-    width: 165px;
-    height: 165px;
-    object-fit: contain;
-  }
-
-  .p-card-body{
-    width: 165px;
-    height: 165px;
-    padding: 0;
-  }
-
-
-
-  .p-card-footer {
-    margin-top: auto;
-    padding-top: 5px;
-    padding-right: 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .p-card-title {
-    font-size: .7rem !important;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5em;
-    max-height: 4.5em;
-    word-break: break-word;
-    margin: 5px;
-    text-decoration: underline;
-    border: 1px solid transparent;
-  }
-
-}
 
 
 // Dialog
 
 .dialog{
-  padding:0;
+
   display:flex;
   height:30px;
   justify-content:center;
   text-align: center;
 }
 
-p-dialog .p-dialog-header{
+
+.dialog-container{
+  padding: 1rem;
+  border-radius: 25px;
+  background-color: white;
+}
+
+.p-dialog .p-dialog-header{
   padding:.3px;
+  background: none;
+}
+
+.p-dialog .p-dialog-footer{
+  padding: 0;
 }
 
 .p-dialog-content{
   padding:0;
   padding-bottom: .3px;
   margin:0;
+  background-color: transparent;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon{
+ height: 0;
 }
 
 .dialog-message{
   padding:10px;
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .general-button-dialog-ja {
   font-weight: bold;
-  height: 40px;
+  height: 30px;
+  margin-bottom: .5rem;
   border-radius: 50px;
   font-size: 18px;
   cursor: pointer;
@@ -906,17 +1023,17 @@ p-dialog .p-dialog-header{
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
-  outline-offset: 2px;
-  background-color: $detail_2-color;
+/*  outline: 2px solid $detail_2-color;*/
+/*  outline-offset: 2px;*/
+  background-color: transparent;
   border: 2px solid $detail_2-color;
-  color: $tertiary-color;
-  width: 100px;
+  color: $detail_2-color;
+  width: 250px;
 }
 
 .general-button-dialog-nein {
   font-weight: bold;
-  height: 40px;
+  height: 30px;
   border-radius: 50px ;
   border: 1px solid $secondary-color;
   font-size: 18px;
@@ -925,26 +1042,72 @@ p-dialog .p-dialog-header{
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  color: $tertiary-color;
-  width: 100px;
-  background-color: $secondary-color;
+  color: $secondary-color;
+  width: 250px;
+  background-color: transparent;
 }
 
 
 .footer-buttons{
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 15px;
   gap: 10px;
 }
 
-.footer-buttons .custom-left, .footer-buttons .custom-right {
-  margin: 0;
-}
 
 @media screen and (max-width: 750px) {
 
-  .zentriertes-formular {
+  .zentriertes-formular-landing{
+    padding-top: 5rem;
+  }
+
+  .landing-seiten-ueberschrift{
+    color: $secondary-color !important;
+  }
+
+  .landing-button-reg{
+    color: white !important;
+    background-color: #191818;
+  }
+
+  .landing-button-anmeldung{
+    color: black !important;
+    background-color: white;
+  /*  backdrop-filter: blur(10px);*/
+  }
+
+  .landing-datenschutz-hinweis {
+    backdrop-filter: blur(30px);
+
+    text-align: center;
+    width: 80%;
+    border-radius: 50px;
+    padding: 15px;
+
+  }
+
+
+  .landing-seite{
+    background-image: url('/assets/landing3.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+  }
+
+
+  .hidden-preload {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  .zentriertes-formular-erstellung {
 
     display: flex;
     flex-direction: column;
@@ -952,12 +1115,11 @@ p-dialog .p-dialog-header{
     justify-content: center;
     width: 100%;
     max-width: 500px;
-    margin: 50px auto;
     padding-bottom: 50px;
   }
 
   .zentriertes-formular-anmeldung{
-    margin-top: 15rem;
+    padding-top: 6rem;
   }
 
   .p-table .p-tablewrapper table {
@@ -1004,12 +1166,14 @@ p-dialog .p-dialog-header{
 .camera-container{
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   text-align: center;
 }
 
 .camera-container .upload-button-label {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   padding: 9px 40px;
   cursor: pointer;
   background-color: $secondary-color ;
@@ -1023,13 +1187,17 @@ p-dialog .p-dialog-header{
 }
 
 .take-photo-button{
-  display: inline-block;
-  margin: 10px auto;
+  width: 150px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem;
   padding: 10px 20px;
   background-color: $detail-color;
   color: white;
-  border: none;
-  border-radius: 5px;
+  border: 1px solid white;
+  border-radius: 15px;
   cursor: pointer;
 }
 
@@ -1046,29 +1214,32 @@ p-dialog .p-dialog-header{
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8); /* Abdunkelung */
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Überlagert das Formular */
+  z-index: 1000;
 }
 
 
-/* Video */
 video {
   width: 100%;
   height: auto;
   border-radius: 8px;
 }
 
-/* Schließen-Button */
 .close-button {
-  margin-top: 10px;
+  margin: 10px;
+  width: 100px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 10px 20px;
   background-color: $secondary-color;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
 }
 
@@ -1146,7 +1317,7 @@ $placeholder-color: #e8d6d1;
   font-weight: bold;
   color: white;
   text-align: center;
-  margin-top:2rem;
+  margin-top:1.5rem;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -1172,9 +1343,10 @@ p-tag + p-tag {
 .category-button {
   display: flex;
   justify-content: center;
-  width: 100px;
-  margin-bottom: 10px;
-  height: 40px;
+  align-items: center;
+  width: 200px;
+  margin-bottom: 15px;
+  height: 30px;
   padding: 10px;
   background-color: $secondary-color !important;
   color: $tertiary-color !important;
@@ -1272,19 +1444,22 @@ p-tag + p-tag {
 }
 
 .p-card-title {
-  font-size: .8rem;
   position: absolute;
-  bottom: 3px;
-  left: 3px;
-  color: #f3f2f2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  font-size: 0.8rem;
   font-weight: bold;
+  color: #f3f2f2;
   text-align: left;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-  background: rgba(0, 0, 0, 0.7);
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-bottom: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0);
+
+  background: rgba(0, 0, 0, 0.75);
+  padding: 3px 5px;
+  margin: 0;
 }
+
 
 .p-card-footer {
   position: absolute;
@@ -1301,11 +1476,18 @@ p-tag + p-tag {
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  width: 30px;
+  height: auto;
+
 }
 
 .p-card-footer button:hover {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
+}
+
+.edit-button .pi, .delete-button .pi {
+  font-size: 0.8rem;
 }
 
 
@@ -1342,17 +1524,19 @@ h3.weiss {
   text-align: left;
 }
 
-.seiten-ueberschrift{
-  font-weight: bold;
+.landing-seiten-ueberschrift{
+  font-weight: bolder;
   display: flex;
   justify-content: flex-start;
   font-size: 2.5rem;
-  color: $tertiary-color;
-  font-family: "Cooper Black";
+  color: white;
+  font-family: "Impact", "Arial", sans-serif;
   align-items: center;
   flex-grow: 1;
   text-align: left;
+  margin-bottom: 3rem;
 }
+
 
 .button-row{
   display: flex;
@@ -1436,15 +1620,6 @@ h3.weiss {
 }
 
 
-.platzhalter-rezeptbild {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 8px;
-  min-height: 250px;
-  padding: 15px;
-}
-
 .linie-unten {
   border: 0;
   height: 1px;
@@ -1477,6 +1652,18 @@ h3.weiss {
   align-items: center;
 }
 
+.ki-label {
+  position: absolute;
+  top: -1px;
+  right: 2px;
+  background: $hover-color1;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
 
 .custom-overlay {
   position: fixed;
@@ -1488,6 +1675,7 @@ h3.weiss {
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 1000;
 }
 
@@ -1500,32 +1688,21 @@ h3.weiss {
   position: relative;
   overflow-y: auto;
   max-height: 90vh;
+  display: flex;
+  align-items: center;
 }
 
-.overlay-close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  margin-bottom: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
+
 
 .dropdown-content {
   display: flex;
   justify-content: start;
-  width: 100%;
+  width: 90%;
   flex-wrap: wrap;
+
 }
 
-.filter-column {
-  flex: 1;
-  min-width: 200px;
-  padding: 10px;
-  box-sizing: border-box;
-}
+
 
 .dropdown-content-title {
   font-size: 20px;
@@ -1571,24 +1748,16 @@ h3.weiss {
 
 .checkbox-label-container{
   display: flex;
-  justify-content: start;
-  align-items: center;
   margin-bottom: 6px;
 }
 
-.filter-grid {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 100%;
-  gap: 15px;
-}
+
 
 .filter-column {
   width: 100%;
-  text-align: left;
-  padding: 15px;
+  padding: 10px;
+  padding-right: 0;
+  padding-left: 60px;
 }
 
 .filter-column h3 {
@@ -1655,27 +1824,46 @@ h3.weiss {
 
 .overlay-content-spoon {
   background-color: whitesmoke;
-  padding: 20px;
-  padding-top: 50px;
+  padding: 50px;
   border-radius: 8px;
   width: 100%;
   max-width: 320px;
   position: relative;
-  overflow-y: auto;
-  min-height: 95vh;
-  height: 90vh;
+  min-height: 80vh;
+  height: 80vh;
   display: flex;
+  align-items: center;
   justify-content: center;
+  overflow:hidden;
 }
 
 .overlay-close-button {
   position: absolute;
+  top: 10px;
   right: 10px;
+  width: 30px;
+  height: 30px;
   margin-bottom: 10px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 28px;
   cursor: pointer;
+}
+
+
+.overlay-close-button:active,
+.overlay-close-button:hover {
+  color: black;
+}
+
+.overlay-content-überschrift{
+  margin-bottom: 1rem;
+  color: $secondary-color;
+  text-align: center;
+}
+
+.spoon-tags-ueberschrift{
+  color: #0e9fae;
 }
 
 .recipe-list {
@@ -1687,6 +1875,7 @@ h3.weiss {
 }
 
 .recipe-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1706,11 +1895,10 @@ h3.weiss {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.recipe-image-container {
+.spoon-recipe-image-container {
   position: relative;
   width: 100%;
   height: auto;
-
   overflow: hidden;
 }
 
@@ -1725,28 +1913,90 @@ h3.weiss {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Halbtransparenter Hintergrund */
+  background: rgba(0, 0, 0, 0.8);
   color: white;
-  text-align: center;
   font-size: 1rem;
   font-weight: bold;
   padding: 8px;
   box-sizing: border-box;
   cursor: pointer;
+  text-align: left;
+}
 
+.recipe-title-overlay {
+  &:hover,
+  &:active {
+    color: $secondary-color;
+  }
+}
+
+
+cd f.spoon-trennstrich {
+  color: black;
 }
 
 .no-recipes-message {
   text-align: center;
-  color: #fff;
+  color: black;
   font-size: 1.25rem;
 }
 
 .gang-spoon{
  font-weight: bold;
   margin: 5px 0;
-  color: $detail-color;
 }
+
+.spoon-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  z-index: 9999;
+  color: white;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.disabled-spoon-button {
+  background-color: #717171 !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.no-tags {
+  background-color: $secondary-color;
+}
+
+.selected-tags {
+  background-color: $hover-color1;
+}
+
+
+.spoon-button:hover {
+  background-color: darken($secondary-color, 20%);
+}
+
+.spoon-button:active {
+  background-color: darken($secondary-color, 30%);
+  transform: scale(0.90);
+}
+
+
+.selected-tags:hover {
+  background-color: #0a6c77;
+}
+
+.selected-tags:active {
+  background-color: #075861;
+  transform: scale(0.90);
+}
+
 
 .loading-spinner {
   display: flex;
@@ -1760,6 +2010,11 @@ h3.weiss {
 
 @media screen and (max-width: 750px) {
 
+ .overlay-content-spoon {
+    min-height: 90vh;
+    height: 90vh;
+  }
+
 
   .listen-container {
     display: flex;
@@ -1769,7 +2024,7 @@ h3.weiss {
     padding:.7rem;
     color:white;
     box-sizing: border-box;
-    margin-bottom: 15px;
+    margin-bottom: 50px;
   }
 
   .custom-overlay {
@@ -1778,9 +2033,10 @@ h3.weiss {
   }
 
   .overlay-content {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     pointer-events: auto;
+    padding: 0;
   }
 
 .label-dropdown{
@@ -1918,15 +2174,15 @@ h3.weiss {
 
 /*Tableiste*/
 
-
 .tab-bar {
   position: fixed;
   bottom: 0;
-  width: 40%;
+  width: 43%;
   display: flex;
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
+  padding: 7px 0;
+  padding-bottom: 4px;
   border-radius: 5px;
 }
 
@@ -1935,7 +2191,8 @@ h3.weiss {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: transparent;
+  font-weight: bold;
   border: none;
   cursor: pointer;
   font-size: 14px;
@@ -1948,32 +2205,14 @@ h3.weiss {
 
 .tab:hover {
   background-color: #f8f9fa;
-  color: #007bff;
-}
-
-.tab::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: pre-line;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-  z-index: 10;
+  color:$hover-color1;
 }
 
 
-.tab.active::after {
-  opacity: 1;
-  visibility: visible;
+.tab.active {
+  color: $hover-color1;
 }
+
 
 .pi.pi-bars {
   margin-bottom: 5px !important;
@@ -1987,9 +2226,9 @@ h3.weiss {
     bottom: 0;
     width: 100%;
     display: flex;
-    background-color: rgb(255, 255, 255);
+    border-top: 1px solid #8f420a;
+    background-color: rgb(232, 225, 221);
     justify-content: center;
-    padding: 8px 0;
   }
 
   .tab {
@@ -1997,7 +2236,7 @@ h3.weiss {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
     font-size: 14px;
@@ -2006,11 +2245,12 @@ h3.weiss {
     text-align: center;
   }
 
-  .tab::after {
-    font-size: 10px;
-    padding: 4px 8px;
+  .tab:active {
+    background: transparent;
   }
 }
+
+
 
   button.tab {
     display: flex;
@@ -2019,7 +2259,7 @@ h3.weiss {
   }
 
   button.tab .pi {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
   }
 
 
@@ -2035,7 +2275,7 @@ h3.weiss {
 
 .header{
   display: flex;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   justify-content: space-between;
   align-items: center;
 }

@@ -3,51 +3,77 @@ import {
   ElementRef,
   Input,
   ViewChild,
-  OnChanges
+  Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef
 } from '@angular/core';
 import {Rezept} from "../../../../../models/rezepte";
 import {RezeptService} from "../../../../../services/rezepte.service";
 import {Router} from "@angular/router";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
-import {Tag} from "../../../../../models/tag";
+import { Subscription } from 'rxjs';
+import {TagService} from "../../../../../services/tags.service";
+import {TabService} from "../../../../../services/tab.service";
 
 @Component({
   selector: 'app-listeninhaltmobil',
   templateUrl: './listeninhalt-mobil.component.html'
 })
-export class ListeninhaltMobilComponent implements OnChanges{
+export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   @ViewChild(DialogComponent) Dialog!: DialogComponent;
   @ViewChild('newRecipeNameInput') newRecipeNameInput?: ElementRef<HTMLInputElement>;
+  @Input() tagsFromSidebarChanged: boolean = false;
   @Input() rezepte: Rezept[] = [];
-  @Input() gefilterteRezepte: Rezept[] = [];
+  /*@Input() selectedTagsInSidebar: boolean = false*/
+ /* @Input() gefilterteRezepte: Rezept[] = [];*/
   @Input() rezepteVerfügbar: boolean = false;
   @Input() visible: boolean = false;
+  @Output() selectedRemoveTags = new EventEmitter<string[]>();
 
+  private tagsSubscription: Subscription | undefined;
+
+  gefilterteRezepte: Rezept[] = [];
+  selectedTags: string[] = [];
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
+  isBildSelected: boolean = false;
 
-  selectedTags: string[] = [];
 
-  constructor( private rezepteService: RezeptService,  private router:Router) {}
-
-  ngOnChanges(): void {
-    // Jedes Mal, wenn sich die gefilterten Rezepte ändern, Tags neu extrahieren
-    this.updateSelectedTags();
+  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private tabService: TabService) {
   }
 
-  updateSelectedTags(): void {
-    const tags = this.gefilterteRezepte
-      .flatMap(rezept => rezept.tags || [])
-      .filter(tag => tag.selected)
-      .filter((tag, index, self) => self.indexOf(tag) === index);
-    this.selectedTags = tags.map(tag => tag.label);
+  ngOnInit(): void {
+    this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
+      this.selectedTags = tags;
+    });
+
+    //Neuer Wert der aus der Gesamtheit "rezepte" genommen wird, wird gefilterteRezepte zugeordnet
+    this.rezepteService.gefilterteRezepte$.subscribe(rezepte => {
+      this.gefilterteRezepte = rezepte;
+    })
+  }
+
+  ngOnDestroy(): void {
+    if (this.tagsSubscription) {
+      this.tagsSubscription.unsubscribe();
+    }
   }
 
   navigateForm(rezept: Rezept, event: MouseEvent) {
     event.preventDefault();
+    console.log('Button clicked');
     this.rezepteService.setCurrentRezept(rezept);
-    this.router.navigate(['/rezepterstellung'], { state: { data: rezept } });
-    console.log('Weitergegeben aus Listeninhalt', rezept)
+
+    if (rezept.bildUrl) {
+      this.isBildSelected = true;
+      console.log('isBildSelected', this.isBildSelected);
+    } else {
+      this.isBildSelected = false;
+      console.log('isBildSelected', this.isBildSelected);
+    }
+    // rezept als state-Daten an Zielseite übergeben
+    this.tabService.setActiveTab(1);
+    this.router.navigate(['/rezepterstellung'], { state: { data: rezept, isBildSelected: this.isBildSelected } });
+
+
   }
 
   showDeleteDialog(rezeptId: number) {
@@ -72,35 +98,23 @@ export class ListeninhaltMobilComponent implements OnChanges{
         () => {
           this.gefilterteRezepte = this.gefilterteRezepte.filter(rezept => rezept.id !== id);
           this.displayDeleteDialog = false;
-        },
-        error => {
-          console.error('Fehler beim Löschen des Rezepts', error);
-        }
-      );
-    } else {
-      console.log('Das Rezept wurde noch nicht geladen. Die deleteRow-Methode wird nicht aufgerufen.');
+        });
     }
   }
+
 
   openUrl(url: string | undefined): void {
     if (!url) {
       console.warn('Versuch, eine undefinierte URL zu öffnen');
       return;
     }
-
     url = url.trim();
-
-    // Füge "http://" hinzu, wenn die URL mit "www." beginnt und kein "http://" oder "https://" hat
     if (url.startsWith('www.')) {
       url = 'http://' + url;
     }
-
-    // Füge "http://" hinzu, wenn die URL weder mit "http://" noch mit "https://" beginnt
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'http://' + url;
     }
-
-    // Grundlegende Validierung, um sicherzustellen, dass die URL jetzt mit "http://" oder "https://" beginnt
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank');
     } else {
@@ -115,8 +129,9 @@ export class ListeninhaltMobilComponent implements OnChanges{
       imageElement.alt = 'Bild in voller Größe';
       imageElement.style.objectFit = 'contain';
       imageElement.style.backgroundColor = 'black';
-      imageElement.style.width = '100%';
-      imageElement.style.height = '100%';
+      imageElement.style.width = '100vw';
+      imageElement.style.height = '100vh';
+      imageElement.style.cursor = 'default';
 
       // Container für das Fullscreen-Bild
       const fullscreenContainer = document.createElement('div');
@@ -132,7 +147,8 @@ export class ListeninhaltMobilComponent implements OnChanges{
       fullscreenContainer.style.alignItems = 'center';
       fullscreenContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
       fullscreenContainer.style.overflow = 'hidden';
-
+      fullscreenContainer.style.paddingTop = '400px'
+      fullscreenContainer.style.paddingBottom = '400px'
 
       const maxDimension = Math.min(window.innerWidth, window.innerHeight);
       fullscreenContainer.style.width = `${maxDimension}px`;
@@ -153,6 +169,19 @@ export class ListeninhaltMobilComponent implements OnChanges{
 
       document.body.appendChild(fullscreenContainer);
     }
+  }
+
+  //Tag aus der Liste der ausgewählten Tags entfernen
+
+  onTagRemoved(tag: string): void {
+    this.selectedTags = this.selectedTags.filter(t => t !== tag);
+    this.selectedRemoveTags.emit(this.selectedTags);
+  }
+
+  clearTags(){
+    console.log('clear Tags');
+    this.selectedTags = [];
+    this.tagService.setSelectedTags([]);
   }
 
 }

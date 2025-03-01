@@ -1,39 +1,48 @@
-import { Component, ViewChild, Renderer2, ChangeDetectorRef, HostListener, ElementRef  } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, ElementRef  } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import {filter, take } from 'rxjs/operators';
-import {RezeptService} from "../../services/rezepte.service";
-import { Subscription } from 'rxjs';
+import { TabService } from '../../services/tab.service';
 import {Rezept} from "../../models/rezepte";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tableiste',
   templateUrl: './tableiste.component.html',
 })
-export class TableisteComponent {
-
+export class TableisteComponent implements OnInit, OnDestroy {
   @ViewChild('dropdownContent', { static: false }) dropdownContent!: ElementRef;
+  private activeTabSubscription!: Subscription;
 
-  activeTab: HTMLElement | null = null;
-  private subscription: Subscription | undefined;
+  activeTab: number = 2;
   rezepte: Rezept[] = [];
 
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService, private tabService: TabService) { }
 
+  ngOnInit() {
+    this.activeTabSubscription = this.tabService.activeTab$.subscribe(tab => {
+      this.activeTab = tab;
+    });
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  ngOnDestroy(): void {
+    if (this.activeTabSubscription) {
+      this.activeTabSubscription.unsubscribe();
     }
   }
 
   navigateListe(event: Event): void {
+    event.preventDefault();
+    this.tabService.setActiveTab(2);
     this.router.navigate(['/listen-container']);
   }
 
-  logoutUser(event: Event) {
+
+  /*logoutUser(event: Event)  {
+    console.log('Logout angestoßen in Komponente')
+    event.preventDefault();
+    this.tabService.setActiveTab(-1);
     this.authService.logout().subscribe({
       next: () => {
         this.authService.setIsAuthenticated(false);
@@ -48,7 +57,6 @@ export class TableisteComponent {
         console.error('Fehler beim Logout', err);
       }
     });
-  }
+  }*/
 
-  protected readonly event = event;
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, EventEmitter  } from '@angular/core';
 import {Router} from "@angular/router";
 import {RezeptService} from "../../../../../services/rezepte.service";
-import {TabService} from "../../../../../services/tab.service";
+import {UserInterfaceService} from "../../../../../services/userInterface.service";
 import { Observable, take} from "rxjs";
 
 @Component({
@@ -15,7 +15,7 @@ export class RezeptHinzufuegenButtonComponent implements OnInit{
   image?: null;
 
 
-  constructor(private router: Router, private rezepteService: RezeptService, private tabService: TabService) {
+  constructor(private router: Router, private rezepteService: RezeptService, private tabService: UserInterfaceService) {
     this.isBildSelected$ = this.rezepteService.isBildSelected$
   }
 

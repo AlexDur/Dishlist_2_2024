@@ -19,7 +19,7 @@ import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
 import { Subscription  } from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {TabService} from "../../services/tab.service";
+import {UserInterfaceService} from "../../services/userInterface.service";
 import {TagService} from "../../services/tags.service";
 
 
@@ -64,7 +64,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private tabService: TabService
+    private tabService: UserInterfaceService
   ) {this.isBildSelected$ = this.rezepteService.isBildSelected$
   }
 

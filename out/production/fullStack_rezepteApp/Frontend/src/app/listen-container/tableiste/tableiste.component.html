@@ -1,20 +1,19 @@
-<div class="tab-bar" >
-
-  <div class="tab">
-  <app-empfehlungen></app-empfehlungen>
+<div class="tab-bar">
+  <div class="tab" >
+    <app-empfehlungen ></app-empfehlungen>
   </div>
 
-  <div class="tab">
-    <app-rezept-hinzufuegen-button></app-rezept-hinzufuegen-button>
+  <div class="tab" [ngClass]="{'active': activeTab === 1}">
+    <app-rezept-hinzufuegen-button  ></app-rezept-hinzufuegen-button>
   </div>
 
-  <div class="tab" (click)="navigateListe($event)">
+  <div class="tab" [ngClass]="{'active': activeTab === 2}" (click)="navigateListe($event)">
     <i class="pi pi-bars"></i>
     <span>DishList</span>
   </div>
 
-  <button class="tab logout-button p-0" (click)="logoutUser($event)">
+<!--  <button class="tab logout-button p-0" (click)="logoutUser($event)" [ngClass]="{'active': activeTab === -1}">
     <i class="pi pi-sign-out"></i>
     <span>Logout</span>
-  </button>
+  </button>-->
 </div>

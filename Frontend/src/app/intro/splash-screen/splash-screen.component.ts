@@ -1,3 +1,5 @@
+/*TODO:Styling wie in Google PLay Console Screenshot*/
+
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 

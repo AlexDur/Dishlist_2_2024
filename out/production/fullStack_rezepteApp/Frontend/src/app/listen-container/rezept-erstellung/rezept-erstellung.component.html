@@ -1,8 +1,15 @@
-<div>
-  <div class="zentriertes-formular">
+<div class="rezept-erstellung">
+  <div class="zentriertes-formular-erstellung">
     <div class="neues-rezept">Neues Dish</div>
-    <form [formGroup]="rezeptForm" (ngSubmit)="handleClick($event)">
+    <form [formGroup]="rezeptForm" >
       <div class="p-fluid">
+
+        <div class="p-field">
+          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
+                 (blur)="onFieldBlur('name')">
+          <label for="rezeptname"><span class="required"></span></label>
+          <div *ngIf="showNameError"></div>
+        </div>
 
         <div class="p-field">
           <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
@@ -12,28 +19,19 @@
         </div>
 
 
-        <div class="p-field">
-          <input class="inputfeld" placeholder="Rezeptname" type="text" id="rezeptname" formControlName="name" pInputText
-                  (blur)="onFieldBlur('name')">
-          <label for="rezeptname"><span class="required"></span></label>
-          <div *ngIf="showNameError"></div>
-        </div>
-
-
         <div class="flex flex-row">
           <div class="erstellung-kategorie">Foto</div>
         </div>
 
         <div class="flex_bildoptionen">
           <app-foto-upload [rezeptForm]="rezeptForm" (imageUploaded)="onImageUploaded($event)"></app-foto-upload>
-          <!--<app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>-->
-          <app-camera></app-camera>
+          <app-camera (imageUploaded)="onImageUploaded($event)"></app-camera>
         </div>
 
         <div>
           <div class="erstellung-kategorie">Kategorie</div>
           <ng-container *ngFor="let category of categories">
-            <button (click)="setCategory(category)" class="category-button" [ngClass]="{'active': category.selected}">
+            <button (click)="setCategory( category)" class="category-button" [ngClass]="{'active': category.selected}">
               {{ category.name }}
             </button>
 
@@ -48,7 +46,7 @@
           </ng-container>
         </div>
 
-        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton>
+        <button [disabled]="isLoading || !isFormValid()" class="general-button" type="submit" pButton (click)="submitForm($event)">
           {{ isUpdateMode ? 'Aktualisieren' : 'Hinzufügen' }}
         </button>
 

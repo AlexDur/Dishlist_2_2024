@@ -3,7 +3,6 @@ import {
   OnInit,
   EventEmitter,
   Output,
-  Input,
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -12,16 +11,16 @@ import {
 import { Rezept } from "../../models/rezepte";
 import { Tag } from "../../models/tag";
 import { RezeptService } from "../../services/rezepte.service";
-import { Router, NavigationEnd  } from "@angular/router";
-import { catchError, Observable, tap, throwError } from "rxjs";
+import { Router  } from "@angular/router";
+import { Observable, } from "rxjs";
 import { HttpResponse } from '@angular/common/http';
 import {RezeptAntwort} from "../../models/rezeptAntwort";
 import {DEFAULT_TAGS} from "../../models/default_tag";
 import {TagType} from "../../models/tagType";
-import { filter } from 'rxjs/operators';
-import { Subscription, combineLatest  } from 'rxjs';
+import { Subscription  } from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {TabService} from "../../services/tab.service";
+import {TagService} from "../../services/tags.service";
 
 
 @Component({
@@ -31,10 +30,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RezeptErstellungComponent implements OnInit, OnDestroy {
   @Output() newRecipeCreated = new EventEmitter<Rezept>();
-  @Input() rezepte: Rezept[] = [];
-  @Input() gefilterteRezepte: Rezept[] = [];
 
   private subscriptions: Subscription = new Subscription();
+  private rezeptSubscription: Subscription | undefined;
+
   newRecipe: any = {};
   tags: Tag[] = [...DEFAULT_TAGS];
 
@@ -43,6 +42,9 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   nametouched: boolean = false;
   on_adtouched: boolean = false;
   selectedCategory: string | null = null;
+  isBildSelected$: Observable<boolean>;
+  isBildSelected: boolean = false;
+  selectedFile: File | null = null;
 
   rezeptForm!: FormGroup;
   isUpdateMode: boolean = false;
@@ -51,9 +53,9 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
 
   categories = [
-    {name: 'Gänge', selected: false},
-    {name: 'Küche', selected: false},
-    {name: 'Nährwert', selected: false}
+    {name: 'Mahlzeit', selected: false},
+    {name: 'Landesküche', selected: false},
+    {name: 'Ernährungsweise', selected: false}
   ];
 
 
@@ -61,8 +63,9 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     private rezepteService: RezeptService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder
-  ) {
+    private fb: FormBuilder,
+    private tabService: TabService
+  ) {this.isBildSelected$ = this.rezepteService.isBildSelected$
   }
 
 
@@ -133,6 +136,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     }
 
     category.selected = !category.selected;
+    console.log('Updated Selected Category:', this.selectedCategory);
     this.cdr.detectChanges();
   }
 
@@ -164,12 +168,12 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
   private mapToTagType(type: string): TagType | null {
     switch (type) {
-      case 'Gänge':
-        return TagType.GÄNGE;
-      case 'Küche':
-        return TagType.KÜCHE;
-      case 'Nährwert':
-        return TagType.NÄHRWERT;
+      case 'Mahlzeit':
+        return TagType.MAHLZEIT;
+      case 'Landesküche':
+        return TagType.LANDESKÜCHE;
+      case 'Ernährungsweise':
+        return TagType.ERNÄHRUNGSWEISE;
       default:
         return null; // Für ungültige Typen
     }
@@ -214,11 +218,10 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-  handleClick(event: Event) {
+  submitForm(event: Event) {
     event.preventDefault();
 
     const rezeptToSave = this.rezeptForm.value as Rezept; // Rezept aus dem Formular erstellen
-
 
     if (this.isUpdateMode) {
       rezeptToSave.id = this.newRecipe.id; // ID des bestehenden Rezepts setzen
@@ -230,36 +233,42 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       rezeptToSave.bildUrl = this.newRecipe.bildUrl;
     }
 
-
     this.isLoading = true;
 
     this.saveRecipe(rezeptToSave).subscribe({
       next: (response) => {
-        console.log(this.isUpdateMode ? 'Rezept erfolgreich aktualisiert' : 'Rezept erfolgreich gespeichert', response);
-        this.router.navigate(['/listen-container']);
+
+        this.rezeptForm.get('image')?.setValue(null);
+        this.rezepteService.setImage(null);
+        this.rezeptForm.reset();
+        this.selectedFile = null;
+        this.rezepteService.setIsBildSelected(false);
+        this.isLoading = false;
+
+        this.router.navigate(['/listen-container']).then(() => {
+          this.tabService.setActiveTab(2);
+        });
+
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Fehler beim Speichern/Aktualisieren:', error);
         this.isLoading = false;
       }
     });
   }
 
+
+
   //mit window.history.state wird Objekt als Referenz übergeben
   loadRezeptToEdit() {
     const state = window.history.state;
-    console.log('Router State:', state);
     if (state && state['data']) {
       this.newRecipe = state['data'];
-      this.isUpdateMode = !!this.newRecipe.id; // Setze Update-Modus basierend auf der ID
-      console.log('Geladene Rezeptdaten:', this.newRecipe);
+      this.isUpdateMode = !!this.newRecipe.id;
+      this.isBildSelected = state['isBildSelected'] || false;
+      console.log('edit Data', state)
     }
   }
-
-
-
-
 
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const formData = this.createFormData(rezeptToSave);
@@ -305,6 +314,7 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
         }))
         : []
     };
+
   }
 
 

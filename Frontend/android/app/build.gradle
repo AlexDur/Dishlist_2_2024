@@ -1,39 +1,33 @@
 apply plugin: 'com.android.application'
 
 android {
-  namespace "com.rezepte_app"
-  compileSdk rootProject.ext.compileSdkVersion
-
-  // Fügen Sie den signingConfigs-Block hinzu
-  signingConfigs {
-    release {
-      storeFile file("C:/Users/alexd/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/GooglePlayStore/release-key-feb16_25.jks")
-      storePassword project.MY_RELEASE_STORE_PASSWORD
-      keyAlias project.MY_RELEASE_KEY_ALIAS
-      keyPassword project.MY_RELEASE_KEY_PASSWORD
+    namespace "de.dishlist.app"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "de.dishlist.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
     }
-  }
-
-  defaultConfig {
-    applicationId "com.rezepte_app"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 147
-    versionName "1.1"
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    manifestPlaceholders = [excludeScreens: "large"]
-    aaptOptions {
-      ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
-  }
+}
 
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      signingConfig signingConfigs.release // Verweisen Sie auf die signingConfig für den Release-Build
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
-  }
 }
 
 dependencies {

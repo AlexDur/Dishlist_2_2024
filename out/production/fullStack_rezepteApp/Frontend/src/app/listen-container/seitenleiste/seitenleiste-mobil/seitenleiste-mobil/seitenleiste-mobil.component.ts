@@ -1,57 +1,93 @@
-import { Component, HostListener, EventEmitter, Input, ViewChild, OnInit, Output, OnDestroy } from '@angular/core';
-import { OverlayPanel } from 'primeng/overlaypanel';
-import { Rezept } from '../../../../models/rezepte';
-import { RezeptService } from '../../../../services/rezepte.service';
-import { Tag } from '../../../../models/tag';
-import { Subscription } from 'rxjs';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {Rezept} from '../../../../models/rezepte';
+import {RezeptService} from '../../../../services/rezepte.service';
+import {Tag} from '../../../../models/tag';
+import {Subject, Subscription} from 'rxjs';
 import {DEFAULT_TAGS} from "../../../../models/default_tag";
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {TagService} from "../../../../services/tags.service";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
   templateUrl: './seitenleiste-mobil.component.html'
 })
-export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
-  @Output() gefilterteRezepte: EventEmitter<Rezept[]> = new EventEmitter<Rezept[]>();
+export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges {
+  // 1. Eingabe- und Ausgabe-Properties
   @Input() rezepte: Rezept[] = [];
   @Input() isMobile?: boolean;
-  @ViewChild('op') op!: OverlayPanel;
-  selectedTags: string[] = [];
-  rezeptGeladen: boolean = false;
+
+  // 2. ViewChild-Referenzen
+  @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
+
+  // 3. Private und geschützte Eigenschaften
+  /*private subscription: Subscription | undefined;*/
+  private searchSubject = new Subject<string>();
+
+  // 4. Öffentliche Eigenschaften
+
+  subscription: Subscription = new Subscription();
   originalRezepte: Rezept[] = [];
-  private subscription: Subscription;
   tags: Tag[] = [...DEFAULT_TAGS];
-  isDropdownOpen: boolean = false;
+  searchText: string = '';
+  isOverlayVisible = false;
+  filteredRecipes: Rezept[] = [];
+  selectedTags: string[] = [];
+  seletedTagInSidebar: boolean = false
+
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService) {
+  constructor(private rezepteService: RezeptService,  private tagService: TagService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
-      this.updateTagCounts();
+      this.updateTagCounts(this.originalRezepte);
     });
-  }
-
-  @HostListener('document:click', ['$event'])
-  closeDropdown(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    const dropdownContent = document.querySelector('.dropdown-content');
-    const filterButton = document.querySelector('.filter-button-container');
-    const isInsideOverlay = this.op?.el.nativeElement.contains(target);
-
-    // Prüft, ob der Klick auf eine Checkbox oder innerhalb des Dropdowns erfolgte
-    const isClickInside = dropdownContent?.contains(target) || isInsideOverlay;
-
-    if (this.isDropdownOpen && !isClickInside) {
-      this.op.hide();
-      this.isDropdownOpen = false;
-    }
   }
 
   ngOnInit(): void {
-    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte  => {
+      this.subscription.add(
+      this.tagService.selectedTags$.subscribe(tags => {
+        this.selectedTags = tags;
+        this.applyFilters();
+
+      })
+    );
+
+
+    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.originalRezepte = [...rezepte];
-      this.tags= [...DEFAULT_TAGS.map(tag => ({ ...tag, selected: false }))];
       this.resetRezepte();
-      this.updateTagCounts();
+      this.updateTagCounts(this.originalRezepte);
     });
+
+
+    // Debounce für Suchtext
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged() // Nur Emmission, wenn Suchtext sich ändert
+      )
+      .subscribe(searchText => {
+        this.applyFilters();
+      });
+
+    this.tagService.setSelectedTags(this.tags.filter(tag => tag.selected).map(tag => tag.label));
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedTags']) {
+      this.updateTagsSelection();
+
+    }
   }
 
   ngOnDestroy() {
@@ -60,46 +96,37 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadRezept(): Promise<void> {
-    return new Promise<void>(resolve => {
-      this.rezeptGeladen = true;
-      resolve();
-    });
-  }
-
-  closeOverlay(): void {
-    this.op.hide(); // Schließt das Overlay
-    this.isDropdownOpen = false; // Setzt den Status auf "geschlossen"
-  }
-
-  toggleDropdown(event: MouseEvent): void {
-    console.log('Dropdown toggled:', this.isDropdownOpen);
-    if (this.isDropdownOpen) {
-      this.op.hide(); // Schließt das Overlay
-      this.isDropdownOpen = false;
-      // Entferne die 'active' Klasse vom Button, wenn das Overlay geschlossen wird
-      this.updateFilterButtonState(false);
-    } else {
-      this.op.show(event); // Öffnet das Overlay
-      this.isDropdownOpen = true;
-      // Füge die 'active' Klasse zum Button hinzu, wenn das Overlay geöffnet wird
-      this.updateFilterButtonState(true);
-    }
-    event.stopPropagation(); // Verhindert das Schließen beim Klick
+  toggleTagInSidebar(tag: Tag): void {
+    this.tagService.toggleTag(tag.label);
   }
 
 
-  updateFilterButtonState(isActive: boolean): void {
-    const filterButton = document.querySelector('.filter-button');
-    if (filterButton) {
-      if (isActive) {
-        filterButton.classList.add('active');
-      } else {
-        filterButton.classList.remove('active');
-      }
+  @HostListener('document:click', ['$event'])
+  @HostListener('document:touchstart', ['$event'])
+  closeOverlay(event: Event): void {
+    const content = document.querySelector('.overlay-content');
+    if (content && !content.contains(event.target as Node)) {
+      this.isOverlayVisible = false;
     }
   }
 
+  closeOverlayButton(event: Event): void {
+    this.isOverlayVisible = false;
+  }
+
+  toggleOverlay(event: Event): void {
+    event.stopPropagation();
+    this.isOverlayVisible = !this.isOverlayVisible;
+
+    if (this.isOverlayVisible) {
+      this.updateTagsSelection();
+    }
+  }
+
+
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
+  }
 
   trackById(index: number, item: Tag): any {
     return item.id || index;
@@ -109,75 +136,56 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy {
     this.rezepte = [...this.originalRezepte];
   }
 
-  toggleTag(tag: Tag): void {
-    this.updateSelectedTags();
-    this.filterRezepte();
-
-  }
-
-  updateSelectedTags(): void {
-    this.selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
-  }
-
-  filterRezepte(): void {
-    // Wenn keine Tags ausgewählt sind, alle Rezepte zurückgeben
-    if (this.selectedTags.length === 0) {
-      this.gefilterteRezepte.emit(this.originalRezepte);
-      return;
-    }
-
-    // Beginne mit den originalen Rezepten als Ausgangspunkt
-    let gefilterteRezepte = [...this.originalRezepte];
-
-    // Filtere basierend auf jedem ausgewählten Tag
-    this.selectedTags.forEach(selectedTag => {
-      gefilterteRezepte = gefilterteRezepte.filter(rezept =>
-        rezept.tags?.some(tag => tag.label === selectedTag)
-      );
-    });
-
-    // Gebe die gefilterten Rezepte aus
-    this.gefilterteRezepte.emit(gefilterteRezepte);
-  }
-
-
-  private updateTagCounts(): void {
+  private updateTagCounts(rezepte: Rezept[]): void {
     const zaehler: { [key: string]: number } = {};
-    this.originalRezepte.forEach(rezept => {
+
+    rezepte.forEach(rezept => {
       rezept.tags?.forEach(tag => {
         if (tag && tag.label) {
-          const kategorieName = tag.label;
-          zaehler[kategorieName] = (zaehler[kategorieName] || 0) + 1;
+          zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
+        } else {
+          console.warn(` Rezept "${rezept.name}" enthält einen ungültigen Tag:`, tag);
         }
       });
     });
 
+    this.updateTagsWithCounts(zaehler);
+  }
+
+
+
+  private updateTagsWithCounts(zaehler: { [key: string]: number }): void {
     this.tags.forEach(tag => {
       tag.count = zaehler[tag.label] || 0;
     });
   }
 
+  //Zur Filterung der Tags
   getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gänge');
+    return this.tags.filter(tag => tag.type === 'Mahlzeit');
   }
-
   getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Küche');
+    return this.tags.filter(tag => tag.type === 'Landesküche');
+  }
+  getErnaehrungsweiseTags(): Tag[] {
+    return this.tags.filter(tag => tag.type == "Ernährungsweise")
   }
 
-  getNaehrwertTags(): Tag[] {
-    return this.tags.filter(tag => tag.type == "Nährwert")
+  onSearchTextChange(): void {
+    this.searchSubject.next(this.searchText);
   }
 
-  updateTagCount(): void {
-    this.tags.forEach(tag => tag.count = 0);
-    this.rezepte.forEach(rezept => {
-      rezept.tags?.forEach(rezeptTag => {
-        const foundTag = this.tags.find(tag => tag.label === rezeptTag.label);
-        if (foundTag) {
-          foundTag.count++;
-        }
-      });
+  applyFilters(): void {
+    this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe(filteredRecipes => {
+      this.filteredRecipes = filteredRecipes;
+      this.updateTagCounts(this.filteredRecipes);
+    });
+
+  }
+
+  private updateTagsSelection(): void {
+    this.tags.forEach(tag => {
+      tag.selected = this.selectedTags.includes(tag.label);
     });
   }
 }

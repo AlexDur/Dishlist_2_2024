@@ -1,18 +1,17 @@
 <div>
   <div class="listen-container">
     <div>
-      <app-seitenleiste-mobil (gefilterteRezepte)="onRezepteFiltered($event)" [rezepte]="rezepte"></app-seitenleiste-mobil>
-      <app-listeninhaltmobil [rezepteVerfügbar]="rezepteVerfuegbar" [gefilterteRezepte]="gefilterteRezepte"></app-listeninhaltmobil>
+      <app-seitenleiste-mobil  [rezepte]="rezepte"></app-seitenleiste-mobil>
+      <app-listeninhaltmobil   [rezepteVerfügbar]="rezepteVerfuegbar" ></app-listeninhaltmobil>
     </div>
   </div>
-<!--  <app-tableiste></app-tableiste>-->
 </div>
 
 
 
 
 
-<!--() i st Event-Bindung. gefilterteRezepte ist Output-Event von Seitenleiste.-->
+<!--() ist Event-Bindung. gefilterteRezepte ist Output-Event von Seitenleiste.-->
 <!--Handler "onRe..($event)" wird aufgerufen, wenn gefiltRez...von app-seit. emittiert wird-->
 <!--$event enthält das Datenobjekt, das vom Event Emitter gesendet wird; hier die gefilterten Rezepte-->
 <!--  <app-seitenleiste *ngIf="!isMobile" (gefilterteRezepte)="onRezepteFiltered($event)"></app-seitenleiste>-->

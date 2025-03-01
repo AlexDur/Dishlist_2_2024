@@ -4,8 +4,9 @@ import { Observable, throwError  } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
-import { of, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';  // Importiere 'map' hier
+import { of, BehaviorSubject, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {TabService} from "./tab.service";  // Importiere 'map' hier
 
 
 
@@ -13,7 +14,7 @@ import { map } from 'rxjs/operators';  // Importiere 'map' hier
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  /*private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
   private backendUrl = environment.apiUrl;
@@ -23,7 +24,7 @@ export class AuthService {
   accountDeleted$ = this.accountDeletedSubject.asObservable();
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tabService: TabService) {
     const storedAuth = localStorage.getItem('isAuthenticated') === 'true';
     this.isAuthenticatedSubject.next(storedAuth);
   }
@@ -35,10 +36,12 @@ export class AuthService {
       map((response: any) => {
         const token = response.token;
 
+
         if (token) {
           localStorage.setItem('jwt_token', token);
           localStorage.setItem('isAuthenticated', 'true');
           this.isAuthenticatedSubject.next(true);
+          this.tabService.resetTab();
         } else {
           console.error('Kein Token in der Antwort vorhanden');
           this.isAuthenticatedSubject.next(false);
@@ -58,24 +61,29 @@ export class AuthService {
   logout(): Observable<any> {
     const authToken = localStorage.getItem('jwt_token');
 
-    if (authToken && /^[A-Za-z0-9-_=.]+$/.test(authToken)) {
-      localStorage.removeItem('jwt_token');
-      localStorage.removeItem('isAuthenticated');
+    // Überprüfen, ob das authToken existiert und einem gültigen Format entspricht
+    if (authToken && /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(authToken)) {
 
-
+      // HTTP-POST-Request für die Abmeldung
       return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${authToken}` }
       }).pipe(
+        tap(response => {
+          console.log("Antwort vom Server:", response);
+          // Lokale Speicherung löschen (auch wenn Logout erfolgreich war)
+          localStorage.clear();
+        }),
         catchError((error: HttpErrorResponse) => {
           console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
-          return of(null);
+          return of(null); // Fehlerbehandlung: Null zurückgeben, damit keine weiteren Aktionen folgen
         })
       );
     } else {
       console.error('Ungültiger Token oder Token fehlt');
-      return of(null); // Rückgabe von null, falls kein Token vorhanden ist
+      return of(null); // Kein Token vorhanden oder Token ungültig
     }
   }
+
 
 
   setIsAuthenticated(status: boolean): void {
@@ -83,12 +91,12 @@ export class AuthService {
   }
 
 
-  /**
+  /!**
    * Sendet Registrierungsdaten des Nutzers an das Backend
    * @param email
    * @param password
    * @returns Ein Observable mit der Antwort des Servers
-   */
+   *!/
   register(email: string, password: string): Observable<any> {
     this.body = { email, password };
 
@@ -131,5 +139,5 @@ export class AuthService {
   setAccountDeleted(status: boolean) {
     this.accountDeletedSubject.next(status);
   }
-
+*/
 }

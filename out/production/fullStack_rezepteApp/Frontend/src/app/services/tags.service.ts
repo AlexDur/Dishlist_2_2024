@@ -3,7 +3,6 @@ import {BehaviorSubject, forkJoin, map, Observable, throwError} from 'rxjs';
 import { Tag } from '../models/tag';
 import {HttpClient} from "@angular/common/http";
 import {RezeptService} from "./rezepte.service";
-import {environment} from "../../environments/environment";
 import {DEFAULT_TAGS} from "../models/default_tag";
 
 
@@ -12,14 +11,27 @@ import {DEFAULT_TAGS} from "../models/default_tag";
 })
 export class TagService {
   private tagsSubject = new BehaviorSubject<Tag[]>([]);
-  public tags$ = this.tagsSubject.asObservable();
-  private backendUrl = environment.apiUrl;
-  tags: Tag[] = DEFAULT_TAGS
 
-  constructor(private http: HttpClient, private rezepteService: RezeptService) {}
+  // BehaviorSubject hält die aktuellen selectedTags
+  private selectedTagsSubject = new BehaviorSubject<string[]>([]);
+  selectedTags$ = this.selectedTagsSubject.asObservable();
 
-  getTags(): Tag[] {
-    return this.tags;
+  constructor(private http: HttpClient) {}
+
+
+  /*setSelectedTags(tags: string[]): void {
+    this.selectedTagsSubject.next(tags);
+  }*/
+
+  //Zum Hinzufügen und Entfernen von Tags (beides in Seiteneleiste und Entfernen auch in Filterkreisen)
+  toggleTag(tag: string): void {
+    const currentTags = this.selectedTagsSubject.value;
+    if (currentTags.includes(tag)) {
+      this.setSelectedTags(currentTags.filter(t => t !== tag));
+    } else {
+      this.setSelectedTags([...currentTags, tag]);
+    }
+    this.updateSelectedTags(this.tagsSubject.value);
   }
 
   updateTag(tag: Tag) {
@@ -30,11 +42,11 @@ export class TagService {
     return this.http.put<Tag>(`/${tag.id}`, tag);
   }
 
-  updateSelectedTags(selectedTags: Tag[]): void {
+  //Hilfsfunktion essentiell für UpdateDates (unklar wieso ausgegraut)
+  private updateSelectedTags(selectedTags: Tag[]): void {
     const validTags = selectedTags.filter(tag => tag.id !== undefined);
 
     if (validTags.length === 0) {
-      console.error('Keine gültigen Tags zum Aktualisieren gefunden.');
       return;
     }
 
@@ -49,30 +61,8 @@ export class TagService {
     });
   }
 
-  getSelectedTags(): Tag[] {
-    return this.tagsSubject.getValue();
-  }
-
-  countTags(tagLabel: string): Observable<number> {
-    return this.rezepteService.rezepte$.pipe(
-      map(rezepte =>
-        rezepte.reduce((count, rezept) => {
-          const tagExists = rezept.tags?.some(tag => tag.label === tagLabel);
-          return count + (tagExists ? 1 : 0);
-        }, 0)
-      )
-    );
-  }
-
-  getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Gerichtart');
-  }
-
-  getKuechenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Küche');
-  }
-
-  getNaehrwertTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Nährwert');
+  setSelectedTags(tags: string[]): void {
+    console.log('Aktualisierte selectedTags:', tags);
+    this.selectedTagsSubject.next(tags);
   }
 }

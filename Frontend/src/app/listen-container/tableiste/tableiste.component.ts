@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, OnDestroy, ElementRef  } from '@angular/c
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import {filter, take } from 'rxjs/operators';
-import { TabService } from '../../services/tab.service';
+import { UserInterfaceService } from '../../services/userInterface.service';
 import {Rezept} from "../../models/rezepte";
 import { Subscription } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class TableisteComponent implements OnInit, OnDestroy {
   rezepte: Rezept[] = [];
 
 
-  constructor(private router: Router, private authService: AuthService, private tabService: TabService) { }
+  constructor(private router: Router, private authService: AuthService, private tabService: UserInterfaceService) { }
 
   ngOnInit() {
     this.activeTabSubscription = this.tabService.activeTab$.subscribe(tab => {

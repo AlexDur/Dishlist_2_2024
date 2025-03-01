@@ -6,8 +6,8 @@ import {AuthService} from "../../services/auth.service";
   selector: 'app-nutzer-anmeldung',
   templateUrl: './nutzer-anmeldung.component.html',
 })
-export class LoginComponent implements OnInit{
-  @Input() isAccountDeleted: boolean = false;
+export class LoginComponent{
+  /*@Input() isAccountDeleted: boolean = false;
   email: string = '';
   password: string = '';
   passwordInvalid = false;
@@ -74,5 +74,5 @@ export class LoginComponent implements OnInit{
   navigateLanding(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/landing']);
-  }
+  }*/
 }

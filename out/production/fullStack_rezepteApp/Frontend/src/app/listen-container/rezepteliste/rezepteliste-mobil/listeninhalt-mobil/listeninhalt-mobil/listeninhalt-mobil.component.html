@@ -1,5 +1,11 @@
 <div>
-<app-filterkreise *ngFor="let tag of selectedTags" [label]="tag"></app-filterkreise>
+<div class="filter-kreis-container">
+  <div *ngIf="selectedTags.length > 0">
+    <app-filterkreise  *ngFor="let tag of selectedTags" [label]="tag"  (tagRemoved)="onTagRemoved(tag)" class="filterkreis">
+    </app-filterkreise>
+  </div>
+  <div *ngIf="selectedTags.length > 0" class="filterkreis-clear" (click)="clearTags()" icon="pi pi-trash">X</div>
+</div>
 <div class="container-listeninhalt">
 
   <div *ngFor="let rezept of gefilterteRezepte">
@@ -8,11 +14,16 @@
 
         <div class="rezept-image-container">
           <img
-            *ngIf="rezept.bildUrl"
+            *ngIf="rezept.bildUrl; else defaultImage"
             [src]="rezept.bildUrl"
             alt="{{ rezept.name }}"
             (click)="openImageFullscreen(rezept.bildUrl)"
           />
+          <ng-template #defaultImage>
+            <div>
+              <img src="assets/plate.webp" alt="Standardbild" style="background-color: #D5D3D3FF;">
+            </div>
+          </ng-template>
         </div>
         <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
         <div class="p-card-footer">
