@@ -1,16 +1,14 @@
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, finalize, Observable, tap, throwError, map} from 'rxjs';
+import {HttpClient, HttpHeaders, HttpResponse, HttpParams} from '@angular/common/http';
+import {EventEmitter, Injectable, NgZone } from '@angular/core';
+import {BehaviorSubject,  Observable,  throwError, of, forkJoin } from 'rxjs';
+import { switchMap, map, catchError, tap,mergeMap  } from 'rxjs/operators';
 import {Rezept} from '../models/rezepte';
 import {environment} from '../../environments/environment';
 import {RezeptAntwort} from "../models/rezeptAntwort";
 import {AuthService} from "./auth.service";
-import {TagType} from "../models/tagType";
-import {DEFAULT_TAGS} from "../models/default_tag";
-import {dishTypeMapping} from "../utils/dishTypeMapping";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-
+import {spoonDataMapping} from "../utils/spoonDataMapping";
+import {reverseSpoonDataMapping} from "../utils/reverseSpoonDataMapping";
+import {SpoonacularApiAntwortGesamt} from "../models/SpoonacularApiAntwort";
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +16,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 export class RezeptService {
+  private currentRecipe: any = {};
   public onRezeptUpdated: EventEmitter<void> = new EventEmitter();
   private backendUrl = environment.apiUrl;
-
-  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
-
-  //Observable rezepte$ wird durch currentRezeptSubject.asObservable() erstellt.
+  //Observable rezepte$ wird durch gefilterteRezepteSubject.asObservable() erstellt.
   //Das ist das abbonnierbar für Interessenten
-  public rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
+  private rezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
+  private gefilterteRezepteSubject = new BehaviorSubject<Rezept[]>([]);
+  rezepte$: Observable<Rezept[]> = this.rezepteSubject.asObservable();
+  gefilterteRezepte$ = this.gefilterteRezepteSubject.asObservable();
+
   public kategorieZaehlerSubject: BehaviorSubject<{[kategorie: string]: number}> = new BehaviorSubject({});
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private currentRezeptSubject: BehaviorSubject<Rezept | null> = new BehaviorSubject<Rezept | null>(null);
@@ -37,34 +37,47 @@ export class RezeptService {
   private imageSubject: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
   public image$: Observable<File | null> = this.imageSubject.asObservable();
 
+  private isBildSelectedSubject = new BehaviorSubject<boolean>(false);
+  isBildSelected$ = this.isBildSelectedSubject.asObservable();
+
   private spoonacularRezepteSubject: BehaviorSubject<Rezept[]> = new BehaviorSubject<Rezept[]>([]);
-  public spoonacularRezepte$: Observable<Rezept[]> = this.spoonacularRezepteSubject.asObservable();
-  private imageUrl: string = '';
 
 
-  constructor(private http: HttpClient, private authService: AuthService, private fb: FormBuilder) {}
+
+  constructor(private http: HttpClient, private authService: AuthService, private ngZone: NgZone) {
+    console.log('Initial isBildSelectedSubject value:', this.isBildSelectedSubject.getValue());
+  }
 
 
   private getJsonHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
+/*    const token = this.authService.getToken();*/
     let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${token}`)
+    headers = headers/*.set('Authorization', `Bearer ${token}`)*/
       .set('Accept', 'application/json');
     return headers;
   }
 
   // Methode zum Setzen des Bildes
-  public setImage(file: File): void {
-    this.imageSubject.next(file);
+  setImage(image: File | null): void {
+    this.imageSubject.next(image);
   }
 
+  setIsBildSelected(value: boolean) {
+    this.isBildSelectedSubject.next(value);
+  }
+
+  setImageSelected(image: any): void {
+    this.isBildSelectedSubject.next(!!image);
+  }
+
+  // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject
   getUserRezepte(): Observable<RezeptAntwort[]> {
-    const token = this.getToken();
+  /*  const token = this.getToken();
     if (!token) {
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
-    }
+    }*/
 
-    const headers = this.createHeaders(token);
+    const headers = this.createHeaders();
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => this.handleResponse(rezepte)),
@@ -72,23 +85,26 @@ export class RezeptService {
     );
   }
 
-  private getToken(): string | null {
+/*  private getToken(): string | null {
     return localStorage.getItem('jwt_token');
-  }
+  }*/
 
-  private createHeaders(token: string): HttpHeaders {
+  private createHeaders(): HttpHeaders {
     return this.getJsonHeaders()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`);
+     /* .set('Authorization', `Bearer ${token}`);*/
   }
 
   private handleResponse(rezepte: RezeptAntwort[]): void {
     if (!rezepte || !Array.isArray(rezepte)) {
       this.rezepteSubject.next([]);
+      this.gefilterteRezepteSubject.next([]);
     } else if (rezepte.length === 0) {
       this.rezepteSubject.next([]);
+      this.gefilterteRezepteSubject.next([]);
     } else {
-      this.rezepteSubject.next(rezepte);
+      this.rezepteSubject.next(rezepte); // Alle Rezepte speichern
+      this.gefilterteRezepteSubject.next(rezepte);
     }
   }
 
@@ -107,6 +123,7 @@ export class RezeptService {
   }
 
 
+
   setCurrentRezept(rezept: Rezept) {
     this.currentRezeptSubject.next(rezept);
   }
@@ -116,31 +133,34 @@ export class RezeptService {
     this.currentRezeptSubject.next(null);
   }
 
-// Validierungsfunktion für das Rezept
-   validateRezept(rezept: Rezept): boolean {
+ // Validierungsfunktion für manuell erstelltes Rezept
+  validateRezept(rezept: Rezept): boolean {
 
-     if (!rezept.name?.trim()) {
-       return false;
-     }
+    if (!rezept.name?.trim()) {
+      return false;
+    }
 
-     if (!rezept.onlineAdresse?.trim()) {
-       return false;
-     }
+    if (!rezept.onlineAdresse?.trim()) {
+      return false;
+    }
 
-     if (rezept.tags?.length) { //  Optional chaining und truthy check
-       for (const tag of rezept.tags) {
-         if (!tag.label?.trim()) { // Optional chaining und trim() kombiniert
-           return false;
-         }
+    if (rezept.tags?.length) {
+      for (const tag of rezept.tags) {
+        if (!tag.label?.trim()) {
+          return false;
+        }
 
-         if (!tag.type?.trim()) { // Optional chaining und trim() kombiniert
-           return false;
-         }
-       }
-     }
+        if (!tag.type?.trim()) {
+          return false;
+        }
+      }
+    }
 
     return true;
   }
+
+
+
 
 
 
@@ -155,46 +175,47 @@ export class RezeptService {
    */
   createRezept(rezept: Rezept, formData: FormData): Observable<HttpResponse<RezeptAntwort>> {
     this.loadingSubject.next(true);
-
-    console.log('FormData-Inhalte vor dem Senden:');
     formData.forEach((value, key) => {
       console.log(key, value);
     });
 
-    // Validierung des Rezeptes
-    if (!this.validateRezept(rezept)) {
-      console.error('Rezept ist ungültig. Die Erstellung wird abgebrochen.');
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
-      return throwError(() => new Error('Rezept ist ungültig.')); // Fehler zurückgeben
+    const isSpoonacularRezept = rezept.onlineAdresse?.startsWith('https://www.foodista.com');
+
+    const isValid = isSpoonacularRezept
+      ? this.validateSpoonRezept(rezept)
+      : this.validateRezept(rezept);
+
+    if (!isValid) {
+      this.loadingSubject.next(false);
+      return throwError(() => new Error('Rezept ist ungültig.'));
     }
 
-    const token = localStorage.getItem('jwt_token'); // Hier holen wir das Token aus dem localStorage
+
+    const token = localStorage.getItem('jwt_token'); // Token aus localStorage holen
 
     if (!token) {
-      console.error('Kein Token gefunden. Bitte loggen Sie sich erneut ein.');
       this.loadingSubject.next(false); // Ladezustand zurücksetzen
       return throwError(() => new Error('Token fehlt.'));
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  /*  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);*/
 
     console.log('Formdata in service.ts', formData)
 
     // Versand der Anfrage
     return this.http.post<RezeptAntwort>(`${this.backendUrl}/api/rezepte/create`, formData, {
-      observe: 'response',
-      headers: headers
+      observe: 'response'/*,
+      headers: headers*/
     }).pipe(
       tap(response => {
-        console.log('Server Response:', response);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
       }),
       catchError(error => {
-        console.error('Unerwarteter Fehler beim Speichern des Rezepts:', error);
         this.loadingSubject.next(false); // Ladezustand zurücksetzen
-        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts')); // Fehler zurückgeben
+        return throwError(() => new Error('rservice3_Fehler beim Speichern des Rezepts'));
       })
     );
+
   }
 
 
@@ -203,10 +224,10 @@ export class RezeptService {
     this.currentRezeptSubject.next(rezeptToSave);
 
     const token = localStorage.getItem('jwt_token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+/*    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);*/
 
     return this.http.put(apiUrl, formData, {
-      headers: headers,
+     /* headers: headers,*/
       observe: 'response'
     }).pipe(
       tap(() => {
@@ -235,98 +256,292 @@ export class RezeptService {
         this.updateTagCountsAfterDeletion(id);
       }),
       catchError((error) => {
-        console.error('Fehler beim Löschen des Rezepts', error);
-        return throwError(new Error('Fehler beim Löschen des Rezepts'));
+        return throwError(() => new Error('Rezept konnte nicht gelöscht werden.'));
+
       })
     );
   }
 
-  updateTagCountsAfterDeletion(id: number) {
-    let currentRezepte = this.rezepteSubject.getValue();
-    let deletedRezept = currentRezepte.find(rezept => rezept.id === id);
+  private updateTagCountsAfterDeletion(id: number): void {
+    const currentRezepte = this.rezepteSubject.getValue();
+    const newZaehler = { ...this.kategorieZaehlerSubject.getValue() };
 
-    if (deletedRezept && deletedRezept.tags) {
-      let zaehler = this.kategorieZaehlerSubject.getValue();
-
-      deletedRezept.tags.forEach(tag => {
-        if (tag.label && zaehler[tag.label] && zaehler[tag.label] > 0) {
-          zaehler[tag.label] -= 1;
-        }
-      });
-
-      this.kategorieZaehlerSubject.next(zaehler);
-      this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
-    }
-  }
-
-// RezeptService
-  fetchRandomSpoonacularRezepte(): Observable<Rezept[]> {
-    const apiUrl = `https://api.spoonacular.com/recipes/random?number=3&apiKey=${environment.spoonacularApiKey}`;
-
-    return this.http.get<any>(apiUrl).pipe(
-      map(response => {
-        if (response && response.recipes) {
-          return this.mapSpoonacularRezepte(response);
-        } else {
-          console.error('Ungültige Antwort von Spoonacular');
-          return []; // Leere Liste zurückgeben, falls die Antwort ungültig ist
-        }
-      }),
-      tap(recipes => {
-        // Rezepte im Subject speichern (falls benötigt)
-        this.spoonacularRezepteSubject.next(recipes);
-      }),
-      catchError(error => {
-        console.error('Fehler beim Laden der zufälligen Rezepte von Spoonacular', error);
-        return throwError(() => new Error("Fehler beim Laden der zufälligen Rezepte"));
-      })
-    );
-  }
-
-
-// Helper-Funktion zum Mappen der API-Daten
-  private mapSpoonacularRezepte(response: any): Rezept[] {
-    // Beispiel für gültige Gänge
-    const gültigeGänge = DEFAULT_TAGS.filter(tag => tag.type === TagType.GÄNGE).map(tag => tag.label);
-
-    return response.recipes.map((rezept: any) => {
-      // Umwandlung der dishTypes in Tags
-      const tags = this.getMappedDishTypes(rezept.dishTypes);
-
-      return {
-        id: Math.random(),
-        name: rezept.title,
-        image: rezept.image || '',
-        bildUrl: rezept.sourceUrl || '',
-        tags, // Tags füllen
-      };
-    });
-  }
-
-// Helper-Funktion zur Gruppierung der dishTypes
-  getMappedDishTypes(dishTypes: string[] | undefined): any[] {
-    if (!dishTypes) return [];
-
-    const uniqueCategories = new Set<string>();
-
-    dishTypes.forEach((type) => {
-      const mappedCategory = dishTypeMapping[type.toLowerCase()];
-      if (mappedCategory) {
-        uniqueCategories.add(mappedCategory);
+    currentRezepte.find(rezept => rezept.id === id)?.tags?.forEach(tag => {
+      if (tag.label) {
+        newZaehler[tag.label] = Math.max(0, (newZaehler[tag.label] || 0) - 1);
       }
     });
 
-    return Array.from(uniqueCategories).map((germanTag: string) => {
-      return {
-        id: Math.random(), // ID generieren oder aus anderen Daten übernehmen
-        type: TagType.GÄNGE, // TagType bleibt 'Gänge' für Mittagessen
-        label: germanTag, // Übersetzung oder Originalwert
-        selected: false, // Optional: Wenn du eine Auswahl benötigst
-        count: 1 // Optional: Hier eine Zählung setzen, falls erforderlich
-      };
+    this.kategorieZaehlerSubject.next(newZaehler);
+    this.rezepteSubject.next(currentRezepte.filter(rezept => rezept.id !== id));
+  }
+
+
+  getFilteredRezepte(tags: string[], searchText: string): Observable<Rezept[]> {
+    return this.rezepte$.pipe(
+      map(rezepte => {
+        const gefilterteRezepte = rezepte.filter(rezept => {
+          const matchesSearch = !searchText || rezept.name.toLowerCase().includes(searchText.toLowerCase());
+
+          if (!matchesSearch) return false;
+
+          if (tags.length === 0) return true;
+
+          return tags.every(selectedTag =>
+            rezept.tags?.some(rTag => rTag.label === selectedTag)
+          );
+        });
+
+        // Aktualisiere die gefilterteRezepteSubject mit den neuen gefilterten Rezepten
+        this.gefilterteRezepteSubject.next(gefilterteRezepte);
+
+        // Gibt die gefilterten Rezepte zurück
+        return gefilterteRezepte;
+      })
+    );
+  }
+
+  // SPOON
+  // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
+  fetchSpoonRezepte(tags: string[] = []): Observable<Rezept[]> {
+    let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&random=true&apiKey=${environment.spoonacularApiKey}`;
+    /*let apiUrl = `https://api.spoonacular.com/recipes/complexSearch?number=3&vegan=true&apiKey=${environment.spoonacularApiKey}`;
+*/
+
+    let apiDishTypes: string[] = [];
+    let apiCuisines: string[] = [];
+    let apiDiets: string[] = [];
+    let combinedTags: string[] = [];
+
+    tags.forEach(tag => {
+      const dishTypeTags = reverseSpoonDataMapping['dishTypes'][tag];
+      const cuisineTags = reverseSpoonDataMapping['cuisines'][tag];
+      const dietTags = reverseSpoonDataMapping['diets'][tag];
+
+      if (dishTypeTags && cuisineTags && dietTags) {
+        dishTypeTags.forEach(dishType => {
+          cuisineTags.forEach(cuisine => {
+            dietTags.forEach(diet => {
+              combinedTags.push(`${dishType},${cuisine},${diet}`); // Komma-getrennt für Spoonacular API
+            });
+          });
+        });
+      } else if (dishTypeTags && cuisineTags) {
+        dishTypeTags.forEach(dishType => {
+          cuisineTags.forEach(cuisine => {
+            combinedTags.push(`${dishType},${cuisine}`); // Komma-getrennt für Spoonacular API
+          });
+        });
+      } else if (dishTypeTags && dietTags) {
+        dishTypeTags.forEach(dishType => {
+          dietTags.forEach(diet => {
+            combinedTags.push(`${dishType},${diet}`);
+          });
+        });
+      } else if (cuisineTags && dietTags) {
+        cuisineTags.forEach(cuisine => {
+          dietTags.forEach(diet => {
+            combinedTags.push(`${cuisine},${diet}`);
+          });
+        });
+      } else if (dishTypeTags) {
+        apiDishTypes.push(...dishTypeTags);
+      } else if (cuisineTags) {
+        apiCuisines.push(...cuisineTags);
+      } else if (dietTags) {
+        apiDiets.push(...dietTags);
+      }
     });
+
+    if (combinedTags.length > 0) {
+      apiUrl += `&type=${encodeURIComponent(combinedTags.join('|'))}`; // | für ODER-Verknüpfung bei kombinierten Suchbegriffen
+    } else if (apiDishTypes.length > 0) {
+      apiUrl += `&type=${encodeURIComponent(apiDishTypes.join(','))}`; // , für UND-Verknüpfung bei nur dishTypes
+    }
+    if (apiCuisines.length > 0) {
+      apiUrl += `&cuisine=${encodeURIComponent(apiCuisines.join(','))}`; // , für UND-Verknüpfung bei nur cuisines
+    }
+    if (apiDiets.length > 0) {
+      apiUrl += `&diet=${encodeURIComponent(apiDiets.join(','))}`; // , für UND-Verknüpfung bei nur diets
+    }
+
+    // Zufälligen Offset zwischen 0 und 20 (oder dynamisch nach totalResults) setzen
+    const randomOffset = Math.floor(Math.random() * 300);
+    apiUrl += `&offset=${randomOffset}`;
+
+
+    // this.http.get gibt ein Observale zurück
+    // "response =>" ist eine anonyme Funktion. Sie nimmt die API-Antwort (response) als Eingabe
+    return this.http.get<SpoonacularApiAntwortGesamt>(apiUrl).pipe(
+      tap(response => console.log('API Response:', response)),
+      switchMap((response: SpoonacularApiAntwortGesamt) => {
+        console.log(response);
+        if (!response.results || response.results.length === 0) {
+          return of([]);
+        }
+
+        const recipeIds = response.results.map(rezept => rezept.id);
+
+        const detailRequests = recipeIds.map(id =>
+          this.http.get<any>(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${environment.spoonacularApiKey}`)
+        );
+
+        return forkJoin(detailRequests).pipe(
+          mergeMap((detailResponses: any[]) => {
+            const mappedRecipes = detailResponses.map((detailResponse, index) => {
+              console.log('Detail Response:', detailResponse);
+              const rezept = response.results[index];
+              return this.mapSpoonRezepte({ ...rezept, sourceUrl: detailResponse.sourceUrl });
+            });
+            return of(mappedRecipes); // Gib ein Observable mit dem Array zurück
+          })
+        );
+      }),
+      tap(recipes => this.spoonacularRezepteSubject.next(recipes)),
+      catchError(error => {
+        console.error('API-Fehler:', error);
+        return throwError(() => new Error("Fehler beim Laden der Rezepte"));
+      })
+    );
+  }
+
+  //Übernimmt die igentliche Transformation der API-Antwort
+  private mapSpoonRezepte(rezept: any): Rezept {
+    console.log('mapSpoonRezepte Input:', rezept);
+    const dishTypeTags = this.getMappedDishTypes(rezept.dishTypes);
+    const cuisineTags = this.getMappedCuisines(rezept.cuisines);
+
+    const uniqueTags = [...dishTypeTags, ...cuisineTags].filter((tag, index, self) =>
+      self.findIndex(t => t.label === tag.label) === index
+    );
+
+    const mappedRezept = {
+      id: rezept.id,
+      name: rezept.title,
+      bildUrl: rezept.image,
+      onlineAdresse: rezept.sourceUrl || '',
+      dishTypes: rezept.dishTypes || [],
+      cuisines: rezept.cuisines || [],
+      tags: uniqueTags,
+    };
+    console.log('Mapped Rezept:', mappedRezept); // Loggen des gemappten Rezepts
+    return mappedRezept;
   }
 
 
 
+  /*TODO: Hier die Unterscheidung zwischen Meal und Cuisine wirksam werden lassen*/
+  //Helper-Funktion zur Gruppierung der dishTypes
+  //Um dishTypes in meine Tag-Struktur zu mappen
+  getMappedDishTypes(dishTypes: { type: string; category: string }[] | undefined) {
+    if (!dishTypes) return [];
+
+    const uniqueTags = new Set<string>();
+
+    dishTypes.forEach((dish) => {
+      const translatedTag = spoonDataMapping[dish.category]?.[dish.type.toLowerCase()];
+
+      if (translatedTag) {
+        uniqueTags.add(translatedTag);
+      }
+    });
+
+    return Array.from(uniqueTags).map((translatedTag: string) => {
+      const type =
+        Object.values(spoonDataMapping['dishTypes']).includes(translatedTag) ? 'Mahlzeit' :
+          Object.values(spoonDataMapping['cuisines']).includes(translatedTag) ? 'Landesküche' :
+            'Unbekannt';
+
+      return {
+        id: Math.random(),
+        type,
+        label: translatedTag,
+        selected: false,
+        count: 1
+      };
+    });
+  }
+
+  getMappedCuisines(cuisines: string[] | undefined) {
+    if (!cuisines) return [];
+
+    const uniqueCuisines = new Set<string>();
+
+    cuisines.forEach((cuisine) => {
+      const translatedCuisine = spoonDataMapping['cuisines'][cuisine];
+      if (translatedCuisine) {
+        uniqueCuisines.add(translatedCuisine);
+      }
+    });
+
+    return Array.from(uniqueCuisines).map((translatedCuisine: string) => ({
+      id: Math.random(),
+      type: 'Landesküche',
+      label: translatedCuisine,
+      selected: false,
+      count: 1
+    }));
+  }
+
+
+
+  //Das Problem war: Content-Type wurde für rezeptDTO nicht korrekt gesetzt, weil kein File-Blob vorhanden war
+  //Lösung: Erstellung eines Blobs (obwohl eigentlich keine Datei mitgesendet wird)
+  addRezeptToList(rezept: Rezept, image?: string | Blob | undefined): Observable<Rezept> {
+    const token = localStorage.getItem('jwt_token'); // Token aus Local Storage holen
+    if (!token) {
+      return throwError(() => new Error('Kein Token gefunden.'));
+    }
+
+    const formData = new FormData();
+    const rezeptBlob = new Blob([JSON.stringify(rezept)], { type: 'application/json' });
+    formData.append('rezeptDTO', rezeptBlob, 'rezept.json');
+
+    if (image) {
+      formData.append('image', image);
+    }
+
+    return this.http.post<Rezept>(
+      `${this.backendUrl}/api/rezepte/create`,
+      formData/*,
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }*/
+    ).pipe(
+      tap((savedRezept) => {
+        console.log('formData', savedRezept)
+        this.ngZone.run(() => {
+          const currentList = this.gefilterteRezepteSubject.value;
+          this.gefilterteRezepteSubject.next([savedRezept, ...currentList]);
+        });
+      }),
+      catchError((error) => {
+        return throwError(() => new Error('Fehler beim Erstellen des Rezepts'));
+      })
+    );
+  }
+
+  // Validierung für Spoon-Rezept
+  validateSpoonRezept(rezept: Rezept): boolean {
+    if (!rezept.name?.trim()) {
+      return false;
+    }
+
+    // Spoonacular-Rezepte haben eine verpflichtende `bildUrl`
+    if (!rezept.bildUrl?.trim()) {
+      return false;
+    }
+
+    if (rezept.tags?.length) {
+      for (const tag of rezept.tags) {
+        console.log('Tag-Objekt:', tag);
+        console.log('Tag-Typ:', typeof tag.type, 'Wert:', tag.type);
+
+        const tagType = Object.values(tag.type).join(' ');
+
+        if (!tag.label?.trim() || !tagType.trim()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }

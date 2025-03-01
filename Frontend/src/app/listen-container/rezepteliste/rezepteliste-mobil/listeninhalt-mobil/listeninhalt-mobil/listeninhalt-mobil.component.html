@@ -6,7 +6,8 @@
   </div>
   <div *ngIf="selectedTags.length > 0" class="filterkreis-clear" (click)="clearTags()" icon="pi pi-trash">X</div>
 </div>
-<div class="container-listeninhalt">
+  <div class="container-listeninhalt"
+       [ngStyle]="isMobile ? {'grid-template-columns': 'repeat(' + spaltenAnzahl + ', 1fr)'} : {}">
 
   <div *ngFor="let rezept of gefilterteRezepte">
     <p-card>
@@ -25,8 +26,9 @@
             </div>
           </ng-template>
         </div>
+        <div *ngIf="actionButtonsVisible && spaltenAnzahl < 4">
         <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
-        <div class="p-card-footer">
+        <div class="p-card-footer" >
           <button
             pButton
             type="button"
@@ -41,6 +43,7 @@
             (click)="showDeleteDialog(rezept.id)"
             class="delete-button"
           ></button>
+        </div>
         </div>
       </div>
     </p-card>

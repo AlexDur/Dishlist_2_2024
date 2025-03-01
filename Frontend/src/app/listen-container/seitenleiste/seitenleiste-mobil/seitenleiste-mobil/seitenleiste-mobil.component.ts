@@ -16,6 +16,8 @@ import {Subject, Subscription} from 'rxjs';
 import {DEFAULT_TAGS} from "../../../../models/default_tag";
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {TagService} from "../../../../services/tags.service";
+import { ListenansichtService} from "../../../../services/listenansicht.service";
+import {UserInterfaceService} from "../../../../services/userInterface.service";
 
 @Component({
   selector: 'app-seitenleiste-mobil',
@@ -24,10 +26,10 @@ import {TagService} from "../../../../services/tags.service";
 export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges {
   // 1. Eingabe- und Ausgabe-Properties
   @Input() rezepte: Rezept[] = [];
-  @Input() isMobile?: boolean;
 
   // 2. ViewChild-Referenzen
   @ViewChild('dropdownContent', {static: false}) dropdownContent!: ElementRef;
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   // 3. Private und geschützte Eigenschaften
   /*private subscription: Subscription | undefined;*/
@@ -42,11 +44,13 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   isOverlayVisible = false;
   filteredRecipes: Rezept[] = [];
   selectedTags: string[] = [];
+  isMobile: boolean = false;
+  isSearchFieldVisible: boolean = false;
   seletedTagInSidebar: boolean = false
 
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService,  private tagService: TagService) {
+  constructor(private rezepteService: RezeptService,  private tagService: TagService, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts(this.originalRezepte);
     });
@@ -57,10 +61,19 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       this.tagService.selectedTags$.subscribe(tags => {
         this.selectedTags = tags;
         this.applyFilters();
-
       })
     );
 
+    this.listenAnsichtService.spaltenAnzahl$.subscribe(spaltenAnzahl => {
+      if (spaltenAnzahl === 4) {
+        this.listenAnsichtService.setzeButtonsVerbergen(true);
+      }
+    });
+
+    this.uiService.isMobile$.subscribe(isMobile => {
+      this.isMobile = isMobile;
+      console.log('isMobile geändert:', isMobile);
+    });
 
     this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
       this.originalRezepte = [...rezepte];
@@ -95,6 +108,33 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       this.subscription.unsubscribe();
     }
   }
+
+  toggleSearchField() {
+    this.isSearchFieldVisible = !this.isSearchFieldVisible;
+
+    // Kleiner Timeout, um sicherzustellen, dass das Element erst im DOM existiert
+    setTimeout(() => {
+      if (this.isSearchFieldVisible && this.searchInput) {
+        this.searchInput.nativeElement.focus();
+      }
+    }, 50);
+  }
+
+  toggleGrid() {
+    console.log('grid-switch eigentlich');
+    this.listenAnsichtService.wechselSpaltenanzahl();
+  }
+
+  onSearchTextChange(): void {
+    this.searchSubject.next(this.searchText);
+  }
+
+
+  toggleButtons(){
+    this.listenAnsichtService.verbergeButtons();
+  }
+
+
 
   toggleTagInSidebar(tag: Tag): void {
     this.tagService.toggleTag(tag.label);
@@ -171,9 +211,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     return this.tags.filter(tag => tag.type == "Ernährungsweise")
   }
 
-  onSearchTextChange(): void {
-    this.searchSubject.next(this.searchText);
-  }
+
 
   applyFilters(): void {
     this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe(filteredRecipes => {

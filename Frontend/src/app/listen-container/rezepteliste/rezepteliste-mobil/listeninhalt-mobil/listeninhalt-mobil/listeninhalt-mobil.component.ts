@@ -11,7 +11,8 @@ import {Router} from "@angular/router";
 import {DialogComponent} from "../../../../../shared/dialog/dialog.component";
 import { Subscription } from 'rxjs';
 import {TagService} from "../../../../../services/tags.service";
-import {TabService} from "../../../../../services/tab.service";
+import {UserInterfaceService} from "../../../../../services/userInterface.service";
+import {ListenansichtService} from "../../../../../services/listenansicht.service";
 
 @Component({
   selector: 'app-listeninhaltmobil',
@@ -26,6 +27,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
  /* @Input() gefilterteRezepte: Rezept[] = [];*/
   @Input() rezepteVerfügbar: boolean = false;
   @Input() visible: boolean = false;
+  @Input() isMobile?: boolean;
   @Output() selectedRemoveTags = new EventEmitter<string[]>();
 
   private tagsSubscription: Subscription | undefined;
@@ -35,10 +37,11 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   displayDeleteDialog: boolean = false;
   selectedRezeptId: number | null = null;
   isBildSelected: boolean = false;
+  spaltenAnzahl: number = 2;
+  actionButtonsVisible: boolean = true;
 
 
-  constructor( private rezepteService: RezeptService, private tagService: TagService, private router:Router, private tabService: TabService) {
-  }
+  constructor(private rezepteService: RezeptService, private tagService: TagService, private router:Router, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService) {}
 
   ngOnInit(): void {
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
@@ -49,6 +52,19 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     this.rezepteService.gefilterteRezepte$.subscribe(rezepte => {
       this.gefilterteRezepte = rezepte;
     })
+
+    this.listenAnsichtService.spaltenAnzahl$.subscribe((anzahl) => {
+      this.spaltenAnzahl = anzahl; // Grid-Anzahl aktualisieren
+    });
+
+    this.listenAnsichtService.actionButtonsVisible$.subscribe(actionButtonsVisible => {
+      this.actionButtonsVisible = actionButtonsVisible; // Sichtbarkeit der Buttons aktualisieren
+    });
+
+    this.uiService.isMobile$.subscribe(isMobile => {
+      this.isMobile = isMobile;
+      console.log('isMobile geändert:', isMobile);
+    });
   }
 
   ngOnDestroy(): void {
@@ -70,10 +86,8 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       console.log('isBildSelected', this.isBildSelected);
     }
     // rezept als state-Daten an Zielseite übergeben
-    this.tabService.setActiveTab(1);
+    this.uiService.setActiveTab(1);
     this.router.navigate(['/rezepterstellung'], { state: { data: rezept, isBildSelected: this.isBildSelected } });
-
-
   }
 
   showDeleteDialog(rezeptId: number) {
