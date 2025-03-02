@@ -748,6 +748,10 @@ f
   position: relative;
 }
 
+.cropper-ng{
+  background-image: none;
+}
+
 .cropper-point{
   background: $secondary-color;
 }
@@ -1278,18 +1282,6 @@ video {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/*  .such-icon {
-
-    display: flex;
-    align-items: center;
-    width: 35px;
-    height: 35px;
-    border-radius: 5px;
-    object-fit: contain;
-    cursor: pointer !important;
-    z-index: 2;
-  }*/
-
 .container-such-icon-button {
   position: absolute;
   left: 5px;
@@ -1304,18 +1296,10 @@ video {
 }
 
 .such-icon-button {
-  /*    position: absolute;*/
   width: 36px;
-  /*height: 43px;*/
   border: none;
   background: transparent;
   cursor: pointer;
-
-
-  /*    &.active{
-        display: flex;
-        justify-content: start;
-      }*/
 }
 
 .suchfeld {
