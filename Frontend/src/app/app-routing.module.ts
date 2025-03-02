@@ -19,9 +19,9 @@ const routes: Routes = [
   { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent},
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-/*  { path: 'landing', component: LandingComponent },*/
+  { path: 'landing', component: LandingComponent },
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
-  { path: '**', redirectTo: 'listen-container' }
+  { path: '**', redirectTo: 'landing' }
 ];
 
 

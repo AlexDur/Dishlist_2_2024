@@ -7,7 +7,7 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './nutzer-anmeldung.component.html',
 })
 export class LoginComponent{
-  /*@Input() isAccountDeleted: boolean = false;
+  @Input() isAccountDeleted: boolean = false;
   email: string = '';
   password: string = '';
   passwordInvalid = false;
@@ -74,5 +74,5 @@ export class LoginComponent{
   navigateLanding(event: MouseEvent) {
     event.preventDefault();
     this.router.navigate(['/landing']);
-  }*/
+  }
 }

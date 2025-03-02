@@ -742,10 +742,18 @@ f
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+
   height: 100%;
   object-fit: contain;
   position: relative;
+}
+
+.cropper-point{
+  background: $secondary-color;
+}
+
+.cropper-line {
+  background-color: $secondary-color;
 }
 
 .image-cropper-container {
@@ -1259,42 +1267,86 @@ video {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  flex-shrink: 0;
+  position: fixed;
+  width: 45px;
+  height: 36px;
+  border-radius: 18px;
+  background: white;
+  transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-$placeholder-color: #e8d6d1;
+/*  .such-icon {
+
+    display: flex;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    object-fit: contain;
+    cursor: pointer !important;
+    z-index: 2;
+  }*/
+
+.container-such-icon-button {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: $secondary-color;
+}
+
+.such-icon-button {
+  /*    position: absolute;*/
+  width: 36px;
+  /*height: 43px;*/
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+
+  /*    &.active{
+        display: flex;
+        justify-content: start;
+      }*/
+}
 
 .suchfeld {
-  cursor: pointer;
-  margin-right: 1rem;
-  border: 1px solid whitesmoke;
+  border: none;
   background-color: whitesmoke;
   border-radius: 20px;
   outline: none;
-  color: #fb874e;
+  color: $secondary-color;
   font-size: 16px;
-  width: 10px;
-  padding: 7.5px;
-
+  width: 0;
+  opacity: 0;
+  transition: width 0.3s ease-in-out, opacity 0.1s ease-in-out;
+  padding-left: 40px;
 
   &::placeholder {
     color: #dda48f;
     transition: color 0.3s ease;
   }
-
-  &:focus {
-    box-shadow: 0 0 5px rgb(230, 87, 39);
-
-    &::placeholder {
-      color: transparent;
-    }
-  }
-
-  &.active {
-    opacity: 1;
-  }
 }
+
+.such-container.expanded {
+  width: 150px;
+  height: 40px;
+}
+
+.such-container.expanded .suchfeld {
+  width: 150px;
+  height: 40px;
+  opacity: 1;
+}
+
 
 
 
@@ -1942,9 +1994,12 @@ h3.weiss {
   box-sizing: border-box;
   cursor: pointer;
   text-align: left;
+
 }
 
 .recipe-title-overlay {
+  transition: color 0.1s ease-in-out;
+
   &:hover,
   &:active {
     color: $secondary-color;
@@ -2030,76 +2085,6 @@ cd f.spoon-trennstrich {
 
 
 @media screen and (max-width: 750px) {
-  .such-container {
-    display: flex;
-    align-items: center;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    width: 45px;
-    height: 36px;
-    border-radius: 18px;
-    background: white;
-    transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    overflow: hidden;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .such-icon {
-    display: flex;
-    align-items: center;
-    width: 35px;
-    height: 35px;
-    border-radius: 5px;
-    object-fit: contain;
-    cursor: pointer !important;
-    z-index: 2;
-  }
-
-  .such-icon-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 43px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-
-    &.active{
-      display: flex;
-      justify-content: end;
-    }
-  }
-
-  .suchfeld {
-    flex: 1;
-    border: none;
-    background-color: whitesmoke;
-    border-radius: 20px;
-    outline: none;
-    color: #fb874e;
-    font-size: 16px;
-    padding: 7.5px;
-    width: 0;
-    opacity: 0;
-    transition: width 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  }
-
-  .such-container.expanded {
-    width: 150px;
-    height: 40px;
-  }
-
-  .such-container.expanded .suchfeld {
-    width: 150px;
-    height: 40px;
-    opacity: 1;
-  }
-
-
 
  .overlay-content-spoon {
     min-height: 90vh;

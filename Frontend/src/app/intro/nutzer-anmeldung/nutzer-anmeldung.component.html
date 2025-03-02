@@ -1,11 +1,10 @@
-<!--
 <div>
   <div class="zentriertes-formular-anmeldung">
     <p *ngIf="isAccountDeleted">Dein Konto wurde gelöscht</p>
 
     <h1 (click)="navigateListe($event)">Anmeldung</h1>
 
-    &lt;!&ndash; Formular für die Anmeldung &ndash;&gt;
+    <!-- Formular für die Anmeldung -->
     <form *ngIf="!isAuthenticated" (ngSubmit)="onLogin()">
       <div class="p-fluid">
         <div class="p-field">
@@ -36,4 +35,3 @@
     <button class="general-button-transparent" pButton (click)="navigateLanding($event)">Zurück</button>
 </div>
 </div>
--->

@@ -50,9 +50,9 @@ export class RezeptService {
 
 
   private getJsonHeaders(): HttpHeaders {
-/*    const token = this.authService.getToken();*/
+    const token = this.authService.getToken();
     let headers = new HttpHeaders();
-    headers = headers/*.set('Authorization', `Bearer ${token}`)*/
+    headers = headers.set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json');
     return headers;
   }
@@ -72,12 +72,12 @@ export class RezeptService {
 
   // Lädt alle im Backend vorhandenen Rezepte (entsprechend ungefilterr) und speichert sie im Subject
   getUserRezepte(): Observable<RezeptAntwort[]> {
-  /*  const token = this.getToken();
+    const token = this.getToken();
     if (!token) {
       return throwError(() => new Error('Kein JWT-Token im localStorage gefunden'));
-    }*/
+    }
 
-    const headers = this.createHeaders();
+    const headers = this.createHeaders(token);
 
     return this.http.get<RezeptAntwort[]>(`${this.backendUrl}/api/rezepte/userRezepte`, { headers }).pipe(
       tap(rezepte => this.handleResponse(rezepte)),
@@ -85,14 +85,14 @@ export class RezeptService {
     );
   }
 
-/*  private getToken(): string | null {
+  private getToken(): string | null {
     return localStorage.getItem('jwt_token');
-  }*/
+  }
 
-  private createHeaders(): HttpHeaders {
+  private createHeaders(token:string): HttpHeaders {
     return this.getJsonHeaders()
       .set('Accept', 'application/json')
-     /* .set('Authorization', `Bearer ${token}`);*/
+      .set('Authorization', `Bearer ${token}`);
   }
 
   private handleResponse(rezepte: RezeptAntwort[]): void {

@@ -23,20 +23,20 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
   ngOnInit() {
     const token = localStorage.getItem('jwt_token');
     console.log('Token im localStorage:', token);
-    /*this.username = this.authService.getEmailFromJWT();*/
-  /*  console.log('Benutzer E-Mail:', this.username);*/
- /*   this.subscription = this.authService.accountDeleted$.subscribe(
+/*    this.username = this.authService.getEmailFromJWT();*/
+    console.log('Benutzer E-Mail:', this.username);
+    this.subscription = this.authService.accountDeleted$.subscribe(
       (status) => {
         this.isAccountDeleted = status;
-      }*/
-
+      }
+    );
   }
 
   onDeleteAccount() {
     this.isDialogVisible = true;
   }
 
-  /*onConfirmDelete(confirmed: boolean) {
+  onConfirmDelete(confirmed: boolean) {
     if (confirmed) {
       this.authService.logout().subscribe({
         next: () => {
@@ -52,15 +52,14 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
       console.log('Löschung abgebrochen.');
     }
     this.isDialogVisible = false;
-  }*/
+  }
 
   navigateLanding(event: Event) {
     event.preventDefault();
     this.router.navigate(['/landing']);
   }
 
-/*
-  deleteUser() {
+ /* deleteUser() {
     const token = localStorage.getItem('jwt_token');
     if (!token) {
       console.error('ds_Kein Token gefunden.');

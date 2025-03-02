@@ -130,7 +130,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
 
-  toggleButtons(){
+  toggleCardView(){
     this.listenAnsichtService.verbergeButtons();
   }
 

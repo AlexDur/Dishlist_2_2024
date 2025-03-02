@@ -7,7 +7,6 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './registrierung.component.html'
 })
 export class RegistrierungComponent {
-/*
   email:string = "";
   password: string = '';
   passwordInvalid = true;
@@ -68,7 +67,7 @@ export class RegistrierungComponent {
   }
 
 
-  protected readonly event = event;*/
+  protected readonly event = event;
 }
 
 

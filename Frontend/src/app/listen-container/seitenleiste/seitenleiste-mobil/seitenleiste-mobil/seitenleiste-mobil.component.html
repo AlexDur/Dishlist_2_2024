@@ -2,8 +2,8 @@
   <div>
     <div class="header">
       <div class="such-container" [class.expanded]="isSearchFieldVisible">
-       <button (click)="toggleSearchField()" >
-        <i class="pi pi-search such-icon-button" ></i>
+       <button (click)="toggleSearchField()" class="container-such-icon-button">
+        <i class="pi pi-search such-icon-button"></i>
        </button>
          <input
           *ngIf="isSearchFieldVisible"
@@ -20,7 +20,7 @@
         <i class="pi pi-th-large filter-icon"></i>
       </button>
 
-      <button (click)="toggleButtons()" class="actionButtons-switch">
+      <button (click)="toggleCardView()" class="actionButtons-switch">
         <i class="pi pi-eye filter-icon"></i>
       </button>
 
