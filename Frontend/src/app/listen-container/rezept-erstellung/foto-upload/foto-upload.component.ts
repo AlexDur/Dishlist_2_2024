@@ -56,7 +56,6 @@ export class FotoUploadComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
 
-    console.log('Initial isBildSelected value in FotoUploadComponent:', this.isBildSelected);
   }
 
   ngOnDestroy(): void {
@@ -107,9 +106,6 @@ export class FotoUploadComponent implements OnInit, OnDestroy {
       this.cropper = null;
     }
   }
-
-
-
 
 
   validateFile(file: File): { isValid: boolean, message?: string } {
