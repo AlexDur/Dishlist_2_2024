@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Optional;
 
 @Component

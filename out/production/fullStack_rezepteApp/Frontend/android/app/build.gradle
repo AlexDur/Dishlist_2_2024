@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+  namespace "com.dishlist_app"
+  compileSdk rootProject.ext.compileSdkVersion
+
+  // Fügen Sie den signingConfigs-Block hinzu
+  signingConfigs {
+    release {
+      storeFile file("C:/Users/alexd/Softwareentwicklung/Webentwicklung/Fullstack/Angular_Java_rezepteApp/GooglePlayStore/release-key-feb16_25.jks")
+      storePassword project.MY_RELEASE_STORE_PASSWORD
+      keyAlias project.MY_RELEASE_KEY_ALIAS
+      keyPassword project.MY_RELEASE_KEY_PASSWORD
+    }
+  }
+
+  defaultConfig {
+    applicationId "com.dishlist_app"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 149
+    versionName "1.1"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    manifestPlaceholders = [excludeScreens: "large"]
+    aaptOptions {
+      ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release // Verweisen Sie auf die signingConfig für den Release-Build
+    }
+  }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

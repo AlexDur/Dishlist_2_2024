@@ -2,13 +2,10 @@ package com.rezepte_app.service;
 
 import com.rezepte_app.model.Tag;
 import com.rezepte_app.repository.TagRepository;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TagService {
@@ -46,5 +43,7 @@ public class TagService {
     }
 
 
-
+  /*  public boolean existsByLabel(String label) {
+        return tagRepository.findByLabel(label).isPresent();
+    }*/
 }

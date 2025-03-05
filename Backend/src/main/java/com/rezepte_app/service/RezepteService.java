@@ -47,20 +47,20 @@ public class RezepteService {
     }
 
     // Im RezepteService
-    public List<Rezept> fetchAlleRezepte(String userId) {
-        List<Rezept> alleRezepte = rezepteRepository.findByUserIdOrderByIdDesc(userId);
-        logRezepteInfo(userId, alleRezepte);
+    public List<Rezept> fetchAlleRezepte() {
+        List<Rezept> alleRezepte = rezepteRepository.findAllByOrderByIdDesc();
+    /*    logRezepteInfo(alleRezepte);*/
         initializeTagsForRezepte(alleRezepte);
         return alleRezepte;
     }
 
-    private void logRezepteInfo(String userId, List<Rezept> alleRezepte) {
+  /*  private void logRezepteInfo(String userId, List<Rezept> alleRezepte) {
         if (alleRezepte.isEmpty()) {
             logger.warn("Keine Rezepte für den Benutzer {} gefunden", userId);
         } else {
             logger.info("Anzahl der abgerufenen Rezepte: {}", alleRezepte.size());
         }
-    }
+    }*/
 
     private void initializeTagsForRezepte(List<Rezept> alleRezepte) {
         // Tags der Rezepte in einer einzigen Abfrage laden

@@ -86,11 +86,22 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String authorizationHeader) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return createResponse(false, "Ungültiger Token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = authorizationHeader.substring(7); // Entferne "Bearer "
+        System.out.println("Token nach Entfernung des Präfix: " + token);
+
+
         try {
             authService.logout(token);
             return createResponse(true, "Abmeldung erfolgreich", HttpStatus.OK);
         } catch (Exception e) {
+            System.err.println("Fehler im Controller: " + e.getMessage()); // Log die Nachricht
+            e.printStackTrace();
             return createResponse(false, "Abmeldung fehlgeschlagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -4,7 +4,6 @@ import com.rezepte_app.dto.RezeptDTO;
 import com.rezepte_app.dto.SpoonRezepteDTO;
 import com.rezepte_app.service.SpoonacularService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ public class SpoonacularController {
         this.spoonacularService = spoonacularService;
     }
 
-    @GetMapping("/random-rezepte")
+  /*  @GetMapping("/random-rezepte")
     public ResponseEntity<List<SpoonRezepteDTO>> getRandomRecipes(@RequestParam String apiKey) {
         if (isValidApiKey(apiKey)) {  // API-Key-Validierung (z.B. gegen eine Liste von erlaubten Schlüsseln)
             List<SpoonRezepteDTO> randomRecipes = spoonacularService.fetchRandomRecipes();
@@ -41,7 +40,7 @@ public class SpoonacularController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Fehler bei der Kommunikation mit Spoonacular: " + e.getMessage());
         }
-    }
+    }*/
 
 
     @GetMapping("/search")

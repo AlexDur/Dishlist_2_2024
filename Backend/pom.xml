@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.rezepte_app</groupId>
+    <groupId>com.dishlist_app</groupId>
     <artifactId>Backend</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Backend</name>
@@ -14,10 +14,8 @@
         <junit.version>5.9.2</junit.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -255,34 +253,42 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.4</version>
-                <configuration>
-                    <from>
-                        <image>openjdk:17-jdk-slim</image>
-                    </from>
-                    <to>
-                        <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_84</image>
-                    </to>
-                    <container>
-                        <mainClass>com.rezepte_app.RezepteAppApplication</mainClass>
-                    </container>
-                    <extraDirectories>
-                        <paths>
-                            <path>
-                                <from>src/main/resources/static</from>
-                                <into>/app/static</into>
-                            </path>
-                        </paths>
-                    </extraDirectories>
-                </configuration>
+        <plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>jib-maven-plugin</artifactId>
+            <version>3.4.4</version>
+            <configuration>
+                <from>
+
+                    <image>openjdk:17-jdk-slim</image>
+                </from>
+                <to>
+                    <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_134</image>
+                </to>
+                <container>
+                    <mainClass>com.rezepte_app.RezepteAppApplication</mainClass>
+                </container>
+
+                <extraDirectories>
+                    <paths>
+                        <!-- Statische Dateien -->
+                        <path>
+                            <from>src/main/resources/static</from>
+                            <into>/app/static</into>
+                        </path>
+
+                        <!-- Nginx Konfigurationsdateien -->
+                        <path>
+                            <from>src/main/resources/nginx</from>
+                            <into>/etc/nginx/</into>
+                        </path>
+                    </paths>
+                </extraDirectories>
+            </configuration>
             </plugin>
 
 
             <!--Docker Maven Plugin-->
-
             <!--<plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>

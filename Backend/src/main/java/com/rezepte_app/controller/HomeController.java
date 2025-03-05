@@ -1,6 +1,5 @@
 package com.rezepte_app.controller;
 
-import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -19,7 +17,7 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @GetMapping(value = {"/", "/**"})
+    @GetMapping(value = {"/", "/index.html"})
     public ResponseEntity<org.springframework.core.io.Resource> serveIndexHtml() {
         logger.info("Anfrage für '/' oder '/index.html' empfangen");
 
@@ -37,4 +35,11 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/{path:^(?!api)[^.]*}")
+    public String redirect() {
+        return "forward:/index.html";  // Nur für API-Routen weiterleiten
+    }
+
+
 }

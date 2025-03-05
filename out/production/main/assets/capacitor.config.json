@@ -1,0 +1,12 @@
+{
+	"appId": "de.dishlist.app",
+	"appName": "DishList",
+	"webDir": "dist",
+	"server": {
+		"url": "https://www.dish-list.de",
+		"androidScheme": "https"
+	},
+	"android": {
+		"flavor": "dev"
+	}
+}

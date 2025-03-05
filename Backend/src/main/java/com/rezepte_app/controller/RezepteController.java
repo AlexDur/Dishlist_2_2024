@@ -9,10 +9,10 @@ import com.rezepte_app.dto.RezeptDTO;
 import com.rezepte_app.model.Rezept;
 import com.rezepte_app.model.Tag;
 import com.rezepte_app.repository.RezepteRepository;
+import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.service.JwtUtil;
 import com.rezepte_app.service.TagService;
 import com.rezepte_app.service.RezepteService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +45,7 @@ public class RezepteController {
     private final S3ImageUploadService s3ImageUploadService;
     private RezepteService rezepteService;
     private RezepteRepository rezepteRepository;
+    private TagRepository tagRepository;
     private JwtUtil jwtUtil;
 
     /*Konstruktor-basiertes DI: MIt @Autowired wird e. Instanz von RezepteService injiziert --> Spring kümmert sich automatisch
@@ -58,16 +59,17 @@ public class RezepteController {
         this.s3ImageUploadService = s3ImageUploadService;
         this.rezepteService = rezepteService;
         this.tagService = tagService;
+        this.tagRepository = tagRepository;
         this.rezepteRepository = rezepteRepository;
         this.jwtUtil = jwtUtil;
         System.out.println("RezepteController: Service wurde erfolgreich injiziert!");
     }
 
 
-    private String extractUserIdFromToken(String authorizationHeader) {
+/*    private String extractUserIdFromToken(String authorizationHeader) {
         String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
         return jwtUtil.getUserIdFromToken(token);
-    }
+    }*/
 
 
     @PostMapping("/{rezeptId}/addTags")
@@ -91,44 +93,46 @@ public class RezepteController {
         }
     }
 
+/*    @PostMapping("/import")
+    public ResponseEntity<Void> importDefaultTags(@RequestBody List<Tag> tags) {
+        for (Tag tag : tags) {
+            if (!tagService.existsByLabel(tag.getLabel())) {
+                tagService.addTag(tag); // Methode zum Hinzufügen eines Tags
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }*/
+
 
     /*Controller generell, hier: Controller-Methode verarbeitet POST-Anfragen auf /api/rezepte/create. Ist für den Empfang und das Parsing
      der Daten aus dem Frontent zuständig. Übergibt die empfangenen Daten an den Serivce (wo eig.
      Geschäftslogik sitzt). Zudem wird die HTTP-Antwort erstellt und an FE gesendet (Das passiert hier im try-catch*/
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> createRezept(
-            @RequestHeader(value = "Authorization") String authorizationHeader,
-            @RequestPart(value = "rezeptDTO") RezeptDTO rezeptDTO,  // RezeptDTO muss immer als Teil des Formulardaten gesendet werden
-            @RequestPart(value = "image", required = false) MultipartFile image,  // Bild ist optional
+            @RequestPart(value = "rezeptDTO") RezeptDTO rezeptDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image,
             BindingResult result) {
 
         // Überprüfe auf Validierungsfehler
         if (result.hasErrors()) {
-            return handleValidationErrors(result); // Stelle sicher, dass du die Validierungsfehler behandelst
+            return handleValidationErrors(result);
         }
 
         try {
-            // Extrahiere die User-ID aus dem JWT-Token
-            String userId = extractUserIdFromToken(authorizationHeader);
-
-            // Tags validieren (falls notwendig)
             validateAndLogTags(rezeptDTO);
-
-            // Bild hochladen, falls es eine Datei gibt
             String imageUrl = rezeptDTO.getBildUrl();
 
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                // Verwende bestehende Bild-URL
-            } else if (image != null && !image.isEmpty()) {
-                imageUrl = s3ImageUploadService.uploadImageToS3(image, userId);
-            } else {
-                logger.warn("Kein Bild vorhanden. Rezept wird ohne Bild gespeichert.");
+            if (imageUrl == null || imageUrl.isEmpty()) {
+                if (image != null && !image.isEmpty()) {
+                    imageUrl = s3ImageUploadService.uploadImageToS3(image, null);
+                } else {
+                    logger.warn("Kein Bild vorhanden. Rezept wird ohne Bild gespeichert.");
+                }
             }
 
-            // Rezept speichern
-            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, userId, image, imageUrl);
+            // Rezept speichern (ohne Benutzer-ID)
+            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, null, image, imageUrl);
 
-            // Antwort zurückgeben
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Rezept erfolgreich erstellt.");
             response.put("id", createdRezept.getId());
@@ -137,15 +141,15 @@ public class RezepteController {
             response.put("onlineAdresse", createdRezept.getOnlineAdresse());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", "Interner Serverfehler beim Erstellen des Rezepts.");
             errorResponse.put("details", "Es gab einen internen Fehler beim Verarbeiten des Rezepts.");
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+
 
 
 
@@ -176,7 +180,7 @@ public class RezepteController {
 
     /*PUT-Anfrage Methode auf /api/rezepte/update/{id} aktualisiert ein bestehendes Rezept. Sie versucht, ein Rezept mit der spezifizierten ID zu aktualisieren.*/
     //<?> =  ein Wildcard, ergo Body der Antwort kann ein Objekt von beliebigem Typ sein
-    @PutMapping("/update/{id}")
+    /*@PutMapping("/update/{id}")
     public ResponseEntity<?> updateRezept(
             @RequestHeader(value = "Authorization") String authorizationHeader,
             @PathVariable("id") long id,
@@ -215,7 +219,7 @@ public class RezepteController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("RController_Fehler beim Aktualisieren des Rezepts: " + e.getMessage());
         }
-    }
+    }*/
 
 
     @PutMapping("/tags/{tagId}")
@@ -236,32 +240,33 @@ public class RezepteController {
       List-Api mit eingebauten Methoden
       Es dürfen nur Rezept-Objekte in die List eingefügt werden*/
     @GetMapping("/alleRezepte")
-    public List<Rezept> getAlleRezepte(String userId) {
-        return rezepteService.fetchAlleRezepte(userId);
-    }
-
-
-    @GetMapping("/userRezepte")
-    public ResponseEntity<List<Rezept>> getUserRezepte(@RequestHeader(value = "Authorization") String authorizationHeader) {
+    public ResponseEntity<List<Rezept>> getAlleRezepte() {
         try {
-            String userId = extractUserIdFromToken(authorizationHeader);
-
-            // Falls keine gültige Benutzer-ID extrahiert werden kann
-            if (userId == null || userId.equals("0")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // Token ist ungültig
-            }
-
-            // Rezepte des Nutzers abrufen
-            List<Rezept> userRezepte = rezepteService.fetchAlleRezepte(userId);
-
-            // Falls keine Rezepte gefunden wurden
-            return ResponseEntity.ok(Optional.ofNullable(userRezepte).orElse(Collections.emptyList()));  // Leere Liste zurückgeben, falls keine Rezepte vorhanden sind
-
+            List<Rezept> alleRezepte = rezepteService.fetchAlleRezepte();
+            return ResponseEntity.ok(Optional.ofNullable(alleRezepte).orElse(Collections.emptyList()));
         } catch (Exception e) {
-            logger.error("Fehler beim Abrufen der Nutzerrezepte", e);
+            logger.error("Fehler beim Abrufen aller Rezepte", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+
+    @GetMapping("/userRezepte")
+    public ResponseEntity<List<Rezept>> getUserRezepte() {
+        try {
+            // Alle Rezepte abrufen (nicht mehr nur für einen User)
+            List<Rezept> userRezepte = rezepteService.fetchAlleRezepte();
+
+            // Falls keine Rezepte vorhanden sind, leere Liste zurückgeben
+            return ResponseEntity.ok(Optional.ofNullable(userRezepte).orElse(Collections.emptyList()));
+
+        } catch (Exception e) {
+            logger.error("Fehler beim Abrufen der Rezepte", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
 
     @GetMapping("/bilder/{bildname:.+}")

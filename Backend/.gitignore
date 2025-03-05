@@ -44,3 +44,14 @@ build/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# PrimeIcons Fonts (EOT, WOFF, etc.)
+primeicons.*.eot
+primeicons.*.woff
+primeicons.*.woff2
+primeicons.*.ttf
+primeicons.*.svg
+
+node_modules/primeicons
+
+gradle.properties

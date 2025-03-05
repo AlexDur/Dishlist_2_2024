@@ -14,7 +14,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-/*Zur Interaktion mit AWS Cognito für die Benutzerregistrierung, Authentifizierung und Verifizierung von E-Mail-Codes.*/
+//Zur Interaktion mit AWS Cognito für die Benutzerregistrierung, Authentifizierung und Verifizierung von E-Mail-Codes.
+
 @Service
 public class AuthService {
 
@@ -95,18 +96,25 @@ public class AuthService {
                     .build();
             cognitoClient.globalSignOut(signOutRequest);
         } catch (Exception e) {
+            System.err.println("Fehler beim Abmelden des Benutzers: " + e.getMessage()); // Log die Nachricht
+            e.printStackTrace();
             throw new RuntimeException("Fehler beim Abmelden des Benutzers: " + e.getMessage(), e);
         }
     }
 
 
-    /**
+/**
      * Berechnet den SECRET_HASH für Cognito.
      * @param clientSecret Das Client-Secret
      * @param clientId Die App-Client-ID
-     * @return Der berechnete SECRET_HASH
-     */
+     * @return Der berechnete SECRET_HASH*/
+
+
     public String calculateSecretHash(String clientSecret,String email, String clientId) {
+        if (clientSecret == null) {
+            throw new IllegalArgumentException("Client secret must not be null");
+        }
+
         try {
             String message = email + clientId;
             SecretKeySpec signingKey = new SecretKeySpec(clientSecret.getBytes("UTF-8"), "HmacSHA256");
@@ -154,5 +162,10 @@ public class AuthService {
                 ))
                 .build();
     }
+
+    public String getClientSecret() {
+        return this.userPoolClientSecret;
+    }
+
 
 }

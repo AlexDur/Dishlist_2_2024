@@ -1,3 +1,5 @@
+/*TODO: Schreibe erste Tests für Repositories. Das ist ein guter Ort für den Anfang*/
+
 /*Allgemein: RezepteRepository um effizient Datenzugriffsoperationen für die Rezept-Entitäten zu abstrahieren
  und zu vereinfachen, indem es die komplexen Datenbankoperationen hinter einfachen Methodenaufrufen verbirgt.*/
 
@@ -6,8 +8,6 @@
 package com.rezepte_app.repository;
 import com.rezepte_app.model.Rezept;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +20,8 @@ import java.util.List;
 @Repository
 public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 
-    List<Rezept> findByUserIdOrderByIdDesc(@Param("userId") String userId);
+  /*  List<Rezept> findByUserIdOrderByIdDesc();
+*/
 
+    List<Rezept> findAllByOrderByIdDesc();
 }
