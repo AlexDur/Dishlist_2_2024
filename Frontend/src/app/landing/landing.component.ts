@@ -8,7 +8,7 @@ import {UserInterfaceService} from "../services/userInterface.service";
 })
 export class LandingComponent implements OnInit{
   backgroundLoaded = false;
-  isMobile: boolean = false;
+ /* isMobile: boolean = false;*/
 
   constructor(private router: Router, private cdRef: ChangeDetectorRef, private uiService: UserInterfaceService) {
   }
@@ -17,20 +17,19 @@ export class LandingComponent implements OnInit{
     if (this.router.url === '/') {
       this.router.navigate(['/landing']);
     }
-
+/*
     this.uiService.isMobile$.subscribe(isMobile => {
       this.isMobile = isMobile;
-    });
+    });*/
 
 
-    if (this.isMobile) {
+
       const img = new Image();
       img.src = 'assets/landing3.webp';
       img.onload = () => {
         this.backgroundLoaded = true;
         this.cdRef.detectChanges();
       };
-    }
   }
 
   navigateAnmeldung(event: Event) {
