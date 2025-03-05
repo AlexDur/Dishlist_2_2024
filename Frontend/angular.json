@@ -20,7 +20,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist",
+            "outputPath": "../backend/src/main/resources/static",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [

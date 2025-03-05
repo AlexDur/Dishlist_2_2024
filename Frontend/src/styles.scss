@@ -425,17 +425,8 @@ a {
   justify-content: center;
   width: 100%;
 }
-f
-//Landing
-.landing-datenschutz-hinweis{
-  width: 250px;
-  text-align: center;
-  color: white;
-  a {
-    text-decoration: underline;
-    color: white;
-  }
-}
+
+
 
 
 
@@ -702,15 +693,6 @@ f
     margin-left: 100px;
   }
 
-  .landing-datenschutz-hinweis {
-    width: 250px;
-    text-align: center;
-    color: black !important;
-    a {
-      text-decoration: underline;
-      color: black !important;
-    }
-  }
 
 
   .p-card {
@@ -1078,8 +1060,34 @@ f
   gap: 10px;
 }
 
+//Landing
+.landing-datenschutz {
+  padding-top: 1rem !important;
+  margin-top: 1rem;
+  width: 250px;
+  text-align: center;
+  color: black !important;
+  a {
+    text-decoration: underline !important;
+    color: white !important;
+  }
+}
+
+.landing-seite{
+  height: 100vh;
+  width: 100%;
+}
+
 
 @media screen and (max-width: 750px) {
+
+  .landing-datenschutz {
+    backdrop-filter: blur(30px);
+    text-align: center;
+    width: 85%;
+    border-radius: 50px;
+    padding: 15px;
+  }
 
   .zentriertes-formular-landing{
     padding-top: 5rem;
@@ -1100,15 +1108,7 @@ f
   /*  backdrop-filter: blur(10px);*/
   }
 
-  .landing-datenschutz-hinweis {
-    backdrop-filter: blur(30px);
 
-    text-align: center;
-    width: 80%;
-    border-radius: 50px;
-    padding: 15px;
-
-  }
 
 
   .landing-seite{
