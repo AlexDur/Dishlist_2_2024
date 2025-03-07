@@ -46,6 +46,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   selectedTags: string[] = [];
   isMobile: boolean = false;
   isSearchFieldVisible: boolean = false;
+  isProcessing: boolean = false;
+  isGridActive = false;
   seletedTagInSidebar: boolean = false
 
 
@@ -110,28 +112,46 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   toggleSearchField() {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+
     this.isSearchFieldVisible = !this.isSearchFieldVisible;
 
-    // Kleiner Timeout, um sicherzustellen, dass das Element erst im DOM existiert
     setTimeout(() => {
       if (this.isSearchFieldVisible && this.searchInput) {
         this.searchInput.nativeElement.focus();
       }
-    }, 50);
+      this.isProcessing = false;
+    }, 300); // 300ms Verzögerung
   }
 
   toggleGrid() {
-    console.log('grid-switch eigentlich');
+
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+
+    this.isGridActive = !this.isGridActive;
     this.listenAnsichtService.wechselSpaltenanzahl();
+
+    setTimeout(() => {
+      this.isProcessing = false;
+    }, 300);
   }
 
   onSearchTextChange(): void {
     this.searchSubject.next(this.searchText);
   }
 
+  toggleCardView() {
+    if (this.isProcessing || this.isGridActive) return;
+    this.isProcessing = true;
+    this.isProcessing = true;
 
-  toggleCardView(){
     this.listenAnsichtService.verbergeButtons();
+
+    setTimeout(() => {
+      this.isProcessing = false;
+    }, 300);
   }
 
 

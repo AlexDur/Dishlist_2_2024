@@ -20,7 +20,8 @@
         <i class="pi pi-th-large filter-icon"></i>
       </button>
 
-      <button (click)="toggleCardView()" class="actionButtons-switch">
+      <button (click)="toggleCardView()" class="actionButtons-switch"   [disabled]="isGridActive"
+              [class.disabled]="isGridActive">
         <i class="pi pi-eye filter-icon"></i>
       </button>
 
