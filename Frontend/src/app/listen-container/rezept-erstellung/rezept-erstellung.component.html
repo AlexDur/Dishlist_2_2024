@@ -12,12 +12,15 @@
         </div>
 
         <div class="p-field">
-          <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse" formControlName="onlineAdresse"
-                 (blur)="onFieldBlur('onlineAdresse'); validateAndFormatURL()" pInputText>
+          <div class="input-container">
+            <span class="prefix">https://</span>
+            <input class="inputfeld" placeholder="Onlineadresse" type="text" id="onlineadresse"
+                   formControlName="onlineAdresse" (blur)="onFieldBlur('onlineAdresse')"
+                   (keydown)="onKeyDown($event)" pInputText>
+          </div>
           <label for="onlineadresse"><span class="required"></span></label>
           <div *ngIf="!isFieldValid('onlineAdresse')"></div>
         </div>
-
 
         <div class="flex flex-row">
           <div class="erstellung-kategorie">Foto</div>

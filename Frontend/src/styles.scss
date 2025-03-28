@@ -211,23 +211,30 @@ a {
 
 //Landing
 
-.zentriertes-formular-landing{
-  padding-top: 17rem;
+.zentriertes-formular-landing {
+  backdrop-filter: blur(5px);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
   width: 100%;
+  padding: 40px;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+  transition: backdrop-filter 0.3s ease;
 }
 
 .landing-button-reg{
-  margin-top:20px !important;
   width: 300px;
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
-  background-color: transparent;
-  color: black !important;
+  background-color: black;
+  color: white !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -235,7 +242,7 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
+  outline: 2px solid black;
   outline-offset: 2px;
 }
 
@@ -245,7 +252,7 @@ a {
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
-  background-color: transparent;
+  background-color: white;
   color: black !important;
   border: 1px transparent solid !important;
   font-size: 20px;
@@ -254,7 +261,7 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
+  outline: 2px solid white;
   outline-offset: 2px;
 }
 
@@ -363,11 +370,10 @@ a {
   width: 300px;
 }
 
-.optional{
+.optional {
   font-size: 12px;
-  color:white;
+  color: white;
   margin-top: 1.5rem;
-
 }
 
 .required {
@@ -392,14 +398,41 @@ a {
   border-color: red;
 }
 
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .prefix {
+    position: absolute;
+    left: 10px;
+    font-size: 14px;
+    color: transparent;
+    pointer-events: none;
+  }
+
+  .inputfeld {
+    width: 100%;
+  }
+}
 
 
-.screen{
+//Veri
+
+
+.veri-screen{
   height: 100vh;
   width: 100%;
   display:flex;
   justify-content: center;
   align-items:center;
+}
+
+.zentriertes-formular-veri{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rezept-erstellung{
@@ -689,6 +722,8 @@ a {
   }
 
   .grid-switch{
+    background-color: transparent;
+    border: none;
     cursor: pointer;
     margin-left: 100px;
   }
@@ -1062,11 +1097,12 @@ a {
 
 //Landing
 .landing-datenschutz {
-  padding-top: 1rem !important;
   margin-top: 1rem;
-  width: 250px;
+  width: 275px;
   text-align: center;
-  color: black !important;
+  color: white !important;
+  border-radius: 50px;
+  padding: 0 15px;
   a {
     text-decoration: underline !important;
     color: white !important;
@@ -1074,6 +1110,10 @@ a {
 }
 
 .landing-seite{
+  background-image: url('/assets/Group-20.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   height: 100vh;
   width: 100%;
 }
@@ -1081,17 +1121,6 @@ a {
 
 @media screen and (max-width: 750px) {
 
-  .landing-datenschutz {
-    backdrop-filter: blur(30px);
-    text-align: center;
-    width: 85%;
-    border-radius: 50px;
-    padding: 15px;
-  }
-
-  .zentriertes-formular-landing{
-    padding-top: 5rem;
-  }
 
   .landing-seiten-ueberschrift{
     color: $secondary-color !important;
@@ -1105,19 +1134,6 @@ a {
   .landing-button-anmeldung{
     color: black !important;
     background-color: white;
-  /*  backdrop-filter: blur(10px);*/
-  }
-
-
-
-
-  .landing-seite{
-    background-image: url('/assets/landing3.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    width: 100%;
   }
 
 
@@ -1136,7 +1152,6 @@ a {
     justify-content: center;
     width: 100%;
     max-width: 500px;
-    padding-bottom: 50px;
   }
 
   .zentriertes-formular-anmeldung{
@@ -1514,7 +1529,7 @@ p-tag + p-tag {
 }
 
 .p-card-footer button {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   border-radius: 50%;
@@ -1713,9 +1728,9 @@ h3.weiss {
   background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
-  align-items: center;
-
+  align-items: end;
   z-index: 1000;
+  pointer-events: auto;
 }
 
 .overlay-content {
@@ -1729,6 +1744,19 @@ h3.weiss {
   max-height: 90vh;
   display: flex;
   align-items: center;
+  pointer-events: auto;
+}
+
+body.overlay-active {
+  pointer-events: none;
+}
+
+body.overlay-active .custom-overlay {
+  pointer-events: auto;
+}
+
+body.overlay-active > *:not(.custom-overlay) {
+  pointer-events: none;
 }
 
 
@@ -1738,7 +1766,6 @@ h3.weiss {
   justify-content: start;
   width: 90%;
   flex-wrap: wrap;
-
 }
 
 
@@ -1817,10 +1844,15 @@ h3.weiss {
 
 .filter-column {
   width: 100%;
-  padding: 10px;
+  padding-bottom: 10px;
   padding-right: 0;
-  padding-left: 60px;
+  padding-left: 80px;
 }
+
+.filter-column:last-child {
+  padding-bottom: 0;
+}
+
 
 .filter-column h3 {
   margin-bottom: 10px;
@@ -2098,7 +2130,7 @@ cd f.spoon-trennstrich {
   }
 
   .overlay-content {
-    height: 90vh;
+    height: 75vh;
     width: 100vw;
     pointer-events: auto;
     padding: 0;
@@ -2310,9 +2342,14 @@ cd f.spoon-trennstrich {
     text-align: center;
   }
 
-  .tab:active {
-    background: transparent;
+  .tab:active,
+  .tab:focus,
+  .tab:visited {
+    background: transparent !important;
+    outline: none;
+    box-shadow: none;
   }
+
 }
 
 

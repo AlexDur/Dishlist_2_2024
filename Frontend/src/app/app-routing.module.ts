@@ -14,17 +14,16 @@ import {LandingComponent} from "./landing/landing.component";
 const routes: Routes = [
 /*  { path: '', component: SplashScreenComponent },
   { path: 'intro', component: InfoScreenComponent },*/
-  { path: '', component: LandingComponent, pathMatch: 'full' }, // Standardroute
+  { path: '', component: LandingComponent, pathMatch: 'full' },
+  { path: 'landing', component: LandingComponent },
   { path: 'listen-container', component: ListenContainerComponent },
   { path: 'anmeldung', component: LoginComponent },
   { path: 'verifikation', component: VerifikationComponent },
   { path: 'registrierung', component: RegistrierungComponent },
   { path: 'rezepterstellung', component: RezeptErstellungComponent },
-  { path: 'landing', component: LandingComponent },
   { path: 'datenschutzerklaerung', component: DatenschutzComponent },
+  /*{ path: '**', redirectTo: 'landing' }*/
 ];
-
-
 
 
 @NgModule({

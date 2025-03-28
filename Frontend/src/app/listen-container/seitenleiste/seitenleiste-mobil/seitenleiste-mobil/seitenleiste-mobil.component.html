@@ -32,9 +32,9 @@
 
       <!-- Overlay -->
       <div *ngIf="isOverlayVisible" class="custom-overlay" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
-        <div class="overlay-content" (click)="stopPropagation($event)">
+        <div class="overlay-content" (click)="stopPropagation($event)" (touchstart)="stopPropagation($event)">
           <!-- Schließen-Button -->
-          <button class="overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+          <button class="overlay-close-button" (click)="closeOverlayButton($event)">x</button>
 
           <!-- Filter-Inhalte -->
           <div class="dropdown-content">

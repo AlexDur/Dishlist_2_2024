@@ -50,6 +50,8 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   isUpdateMode: boolean = false;
   image: any;
   isLoading = false;
+  lastKey: string = '';
+  previousValue: string = '';
 
 
   categories = [
@@ -115,11 +117,33 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
     }
   }
 
-  validateAndFormatURL(): void {
-    const urlControl = this.rezeptForm.get('onlineAdresse');
-    if (urlControl?.value && !/^https?:\/\//.test(urlControl.value)) {
-      urlControl.setValue('https://' + urlControl.value);
+  validateAndFormatURL() {
+    const field = this.rezeptForm.get('onlineAdresse');
+    if (!field) return;
+
+    let value = field.value?.trim() || '';
+
+    // Falls das Feld leer ist oder nur "http" / "https", tue nichts
+    if (value === '' || value === 'http' || value === 'https' || value === 'https:/') {
+      return;
     }
+
+    // Falls "https://" noch existiert, entferne es für die Speicherung
+    if (value.startsWith('https://')) {
+      value = value.replace('https://', '');
+    } else if (value.startsWith('http://')) {
+      value = value.replace('http://', '');
+    }
+
+    // Speichere nur den Domain-Teil ohne "https://"
+    field.setValue(value, { emitEvent: false });
+  }
+
+
+  onKeyDown(event: KeyboardEvent) {
+    const field = this.rezeptForm.get('onlineAdresse');
+    if (!field) return;
+    this.previousValue = field.value || '';
   }
 
   isFormValid(): boolean {

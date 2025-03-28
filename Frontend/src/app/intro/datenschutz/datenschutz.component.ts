@@ -20,7 +20,11 @@ export class DatenschutzComponent implements OnInit, OnDestroy{
 
   constructor(private authService: AuthService, private router: Router) { }
 
+
+
   ngOnInit() {
+      console.log('DatenschutzComponent aktiviert. Aktuelle URL:', this.router.url);
+
     const token = localStorage.getItem('jwt_token');
     console.log('Token im localStorage:', token);
 /*    this.username = this.authService.getEmailFromJWT();*/
