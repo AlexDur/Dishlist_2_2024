@@ -1,5 +1,5 @@
 {
-  "appId": "de.dishlist.app",
+  "appId": "com.rezepte_app",
   "appName": "DishList",
   "webDir": "dist",
   "server": {
@@ -7,6 +7,10 @@
     "androidScheme": "https"
   },
   "android": {
-    "flavor": "dev"
+    "flavor": "dev",
+    "compileOptions": {
+      "sourceCompatibility": 17,
+      "targetCompatibility": 17
+    }
   }
 }
