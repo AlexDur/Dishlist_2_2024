@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit, Input } from '@angular/core';
 import {Router} from "@angular/router";
+import {UserInterfaceService} from "../services/userInterface.service";
 
 @Component({
   selector: 'app-landing',
@@ -10,20 +11,19 @@ export class LandingComponent implements OnInit{
   backgroundLoaded = false;
  /* isMobile: boolean = false;*/
 
-  constructor(private router: Router, private cdRef: ChangeDetectorRef,) {
+  constructor(private router: Router, private cdRef: ChangeDetectorRef, private uiService: UserInterfaceService) {
   }
 
   ngOnInit() {
 
-/*
     this.uiService.isMobile$.subscribe(isMobile => {
       this.isMobile = isMobile;
-    });*/
+    });
 
 
 
       const img = new Image();
-      img.src = 'assets/Group-20.webp';
+      img.src = 'assets/Group-20_landing.webp';
       img.onload = () => {
         this.backgroundLoaded = true;
         this.cdRef.detectChanges();
