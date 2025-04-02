@@ -1,4 +1,42 @@
 <div>
+  <div *ngIf="isAndroid">
+  <div *ngIf="showTrialPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Nach der 7-tägigen Testphase hast du die Wahl zwischen einem kostenpflichtigen Abonnement oder der Anzeige von Werbung innerhalb der App.</h2>
+      <p-footer class="footer-buttons">
+        <button type="button" pButton label="Ok" (click)="startTrialAndHidePopup()"
+                class="general-button-dialog-ja"
+                [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-left': true}">
+        </button>
+      </p-footer>
+    </div>
+    </div>
+  </div>
+
+  <div>
+    <div *ngIf="isAndroid">
+    <div *ngIf="showSubscriptionPopup" class="popup-overlay">
+      <div class="popup-content">
+        <div class="abo-titel">Abo abgelaufen</div>
+        <p>
+          Entscheide dich für ein <b>werbefreies Monatsabo</b> oder nutze die App <b>kostenlos inklusive Werbung</b>.
+        </p>
+        <p-footer class="footer-buttons">
+          <button type="button" pButton label="Abo abschließen" (click)="subscribeViaPlayStore()"
+                  class="general-button-dialog-ja"
+                  [ngClass]="{'active-button': !isYesActive, 'p-button': true, 'custom-left': true}">
+          </button>
+          <button type="button" pButton label="Weiter mit Werbung" (click)="continueWithAds()"
+                  class="general-button-dialog-nein"
+                  [ngClass]="{'active-button': isYesActive, 'p-button': true}">
+          </button>
+        </p-footer>
+      </div>
+    </div>
+    </div>
+
+  </div>
+
   <div class="listen-container">
     <div>
       <app-seitenleiste-mobil  [rezepte]="rezepte"></app-seitenleiste-mobil>

@@ -6,22 +6,24 @@ import { catchError } from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 import { of, BehaviorSubject, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {UserInterfaceService} from "./userInterface.service";  // Importiere 'map' hier
-
+import {UserInterfaceService} from "./userInterface.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
-
+  private jwtHelper = new JwtHelperService();
   private backendUrl = environment.apiUrl;
   private tokenKey = 'cognitoToken';
   private body: { email: string; password: string; } | undefined;
   private accountDeletedSubject = new BehaviorSubject<boolean>(false);
   accountDeleted$ = this.accountDeletedSubject.asObservable();
+
 
 
   constructor(private http: HttpClient, private tabService: UserInterfaceService) {
@@ -114,29 +116,16 @@ export class AuthService {
   }
 
 
-  checkAuthentication() {
-    const token = localStorage.getItem('jwt_token');
-    const isCurrentlyAuthenticated = this.isAuthenticatedSubject.value; // Aktueller Zustand aus BehaviorSubject
-    const newAuthStatus = !!token; // Neuer Zustand basierend auf localStorage
+  getUserId(): string | null {
+    const token = localStorage.getItem('jwt_token'); // Falls dein Token im LocalStorage gespeichert wird
+    if (!token) return null;
 
-    // Nur updaten, wenn sich der Zustand geändert hat
-    if (isCurrentlyAuthenticated !== newAuthStatus) {
-      this.isAuthenticatedSubject.next(newAuthStatus);
-    }
-  }
-
-
-  // Token speichern (z. B. nach Anmeldung)
-  setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken?.sub || null; // `sub` ist oft die User-ID
   }
 
 
   verifyCodeBackend(verifikationCode: string, email: string): Observable<any> {
     return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verifikationCode, email });
-  }
-
-  setAccountDeleted(status: boolean) {
-    this.accountDeletedSubject.next(status);
   }
 }

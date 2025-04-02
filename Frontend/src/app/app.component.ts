@@ -47,12 +47,15 @@ export class AppComponent implements OnInit {
       }
     });
 
+
     // Überprüfe, ob der Auth-Status einen Redirect auslöst
     this.authService.isAuthenticated$.subscribe(status => {
       this.isAuthenticated = status;
       console.log('Auth-Status:', status);
       this.redirectToLastVisitedRoute();
     });
+
+
   }
 
   private redirectToLastVisitedRoute() {

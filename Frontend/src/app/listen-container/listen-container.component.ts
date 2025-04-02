@@ -3,6 +3,19 @@ import {Rezept} from "../models/rezepte";
 import {RezeptService} from "../services/rezepte.service";
 import { Subscription } from 'rxjs';
 import {TagService} from "../services/tags.service";
+import {SubscriptionService} from "../services/subscription.service";
+import {AuthService} from "../services/auth.service";
+import { Platform } from '@ionic/angular';
+
+interface TrialInfo {
+  startDate: string;
+  trialExpired?: boolean; // trialExpired ist optional
+}
+
+interface TrialStatusResponse {
+  startDate: string;
+  trialExpired: boolean;
+}
 
 @Component({
   selector: 'app-listen-container',
@@ -23,52 +36,74 @@ export class ListenContainerComponent implements OnInit{
   bildUrls: { [key: number]: string } = {};
   searchText: string = '';
   selectedTags: string[] = [];
-  selectedTagsInSidebar: boolean = false;
+
+  showTrialPopup: boolean = false;
+  showSubscriptionPopup: boolean = false;
+  isYesActive: boolean = false;
+  isAndroid: boolean = false;
 
 
-  constructor(private rezepteService: RezeptService, private tagService: TagService, private cdr: ChangeDetectorRef) {
+  constructor(private rezepteService: RezeptService, private authService: AuthService, private platform: Platform, private tagService: TagService, private cdr: ChangeDetectorRef, private subscriptionService: SubscriptionService) {
   }
 
   ngOnInit(): void {
-    const abgerufeneBilder = new Set();
+    this.isAndroid = this.platform.is('android');
+    const userId = this.authService.getUserId();
 
-    // Abonniere die ausgewählten Tags
+    if (!userId) {
+      console.error('Keine User-ID gefunden');
+      return;
+    }
+
+    this.subscriptionService.getTrialStatus(userId).subscribe(
+      (trialInfo: TrialStatusResponse | null) => { // Korrigierte Typisierung
+        if (!trialInfo) {
+          this.subscriptionService.startTrial(userId).subscribe(
+            () => {
+              console.log('Testphase gestartet');
+              this.showTrialPopup = true;
+            },
+            (error) => {
+              console.error('Fehler beim Starten des Trials:', error);
+            }
+          );
+        } else if (trialInfo.trialExpired) {
+          this.showSubscriptionPopup = true;
+        } else {
+          this.showTrialPopup = true;
+        }
+      },
+      (error) => {
+        console.error('Fehler beim Abrufen des Trial-Status:', error);
+      }
+    );
+
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
-      // Sobald die Tags geändert werden, wende die Filter an
-      this.applyFilters(); // Filter anwenden, wenn Tags sich ändern
+      this.applyFilters();
     });
 
-    // Abrufen der Rezepte
     this.rezepteService.getUserRezepte().subscribe(rezepte => {
       this.rezepte = rezepte.map(rezept => ({ ...rezept }));
       this.rezepteGeladen.emit(this.rezepte);
-
-      // Anfangswerte für gefilterte Rezepte setzen
       this.gefilterteRezepte = [...this.rezepte];
       this.rezepteVerfuegbar = true;
-
       this.selectedTags = [...this.selectedTags];
       this.cdr.detectChanges();
 
-      // Bilder für die Rezepte laden
       this.gefilterteRezepte.forEach(rezept => {
         if (rezept && rezept.bildUrl) {
           const bildname = rezept.bildUrl.split('/').pop();
-          if (bildname && !abgerufeneBilder.has(bildname)) {
-            abgerufeneBilder.add(bildname);
-
-            // Direkte S3-URL verwenden
-            const imageUrl = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
-            this.bildUrls[rezept.id] = imageUrl;
+          if (bildname) {
+            this.bildUrls[rezept.id] = `https://bonn-nov24.s3.eu-central-1.amazonaws.com/${bildname}`;
           }
         }
       });
 
-      // Wende Filter direkt nach dem Abrufen der Rezepte an
       this.applyFilters();
     });
   }
+
 
 // Filter anwenden
   applyFilters(): void {
@@ -96,9 +131,49 @@ export class ListenContainerComponent implements OnInit{
     }
   }
 
+
   onSelectedTagsInSidebarChange(isInSidebar: boolean): void {
     console.log('selectedTagsInSidebar geändert:', isInSidebar);
     // Weitere Logik basierend auf dem Wert von isInSidebar
+  }
+
+
+  // Diese Methode wird aufgerufen, wenn der Nutzer auf "Ok" klickt
+  startTrialAndHidePopup(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.subscriptionService.startTrial(userId).subscribe((response) => {
+        this.showTrialPopup = false;
+      });
+
+      this.subscriptionService.hideTrialPopup();
+    } else {
+      console.error('Keine User-ID gefunden');
+    }
+  }
+
+
+  subscribeViaPlayStore(): void {
+    if (this.isAndroid) {
+      // Android-spezifische Logik, um das Play Store-Zahlmenü zu öffnen
+      if (window.startSubscription) {  // Ohne den Index-Zugriff
+        window.startSubscription();  // Aufruf der nativen Methode
+      } else {
+        console.error('startSubscription-Methode nicht gefunden');
+      }
+    } else {
+      console.log('Abonnement nur auf Android verfügbar');
+      // Möglicherweise eine Web-basierte Lösung anbieten
+    }
+  }
+
+
+
+  continueWithAds(): void {
+    // Logik, um die App mit Werbung fortzusetzen
+    console.log('Weiter mit Werbung...');
+    this.showSubscriptionPopup = false;
+    /*TODO:Aktivierung der Werbeanzeigen in der App*/
   }
 
 }
