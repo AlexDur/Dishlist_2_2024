@@ -55,28 +55,32 @@ export class ListenContainerComponent implements OnInit{
       return;
     }
 
-    this.subscriptionService.getTrialStatus(userId).subscribe(
-      (trialInfo: TrialStatusResponse | null) => { // Korrigierte Typisierung
-        if (!trialInfo) {
-          this.subscriptionService.startTrial(userId).subscribe(
-            () => {
-              console.log('Testphase gestartet');
-              this.showTrialPopup = true;
-            },
-            (error) => {
-              console.error('Fehler beim Starten des Trials:', error);
-            }
-          );
-        } else if (trialInfo.trialExpired) {
-          this.showSubscriptionPopup = true;
-        } else {
-          this.showTrialPopup = true;
+    const trialPopupShown = localStorage.getItem('trialPopupShown');
+
+    if (!trialPopupShown) {
+      this.subscriptionService.getTrialStatus(userId).subscribe(
+        (trialInfo: TrialStatusResponse | null) => { // Korrigierte Typisierung
+          if (!trialInfo) {
+            this.subscriptionService.startTrial(userId).subscribe(
+              () => {
+                console.log('Testphase gestartet');
+                this.showTrialPopup = true;
+              },
+              (error) => {
+                console.error('Fehler beim Starten des Trials:', error);
+              }
+            );
+          } else if (trialInfo.trialExpired) {
+            this.showSubscriptionPopup = true;
+          } else {
+            this.showTrialPopup = true;
+          }
+        },
+        (error) => {
+          console.error('Fehler beim Abrufen des Trial-Status:', error);
         }
-      },
-      (error) => {
-        console.error('Fehler beim Abrufen des Trial-Status:', error);
-      }
-    );
+      );
+    }
 
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
@@ -132,24 +136,17 @@ export class ListenContainerComponent implements OnInit{
   }
 
 
+/*
   onSelectedTagsInSidebarChange(isInSidebar: boolean): void {
     console.log('selectedTagsInSidebar geändert:', isInSidebar);
     // Weitere Logik basierend auf dem Wert von isInSidebar
   }
+*/
 
 
   // Diese Methode wird aufgerufen, wenn der Nutzer auf "Ok" klickt
   startTrialAndHidePopup(): void {
-    const userId = this.authService.getUserId();
-    if (userId) {
-      this.subscriptionService.startTrial(userId).subscribe((response) => {
-        this.showTrialPopup = false;
-      });
-
-      this.subscriptionService.hideTrialPopup();
-    } else {
-      console.error('Keine User-ID gefunden');
-    }
+    this.showTrialPopup = false;
   }
 
 

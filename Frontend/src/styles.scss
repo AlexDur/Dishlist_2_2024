@@ -241,8 +241,8 @@ a {
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
-  background-color: black;
-  color: white !important;
+  background-color: white;
+  color: black !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -250,7 +250,7 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid black;
+  outline: 2px solid white;
   outline-offset: 2px;
 }
 
@@ -1163,15 +1163,15 @@ a {
     color: $secondary-color !important;
   }
 
-  .landing-button-reg{
-    color: white !important;
-    background-color: #191818;
+ /* .landing-button-reg{
+    color: black !important;
+    background-color: white;
   }
 
   .landing-button-anmeldung{
     color: black !important;
     background-color: white;
-  }
+  }*/
 
 
   .hidden-preload {

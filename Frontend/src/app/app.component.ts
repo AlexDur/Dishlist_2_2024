@@ -4,6 +4,7 @@ import { AuthService } from "./services/auth.service";
 import { filter } from 'rxjs/operators';
 import { NavigationService } from "./services/navigation.service";
 import { UserInterfaceService } from "./services/userInterface.service";
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // Statusleiste transparent und über WebView
+    StatusBar.setOverlaysWebView({ overlay: true });
+    StatusBar.setBackgroundColor({ color: 'transparent' });
+    StatusBar.setStyle({ style: Style.Light }); // oder Style.Dark, je nach Layout
+
     this.uiService.isMobile$.subscribe(isMobile => {
       this.isMobile = isMobile;
     });
@@ -54,6 +61,7 @@ export class AppComponent implements OnInit {
       console.log('Auth-Status:', status);
       this.redirectToLastVisitedRoute();
     });
+
 
 
   }
