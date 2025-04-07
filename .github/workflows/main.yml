@@ -1,0 +1,55 @@
+name: Build and Deploy to AWS ECR
+
+on:
+  push:
+    branches:
+      - main  # Trigger beim Push auf den main-Branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Schritt 1: Checkout des Repositories
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Schritt 2: Setup für Node.js und Angular
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'  # Setze hier die gewünschte Node.js-Version
+
+    # Schritt 3: Installiere Frontend-Abhängigkeiten
+    - name: Install dependencies (Frontend)
+      run: |
+        cd frontend  # Wechsle in das Frontend-Verzeichnis (falls es eines gibt)
+        npm install
+
+    # Schritt 4: Baue das Frontend mit Angular
+    - name: Build Frontend
+      run: |
+        cd frontend  # Wechsle in das Frontend-Verzeichnis (falls es eines gibt)
+        ng build --configuration=production --outputPath="../Backend/src/main/resources/static"
+
+    # Schritt 5: Clean und Installiere Maven für das Backend
+    - name: Setup Maven
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'  # Setze hier die gewünschte Java-Version
+
+    - name: Install dependencies (Backend)
+      run: mvn clean install
+
+    # Schritt 6: Spring Boot Backend neu starten
+    - name: Restart Spring Boot Server
+      run: mvn spring-boot:run &  # Starte den Backend-Server neu im Hintergrund
+
+    # Schritt 7: Build und Push zum AWS ECR
+    - name: Push to AWS ECR using Jib
+      run: mvn clean package jib:build
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'eu-central-1'  # Region anpassen, falls nötig
+        ECR_REPOSITORY: 'mein-backend'  # ECR-Repository-Name anpassen
