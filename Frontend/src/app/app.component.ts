@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { NavigationService } from "./services/navigation.service";
 import { UserInterfaceService } from "./services/userInterface.service";
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -32,10 +33,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    // Statusleiste transparent und über WebView
-    StatusBar.setOverlaysWebView({ overlay: true });
-    StatusBar.setBackgroundColor({ color: 'transparent' });
-    StatusBar.setStyle({ style: Style.Light }); // oder Style.Dark, je nach Layout
+    // Statusleiste transparent und über WebView (nur für mobile App implementiert)
+    if (Capacitor.isNativePlatform()) {
+      StatusBar.setOverlaysWebView({ overlay: true }).catch(err =>
+        console.warn('setOverlaysWebView fehlgeschlagen:', err)
+      );
+
+      StatusBar.setBackgroundColor({ color: 'transparent' }).catch(err =>
+        console.warn('setBackgroundColor fehlgeschlagen:', err)
+      );
+
+      StatusBar.setStyle({ style: Style.Light }).catch(err =>
+        console.warn('setStyle fehlgeschlagen:', err)
+      );
+    }
 
     this.uiService.isMobile$.subscribe(isMobile => {
       this.isMobile = isMobile;

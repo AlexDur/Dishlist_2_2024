@@ -6,16 +6,7 @@ import {TagService} from "../services/tags.service";
 import {SubscriptionService} from "../services/subscription.service";
 import {AuthService} from "../services/auth.service";
 import { Platform } from '@ionic/angular';
-
-interface TrialInfo {
-  startDate: string;
-  trialExpired?: boolean; // trialExpired ist optional
-}
-
-interface TrialStatusResponse {
-  startDate: string;
-  trialExpired: boolean;
-}
+import {TrialStatusResponse} from "../models/trial-status";
 
 @Component({
   selector: 'app-listen-container',
@@ -57,30 +48,28 @@ export class ListenContainerComponent implements OnInit{
 
     const trialPopupShown = localStorage.getItem('trialPopupShown');
 
-    if (!trialPopupShown) {
-      this.subscriptionService.getTrialStatus(userId).subscribe(
-        (trialInfo: TrialStatusResponse | null) => { // Korrigierte Typisierung
-          if (!trialInfo) {
-            this.subscriptionService.startTrial(userId).subscribe(
-              () => {
-                console.log('Testphase gestartet');
-                this.showTrialPopup = true;
-              },
-              (error) => {
-                console.error('Fehler beim Starten des Trials:', error);
-              }
-            );
-          } else if (trialInfo.trialExpired) {
-            this.showSubscriptionPopup = true;
-          } else {
+    this.subscriptionService.getTrialStatus(userId).subscribe(
+      (trialInfo: TrialStatusResponse | null) => {
+        if (!trialInfo || !trialInfo.startDate) {
+          // Wenn kein Trial-Startdatum vorhanden ist UND der Popup noch nicht angezeigt wurde
+          if (!trialPopupShown) {
             this.showTrialPopup = true;
+            localStorage.setItem('trialPopupShown', 'true');
+          } else {
+            this.showTrialPopup = false;
           }
-        },
-        (error) => {
-          console.error('Fehler beim Abrufen des Trial-Status:', error);
+        } else if (trialInfo.trialExpired) {
+          this.showSubscriptionPopup = true;
+          this.showTrialPopup = false; // Sicherstellen, dass der Trial-Popup nicht angezeigt wird
+        } else {
+          this.showTrialPopup = false; // Aktiver Trial, kein Popup anzeigen
+          this.showSubscriptionPopup = false; // Sicherstellen, dass der Abo-Popup nicht angezeigt wird
         }
-      );
-    }
+      },
+      (error) => {
+        console.error('Fehler beim Abrufen des Trial-Status:', error);
+      }
+    );
 
     this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
@@ -136,33 +125,41 @@ export class ListenContainerComponent implements OnInit{
   }
 
 
-/*
-  onSelectedTagsInSidebarChange(isInSidebar: boolean): void {
-    console.log('selectedTagsInSidebar geändert:', isInSidebar);
-    // Weitere Logik basierend auf dem Wert von isInSidebar
-  }
-*/
-
-
   // Diese Methode wird aufgerufen, wenn der Nutzer auf "Ok" klickt
   startTrialAndHidePopup(): void {
-    this.showTrialPopup = false;
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.subscriptionService.startTrial(userId).subscribe(
+        () => {
+          console.log('Testphase gestartet und Popup geschlossen');
+          this.showTrialPopup = false;
+          // Das Flag wurde bereits beim Anzeigen des Popups gesetzt
+        },
+        (error) => {
+          console.error('Fehler beim Starten des Trials:', error);
+        }
+      );
+    } else {
+      console.error('Keine User-ID zum Starten des Trials gefunden.');
+      this.showTrialPopup = false; // Popup trotzdem schließen
+    }
   }
 
 
   subscribeViaPlayStore(): void {
     if (this.isAndroid) {
       // Android-spezifische Logik, um das Play Store-Zahlmenü zu öffnen
-      if (window.startSubscription) {  // Ohne den Index-Zugriff
-        window.startSubscription();  // Aufruf der nativen Methode
+      if (window.Capacitor && window.Capacitor.Plugins.BillingPlugin) {  // Überprüfen auf Capacitor und das Plugin
+        window.Capacitor.Plugins.BillingPlugin.startSubscription();  // Aufruf der nativen Methode
       } else {
-        console.error('startSubscription-Methode nicht gefunden');
+        console.error('Capacitor oder das BillingPlugin wurden nicht gefunden');
       }
     } else {
       console.log('Abonnement nur auf Android verfügbar');
-      // Möglicherweise eine Web-basierte Lösung anbieten
     }
   }
+
+
 
 
 

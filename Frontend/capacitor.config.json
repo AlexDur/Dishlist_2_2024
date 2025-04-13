@@ -1,11 +1,7 @@
 {
   "appId": "com.rezepte_app",
   "appName": "DishList",
-  "webDir": "dist",
-  "server": {
-    "url": "https://www.dish-list.de",
-    "androidScheme": "https"
-  },
+  "webDir": "Frontend/dist/rezepte-app",
   "android": {
     "flavor": "dev",
     "compileOptions": {

@@ -282,18 +282,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   }
 
 
-
-  //mit window.history.state wird Objekt als Referenz übergeben
-  loadRezeptToEdit() {
-    const state = window.history.state;
-    if (state && state['data']) {
-      this.newRecipe = state['data'];
-      this.isUpdateMode = !!this.newRecipe.id;
-      this.isBildSelected = state['isBildSelected'] || false;
-      console.log('edit Data', state)
-    }
-  }
-
   saveRecipe(rezeptToSave: Rezept): Observable<HttpResponse<RezeptAntwort>> {
     const formData = this.createFormData(rezeptToSave);
 
@@ -339,6 +327,17 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
         : []
     };
 
+  }
+
+  //mit window.history.state wird Objekt als Referenz übergeben
+  loadRezeptToEdit() {
+    const state = window.history.state;
+    if (state && state['data']) {
+      this.newRecipe = state['data'];
+      this.isUpdateMode = !!this.newRecipe.id;
+      this.isBildSelected = state['isBildSelected'] || false;
+      console.log('edit Data', state)
+    }
   }
 
 
