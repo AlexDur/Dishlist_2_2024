@@ -3,10 +3,8 @@ import {
   ElementRef,
   HostListener,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {Rezept} from '../../../../models/rezepte';
@@ -18,6 +16,7 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {TagService} from "../../../../services/tags.service";
 import { ListenansichtService} from "../../../../services/listenansicht.service";
 import {UserInterfaceService} from "../../../../services/userInterface.service";
+import { SimpleChanges, OnChanges, ChangeDetectorRef  } from '@angular/core';
 
 @Component({
   selector: 'app-seitenleiste-mobil',
@@ -52,7 +51,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
 
   //Verwendung des aktuellen Werts von kategorieZaehlerSubject, um Tag-Zähler in Komponente zu aktualsieren
-  constructor(private rezepteService: RezeptService,  private tagService: TagService, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService) {
+  constructor(private rezepteService: RezeptService,  private tagService: TagService, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService, private cdr: ChangeDetectorRef) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts(this.originalRezepte);
     });
@@ -77,12 +76,14 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       console.log('isMobile geändert:', isMobile);
     });
 
-    this.subscription = this.rezepteService.rezepte$.subscribe(rezepte => {
-      this.originalRezepte = [...rezepte];
-      this.resetRezepte();
-      this.updateTagCounts(this.originalRezepte);
-    });
-
+    this.subscription.add(
+      this.rezepteService.rezepte$.subscribe(rezepte => {
+        this.originalRezepte = [...rezepte];
+        this.resetFilteredRezepte();
+        this.updateTagCounts(this.originalRezepte);
+        this.cdr.detectChanges();
+      })
+    );
 
     // Debounce für Suchtext
     this.searchSubject
@@ -99,9 +100,8 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedTags']) {
-      this.updateTagsSelection();
-
+    if (changes['tags']) {
+      this.updateTagCounts(this.rezepte); // Tags und Zähler aktualisieren
     }
   }
 
@@ -126,7 +126,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   toggleGrid() {
-
     if (this.isProcessing) return;
     this.isProcessing = true;
 
@@ -145,7 +144,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   toggleCardView() {
     if (this.isProcessing || this.isGridActive) return;
     this.isProcessing = true;
-    this.isProcessing = true;
 
     this.listenAnsichtService.verbergeButtons();
 
@@ -154,12 +152,10 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     }, 300);
   }
 
-
-
-  toggleTagInSidebar(tag: Tag): void {
-    this.tagService.toggleTag(tag.label);
+  toggleTagInSidebar(tag: Tag) {
+    tag.selected = !tag.selected;
+    this.updateTagCounts(this.rezepte);
   }
-
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])
@@ -192,7 +188,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     return item.id || index;
   }
 
-  resetRezepte(): void {
+  resetFilteredRezepte(): void {
     this.rezepte = [...this.originalRezepte];
   }
 
@@ -201,49 +197,79 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
     rezepte.forEach(rezept => {
       rezept.tags?.forEach(tag => {
-        if (tag && tag.label) {
-          zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
-        } else {
-          console.warn(` Rezept "${rezept.name}" enthält einen ungültigen Tag:`, tag);
+        if (tag?.id != null) {
+          zaehler[tag.id] = (zaehler[tag.id] || 0) + 1;
         }
       });
     });
 
-    this.updateTagsWithCounts(zaehler);
+    this.tags.forEach(tag => {
+      tag.count = zaehler[tag.id] || 0;
+    });
+
+
   }
 
 
+ /* private updateTagsWithCounts(rezepte: Rezept[]): void {
+    // Definiert einen Zähler mit einem Index-Typ für Strings und Werten vom Typ Number
+    const zaehler: { [key: string]: number } = {};
 
-  private updateTagsWithCounts(zaehler: { [key: string]: number }): void {
+    // Alle Rezepte durchgehen und Tag-Zähler erhöhen
+    rezepte.forEach(rezept => {
+      rezept.tags?.forEach(tag => {
+        if (tag && tag.label) {
+          // Loggt die Tags, um zu sehen, ob sie richtig durchlaufen werden
+          console.log('Tag gefunden:', tag.label);
+
+          // Erhöht die Zählung des Tags
+          zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
+        }
+      });
+    });
+
+
+    // Tags mit den neuen Zählwerten aktualisieren
     this.tags.forEach(tag => {
       tag.count = zaehler[tag.label] || 0;
     });
-  }
+
+
+  }*/
+
+
 
   //Zur Filterung der Tags
-  getGerichtartenTags(): Tag[] {
-    return this.tags.filter(tag => tag.type === 'Mahlzeit');
+  getGerichtartenTags() {
+    const tags = this.tags.filter(tag => tag.type === 'Mahlzeit');
+    console.log('Aktualisierte Tags:', tags);
+    return tags;
   }
-  getKuechenTags(): Tag[] {
+
+
+  getKuechenTags() {
     return this.tags.filter(tag => tag.type === 'Landesküche');
   }
-  getErnaehrungsweiseTags(): Tag[] {
-    return this.tags.filter(tag => tag.type == "Ernährungsweise")
+
+  getErnaehrungsweiseTags() {
+    return this.tags.filter(tag => tag.type === 'Ernährungsweise');
   }
-
-
-
   applyFilters(): void {
-    this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe(filteredRecipes => {
-      this.filteredRecipes = filteredRecipes;
-      this.updateTagCounts(this.filteredRecipes);
+    this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe({
+      next: (filteredRecipes) => {
+        this.filteredRecipes = filteredRecipes;
+        this.updateTagCounts(filteredRecipes); // Hier muss der Zähler angewendet werden
+      },
+      error: (err) => {
+        console.error("Fehler beim Filtern der Rezepte:", err);
+      }
     });
-
   }
+
 
   private updateTagsSelection(): void {
     this.tags.forEach(tag => {
-      tag.selected = this.selectedTags.includes(tag.label);
+      tag.selected = this.selectedTags.includes(String(tag.id));
     });
   }
 }

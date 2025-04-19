@@ -43,7 +43,7 @@ Der Nutzer kann Online-Rezepte manuell in der App speichern. Dabei können neben
 
 - Mahlzeit (Vorspeise, Hauptgericht, Nachspeise)  
 - Küche (Deutsch, Italienisch, Japanisch, etc.)  
-- Nährwert (proteinreich, kalorienarm, etc.).
+- Ernährungsweise (vegetarisch, vegan, etc.).
 
 Dank dieser Tags ist eine genauere Beschreibung des Rezepts möglich, welche das Filtern der bereits angelegten Rezepts erlaubt.
 Gespeicherte Rezepte können in einer Übersicht angezeigt und mithilfe der gesetzten Tags gefiltert werden.

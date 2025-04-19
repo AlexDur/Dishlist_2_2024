@@ -53,6 +53,12 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
   lastKey: string = '';
   previousValue: string = '';
 
+  selectedTagsByCategory: { [key: string]: Set<string> } = {
+    Mahlzeit: new Set<string>(),
+    Landesküche: new Set<string>(),
+    Ernährungsweise: new Set<string>()
+  };
+
 
   categories = [
     {name: 'Mahlzeit', selected: false},
@@ -166,7 +172,6 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
 
 
   getVisibleTags() {
-    // Tags nach `selectedCategory` filtern
     if (this.selectedCategory !== null) {
       return this.tags.filter(tag => tag.type === this.selectedCategory);
     } else {
@@ -195,43 +200,52 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
       case 'Mahlzeit':
         return TagType.MAHLZEIT;
       case 'Landesküche':
-        return TagType.LANDESKÜCHE;
+        return TagType.LANDESKUECHE;
       case 'Ernährungsweise':
-        return TagType.ERNÄHRUNGSWEISE;
+        return TagType.ERNAEHRUNGSWEISE;
       default:
-        return null; // Für ungültige Typen
+        return null;
     }
   }
 
   toggleTagSelection(tag: Tag) {
     const tagsArray = this.rezeptForm.get('tags') as FormArray;
-
-    // Index des Tags im FormArray suchen
     const index = tagsArray.value.findIndex(
       (t: Tag) => t.label === tag.label && t.type === tag.type
     );
 
+    const categorySet = this.selectedTagsByCategory[tag.type];
+
+    // Tag wird abgewählt
     if (index !== -1) {
-      // Tag existiert bereits im FormArray
       if (tagsArray.at(index).value.selected) {
         tagsArray.removeAt(index);
+        categorySet.delete(tag.label);  // Tag entfernen
       } else {
         tagsArray.at(index).patchValue({ selected: true });
+        categorySet.add(tag.label);  // Tag hinzufügen
       }
     } else {
       const newTag = { ...tag, selected: true };
       tagsArray.push(this.createTagFormGroup(newTag));
+      categorySet.add(tag.label);  // Tag hinzufügen
     }
 
-    // Direkt das Original-Tag aktualisieren
+    // Den Zähler der Kategorie entsprechend aktualisieren
+    this.updateCategoryCounter(tag.type);
+
     tag.selected = !tag.selected;
 
-    // FormArray-Status aktualisieren
     this.rezeptForm.get('tags')?.updateValueAndValidity();
     this.cdr.markForCheck();
   }
 
-
+// Funktion zur Aktualisierung des Zählers
+  private updateCategoryCounter(category: string) {
+    const categorySet = this.selectedTagsByCategory[category];
+    // Den Zähler der Kategorie nach der Auswahl von Tags aktualisieren
+    this.selectedTagsByCategory[category] = categorySet;
+  }
 
   onImageUploaded(image: File): void {
     this.rezeptForm.patchValue({
@@ -320,14 +334,13 @@ export class RezeptErstellungComponent implements OnInit, OnDestroy {
           id: tag.id,
           type: tag.type ?? 'defaultType',
           label: tag.label,
-          selected:tag.selected,
-          count:tag.count
-          // selected und count werden nicht benötigt
+          selected: tag.selected ?? false, // Falls selected nicht gesetzt ist
+          count: tag.count ?? 0, // Falls count nicht gesetzt ist
         }))
         : []
     };
-
   }
+
 
   //mit window.history.state wird Objekt als Referenz übergeben
   loadRezeptToEdit() {

@@ -90,11 +90,10 @@ INSERT INTO `tags` (`id`, `label`, `type`) VALUES
 	(9, 'Japanisch', 'Landesküche'),
 	(10, 'Koreanisch', 'Landesküche'),
 	(11, 'Mexikanisch', 'Landesküche'),
-	(12, 'ballaststoffreich', 'Nährwert'),
-	(13, 'kalorienarm', 'Nährwert'),
-	(14, 'kalorienreich', 'Nährwert'),
-	(15, 'proteinreich', 'Nährwert'),
-	(16, 'zuckerarm', 'Nährwert');
+	(12, 'fleischhaltig', 'Ernährungsweise'),
+	(13, 'fischhaltig', 'Ernährungsweise'),
+	(14, 'vegan', 'Ernährungsweise'),
+	(15, 'vegetarisch', 'Ernährungsweise'),
 
 -- Exportiere Struktur von Tabelle dishlist.users
 CREATE TABLE IF NOT EXISTS `users` (

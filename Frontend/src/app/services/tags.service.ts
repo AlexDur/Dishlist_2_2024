@@ -26,13 +26,32 @@ export class TagService {
   //Zum Hinzufügen und Entfernen von Tags (beides in Seiteneleiste und Entfernen auch in Filterkreisen)
   toggleTag(tag: string): void {
     const currentTags = this.selectedTagsSubject.value;
+    let updatedTags: string[];
+
     if (currentTags.includes(tag)) {
-      this.setSelectedTags(currentTags.filter(t => t !== tag));
+      updatedTags = currentTags.filter(t => t !== tag);
+      this.updateTagCount(tag, -1); // Zähler reduzieren, wenn Tag entfernt wird
     } else {
-      this.setSelectedTags([...currentTags, tag]);
+      updatedTags = [...currentTags, tag];
+      this.updateTagCount(tag, 1); // Zähler erhöhen, wenn Tag hinzugefügt wird
     }
+
+    this.setSelectedTags(updatedTags);
     this.updateSelectedTags(this.tagsSubject.value);
   }
+
+// Hilfsfunktion zum Aktualisieren des Zählers eines Tags
+  private updateTagCount(tag: string, delta: number): void {
+    const updatedTags = this.tagsSubject.value.map(t => {
+      if (t.label === tag) {
+        t.count += delta; // Zähler aktualisieren
+      }
+      return t;
+    });
+
+    this.tagsSubject.next(updatedTags); // Das tagsSubject mit den aktualisierten Tags setzen
+  }
+
 
   updateTag(tag: Tag) {
     if (!tag.id) {

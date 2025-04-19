@@ -180,7 +180,7 @@ export class RezeptService {
     console.log('JWT Token:', token);
 
     if (!token) {
-      this.loadingSubject.next(false); // Ladezustand zurücksetzen
+      this.loadingSubject.next(false);
       return throwError(() => new Error('Token fehlt.'));
     }
 

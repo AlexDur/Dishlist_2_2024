@@ -52,7 +52,7 @@ export class AuthService {
         return response; // Antwort weitergeben
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('Fehler im HTTP-Aufruf:', error);
+        console.error('Login: Fehler im HTTP-Aufruf:', error);
         this.isAuthenticatedSubject.next(false); // Auth-Status bei Fehler setzen
         return throwError(() => new Error('Anmeldefehler: ' + error.message));
       })
@@ -104,7 +104,9 @@ export class AuthService {
 
     return this.http.post(`${this.backendUrl}/api/auth/register`, this.body, { responseType: 'text'}).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('Fehler im HTTP-Aufruf:', error);
+        console.error('HTTP Status:', error.status);
+        console.error('Fehlermeldung vom Backend:', error.error);
+
         return throwError(() => new Error('Registrierungsfehler: ' + error.message));
       })
     );

@@ -1,5 +1,5 @@
 export enum TagType {
   MAHLZEIT = 'Mahlzeit',
-  LANDESKÜCHE = 'Landesküche',
-  ERNÄHRUNGSWEISE = 'Ernährungsweise',
+  LANDESKUECHE  = 'Landesküche',
+  ERNAEHRUNGSWEISE  = 'Ernährungsweise',
 }
