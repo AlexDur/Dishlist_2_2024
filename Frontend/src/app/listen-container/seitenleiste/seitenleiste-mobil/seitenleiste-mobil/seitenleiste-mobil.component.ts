@@ -154,8 +154,21 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   toggleTagInSidebar(tag: Tag) {
     tag.selected = !tag.selected;
+    console.log(`Tag "${tag.label}" ausgewählt: ${tag.selected}`);
+
+
+    if (tag.selected) {
+      this.selectedTags.push(tag.label);
+    } else {
+      this.selectedTags = this.selectedTags.filter(t => t !== tag.label);
+    }
+
+    this.tagService.setSelectedTags(this.selectedTags);
+
     this.updateTagCounts(this.rezepte);
+    this.applyFilters();
   }
+
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])
@@ -228,21 +241,17 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
       });
     });
 
-
     // Tags mit den neuen Zählwerten aktualisieren
     this.tags.forEach(tag => {
       tag.count = zaehler[tag.label] || 0;
     });
 
-
   }*/
-
 
 
   //Zur Filterung der Tags
   getGerichtartenTags() {
     const tags = this.tags.filter(tag => tag.type === 'Mahlzeit');
-    console.log('Aktualisierte Tags:', tags);
     return tags;
   }
 
@@ -254,6 +263,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   getErnaehrungsweiseTags() {
     return this.tags.filter(tag => tag.type === 'Ernährungsweise');
   }
+
   applyFilters(): void {
     this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe({
       next: (filteredRecipes) => {

@@ -287,19 +287,18 @@ export class RezeptService {
 
           if (tags.length === 0) return true;
 
+
           return tags.every(selectedTag =>
-            rezept.tags?.some(rTag => rTag.label === selectedTag)
+            rezept.tags?.some(rTag => rTag.label?.toLowerCase() === selectedTag.toLowerCase())
           );
         });
 
-        // Aktualisiere die gefilterteRezepteSubject mit den neuen gefilterten Rezepten
         this.gefilterteRezepteSubject.next(gefilterteRezepte);
-
-        // Gibt die gefilterten Rezepte zurück
         return gefilterteRezepte;
       })
     );
   }
+
 
   // SPOON
   // Abruf der Spoon-Rezepte DIREKT von der API ohne BE als Proxy
