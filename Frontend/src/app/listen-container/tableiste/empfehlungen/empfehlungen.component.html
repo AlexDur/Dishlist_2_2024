@@ -1,8 +1,33 @@
-<button class="tab p-0 pl-1" (click)="toggleOverlay($event)">
-  <span *ngIf="selectedTags.length > 0" class="ki-label">AI</span>
-  <i class="pi pi-android"></i>
+<button class="tab p-0 pl-1" >
+  <div class="row-wishadish">
+    <button class="button-wishadish" (click)="toggleOverlayAI($event)"><i class="pi pi-android"></i></button>
+    <button class="button-wishadish" (click)="toggleOverlay($event)">ZUF</button>
+  </div>
   <span>Wish-A-Dish</span>
+  <span *ngIf="selectedTags.length > 0" class="ki-label">Filter</span>
 </button>
+
+<!--TODO: Bei "Suchen" soll die  KI API (Mistral) abgefragt werden und es soll auf einer card einen text formulieren für ein rezept.
+diese card, kann dann hinzugefügt werden oder nicht in den listeninhalt
+Standardmäßig ist nur das Mistral-Logo mit Essen abgebildet für eine Kachel, die in Listeninhalt übernommen wurde-->
+<div *ngIf="isAIOverlayVisible" class="ai-overlay-backdrop"></div>
+
+<div *ngIf="isAIOverlayVisible" class="ai-overlay">
+  <div class="ai-overlay-content">
+     <textarea
+       [(ngModel)]="rezeptWunsch"
+       placeholder="..."
+       rows="6"
+     ></textarea>
+    <div class="ai-overlay-buttons">
+      <button
+        (click)="sucheRezeptNachWunsch()"
+        [ngClass]="{'button-wishadish': true, 'overlay-open': isAIOverlayVisible}"
+      >Suchen</button>
+      <button class="ai-overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+    </div>
+  </div>
+</div>
 
 <div *ngIf="isOverlayVisible" class="custom-overlay-spoon" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
   <div class="overlay-content-spoon" (click)="stopPropagation($event)">
@@ -23,10 +48,8 @@
         <span>{{ selectedTags.join('; ') }}</span>
       </div>
 
-      <!-- Rezeptliste -->
       <div *ngIf="rezepte && rezepte.length > 0; else noRecipes" class="recipe-list">
         <div *ngFor="let rezept of rezepte" class="recipe-item">
-
           <button
             pButton
             class="spoon-button"
@@ -56,13 +79,25 @@
               <span class="recipe-name" (click)="openUrlSpoon(rezept.onlineAdresse || '', 'recipe')">{{ rezept.name }} </span>
             </div>
           </div>
-
         </div>
       </div>
 
-    <ng-template #noRecipes>
-      <div class="no-recipes-message">Keine Rezepte verfügbar</div>
-    </ng-template>
+      <ng-template #noRecipes>
+        <div class="no-recipes-message">Keine Rezepte verfügbar</div>
+      </ng-template>
+    </div>
   </div>
-</div>
-</div>
+
+  <div *ngIf="isAIInputVisible" class="custom-overlay-ai-input" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
+    <div class="overlay-content-ai-input" (click)="stopPropagation($event)">
+      <button class="overlay-close-button" (click)="closeOverlayButton($event)">XXXX</button>
+      <div class="overlay-content-inner">
+        <h2>Gib deinen Rezeptwunsch ein</h2>
+        <input type="text" #wunschInput [(ngModel)]="rezeptWunsch" placeholder="z.B. schnelle vegetarische Pasta">
+        <button (click)="starteSuche()">Suchen</button>
+
+      </div>
+    </div>
+  </div>
+
+  </div>

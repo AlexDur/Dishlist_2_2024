@@ -24,6 +24,11 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   selectedTags: string[] = [];
   isClicked = false;
+  rezeptWunsch: string = '';
+  isAIInputVisible = false;
+  hasAIInputBeenVisible = false;
+  isAIOverlayVisible: boolean = false;
+  isWishButtonActive = false;
 
   constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router, private cdRef: ChangeDetectorRef) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
@@ -37,6 +42,9 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
   }
 
+  get hasFilter(): boolean {
+    return this.selectedTags.length > 0;
+  }
 
   @HostListener('document:click', ['$event'])
   @HostListener('document:touchstart', ['$event'])
@@ -47,6 +55,7 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     }
   }
 
+
   // Verhindert das Schließen des Overlays, wenn innerhalb des Overlays geklickt wird
   stopPropagation(event: MouseEvent): void {
     event.stopPropagation();
@@ -54,10 +63,12 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
   // Schließt das Overlay, wenn der Schließen-Button geklickt wird
   closeOverlayButton(event: MouseEvent): void {
-    this.isOverlayVisible = false;
+    this.isAIOverlayVisible = false;
     event.stopPropagation();
     this.router.navigate(['/listen-container']);
+    console.log('button clicked');
   }
+
 
   // Öffnet oder schließt das Overlay
   toggleOverlay(event: Event) {
@@ -69,6 +80,34 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  /*TODO: Finde heraus wieso OVerlay sich nicht bei isAIInputVisible öffnet*/
+  toggleOverlayAI(event: Event) {
+    event.stopPropagation();
+    this.isAIOverlayVisible  = !this.isAIOverlayVisible ;
+    this.hasAIInputBeenVisible = true;
+    this.rezeptWunsch = '';
+  }
+
+
+  sucheRezeptNachWunsch() {
+    if (this.rezeptWunsch.trim() !== '') {
+      this.isOverlayVisible = false;
+      this.rezeptWunsch = '';
+    } else {
+      alert('Bitte gib einen Rezeptwunsch ein.');
+    }
+  }
+
+  starteSuche() {
+    if (this.rezeptWunsch.trim() !== '') {
+      this.isLoading = true;
+      console.log('Nutzer sucht nach:', this.rezeptWunsch);
+      this.isAIInputVisible = false;
+    }
+  }
+
+
   loadSpoonRezepte(): void {
     this.isLoading = true;
     this.isClicked = false;
@@ -76,7 +115,6 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
 
     const TIMEOUT_DURATION = 5000;
 
-    console.log('an fetchSpoon weitergebene Tags für Spoon-Abfrage:', this.selectedTags);
 
     this.rezeptService.fetchSpoonRezepte(this.selectedTags).pipe(
       timeout(TIMEOUT_DURATION),
