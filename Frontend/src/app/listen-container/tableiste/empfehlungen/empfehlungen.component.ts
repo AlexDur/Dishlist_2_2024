@@ -61,12 +61,22 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  // Schließt das Overlay, wenn der Schließen-Button geklickt wird
+
   closeOverlayButton(event: MouseEvent): void {
-    this.isAIOverlayVisible = false;
     event.stopPropagation();
-    this.router.navigate(['/listen-container']);
-    console.log('button clicked');
+
+
+    this.isAIOverlayVisible = false;
+    this.isOverlayVisible = false;
+    this.isAIInputVisible = false;
+
+
+    this.cdRef.detectChanges();
+
+    // Navigate after a short delay
+    setTimeout(() => {
+      this.router.navigate(['/listen-container']);
+    }, 10);
   }
 
 
@@ -121,22 +131,22 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
       catchError((error) => {
         if (error.name === 'TimeoutError') {
           console.error('Die Anfrage hat das Zeitlimit überschritten.');
-          this.errorMessage = 'Die Anfrage hat das Zeitlimit überschritten. Bitte versuche es später noch einmal.'; // Benutzerfreundliche Nachricht
+          this.errorMessage = 'Die Anfrage hat das Zeitlimit überschritten. Bitte versuche es später noch einmal.';
         } else {
           console.error('Fehler beim Abrufen der Rezepte:', error);
-          this.errorMessage = 'Ein Fehler ist beim Abrufen der Rezepte aufgetreten. Bitte versuche es später noch einmal.'; // Allgemeine Fehlermeldung
+          this.errorMessage = 'Ein Fehler ist beim Abrufen der Rezepte aufgetreten. Bitte versuche es später noch einmal.';
         }
-        return of([]); // Gib ein leeres Array zurück, um den Observable-Strom fortzusetzen
+        return of([]);
       }),
       finalize(() => {
         this.isLoading = false;
-        this.cdRef.detectChanges(); // Manuelles Aktualisieren der UI
+       /* this.cdRef.detectChanges();*/
       })
     ).subscribe((rezepte) => {
       console.log('Empfangene Rezepte:', rezepte);
       this.rezepte = rezepte.map((rezept) => ({
-        ...rezept, // Behält alle anderen Eigenschaften des Rezepts bei
-        tags: rezept.tags ?? [] // Setzt tags auf ein leeres Array, falls rezept.tags null oder undefined ist
+        ...rezept,
+        tags: rezept.tags ?? []
       }));
 
     });

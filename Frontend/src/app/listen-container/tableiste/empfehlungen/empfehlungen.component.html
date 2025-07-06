@@ -10,9 +10,9 @@
 <!--TODO: Bei "Suchen" soll die  KI API (Mistral) abgefragt werden und es soll auf einer card einen text formulieren für ein rezept.
 diese card, kann dann hinzugefügt werden oder nicht in den listeninhalt
 Standardmäßig ist nur das Mistral-Logo mit Essen abgebildet für eine Kachel, die in Listeninhalt übernommen wurde-->
-<div *ngIf="isAIOverlayVisible" class="ai-overlay-backdrop"></div>
+<div *ngIf="isAIOverlayVisible" class="ai-overlay-backdrop" (click)="closeOverlayButton($event)"></div>
 
-<div *ngIf="isAIOverlayVisible" class="ai-overlay">
+<div *ngIf="isAIOverlayVisible" class="ai-overlay" (click)="stopPropagation($event)">
   <div class="ai-overlay-content">
      <textarea
        [(ngModel)]="rezeptWunsch"
@@ -32,7 +32,7 @@ Standardmäßig ist nur das Mistral-Logo mit Essen abgebildet für eine Kachel, 
 <div *ngIf="isOverlayVisible" class="custom-overlay-spoon" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
   <div class="overlay-content-spoon" (click)="stopPropagation($event)">
 
-    <button class="overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+    <button class="overlay-close-button" (click)="closeOverlayButton($event)">x</button>
 
     <div class="overlay-content-inner">
 
