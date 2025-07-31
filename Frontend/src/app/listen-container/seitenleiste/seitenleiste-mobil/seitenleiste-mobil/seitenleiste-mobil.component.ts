@@ -33,6 +33,9 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   // 3. Private und geschützte Eigenschaften
   /*private subscription: Subscription | undefined;*/
   private searchSubject = new Subject<string>();
+  private lastSearchText: string = '';
+  private lastSelectedTags: string[] = [];
+
 
   // 4. Öffentliche Eigenschaften
 
@@ -54,10 +57,13 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   constructor(private rezepteService: RezeptService,  private tagService: TagService, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService, private cdr: ChangeDetectorRef) {
     this.subscription = this.rezepteService.onRezeptUpdated.subscribe(() => {
       this.updateTagCounts(this.originalRezepte);
+
     });
   }
 
   ngOnInit(): void {
+    // @ts-ignore
+
       this.subscription.add(
       this.tagService.selectedTags$.subscribe(tags => {
         this.selectedTags = tags;
@@ -88,15 +94,14 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
     // Debounce für Suchtext
     this.searchSubject
       .pipe(
-        debounceTime(300),
+        debounceTime(500),
         distinctUntilChanged() // Nur Emmission, wenn Suchtext sich ändert
       )
       .subscribe(searchText => {
         this.applyFilters();
       });
 
-    this.tagService.setSelectedTags(this.tags.filter(tag => tag.selected).map(tag => tag.label));
-
+    this.tagService.setSelectedTags(this.tags.filter(tag => tag.selected).map(tag => String(tag.id)));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -154,7 +159,6 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   toggleTagInSidebar(tag: Tag) {
     tag.selected = !tag.selected;
-    console.log(`Tag "${tag.label}" ausgewählt: ${tag.selected}`);
 
 
     if (tag.selected) {
@@ -180,6 +184,7 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   closeOverlayButton(event: Event): void {
+    event.stopPropagation();
     this.isOverlayVisible = false;
   }
 
@@ -223,38 +228,9 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   }
 
-
- /* private updateTagsWithCounts(rezepte: Rezept[]): void {
-    // Definiert einen Zähler mit einem Index-Typ für Strings und Werten vom Typ Number
-    const zaehler: { [key: string]: number } = {};
-
-    // Alle Rezepte durchgehen und Tag-Zähler erhöhen
-    rezepte.forEach(rezept => {
-      rezept.tags?.forEach(tag => {
-        if (tag && tag.label) {
-          // Loggt die Tags, um zu sehen, ob sie richtig durchlaufen werden
-          console.log('Tag gefunden:', tag.label);
-
-          // Erhöht die Zählung des Tags
-          zaehler[tag.label] = (zaehler[tag.label] || 0) + 1;
-        }
-      });
-    });
-
-    // Tags mit den neuen Zählwerten aktualisieren
-    this.tags.forEach(tag => {
-      tag.count = zaehler[tag.label] || 0;
-    });
-
-  }*/
-
-
-  //Zur Filterung der Tags
   getGerichtartenTags() {
-    const tags = this.tags.filter(tag => tag.type === 'Mahlzeit');
-    return tags;
+    return this.tags.filter(tag => tag.type === 'Mahlzeit');
   }
-
 
   getKuechenTags() {
     return this.tags.filter(tag => tag.type === 'Landesküche');
@@ -262,19 +238,36 @@ export class SeitenleisteMobilComponent implements OnInit, OnDestroy, OnChanges 
 
   getErnaehrungsweiseTags() {
     return this.tags.filter(tag => tag.type === 'Ernährungsweise');
+
   }
 
   applyFilters(): void {
+    const trimmedSearchText = this.searchText.trim();
+
+    const tagsChanged = this.selectedTags.length !== this.lastSelectedTags.length ||
+      !this.selectedTags.every((tag, index) => tag === this.lastSelectedTags[index]);
+
+    const searchTextChanged = this.lastSearchText !== trimmedSearchText;
+
+    if (!tagsChanged && !searchTextChanged) {
+      return; // Kein Filtervorgang nötig
+    }
+
+    this.lastSearchText = trimmedSearchText;
+    this.lastSelectedTags = [...this.selectedTags]; // Kopie zur Sicherheit
+
     this.rezepteService.getFilteredRezepte(this.selectedTags, this.searchText).subscribe({
       next: (filteredRecipes) => {
         this.filteredRecipes = filteredRecipes;
-        this.updateTagCounts(filteredRecipes); // Hier muss der Zähler angewendet werden
+        this.updateTagCounts(filteredRecipes);
       },
       error: (err) => {
         console.error("Fehler beim Filtern der Rezepte:", err);
       }
     });
   }
+
+
 
 
   private updateTagsSelection(): void {

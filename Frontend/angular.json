@@ -81,7 +81,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "fullStack_rezepteApp:build:production"
+              "browserTarget": "fullStack_rezepteApp:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
               "browserTarget": "fullStack_rezepteApp:build:development"

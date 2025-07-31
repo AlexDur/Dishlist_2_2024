@@ -1,7 +1,7 @@
 {
   "appId": "com.rezepte_app",
   "appName": "DishList",
-  "webDir": "Frontend/dist/rezepte-app",
+  "webDir": "www",
   "android": {
     "flavor": "dev",
     "compileOptions": {

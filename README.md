@@ -36,7 +36,7 @@ Technologien:
 Rezepteapp für Verwaltung von Onlinerezepten
 >>>>>>> 6cedcacfe5ae7ca174b7c5ef3ee36b5524292552
 =======
-# Dishlist_2024 (verfügbar unter www.dish-list.de und demnächst im Google Play Store)
+# Dishlist_2024 (verfügbar unter www.the-dishlist.com und demnächst im Google Play Store)
 Eine Rezepte-App zur Organisation von Online-Rezepten mit integriertem Empfehlungssystem.
 
 Der Nutzer kann Online-Rezepte manuell in der App speichern. Dabei können neben einer Fotoaufnahme auch weitere Details zum Gericht hinzugefügt werden. Die Rezepte können mit Tags versehen werden, die in den folgenden Kategorien unterteilt sind:

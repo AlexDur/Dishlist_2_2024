@@ -44,7 +44,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
   constructor(private rezepteService: RezeptService, private tagService: TagService, private router:Router, private uiService: UserInterfaceService, private listenAnsichtService: ListenansichtService) {}
 
   ngOnInit(): void {
-    this.tagsSubscription = this.tagService.selectedTags$.subscribe(tags => {
+    this.tagService.selectedTags$.subscribe(tags => {
       this.selectedTags = tags;
     });
 
@@ -150,19 +150,19 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
       // Container für das Fullscreen-Bild
       const fullscreenContainer = document.createElement('div');
       fullscreenContainer.style.position = 'fixed';
-      fullscreenContainer.style.top = '50%';
-      fullscreenContainer.style.left = '50%';
-      fullscreenContainer.style.transform = 'translate(-50%, -50%)';
-      fullscreenContainer.style.width = '100vw';
-      fullscreenContainer.style.height = '100vh';
+      fullscreenContainer.style.top = '0';
+      fullscreenContainer.style.left = '0';
+      const minDimension = Math.min(window.innerWidth, window.innerHeight);
+      fullscreenContainer.style.width = `${minDimension}px`;
+      fullscreenContainer.style.height = `${minDimension}px`;
       fullscreenContainer.style.zIndex = '10000';
       fullscreenContainer.style.display = 'flex';
       fullscreenContainer.style.justifyContent = 'center';
       fullscreenContainer.style.alignItems = 'center';
       fullscreenContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
       fullscreenContainer.style.overflow = 'hidden';
-      fullscreenContainer.style.paddingTop = '400px'
-      fullscreenContainer.style.paddingBottom = '400px'
+      fullscreenContainer.style.paddingTop = '500px'
+      fullscreenContainer.style.paddingBottom = '500px'
 
       const maxDimension = Math.min(window.innerWidth, window.innerHeight);
       fullscreenContainer.style.width = `${maxDimension}px`;
@@ -196,6 +196,7 @@ export class ListeninhaltMobilComponent implements OnInit, OnDestroy {
     console.log('clear Tags');
     this.selectedTags = [];
     this.tagService.setSelectedTags([]);
+
   }
 
 }

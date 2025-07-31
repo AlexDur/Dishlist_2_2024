@@ -7,6 +7,7 @@
 
 $color-start: #f6a257;
 $color-end: #b34f09;
+$green_one: #0f8974;
 
 $primary-color: #b61919;
 $secondary-color: rgba(230, 87, 39, 0.8);
@@ -49,7 +50,7 @@ a {
   font-weight: bold;
   height: 30px;
   border-radius: 50px;
-  background-color: $detail_2-color !important;
+  background-color: $green_one !important;
   color: $tertiary-color !important;
   border: 1px transparent solid !important;
   font-size: 20px;
@@ -58,7 +59,7 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
+  outline: 2px solid $green_one;
   outline-offset: 2px;
 
 }
@@ -197,15 +198,15 @@ a {
   font-weight: bold;
   height: 30px;
   background-color: transparent;
-  color: black;
-  border: 1px transparent solid !important;
+  color: white;
+  border: 1px white solid ;
   font-size: 20px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid $detail_2-color;
+  outline: 2px solid white !important;
   outline-offset: 2px;
 }
 
@@ -241,8 +242,8 @@ a {
   border-radius: 50px;
   font-weight: bold;
   height: 30px;
-  background-color: white;
-  color: black !important;
+  background-color: $green_one;
+  color: white !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -250,7 +251,7 @@ a {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  outline: 2px solid white;
+  outline: 2px solid #0f8974;
   outline-offset: 2px;
 }
 
@@ -261,7 +262,7 @@ a {
   font-weight: bold;
   height: 30px;
   background-color: white;
-  color: black !important;
+  color: #0f8974 !important;
   border: 1px transparent solid !important;
   font-size: 20px;
   cursor: pointer;
@@ -286,8 +287,8 @@ a {
   align-items: center;
   justify-content: end;
   width: 100%;
-  padding: 40px;
-  padding-bottom: 80px;
+  padding: 60px;
+  padding-bottom: 50px;
   box-sizing: border-box;
   transition: backdrop-filter 0.3s ease;
 }
@@ -1091,7 +1092,7 @@ a {
   transition: background-color 0.3s ease;
   outline: 2px solid $detail_2-color;
   outline-offset: 2px;
-  background-color: $detail_2-color;
+  background-color: $green_one;
   border: 2px solid $detail_2-color;
   color: white;
   width: 200px;
@@ -1133,6 +1134,7 @@ a {
   width: 275px;
   text-align: center;
   color: white !important;
+  background-color: $green_one;
   border-radius: 50px;
   padding: 0 15px;
   a {
@@ -1148,16 +1150,18 @@ a {
 
 .landing-page-subtitle{
   color: #0f8974;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 5rem;
   margin-bottom: 5rem;
 }
 
 @media screen and (max-width: 750px) {
 
   .landing-seite{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-image: url('/assets/Group-20_landing.webp');
     background-size: cover;
     background-position: center;
@@ -1171,16 +1175,15 @@ a {
     color: $secondary-color !important;
   }
 
- /* .landing-button-reg{
-    color: black !important;
-    background-color: white;
+  .landing-page-subtitle{
+    color: #0f8974;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    width: 275px;
+    top: -27rem;
+    position: fixed;
   }
-
-  .landing-button-anmeldung{
-    color: black !important;
-    background-color: white;
-  }*/
-
 
   .hidden-preload {
     position: absolute;
@@ -1330,17 +1333,31 @@ video {
 .such-container {
   display: flex;
   align-items: center;
-  justify-content: center;
   position: fixed;
+  top: 30px;
   width: 45px;
   height: 36px;
   border-radius: 18px;
   background: white;
   transition: width 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
   overflow: hidden;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
+
+.top-leiste-linkss {
+  position: absolute;
+}
+
+.top-leiste-rechts {
+  display: flex;
+  align-items: center;
+}
+
+.top-leiste-rechts > button {
+  margin-left: 10px;
+}
+
 
 .container-such-icon-button {
   position: absolute;
@@ -1391,12 +1408,9 @@ video {
   opacity: 1;
 }
 
-
-
-
 .such-icon {
   position: absolute;
-  left: 10px;
+
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
@@ -1752,7 +1766,8 @@ h3.weiss {
 }
 
 .ki-label {
-  position: absolute;
+  position: static;
+  margin-top: 5px;
   top: -1px;
   right: 2px;
   background: $hover-color1;
@@ -1763,6 +1778,37 @@ h3.weiss {
   border-radius: 5px;
 }
 
+.button-wishadish {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $secondary-color;
+  width: 60px;
+  height: 30px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 5px;
+}
+
+.button-wishadish.overlay-open {
+  background-color: $hover-color1;
+}
+
+.button-wishadish.active {
+  background-color: $hover-color1;
+}
+
+.button-wishadish:not(.active):not(.overlay-open):hover {
+  background-color: $hover-color1;
+}
+
+
+.row-wishadish{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
 .custom-overlay {
   position: fixed;
@@ -1960,6 +2006,117 @@ body.overlay-active > *:not(.custom-overlay) {
   z-index: 1000;
 }
 
+.ai-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); // Dunkler, halbtransparenter Hintergrund
+  z-index: 998;
+}
+
+.ai-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  padding: 1rem;
+  z-index: 1000;
+  height: auto;
+  min-height: 6rem;
+}
+
+.textarea-button-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.textarea-button-wrapper textarea {
+  width: 100%;
+  padding: 10px;
+  padding-bottom: 50px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.ai-overlay-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+
+
+.ai-overlay input {
+  flex-grow: 1;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+.ai-overlay-buttons {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.ai-overlay-buttons button {
+  padding: 12px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.ai-overlay-buttons button:first-child {
+  background: $secondary-color;
+  color: white;
+  padding: .5rem;
+}
+
+.ai-overlay-close-button {
+  background: darkgray;
+  color: white;
+  width: 4rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.chat-card {
+  border-radius: .75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+.chat-user { background: #e0f3ff; align-self: flex-end; }
+.chat-ai   { background: #f5f5f5; align-self: flex-start; }
+
 .overlay-content-spoon {
   background-color: whitesmoke;
   padding: 50px;
@@ -1975,6 +2132,8 @@ body.overlay-active > *:not(.custom-overlay) {
   overflow:hidden;
 }
 
+
+
 .overlay-close-button {
   position: absolute;
   top: 10px;
@@ -1986,6 +2145,8 @@ body.overlay-active > *:not(.custom-overlay) {
   border: none;
   font-size: 28px;
   cursor: pointer;
+  z-index: 1000;
+  color: #333;
 }
 
 
@@ -2348,17 +2509,20 @@ cd f.spoon-trennstrich {
   position: fixed;
   bottom: 0;
   width: 43%;
+  height: 75px;
   display: flex;
   background-color: #f8f9fa;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
   padding: 7px 0;
   padding-bottom: 4px;
   border-radius: 5px;
+
 }
 
 .tab {
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
   background: transparent;
@@ -2388,24 +2552,51 @@ cd f.spoon-trennstrich {
   margin-bottom: 5px !important;
 }
 
+.tab-row{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.wish-a-dish-text {
+  margin-top: 5px;
+}
+
+.icon-container {
+  margin-right: auto;
+}
+
+.row-Wish-a-dish{
+  display: flex;
+  flex-direction: row;
+  gap:30px;
+}
+
+
 
 @media screen and (max-width: 750px) {
 
   .tab-bar {
     position: fixed;
-    bottom: 0;
-    width: 100%;
+    bottom: env(safe-area-inset-bottom);
+    left: env(safe-area-inset-left);
+    right: env(safe-area-inset-right);
+    width: auto;
     display: flex;
     border-top: 1px solid #8f420a;
     background-color: rgb(232, 225, 221);
     justify-content: center;
+    z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   .tab {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -2422,6 +2613,10 @@ cd f.spoon-trennstrich {
     outline: none;
     box-shadow: none;
   }
+
+
+
+
 
 }
 
@@ -2446,11 +2641,11 @@ cd f.spoon-trennstrich {
     flex: 1;
   }
 
-/*Header*/
 
 .header{
   display: flex;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  margin-bottom: .5rem;
   justify-content: space-between;
   align-items: center;
 }

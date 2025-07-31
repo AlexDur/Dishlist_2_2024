@@ -5,8 +5,12 @@ import {Router} from "@angular/router";
 import { Subscription, of, finalize, Observable, timeout } from 'rxjs';
 import {TagService} from "../../../services/tags.service";
 import { catchError } from 'rxjs/operators';
+import {OpenAiService} from "../../../services/openai.service";
 
-
+interface ChatMessage {
+  role: 'user' | 'ai';
+  content: string;
+}
 
 @Component({
   selector: 'app-empfehlungen',
@@ -29,8 +33,9 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   hasAIInputBeenVisible = false;
   isAIOverlayVisible: boolean = false;
   isWishButtonActive = false;
+  chatLog: { role: 'user' | 'ai', content: string }[] = [];
 
-  constructor(private rezeptService: RezeptService, private tagService: TagService, private router: Router, private cdRef: ChangeDetectorRef) {
+  constructor(private readonly openAi: OpenAiService, private rezeptService: RezeptService, private tagService: TagService, private router: Router, private cdRef: ChangeDetectorRef) {
     this.gefilterteRezepte$ = this.rezeptService.gefilterteRezepte$;
   }
 
@@ -91,23 +96,48 @@ export class EmpfehlungenComponent implements OnInit, OnDestroy {
   }
 
 
-  /*TODO: Finde heraus wieso OVerlay sich nicht bei isAIInputVisible öffnet*/
   toggleOverlayAI(event: Event) {
     event.stopPropagation();
-    this.isAIOverlayVisible  = !this.isAIOverlayVisible ;
+    this.isAIOverlayVisible = !this.isAIOverlayVisible;
     this.hasAIInputBeenVisible = true;
     this.rezeptWunsch = '';
   }
 
 
-  sucheRezeptNachWunsch() {
-    if (this.rezeptWunsch.trim() !== '') {
-      this.isOverlayVisible = false;
-      this.rezeptWunsch = '';
-    } else {
+  sucheRezeptNachWunsch(): void {
+    const frage = this.rezeptWunsch.trim();
+    if (!frage) {
       alert('Bitte gib einen Rezeptwunsch ein.');
+      return;
     }
+
+    // Benutzerfrage als Karte anzeigen
+    this.chatLog.push({role: 'user', content: frage});
+    this.rezeptWunsch = '';
+    this.isLoading = true;
+
+
+    this.openAi.frageRezept(frage).subscribe({
+      next: (rezept: Rezept) => {
+        /* KI‑Antwort anzeigen */
+        this.chatLog.push({
+          role: 'ai',
+          content: JSON.stringify(rezept, null, 2)
+        });
+        this.isLoading = false;
+      },
+      error: err => {
+        this.chatLog.push({
+          role: 'ai',
+          content: 'Fehler bei der Abfrage der KI: ' + err.message
+        });
+        this.isLoading = false;
+      }
+    });
   }
+
+
+
 
   starteSuche() {
     if (this.rezeptWunsch.trim() !== '') {

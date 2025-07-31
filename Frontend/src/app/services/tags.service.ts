@@ -19,10 +19,6 @@ export class TagService {
   constructor(private http: HttpClient) {}
 
 
-  /*setSelectedTags(tags: string[]): void {
-    this.selectedTagsSubject.next(tags);
-  }*/
-
   //Zum Hinzufügen und Entfernen von Tags (beides in Seiteneleiste und Entfernen auch in Filterkreisen)
   toggleTag(tag: string): void {
     const currentTags = this.selectedTagsSubject.value;
@@ -61,7 +57,7 @@ export class TagService {
     return this.http.put<Tag>(`/${tag.id}`, tag);
   }
 
-  //Hilfsfunktion essentiell für UpdateDates (unklar wieso ausgegraut)
+  //Hilfsfunktion essentiell für UpdateDates
   private updateSelectedTags(selectedTags: Tag[]): void {
     const validTags = selectedTags.filter(tag => tag.id !== undefined);
 
@@ -81,7 +77,6 @@ export class TagService {
   }
 
   setSelectedTags(tags: string[]): void {
-    console.log('Aktualisierte selectedTags:', tags);
     this.selectedTagsSubject.next(tags);
   }
 }

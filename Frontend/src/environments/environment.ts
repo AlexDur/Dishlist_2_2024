@@ -4,6 +4,7 @@ export const environment = {
   production: false,
   apiUrl: config.apiUrl,
   spoonacularApiKey: 'd63b99bd1aaa4d149becceeaf5659548',
+  openAiProxy: '/api/openai/chat',
   enableDebug: true,
   featureToggle: {
     enableNewFeature: true,

@@ -1,11 +1,11 @@
 <button class="tab p-0 pl-1" >
   <div class="row-wishadish">
     <button class="button-wishadish" (click)="toggleOverlayAI($event)"><i class="pi pi-android"></i></button>
-    <button class="button-wishadish" (click)="toggleOverlay($event)">ZUF</button>
+    <button class="button-wishadish" (click)="toggleOverlay($event)">Random</button>
   </div>
-  <span>Wish-A-Dish</span>
   <span *ngIf="selectedTags.length > 0" class="ki-label">Filter</span>
 </button>
+
 
 <!--TODO: Bei "Suchen" soll die  KI API (Mistral) abgefragt werden und es soll auf einer card einen text formulieren für ein rezept.
 diese card, kann dann hinzugefügt werden oder nicht in den listeninhalt
@@ -14,17 +14,36 @@ Standardmäßig ist nur das Mistral-Logo mit Essen abgebildet für eine Kachel, 
 
 <div *ngIf="isAIOverlayVisible" class="ai-overlay" (click)="stopPropagation($event)">
   <div class="ai-overlay-content">
-     <textarea
-       [(ngModel)]="rezeptWunsch"
-       placeholder="..."
-       rows="6"
-     ></textarea>
-    <div class="ai-overlay-buttons">
-      <button
-        (click)="sucheRezeptNachWunsch()"
-        [ngClass]="{'button-wishadish': true, 'overlay-open': isAIOverlayVisible}"
-      >Suchen</button>
-      <button class="ai-overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+
+    <!-- Chat‑Verlauf -->
+    <div class="chat-container" *ngIf="chatLog.length">
+      <div
+        *ngFor="let msg of chatLog"
+        class="chat-card"
+        [ngClass]="{ 'chat-user': msg.role === 'user', 'chat-ai': msg.role === 'ai' }"
+      >
+        <p>{{ msg.content }}</p>
+      </div>
+    </div>
+
+
+
+    <div class="textarea-button-wrapper">
+      <textarea
+        [(ngModel)]="rezeptWunsch"
+        placeholder="Dein Rezeptwunsch hier..."
+        rows="6"
+      ></textarea>
+
+      <div class="ai-overlay-buttons">
+        <button class="ai-overlay-close-button" (click)="closeOverlayButton($event)">X</button>
+        <button class="ai-overlay-close-button"
+                (click)="sucheRezeptNachWunsch()"
+                [disabled]="isLoading"
+                [ngClass]="{'button-wishadish': true, 'overlay-open': isAIOverlayVisible}">
+          Suchen</button>
+
+      </div>
     </div>
   </div>
 </div>

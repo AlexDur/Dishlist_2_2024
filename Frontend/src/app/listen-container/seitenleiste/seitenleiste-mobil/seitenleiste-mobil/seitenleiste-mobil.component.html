@@ -1,39 +1,42 @@
 <div>
   <div>
     <div class="header">
-      <div class="such-container" [class.expanded]="isSearchFieldVisible">
-       <button (click)="toggleSearchField()" class="container-such-icon-button">
-        <i class="pi pi-search such-icon-button"></i>
-       </button>
-         <input
-          *ngIf="isSearchFieldVisible"
-          [(ngModel)]="searchText"
-          (input)="onSearchTextChange()"
-          type="text"
-          class="suchfeld"
-          placeholder="Suche..."
-          #searchInput
-        />
+
+      <div class="top-leiste-links">
+        <div class="such-container" [class.expanded]="isSearchFieldVisible">
+         <button (click)="toggleSearchField()" class="container-such-icon-button">
+          <i class="pi pi-search such-icon-button"></i>
+         </button>
+           <input
+            *ngIf="isSearchFieldVisible"
+            [(ngModel)]="searchText"
+            (input)="onSearchTextChange()"
+            type="text"
+            class="suchfeld"
+            placeholder="Suche..."
+            #searchInput
+          />
+        </div>
       </div>
 
-      <button *ngIf="isMobile" (click)="toggleGrid()" class="grid-switch">
-        <i class="pi pi-th-large filter-icon"></i>
-      </button>
+      <div class="top-leiste-rechts">
+        <button *ngIf="isMobile" (click)="toggleGrid()" class="grid-switch">
+          <i class="pi pi-th-large filter-icon"></i>
+        </button>
 
-      <button (click)="toggleCardView()" class="actionButtons-switch"   [disabled]="isGridActive"
-              [class.disabled]="isGridActive">
-        <i class="pi pi-eye filter-icon"></i>
-      </button>
+        <button (click)="toggleCardView()" class="actionButtons-switch"   [disabled]="isGridActive"
+                [class.disabled]="isGridActive">
+          <i class="pi pi-eye filter-icon"></i>
+        </button>
 
-      <!-- Button zum Öffnen des Overlays -->
-      <button (click)="toggleOverlay($event)"   class="filter-button">
-        <i class="pi pi-sliders-h filter-icon"></i>
-      </button>
+        <button (click)="toggleOverlay($event)"   class="filter-button">
+          <i class="pi pi-sliders-h filter-icon"></i>
+        </button>
 
-      <!-- Overlay -->
+      </div>
+
       <div *ngIf="isOverlayVisible" class="custom-overlay" (click)="closeOverlay($event)" (touchstart)="closeOverlay($event)">
         <div class="overlay-content" (click)="stopPropagation($event)" (touchstart)="stopPropagation($event)">
-          <!-- Schließen-Button -->
           <button class="overlay-close-button" (click)="closeOverlayButton($event)">x</button>
 
           <!-- Filter-Inhalte -->
