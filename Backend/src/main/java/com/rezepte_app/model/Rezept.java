@@ -1,6 +1,7 @@
 package com.rezepte_app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rezepte_app.repository.UserRepository;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.lang.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,10 @@ public class Rezept {
     @Column(name = "name")
     private String name;
 
-    @Column(name="userid")
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    private User user;
+
 
     @Column(name = "onlineAdresse")
     private String onlineAdresse;
@@ -46,7 +50,6 @@ public class Rezept {
     @Column(name = "bildUrl")
     @Nullable
     private String bildUrl;
-
 
     @PrePersist
     @PreUpdate
@@ -66,7 +69,7 @@ public class Rezept {
     }
 
     public List<Tag> getTags() {
-        return new ArrayList<>(tags); // Rückgabe der Tags als Liste
+        return new ArrayList<>(tags);
     }
 
     public String getOnlineAdresse() {
@@ -97,12 +100,20 @@ public class Rezept {
         this.bildUrl = bildUrl;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     public String getUserId() {
-        return userId;
+        return (user != null) ? user.getId() : null;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        this.user = (userId != null) ? new User(userId) : null;
     }
 
 }

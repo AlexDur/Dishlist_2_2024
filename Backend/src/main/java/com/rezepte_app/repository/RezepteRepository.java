@@ -20,8 +20,11 @@ import java.util.List;
 @Repository
 public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 
-  /*  List<Rezept> findByUserIdOrderByIdDesc();
-*/
+    List<Rezept> findAllByUser_IdOrderByIdDesc(String userId);
 
-    List<Rezept> findAllByOrderByIdDesc();
+
+
+    /*  List<Rezept> findByUserIdOrderByIdDesc();
+     */
+
 }

@@ -3,6 +3,7 @@ package com.rezepte_app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,8 +26,10 @@ public class Tag{
     @Column(name = "label", nullable = false)
     private String label;
 
-    @NotBlank(message="Typ muss vorhanden sein")
-    private String type;
+    @Column(name = "type", nullable = false)
+    @NotNull(message = "Typ muss vorhanden sein")
+    private TagType type;
+
 
     @ManyToMany(mappedBy = "tags")
       // Verhindert die Serialisierung dieser Seite der Beziehung
@@ -44,6 +47,10 @@ public class Tag{
         this.count = rezepte != null ? rezepte.size() : 0;
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     // Optional: Getter für count, der den count-Wert immer aktualisiert
     public int getCount() {
         updateCount();
@@ -56,6 +63,10 @@ public class Tag{
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setLabel(String label) {
@@ -80,12 +91,13 @@ public class Tag{
     }
 
 
-    public String getType() {
+    public TagType getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+
+    public void setType(TagType type) {
+        this.type  = type;
     }
 
     public boolean isSelected() {

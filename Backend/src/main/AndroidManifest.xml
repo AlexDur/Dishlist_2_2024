@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dishlist_app"
+          package="com.rezepte_app"
           xmlns:tools="http://schemas.android.com/tools">
 
     <application
@@ -12,7 +12,7 @@
             android:theme="@style/AppTheme">
 
         <activity
-                android:name="com.rezepte_app.MainActivity"
+                android:name="Frontend.android.app.src.main.java.com.rezepte_app.MainActivity"
                 android:label="@string/title_activity_main"
                 android:theme="@style/AppTheme.NoActionBarLaunch"
                 android:launchMode="singleTask"

@@ -73,6 +73,11 @@
             <version>3.2.0</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <version>3.1.0.RELEASE</version>
@@ -165,7 +170,10 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.3.0</version> </dependency>
 
         <!--Dok-->
         <dependency>
@@ -263,7 +271,7 @@
                     <image>openjdk:17-jdk-slim</image>
                 </from>
                 <to>
-                    <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_134</image>
+                    <image>654654542135.dkr.ecr.eu-central-1.amazonaws.com/mein-backend:frontback_s3_163</image>
                 </to>
                 <container>
                     <mainClass>com.rezepte_app.RezepteAppApplication</mainClass>

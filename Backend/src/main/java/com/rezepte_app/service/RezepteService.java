@@ -1,11 +1,16 @@
 package com.rezepte_app.service;
 
 import com.rezepte_app.dto.RezeptDTO;
+import com.rezepte_app.dto.TagDTO;
+import com.rezepte_app.model.TagType;
+import com.rezepte_app.model.User;
 import com.rezepte_app.model.mapper.RezeptMapper;
+import com.rezepte_app.model.mapper.TagMapper;
 import com.rezepte_app.repository.RezepteRepository;
 import com.rezepte_app.repository.TagRepository;
 import com.rezepte_app.model.Rezept;
 import com.rezepte_app.model.Tag;
+import com.rezepte_app.repository.UserRepository;
 import com.rezepte_app.service.ImageServices.ImageUploadService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -14,10 +19,13 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,38 +37,41 @@ public class RezepteService {
     private final TagService tagService;
     private final RezeptMapper rezeptMapper;
     private final TagRepository tagRepository;
+    private final JwtUtil jwtUtil;
     private final RezepteRepository rezepteRepository;
     private final ImageUploadService imageUploadService;
+    private final TagMapper tagMapper;
+    private final UserRepository userRepository;
 
     // Constructor-based Dependency Injection
     @Autowired
     public RezepteService(TagService tagService,
                           RezeptMapper rezeptMapper,
+                          JwtUtil jwtUtil,
                           TagRepository tagRepository,
                           RezepteRepository rezepteRepository,
-                          ImageUploadService imageUploadService) {
+                          ImageUploadService imageUploadService,
+                          TagMapper tagMapper,
+                          UserRepository userRepository) {
         this.tagService = tagService;
         this.rezeptMapper = rezeptMapper;
+        this.jwtUtil = jwtUtil;
         this.tagRepository = tagRepository;
         this.rezepteRepository = rezepteRepository;
+        this.tagMapper = tagMapper;
         this.imageUploadService = imageUploadService;
+        this.userRepository = userRepository;
     }
 
     // Im RezepteService
-    public List<Rezept> fetchAlleRezepte() {
-        List<Rezept> alleRezepte = rezepteRepository.findAllByOrderByIdDesc();
-    /*    logRezepteInfo(alleRezepte);*/
-        initializeTagsForRezepte(alleRezepte);
-        return alleRezepte;
+    public List<Rezept> fetchAlleRezepte(String token) {
+        String userId = jwtUtil.getUserIdFromToken(token);
+        List<Rezept> userRezepte = rezepteRepository.findAllByUser_IdOrderByIdDesc(userId);
+        initializeTagsForRezepte(userRezepte);
+        return userRezepte;
     }
 
-  /*  private void logRezepteInfo(String userId, List<Rezept> alleRezepte) {
-        if (alleRezepte.isEmpty()) {
-            logger.warn("Keine Rezepte für den Benutzer {} gefunden", userId);
-        } else {
-            logger.info("Anzahl der abgerufenen Rezepte: {}", alleRezepte.size());
-        }
-    }*/
+
 
     private void initializeTagsForRezepte(List<Rezept> alleRezepte) {
         // Tags der Rezepte in einer einzigen Abfrage laden
@@ -97,7 +108,6 @@ public class RezepteService {
         if (image != null && !image.isEmpty()) {
             handleImageUpload(rezept, image);
         } else if (imageUrl != null && !imageUrl.isBlank()) {
-
             rezept.setBildUrl(imageUrl);
         }
 
@@ -121,21 +131,36 @@ public class RezepteService {
 
     private void handleTags(Rezept rezept) {
         if (rezept.getTags() != null && !rezept.getTags().isEmpty()) {
-            List<Long> existingTagIds = rezept.getTags().stream()
-                    .map(Tag::getId)
+            // Convert all Tag objects to TagDTO objects
+            List<TagDTO> tagDTOs = rezept.getTags().stream()
+                    .map(tag -> tagMapper.convertToTagDTO((Tag) tag))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
+            // Extract IDs of existing tags
+            List<Long> existingTagIds = tagDTOs.stream()
+                    .map(TagDTO::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            // Fetch existing tags from database
             Map<Long, Tag> existingTagsMap = tagRepository.findAllById(existingTagIds).stream()
                     .collect(Collectors.toMap(Tag::getId, tag -> tag));
 
-            Set<Tag> updatedTags = rezept.getTags().stream()
-                    .map(tag -> getOrCreateTag(tag, existingTagsMap))
+            // Update or create tags
+            Set<Tag> updatedTags = tagDTOs.stream()
+                    .map(tagDTO -> {
+                        Tag tag = tagMapper.convertToTag(tagDTO);
+                        return getOrCreateTag(tag, existingTagsMap);
+                    })
                     .collect(Collectors.toSet());
 
+            // Update tags in the recipe
             rezept.setTags(new ArrayList<>(updatedTags));
         }
     }
+
+
 
     private Tag getOrCreateTag(Tag tag, Map<Long, Tag> existingTagsMap) {
         if (tag.getId() != null && existingTagsMap.containsKey(tag.getId())) {
@@ -169,11 +194,27 @@ public class RezepteService {
     private void updateTags(Rezept existingRezept, RezeptDTO rezeptDTO) {
         if (rezeptDTO.getTags() != null) {
             Set<Tag> updatedTags = rezeptDTO.getTags().stream()
-                    .map(tag -> tagRepository.findById(tag.getId()).orElseGet(() -> tagRepository.save(tag)))
+                    .map(tagDTO -> {
+                        // Konvertiere TagDTO in Tag Entity
+                        Tag tag = tagRepository.findById(tagDTO.getId()).orElseGet(() -> {
+                            Tag newTag = new Tag();
+                            // Der TagType wird hier direkt verwendet, ohne Umwandlung in einen String
+                            newTag.setType(TagType.valueOf(tagDTO.getType()));  // Hier wird der String in TagType umgewandelt
+                            newTag.setLabel(tagDTO.getLabel());
+                            newTag.setSelected(tagDTO.isSelected());
+                            newTag.setCount(tagDTO.getCount());
+                            return tagRepository.save(newTag);
+                        });
+                        return tag;
+                    })
                     .collect(Collectors.toSet());
             existingRezept.setTags(new ArrayList<>(updatedTags));
         }
     }
+
+
+
+
 
 
     @Transactional

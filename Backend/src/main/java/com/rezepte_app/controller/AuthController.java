@@ -4,7 +4,6 @@ import com.rezepte_app.dto.LoginRequest;
 import com.rezepte_app.dto.NutzerRegistrierungDto;
 import com.rezepte_app.dto.VerfikationCodeDto;
 import com.rezepte_app.service.AuthService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

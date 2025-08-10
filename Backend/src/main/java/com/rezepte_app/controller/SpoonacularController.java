@@ -1,8 +1,8 @@
 package com.rezepte_app.controller;
 
+import com.rezepte_app.service.SpoonacularService;
 import com.rezepte_app.dto.RezeptDTO;
 import com.rezepte_app.dto.SpoonRezepteDTO;
-import com.rezepte_app.service.SpoonacularService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

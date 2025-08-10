@@ -16,7 +16,7 @@ public class RezeptDTO {
     private Long id;
     private String name;
     private String onlineAdresse;
-    private List<Tag> tags; // Liste von Tag-Objekten
+    private List<TagDTO> tags;
     private String bildUrl;
     private String userId;
 
@@ -38,7 +38,7 @@ public class RezeptDTO {
         this.name = name;
     }
 
-    public List<Tag> getTags() {
+    public List<TagDTO> getTags() {
         return tags;
     }
 

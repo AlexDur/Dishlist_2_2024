@@ -1,9 +1,15 @@
 package com.rezepte_app.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.rezepte_app.model.User;
+import com.rezepte_app.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
@@ -11,7 +17,6 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 
 //Zur Interaktion mit AWS Cognito für die Benutzerregistrierung, Authentifizierung und Verifizierung von E-Mail-Codes.
@@ -27,6 +32,9 @@ public class AuthService {
     private final String userPoolClientSecret;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     public AuthService(CognitoIdentityProviderClient cognitoClient,
                        @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
                        @Value("${aws.cognito.userPoolClientSecret}") String userPoolClientSecret) {
@@ -36,11 +44,34 @@ public class AuthService {
     }
 
     public SignUpResponse registerUser(String email, String password) {
-        String secretHash = calculateSecretHash(this.userPoolClientSecret, email, this.userPoolClientId);
-        return registerUserWithSecretHash(email, password, secretHash);
+
+        try {
+            String secretHash = calculateSecretHash(this.userPoolClientSecret, email, this.userPoolClientId);
+            SignUpResponse response = registerUserWithSecretHash(email, password, secretHash);
+
+            String userId = response.userSub();
+            if (userId == null || userId.isEmpty()) {
+                // Falls die Benutzer-ID nicht vorhanden ist, wird ein Fehler geworfen
+                throw new RuntimeException("Registrierung fehlgeschlagen: Cognito-Nutzer nicht bestätigt.");
+            }
+
+
+            return response;
+        } catch (CognitoIdentityProviderException e) {
+            if (e.awsErrorDetails().errorCode().equals("UsernameExistsException")) {
+                logger.error("Benutzer mit der E-Mail-Adresse {} existiert bereits.", email);
+                throw new RuntimeException("Benutzer mit dieser E-Mail-Adresse existiert bereits.");
+            } else {
+                logger.error("Fehler bei der Benutzerregistrierung", e);
+                throw new RuntimeException("Fehler bei der Benutzerregistrierung: " + e.getMessage(), e);
+            }
+        }
     }
 
+
     public SignUpResponse registerUserWithSecretHash(String email, String password, String secretHash) {
+
+
         try {
             SignUpRequest signUpRequest = buildSignUpRequest(email, password, secretHash);
             return cognitoClient.signUp(signUpRequest);
@@ -78,6 +109,8 @@ public class AuthService {
             // Erstellung der Authentifizierungs-Anfrage für Cognito unter Verwendung des Builders
             InitiateAuthRequest authRequest = buildAuthRequest(email, password, secretHash);
             InitiateAuthResponse authResponse = cognitoClient.initiateAuth(authRequest);
+            saveCognitoUserId(authResponse.authenticationResult().idToken()); // Benutzer-ID speichern
+
             return authResponse.authenticationResult().accessToken();
 
         } catch (Exception e) {
@@ -87,6 +120,39 @@ public class AuthService {
             throw new RuntimeException("Fehler bei der Authentifizierung: " + e);
         }
     }
+
+    private void saveCognitoUserId(String cognitoIdToken) {
+        // Extrahieren der Benutzer-ID aus dem Cognito-Token (idToken oder accessToken)
+        String userId = extractUserIdFromCognitoToken(cognitoIdToken);
+        if (!userId.isEmpty()) {
+            User user = new User();
+            user.setId(userId);
+            userRepository.save(user);
+            logger.info("Cognito Benutzer-ID gespeichert: {}", userId);
+        } else {
+            logger.warn("Benutzer-ID konnte nicht extrahiert werden.");
+        }
+    }
+
+    private String extractUserIdFromCognitoToken(String cognitoIdToken) {
+        if (cognitoIdToken == null || cognitoIdToken.trim().isEmpty() || !cognitoIdToken.contains(".")) {
+            logger.error("Das übergebene Token ist ungültig oder leer: {}", cognitoIdToken);
+            return null;  // Oder eine spezifische Exception werfen
+        }
+        try {
+            DecodedJWT jwt = JWT.decode(cognitoIdToken);
+            String userId = jwt.getSubject(); // Benutzer-ID (sub-Claim) extrahieren
+            if (userId == null || userId.trim().isEmpty()) {
+                logger.error("Benutzer-ID aus dem Token konnte nicht extrahiert werden: {}", cognitoIdToken);
+                return null;
+            }
+            return userId;
+        } catch (Exception e) {
+            logger.error("Fehler beim Extrahieren der Benutzer-ID aus dem Cognito-Token: {}", cognitoIdToken, e);
+            return null;
+        }
+    }
+
 
 
     public void logout(String token) {

@@ -26,7 +26,7 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
     /**
      * An allowed callback URL.
      */
-    private String logoutRedirectUrl = "https://www.dish-list.de/logout";
+    private String logoutRedirectUrl = "https://www.the-dishlist.com/logout";
 
     /**
      * The ID of your User Pool Client.

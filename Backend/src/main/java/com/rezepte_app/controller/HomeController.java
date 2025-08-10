@@ -40,6 +40,4 @@ public class HomeController {
     public String redirect() {
         return "forward:/index.html";  // Nur für API-Routen weiterleiten
     }
-
-
 }

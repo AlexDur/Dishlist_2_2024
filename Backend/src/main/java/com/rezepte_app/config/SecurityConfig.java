@@ -20,9 +20,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://dish-list.de", "https://www.dish-list.de"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://the-dishlist.com", "https://www.the-dishlist.com"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Content-Type", "*"));
+        config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return source;
@@ -34,12 +34,17 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/static/**", "/error", "/", "/index.html", "/api/**").permitAll()
+                        .requestMatchers("/static/**", "/error", "/", "/index.html").permitAll()
+                        .requestMatchers("/api/openai/**").permitAll()  // ← OpenAI API frei zugänglich
+                        .requestMatchers("/api/**").permitAll()    // ← Andere APIs brauchen Auth
                         .anyRequest().permitAll()
                 )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
     }
+
+
 }

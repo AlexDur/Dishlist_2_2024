@@ -5,7 +5,6 @@ import software.amazon.awssdk.regions.Region;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import software.amazon.awssdk.regions.Region;
 
 @SpringBootApplication
 public class RezepteAppApplication {
