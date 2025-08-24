@@ -1,0 +1,21 @@
+<div class="camera-container">
+
+  <!-- Kamera-Button -->
+  <label
+    class="upload-button-label"
+    [class.cameraShot-selected]="isCameraShot"
+    (click)="startCamera()">
+    <i class="pi pi-camera"></i>
+  </label>
+
+</div>
+
+<!-- Kameraansicht -->
+<div *ngIf="isCameraOpen" class="camera-modal">
+  <div class="camera-container">
+    <video #videoElement autoplay></video>
+    <canvas #canvasElement style="display: none;"></canvas>
+    <button class="take-photo-button" (click)="capturePhoto()">Foto aufnehmen</button>
+    <button class="close-button" (click)="closeCamera()">Schließen</button>
+  </div>
+</div>

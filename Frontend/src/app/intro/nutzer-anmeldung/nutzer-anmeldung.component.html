@@ -1,0 +1,37 @@
+<div>
+  <div class="zentriertes-formular-anmeldung">
+    <p *ngIf="isAccountDeleted">Dein Konto wurde gelöscht</p>
+
+    <h1 (click)="navigateListe($event)">Anmeldung</h1>
+
+    <!-- Formular für die Anmeldung -->
+    <form *ngIf="!isAuthenticated" (ngSubmit)="onLogin()">
+      <div class="p-fluid">
+        <div class="p-field">
+          <input class="inputfeld" placeholder="E-Mailadresse" type="text" [(ngModel)]="email" required name="email" pInputText>
+        </div>
+        <div class="p-field password-container">
+          <input class="inputfeld" [type]="inputType" placeholder="Passwort" [(ngModel)]="password" required name="password" pInputText (focus)="onPasswordFocus()" (input)="onPasswordChange()">
+          <i
+            class="pi toggle-password-icon"
+            [ngClass]="{'pi-eye-slash': !showPassword, 'pi-eye': showPassword}"
+            (click)="togglePasswordVisibility()">
+          </i>
+          <small *ngIf="passwordInvalid && passwordTouched" class="error-message">Das Passwort besteht aus mindestens 8 Stellen, einer Zahl und einem Sonderzeichen.</small>
+        </div>
+        <button class="general-button" type="submit" pButton>Anmelden</button>
+
+
+      </div>
+      <div class="anmeldung-validierung">
+        <div *ngIf="loginSuccess" class="success-message">
+          Login erfolgreich!
+        </div>
+        <div *ngIf="loginError" class="error-message">
+          Login fehlgeschlagen. Bitte überprüfen Deine Anmeldeinformationen.
+        </div>
+      </div>
+    </form>
+    <button class="general-button-transparent" pButton (click)="navigateLanding($event)">Zurück</button>
+</div>
+</div>

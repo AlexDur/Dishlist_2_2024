@@ -1,0 +1,22 @@
+<div class="notification-container">
+  <div 
+    *ngFor="let notification of notifications" 
+    [class]="getNotificationClass(notification)"
+    [@slideInOut]>
+    
+    <div class="notification-content">
+      <i [class]="getIconClass(notification)"></i>
+      <span class="notification-message">{{ notification.message }}</span>
+      <button 
+        class="notification-close" 
+        (click)="removeNotification(notification.id)"
+        aria-label="Close notification">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+    
+    <div class="notification-progress" *ngIf="notification.duration">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+</div> 
