@@ -1,0 +1,30 @@
+<div>
+  <div class="zentriertes-formular-registrierung">
+    <h1>Registrierung</h1>
+    <form (ngSubmit)="onRegister()">
+      <div class="p-fluid">
+        <div class="p-field">
+          <input class="inputfeld" placeholder="E-Mail" type="text" [(ngModel)]="email" required name="email" pInputText>
+        </div>
+
+        <div class="p-field password-container">
+          <input class="inputfeld" placeholder="Passwort" [type]="inputType"  [(ngModel)]="password" required name="password" pInputText (focus)="onPasswordFocus()" (input)="onPasswordChange()">
+
+          <small class="error-message" *ngIf="passwordInvalid && passwordTouched">Passwort muss mindestens 8 Stellen, eine Zahl und ein Sonderzeichen enthalten.</small>
+        </div>
+
+        <div class="p-field password-container">
+          <input class="inputfeld" placeholder="Passwort bestätigen" [type]="inputType" [(ngModel)]="confirmPassword" required name="confirmPassword" pInputText (focus)="onPasswordFocus()">
+
+          <small class="error-message" *ngIf="passwordMismatch">Passwörter stimmen nicht überein.</small>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+        <button class="general-button" type="submit" pButton>Registrieren</button>
+      </div>
+    </form>
+    <button class="general-button-transparent" pButton (click)="navigateLanding($event)">Zurück</button>
+  </div>
+</div>

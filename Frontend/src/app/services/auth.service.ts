@@ -1,0 +1,133 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError  } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import {environment} from "../../environments/environment";
+import { of, BehaviorSubject, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {UserInterfaceService} from "./userInterface.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class AuthService {
+  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  private jwtHelper = new JwtHelperService();
+  private backendUrl = environment.apiUrl;
+  private tokenKey = 'cognitoToken';
+  private body: { email: string; password: string; } | undefined;
+  private accountDeletedSubject = new BehaviorSubject<boolean>(false);
+  accountDeleted$ = this.accountDeletedSubject.asObservable();
+
+
+
+  constructor(private http: HttpClient, private tabService: UserInterfaceService) {
+    const storedAuth = localStorage.getItem('isAuthenticated') === 'true';
+    this.isAuthenticatedSubject.next(storedAuth);
+  }
+
+  login(email: string, password: string): Observable<any> {
+    this.body = { email, password };
+
+    return this.http.post(`${this.backendUrl}/api/auth/login`, this.body, { responseType: 'json' }).pipe(
+      map((response: any) => {
+        const token = response.token;
+
+
+        if (token) {
+          localStorage.setItem('jwt_token', token);
+          localStorage.setItem('isAuthenticated', 'true');
+          this.isAuthenticatedSubject.next(true);
+          this.tabService.resetTab();
+        } else {
+          console.error('Kein Token in der Antwort vorhanden');
+          this.isAuthenticatedSubject.next(false);
+        }
+
+        return response; // Antwort weitergeben
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Login: Fehler im HTTP-Aufruf:', error);
+        this.isAuthenticatedSubject.next(false); // Auth-Status bei Fehler setzen
+        return throwError(() => new Error('Anmeldefehler: ' + error.message));
+      })
+    );
+  }
+
+
+  logout(): Observable<any> {
+    const authToken = localStorage.getItem('jwt_token');
+
+    // Überprüfen, ob das authToken existiert und einem gültigen Format entspricht
+    if (authToken && /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(authToken)) {
+
+      // HTTP-POST-Request für die Abmeldung
+      return this.http.post(`${this.backendUrl}/api/auth/logout`, {}, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      }).pipe(
+        tap(response => {
+          console.log("Antwort vom Server:", response);
+          // Lokale Speicherung löschen (auch wenn Logout erfolgreich war)
+          localStorage.clear();
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Fehler bei der Abmeldung:', error.message, 'Status:', error.status, 'URL:', error.url);
+          return of(null); // Fehlerbehandlung: Null zurückgeben, damit keine weiteren Aktionen folgen
+        })
+      );
+    } else {
+      console.error('Ungültiger Token oder Token fehlt');
+      return of(null); // Kein Token vorhanden oder Token ungültig
+    }
+  }
+
+
+
+  setIsAuthenticated(status: boolean): void {
+    this.isAuthenticatedSubject.next(status);
+  }
+
+
+  /**
+   * Sendet Registrierungsdaten des Nutzers an das Backend
+   * @param email
+   * @param password
+   * @returns Ein Observable mit der Antwort des Servers
+   */
+  register(email: string, password: string): Observable<any> {
+    this.body = { email, password };
+
+    return this.http.post(`${this.backendUrl}/api/auth/register`, this.body, { responseType: 'text'}).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('HTTP Status:', error.status);
+        console.error('Fehlermeldung vom Backend:', error.error);
+
+        return throwError(() => new Error('Registrierungsfehler: ' + error.message));
+      })
+    );
+  }
+
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+
+  getUserId(): string | null {
+    const token = localStorage.getItem('jwt_token'); // Falls dein Token im LocalStorage gespeichert wird
+    if (!token) return null;
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken?.sub || null; // `sub` ist oft die User-ID
+  }
+
+
+  verifyCodeBackend(verifikationCode: string, email: string): Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/api/auth/verify-code`, { verifikationCode, email });
+  }
+}

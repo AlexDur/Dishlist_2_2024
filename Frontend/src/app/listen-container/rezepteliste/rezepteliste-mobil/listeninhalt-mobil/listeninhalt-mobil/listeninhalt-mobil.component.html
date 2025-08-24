@@ -1,0 +1,61 @@
+<div>
+<div class="filter-kreis-container">
+  <div *ngIf="selectedTags.length > 0">
+    <app-filterkreise  *ngFor="let tag of selectedTags" [label]="tag"  (tagRemoved)="onTagRemoved(tag)" class="filterkreis">
+    </app-filterkreise>
+  </div>
+  <div *ngIf="selectedTags.length > 0" class="filterkreis-clear" (click)="clearTags()" icon="pi pi-trash">X</div>
+</div>
+  <div class="container-listeninhalt"
+       [ngStyle]="isMobile ? {'grid-template-columns': 'repeat(' + spaltenAnzahl + ', 1fr)'} : {}">
+
+  <div *ngFor="let rezept of gefilterteRezepte">
+    <p-card>
+      <div class="rezept-container">
+
+        <div class="rezept-image-container">
+          <img
+            *ngIf="rezept.bildUrl; else defaultImage"
+            [src]="rezept.bildUrl"
+            alt="{{ rezept.name }}"
+            (click)="onImageClick(rezept, $event)"
+          />
+          <ng-template #defaultImage>
+            <div>
+              <img src="assets/plate.webp" alt="Standardbild" style="background-color: #D5D3D3FF;">
+            </div>
+          </ng-template>
+        </div>
+        <div *ngIf="actionButtonsVisible && spaltenAnzahl < 4">
+        <div class="p-card-title"  (click)="openUrl(rezept.onlineAdresse)">{{ rezept.name }} </div>
+        <div class="p-card-footer" >
+          <button
+            pButton
+            type="button"
+            icon="pi pi-pencil"
+            (click)="navigateForm(rezept, $event)"
+            class="edit-button"
+          ></button>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            (click)="showDeleteDialog(rezept.id)"
+            class="delete-button"
+          ></button>
+        </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  <app-dialog  [(visible)]="displayDeleteDialog" (confirm)="confirmDelete($event)"></app-dialog>
+  
+  <!-- Recipe Modal for AI-generated recipes -->
+  <app-recipe-modal 
+    *ngIf="showRecipeModal"
+    [recipe]="selectedRecipe"
+    [isVisible]="showRecipeModal"
+    (close)="closeRecipeModal()">
+  </app-recipe-modal>
+</div>
+</div>
