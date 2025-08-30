@@ -111,6 +111,7 @@ public class RezepteController {
     public ResponseEntity<Map<String, Object>> createRezept(
             @RequestPart(value = "rezeptDTO") RezeptDTO rezeptDTO,
             @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
             BindingResult result) {
 
         // Überprüfe auf Validierungsfehler
@@ -119,6 +120,19 @@ public class RezepteController {
         }
 
         try {
+            // Extract user ID from JWT token
+            String userId = null;
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                try {
+                    String token = authorizationHeader.substring(7);
+                    userId = jwtUtil.getUserIdFromToken(token);
+                    logger.info("Extracted user ID from token: {}", userId);
+                } catch (Exception e) {
+                    logger.warn("Could not extract user ID from token: {}", e.getMessage());
+                    // Continue without user ID - this will be handled by the service
+                }
+            }
+
             validateAndLogTags(rezeptDTO);
             String imageUrl = rezeptDTO.getBildUrl();
 
@@ -130,8 +144,8 @@ public class RezepteController {
                 }
             }
 
-            // Rezept speichern (ohne Benutzer-ID)
-            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, null, image, imageUrl);
+            // Rezept speichern mit Benutzer-ID
+            Rezept createdRezept = rezepteService.createRezept(rezeptDTO, userId, image, imageUrl);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Rezept erfolgreich erstellt.");
@@ -139,6 +153,7 @@ public class RezepteController {
             response.put("name", createdRezept.getName());
             response.put("bildUrl", createdRezept.getBildUrl());
             response.put("onlineAdresse", createdRezept.getOnlineAdresse());
+            response.put("userId", createdRezept.getUserId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
