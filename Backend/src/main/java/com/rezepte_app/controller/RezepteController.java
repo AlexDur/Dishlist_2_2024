@@ -65,11 +65,24 @@ public class RezepteController {
         System.out.println("RezepteController: Service wurde erfolgreich injiziert!");
     }
 
-
-/*    private String extractUserIdFromToken(String authorizationHeader) {
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
-        return jwtUtil.getUserIdFromToken(token);
-    }*/
+    /**
+     * Utility method to extract user ID from Authorization header
+     * @param authorizationHeader The Authorization header value
+     * @return The extracted user ID or null if extraction fails
+     */
+    private String extractUserIdFromHeader(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        
+        try {
+            String token = authorizationHeader.substring(7);
+            return jwtUtil.getUserIdFromToken(token);
+        } catch (Exception e) {
+            logger.warn("Could not extract user ID from token: {}", e.getMessage());
+            return null;
+        }
+    }
 
 
     @PostMapping("/{rezeptId}/addTags")
@@ -121,16 +134,9 @@ public class RezepteController {
 
         try {
             // Extract user ID from JWT token
-            String userId = null;
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                try {
-                    String token = authorizationHeader.substring(7);
-                    userId = jwtUtil.getUserIdFromToken(token);
-                    logger.info("Extracted user ID from token: {}", userId);
-                } catch (Exception e) {
-                    logger.warn("Could not extract user ID from token: {}", e.getMessage());
-                    // Continue without user ID - this will be handled by the service
-                }
+            String userId = extractUserIdFromHeader(authorizationHeader);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Authentication required"));
             }
 
             validateAndLogTags(rezeptDTO);
@@ -255,30 +261,44 @@ public class RezepteController {
       List-Api mit eingebauten Methoden
       Es dürfen nur Rezept-Objekte in die List eingefügt werden*/
     @GetMapping("/alleRezepte")
-    public ResponseEntity<List<Rezept>> getAlleRezepte() {
+    public ResponseEntity<List<Rezept>> getAlleRezepte(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         try {
-            List<Rezept> alleRezepte = rezepteService.fetchAlleRezepte();
-            return ResponseEntity.ok(Optional.ofNullable(alleRezepte).orElse(Collections.emptyList()));
+            // Extract user ID from JWT token
+            String userId = extractUserIdFromHeader(authorizationHeader);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
+            }
+
+            // Get only recipes for the current user
+            List<Rezept> userRezepte = rezepteService.getRezepteByUserId(userId);
+            return ResponseEntity.ok(Optional.ofNullable(userRezepte).orElse(Collections.emptyList()));
+
         } catch (Exception e) {
-            logger.error("Fehler beim Abrufen aller Rezepte", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            logger.error("Fehler beim Abrufen der Benutzer-Rezepte", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
 
 
 
     @GetMapping("/userRezepte")
-    public ResponseEntity<List<Rezept>> getUserRezepte() {
+    public ResponseEntity<List<Rezept>> getUserRezepte(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         try {
-            // Alle Rezepte abrufen (nicht mehr nur für einen User)
-            List<Rezept> userRezepte = rezepteService.fetchAlleRezepte();
+            // Extract user ID from JWT token
+            String userId = extractUserIdFromHeader(authorizationHeader);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
+            }
 
-            // Falls keine Rezepte vorhanden sind, leere Liste zurückgeben
+            // Get only recipes for the current user
+            List<Rezept> userRezepte = rezepteService.getRezepteByUserId(userId);
             return ResponseEntity.ok(Optional.ofNullable(userRezepte).orElse(Collections.emptyList()));
 
         } catch (Exception e) {
-            logger.error("Fehler beim Abrufen der Rezepte", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            logger.error("Fehler beim Abrufen der Benutzer-Rezepte", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
 

@@ -24,4 +24,11 @@ public interface RezepteRepository extends JpaRepository<Rezept, Long> {
 */
 
     List<Rezept> findAllByOrderByIdDesc();
+    
+    /**
+     * Find all recipes by user ID
+     * @param userId The Cognito user ID
+     * @return List of recipes for the specified user
+     */
+    List<Rezept> findByUserId(String userId);
 }

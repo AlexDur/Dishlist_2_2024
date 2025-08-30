@@ -190,9 +190,29 @@ public class RezepteService {
             rezepteRepository.deleteById((long) id);
             return true;
         } catch (Exception e) {
-            logger.error("Fehler beim Löschen des Rezepts mit ID {}: {}", id, e.getMessage());
+            logger.error("Fehler beim Löschen des Rezepts mit ID: {}", id, e);
             return false;
         }
     }
 
+    /**
+     * Get recipes by user ID
+     * @param userId The Cognito user ID
+     * @return List of recipes for the specified user
+     */
+    public List<Rezept> getRezepteByUserId(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            logger.warn("User ID is null or empty, returning empty list");
+            return Collections.emptyList();
+        }
+        
+        try {
+            List<Rezept> userRezepte = rezepteRepository.findByUserId(userId);
+            logger.info("Found {} recipes for user ID: {}", userRezepte.size(), userId);
+            return userRezepte;
+        } catch (Exception e) {
+            logger.error("Error fetching recipes for user ID: {}", userId, e);
+            return Collections.emptyList();
+        }
+    }
 }

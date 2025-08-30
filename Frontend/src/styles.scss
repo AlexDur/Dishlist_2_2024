@@ -1225,6 +1225,49 @@ a {
     display: block;
     width: 100%;
   }
+
+  // Mobile-specific AI text improvements - Consistent black text
+  .chat-card.chat-ai {
+    background: #ffffff !important;
+    border: 2px solid #e0e0e0;
+    margin: 10px 0;
+    padding: 15px;
+  }
+
+  .chat-card.chat-ai .chat-content,
+  .chat-card.chat-ai div {
+    color: #000000 !important; // Consistent black text on mobile
+    font-size: 16px; // Larger font on mobile
+    line-height: 1.7;
+  }
+
+  .ai-overlay {
+    width: 98% !important; // Better mobile fit
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .ai-overlay textarea {
+    font-size: 16px; // Larger font on mobile
+    color: #000000 !important; // Consistent black text on mobile
+  }
+
+  // Mobile AI recipe modal - Consistent black text
+  .recipe-modal-overlay .modal-content {
+    width: 95% !important;
+    max-height: 90vh;
+  }
+
+  .recipe-modal-overlay .modal-body {
+    color: #000000 !important; // Black text on mobile
+  }
+
+  .recipe-modal-overlay .recipe-info,
+  .recipe-modal-overlay .recipe-section h3,
+  .recipe-modal-overlay .ingredients-list li,
+  .recipe-modal-overlay .instructions {
+    color: #000000 !important; // Consistent black text on mobile
+  }
 }
 
 .rezept-tabelle tr:hover {
@@ -2090,6 +2133,89 @@ body.overlay-active > *:not(.custom-overlay) {
 .chat-user { background: #e0f3ff; align-self: flex-end; }
 .chat-ai   { background: #f5f5f5; align-self: flex-start; }
 
+// Enhanced AI recipe text readability - Consistent black text on all devices
+.chat-card.chat-ai {
+  background: #ffffff !important; // White background for better contrast
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-card.chat-ai .chat-content,
+.chat-card.chat-ai div {
+  color: #000000 !important; // Consistent black text for better readability
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chat-card.chat-ai strong {
+  color: #000000 !important; // Bold text in black
+  font-weight: 600;
+}
+
+.chat-card.chat-ai span {
+  color: #000000 !important; // Ensure all spans have black color
+}
+
+// AI overlay text improvements - Consistent black text
+.ai-overlay {
+  background: #ffffff !important; // Ensure white background
+}
+
+.ai-overlay-content {
+  background: #ffffff !important; // Ensure white background
+}
+
+.ai-overlay textarea {
+  color: #000000 !important; // Consistent black text in textarea
+  background: #ffffff !important; // White background
+  border: 2px solid #e0e0e0;
+}
+
+.ai-overlay textarea::placeholder {
+  color: #666666 !important; // Dark placeholder text
+}
+
+// Loading spinner text - Consistent black text
+.loading-spinner {
+  color: #000000 !important; // Black text for loading message
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Additional AI text improvements - Consistent black text
+.ai-overlay-buttons button {
+  color: #000000 !important; // Black text for buttons
+  background: #ffffff !important; // White background
+  border: 2px solid #e0e0e0;
+}
+
+.ai-overlay-close-button {
+  color: #000000 !important; // Black text for close button
+  background: #f0f0f0 !important; // Light background
+  border: 2px solid #e0e0e0;
+}
+
+// Ensure all text in AI components has consistent black color
+.chat-container {
+  background: #ffffff;
+}
+
+.chat-card {
+  background: #ffffff !important;
+  color: #000000 !important; // Consistent black text
+}
+
+.chat-card.chat-user {
+  background: #e0f3ff !important;
+  color: #000000 !important; // Black text for user messages
+}
+
+.chat-card.chat-user div {
+  color: #000000 !important; // Black text for user message content
+}
+
 .save-recipe-section {
   margin-top: 15px;
   text-align: center;
@@ -2730,4 +2856,94 @@ cd f.spoon-trennstrich {
   padding-top: 10px;
   border-top: 1px solid #ccc;
   margin-bottom: 3rem;
+}
+
+
+.save-recipe-btn {
+  color: #ffffff !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+.recipe-modal-overlay .modal-content {
+  background: #ffffff !important;
+}
+
+.recipe-modal-overlay .modal-body {
+  color: #000000 !important;
+}
+
+.recipe-modal-overlay .recipe-info {
+  color: #000000 !important;
+}
+
+.recipe-modal-overlay .recipe-info .info-item {
+  color: #000000 !important;
+}
+
+.recipe-modal-overlay .recipe-info .info-item span {
+  color: #000000 !important;
+}
+
+.recipe-modal-overlay .recipe-info .info-item strong {
+  color: #000000 !important;
+}
+
+.recipe-modal-overlay .recipe-section h3 {
+  color: #000000 !important; // Black headings for recipe sections
+}
+
+.recipe-modal-overlay .ingredients-list li {
+  color: #000000 !important; // Black text for ingredients
+}
+
+.recipe-modal-overlay .instructions {
+  color: #000000 !important; // Black text for cooking instructions
+}
+
+.recipe-modal-overlay .ai-badge {
+  color: #ffffff !important; // Keep AI badge text white on gradient background
+}
+
+// AI Recipe Cards - Consistent black text
+.rezept-container[data-ai="true"] .p-card-title,
+.rezept-container[data-ai="true"] .p-card-content,
+.rezept-container[data-ai="true"] .p-card-body {
+  color: #000000 !important;
+}
+
+// AI Recipe List Items - Consistent black text
+.rezept-tabelle tr[data-ai="true"] td,
+.rezept-tabelle tr[data-ai="true"] th {
+  color: #000000 !important;
+}
+
+// AI Recipe Form Elements - Consistent black text
+.zentriertes-formular-erstellung[data-ai="true"] input,
+.zentriertes-formular-erstellung[data-ai="true"] textarea,
+.zentriertes-formular-erstellung[data-ai="true"] label,
+.zentriertes-formular-erstellung[data-ai="true"] .erstellung-kategorie {
+  color: #000000 !important;
+}
+
+// AI Recipe Overlay - Consistent black text
+.ai-overlay[data-ai="true"] .chat-content,
+.ai-overlay[data-ai="true"] .chat-card div,
+.ai-overlay[data-ai="true"] .loading-spinner {
+  color: #000000 !important;
+}
+
+// Ensure all AI recipe text elements have black color
+[data-ai="true"] *,
+.ai-recipe *,
+.chatgpt-recipe * {
+  color: #000000 !important;
+}
+
+// Fallback for any AI recipe text that might inherit white color
+.ai-recipe-text,
+.chatgpt-text,
+.recipe-ai-content {
+  color: #000000 !important;
+  background: #ffffff !important;
 }
