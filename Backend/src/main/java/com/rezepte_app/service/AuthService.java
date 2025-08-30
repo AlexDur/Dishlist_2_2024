@@ -21,18 +21,23 @@ public class AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-
     private final CognitoIdentityProviderClient cognitoClient;
     private final String userPoolClientId;
     private final String userPoolClientSecret;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public AuthService(CognitoIdentityProviderClient cognitoClient,
                        @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
-                       @Value("${aws.cognito.userPoolClientSecret}") String userPoolClientSecret) {
+                       @Value("${aws.cognito.userPoolClientSecret}") String userPoolClientSecret,
+                       UserService userService,
+                       JwtUtil jwtUtil) {
         this.cognitoClient = cognitoClient;
         this.userPoolClientId = userPoolClientId;
         this.userPoolClientSecret = userPoolClientSecret;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     public SignUpResponse registerUser(String email, String password) {
@@ -67,7 +72,6 @@ public class AuthService {
         }
     }
 
-
     public String authenticateUser(String email, String password) {
         if (email == null || password == null ) {
             throw new IllegalArgumentException("E-Mail, Passwort oder Client Secret dürfen nicht null sein.");
@@ -78,7 +82,23 @@ public class AuthService {
             // Erstellung der Authentifizierungs-Anfrage für Cognito unter Verwendung des Builders
             InitiateAuthRequest authRequest = buildAuthRequest(email, password, secretHash);
             InitiateAuthResponse authResponse = cognitoClient.initiateAuth(authRequest);
-            return authResponse.authenticationResult().accessToken();
+            String accessToken = authResponse.authenticationResult().accessToken();
+            
+            // Extract user ID from token and save to database
+            if (accessToken != null) {
+                try {
+                    String cognitoUserId = jwtUtil.getUserIdFromToken(accessToken);
+                    if (cognitoUserId != null) {
+                        // Save user to database if they don't exist
+                        userService.saveUserFromCognito(cognitoUserId);
+                        logger.info("User with Cognito ID {} saved/verified in database", cognitoUserId);
+                    }
+                } catch (Exception e) {
+                    logger.warn("Could not extract user ID from token or save to database: {}", e.getMessage());
+                }
+            }
+            
+            return accessToken;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +107,6 @@ public class AuthService {
             throw new RuntimeException("Fehler bei der Authentifizierung: " + e);
         }
     }
-
 
     public void logout(String token) {
         try {
